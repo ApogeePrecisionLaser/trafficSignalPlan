@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<<<<<<< HEAD
+<Context antiJARLocking="true" path="/TrafficSignalsPhase"/>
+=======
+<Context antiJARLocking="true" path="/trafficSignalsPhase"/>
+>>>>>>> ec5195537197c483ad2e02cf3d111cdc50263f81

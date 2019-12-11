@@ -1,0 +1,170 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package com.ts.junction.Controller;
+
+import com.ts.junction.Model.DayDetailModel;
+import com.ts.junction.tableClasses.DayDetail;
+import com.ts.util.xyz;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+import java.util.List;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ *
+ * @author DELL
+ */
+public class DayDetailsController extends HttpServlet {
+
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 15, noOfRowsInTable;
+        ServletContext ctx = getServletContext();
+
+        DayDetailModel dayDetailModel = new DayDetailModel();
+         dayDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
+         dayDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
+         dayDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
+         dayDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
+         dayDetailModel.setConnection();
+         int junction_id=0;
+         int day_detail_id;
+      
+         String junction_name = request.getParameter("junction_name");
+         
+        String task = request.getParameter("task");
+        if (task == null) {
+            task = "";
+        }
+  try {
+            String JQstring = request.getParameter("action1");
+            String q = request.getParameter("q");
+            if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+                List<String> list = null;
+
+                if(JQstring.equals("getJunctionName")) {
+                    list = dayDetailModel.getSearchJunctionName(q);
+                }
+              
+
+
+                Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                        out.println(data);
+                }
+                dayDetailModel.closeConnection();
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("\n Error --ClientPersonMapController get JQuery Parameters Part-" + e);
+        }
+        if (task.equals("Delete")) {
+            // Pretty sure that id will be available.
+            try{
+              day_detail_id=Integer.parseInt(request.getParameter("day_detail_id"));
+             dayDetailModel.deleteRecord(day_detail_id);
+             
+            }catch(Exception e)
+            {
+                System.out.println("Exception "+e);
+            }
+        } else if (task.equals("Save") || task.equals("Save AS New")) {
+         
+            try {
+                // date_detail_id may or may NOT be available i.e. it can be update or new record.
+                day_detail_id = Integer.parseInt(request.getParameter("day_detail_id"));
+            } catch (Exception e) {
+                day_detail_id = 0;
+            }
+            if (task.equals("Save AS New")) {
+                day_detail_id = 0;
+            }
+            junction_id = dayDetailModel.getJunctionID(junction_name);
+            DayDetail dayDetail = new DayDetail();
+            dayDetail.setDay_detail_id(day_detail_id);
+            dayDetail.setDay_name(request.getParameter("day_name").trim());
+            dayDetail.setDay(request.getParameter("day").trim());
+            dayDetail.setJunction_id(junction_id);
+             dayDetail.setJunction_name(request.getParameter("junction_name").trim());
+            
+           dayDetail.setRemark(request.getParameter("remark").trim());
+
+            if (day_detail_id == 0) {
+                // if day_detail_id was not provided, that means insert new record.
+                dayDetailModel.insertRecord(dayDetail);
+            } else {
+                // update existing record.
+                dayDetailModel.updateRecord(dayDetail);
+            }
+        }
+
+        try {
+            lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
+            noOfRowsTraversed = Integer.parseInt(request.getParameter("noOfRowsTraversed"));
+        } catch (Exception e) {
+            lowerLimit = noOfRowsTraversed = 0;
+        }
+        String buttonAction = request.getParameter("buttonAction"); // Holds the name of any of the four buttons: First, Previous, Next, Delete.
+        if (buttonAction == null) {
+            buttonAction = "none";
+        }
+        noOfRowsInTable = dayDetailModel.getNoOfRows();                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        else if (buttonAction.equals("Previous")) {
+            int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
+            if (temp < 0) {
+                noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
+                lowerLimit = 0;
+            } else {
+                lowerLimit = temp;
+            }
+        } else if (buttonAction.equals("First")) {
+            lowerLimit = 0;
+        } else if (buttonAction.equals("Last")) {
+            lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
+            if (lowerLimit < 0) {
+                lowerLimit = 0;
+            }
+        }
+
+        if (task.equals("Save") || task.equals("Delete") || task.equals("Save AS New")) {
+            lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
+        }
+        // Logic to show data in the table.
+        List<DayDetail> dayDetailList = dayDetailModel.showData(lowerLimit, noOfRowsToDisplay);
+        lowerLimit = lowerLimit + dayDetailList.size();
+        noOfRowsTraversed = dayDetailList.size();
+
+        // Now set request scoped attributes, and then forward the request to view.
+        request.setAttribute("lowerLimit", lowerLimit);
+        request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
+        request.setAttribute("dayDetailList", dayDetailList);
+
+        if ((lowerLimit - noOfRowsTraversed) == 0) {     // if this is the only data in the table or when viewing the data 1st time.
+            request.setAttribute("showFirst", "false");
+            request.setAttribute("showPrevious", "false");
+        }
+        if (lowerLimit == noOfRowsInTable) {             // if No further data (rows) in the table.
+            request.setAttribute("showNext", "false");
+            request.setAttribute("showLast", "false");
+        }
+        request.setAttribute("IDGenerator", new xyz());
+        request.setAttribute("message", dayDetailModel.getMessage());
+        request.setAttribute("msgBgColor", dayDetailModel.getMsgBgColor());
+         request.setAttribute("junction_name", request.getParameter("junction_name"));
+          request.getRequestDispatcher("/day_details").forward(request, response);
+        }
+    
+   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        doGet(request, response);
+    }
+}

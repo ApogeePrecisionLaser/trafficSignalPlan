@@ -1,0 +1,77 @@
+10
+
+dir
+0
+file://192.168.1.6/e/new_repository/trafficSignals_new/Documents/Traffic_Signal_New1/trafficSignalsPhase/web/css
+file://192.168.1.6/e/new_repository
+add
+
+
+
+
+
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+bb2a1e29-86ca-ef48-b096-f23b4a743b66
+
+bootstrap.min.css
+file
+
+
+
+add
+
+calendar.css
+file
+
+
+
+add
+
+horizontal_de.css
+file
+
+
+
+add
+
+menu.css
+file
+
+
+
+add
+
+style.css
+file
+
+
+
+add
+
+tabs.css
+file
+
+
+
+add
+
+vertical_tab.css
+file
+
+
+
+add
+

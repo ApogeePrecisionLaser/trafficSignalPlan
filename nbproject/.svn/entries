@@ -1,0 +1,63 @@
+10
+
+dir
+0
+file://192.168.1.6/e/new_repository/trafficSignals_new/Documents/Traffic_Signal_New1/trafficSignalsPhase/nbproject
+file://192.168.1.6/e/new_repository
+add
+
+
+
+
+
+has-props
+has-prop-mods
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+bb2a1e29-86ca-ef48-b096-f23b4a743b66
+
+ant-deploy.xml
+file
+
+
+
+add
+
+genfiles.properties
+file
+
+
+
+add
+
+project.properties
+file
+
+
+
+add
+
+project.xml
+file
+
+
+
+add
+
+rest-build.xml
+file
+
+
+
+add
+
