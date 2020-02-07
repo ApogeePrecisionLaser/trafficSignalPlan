@@ -66,7 +66,7 @@
                 <td>
                     <input value="Add Plan" id="add_plan" onclick="addRow('dataTable')" type="button">
 
-           <input value="Delete Plan" onclick="deleteRow('dataTable')" type="button">
+<!--                    <input value="Delete Plan" onclick="deleteRow('dataTable')" type="button">-->
                 </td>
                 
             </tr>
@@ -77,7 +77,7 @@
             </tr>
             <tr>
                 <td align="center">
-                    <form name="form1" action="slaveInfoCont" method="post" enctype='multipart/form-data' onsubmit="return verify()">
+                    <form name="form1" action="slaveInfoCont" method="post" enctype='multipart  /form-data' onsubmit="return verify()">
                         <table id="dataTable" style="border-collapse: collapse;" border="1" width="100%" align="center">
                             <tbody>
                                 <tr>
@@ -112,7 +112,6 @@
                                         </td>
                                         <td><input class="input" type="text" name="side_no${loopCounter.count}" id="side_no${loopCounter.count}" size="3" value="${list.side_no}"  >
                                             <input type="hidden" name="side_detail_id${loopCounter.count}" id="side_detail_id${loopCounter.count}" value="${list.side_detail_id}">
-                                            <input type="hidden" id="junction_id" name="junction_id" value="${junction_id}">
                                         <input type="hidden" name="revision_no${loopCounter.count}" id="revision_no${loopCounter.count}" value="${list.revision_no}">
                                         <input type="hidden" name="s_no_count" id="s_no_count" value="${loopCounter.count}"></td>
                                         <td><input class="input" type="text" name="side_name${loopCounter.count}" id="side_name${loopCounter.count}" value="${list.sideName}" onclick="getSideName(id,${junction_id},${list.side_no})" ></td>
@@ -140,12 +139,8 @@
                                               
 
                                         
-                                   
-                                        
-                                       <td><a href="#" onclick="ViewPlanInfo('${list.side_detail_id}', '${list.sideName}', '${junction_id}');">View image</a></td>
-                                          
-                                       
-<!-- <td><button type="button"  onclick="addRow()" style="height:200px;width:200px" >Upload</button></td>-->
+                                        <td><input type="hidden"  name="image_folder${loopCounter.count}" value="${list.image_folder}"><button type="button" class="btn btn-primary" id="image_folder${loopCounter.count}" onclick="getImage(id,'${list.image_folder}')"> Launch demo modal</button></td>
+<!--                                         <td><button type="button"  onclick="addRow()" style="height:200px;width:200px" >Upload</button></td>-->
                                         <td><input class="input" type="text" name="vehicle_detection${loopCounter.count}" id="vehicle_detection${loopCounter.count}" value="${list.vehicle_detection}"></td>
                                         <td><input class="input" type="text" name="count_down${loopCounter.count}" id="count_down${loopCounter.count}" value="${list.count_down}"></td>
                                         <td><input class="input" type="text" name="no_of_lane${loopCounter.count}" id="no_of_lane${loopCounter.count}" value="${list.no_of_lane}"></td>
@@ -196,10 +191,40 @@
        </div>
 </div> 
         <script type="text/javascript">
+////////////////////////////////////////////////////////////////////////////////////////
+   var popupwin = null;
+    function displayImageList(id){
+        
+          var image = document.getElementById('image'+id).value;
 
+        var image_id=document.getElementById('image_id'+id).value;
+        var queryString = "task1=viewImage&image_name="+image+"&general_image_details_id="+image_id ;
+        var url = "slaveInfoCont?"+queryString;
+        popupwin = openPopUp(url, "Mounting Type Map Details", 500, 1000);
+
+    }
+///////////////////////////////////////////////////////////////////////////
+
+//            function verify() {
+//                var no_of_sides = document.getElementById("no_of_sides").value;
+//                // alert(no_of_sides);
+//                if (document.getElementById("SAVE").value == 'SAVE') {
+//                    for (var i = 1; i <= parseInt(no_of_sides); i++) {
+//                        var slave_id = $("#slave_id" + i).val();
+//                        // alert(slave_id);
+//                        if ($.trim(slave_id).length == 0) {
+//                            var message = "<td colspan='6' bgcolor='coral'><b>Slave Id is required...</b></td>";
+//                            $("#message").html(message);
+//                            document.getElementById("slave_id" + i).focus();
+//                            return false; // code to stop from submitting the form2.
+//                        }
+//                    }
+//                    // alert(result);
+//                    return confirm("Do you want to save slave ids ?");
+//                }
+//            }
 
             function addRow(tableID) {
-            debugger;
                 var table = document.getElementById(tableID);
                 var rowCount = table.rows.length;
                 var previousRow = rowCount - 1;
@@ -221,9 +246,7 @@
                     //element1.style.display = "none";
 
                     cell1.appendChild(element1);
-                    
-        
-        var cell2 = row.insertCell(1);
+                    var cell2 = row.insertCell(1);
                     var element1 = document.createElement("input");
                     element1.type = "text";
                     element1.id = "s_no" + rowCount;
@@ -244,39 +267,8 @@
                     //element2.readonly =true;
                     element2.setAttribute("onchange", 'validateSide(id,' + rowCount + ',' + side_no + ')');
                     element2.setAttribute("onkeyup", 'validateSide(id,' + rowCount + ',' + side_no + ')');
+                    
                     cell3.appendChild(element2);
-//                    
-//                    var element1 = document.createElement("input");
-//                    element1.type = "hidden";
-//                    element1.name = "side_detail_id" + rowCount;
-//                    element1.id = "side_detail_id" + rowCount;
-//                    element1.size = 3;
-//                    element1.maxLength = 2;
-//                    element1.value = ;
-//                    //element2.readonly =true;                    
-//                    cell3.appendChild(element1);
-//                    
-//                    var element3 = document.createElement("input");
-//                    element3.type = "hidden";
-//                    element3.name = "revision_no" + rowCount;
-//                    element3.id = "revision_no" + rowCount;
-//                    element3.size = 3;
-//                    element3.maxLength = 2;
-//                    element3.value = ;
-//                    //element2.readonly =true;                    
-//                    cell3.appendChild(element3);
-//                    
-                     var element4 = document.createElement("input");
-                    element4.type = "hidden";
-                    element4.name = "s_no_count";
-                    element4.id = "s_no_count";
-                    element4.size = 3;
-                    element4.maxLength = 2;
-                    element4.value = rowCount;
-                    //element2.readonly =true;                    
-                    cell3.appendChild(element4);
-                    
-                    
                     var cell4 = row.insertCell(3);
                     var element2 = document.createElement("input");
                     element2.type = "text";
@@ -496,13 +488,12 @@
                     contentType: 'application/json',
                     data: {task: 'getSideName',junctionID:junction_id,side_no:side_no},
                     success: function (response_data) {
-                        debugger;
-                        console.log(response_data);
-                        document.getElementById(id).value = response_data.side_name;
+                        
+                        
                     }, error: function (error) {
                         debugger;
                         console.log(error.responseJSON.side_name);
-                        
+                        document.getElementById(id).value = error.responseJSON.side_name;
                     }
 
                 });
@@ -585,33 +576,7 @@
                    alert(e);
                 }
     }
-      var popupwin = null;
-       debugger;
- 
-                function ViewPlanInfo(side_detail_id, sideName, junction_id) {
-                 alert(side_detail_id,sideName);
-        var queryString = "task=View_Image&imageid="+ side_detail_id + "&sideName=" + sideName + "&junction_id=" + junction_id;
-        var url = "slaveInfoCont?" + queryString;
-        popupwin = openPopUp(url, "View PlanInfo", 580, 900);
-        //                var bodyElementRef = null;
-        //                    var currentColor = '';
-        //                    var elementArray = document.getElementsByTagName('BODY');
-        //
-        //                    if ( elementArray.length > 0 )
-        //                    {
-        //                        bodyElementRef = elementArray[0];
-        //                        currentColor = bodyElementRef.style.backgroundColor;
-        //                        bodyElementRef.style.backgroundColor = 'Yellow';
-        //                    }
-
-    }  
-   function openPopUp(url, window_name, popup_height, popup_width) {
-                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
-                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
-                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=yes, scrollbars=yes, location=0, menubar=no, status=no, dependent=yes";
-    debugger;
-                return window.open(url, window_name, window_features);
-            }
+    
     function ViewCameraInfo(junction_id, side_no) {
 //        var queryString = "junction_id=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
 //        var url = "slaveInfoCont?" + queryString;
@@ -622,14 +587,64 @@
         document.forms['redirectCamera'].submit();
 
     }
+    
+    function openPopUp(url, window_name, popup_height, popup_width) {
+        debugger;
+        var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+        var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+        var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=yes, scrollbars=yes, location=0, menubar=no, status=no, dependent=yes";
 
+        return window.open(url, window_name, window_features);
+    }
     
     function openMapForCord(count) {
         var url="slaveInfoCont?task=GetCordinates1&count="+count;//"getCordinate";
         popupwin = openPopUp(url, "",  600, 630);
     }
- 
-          
+    
+    function getImage(id,image_folder) {       
+        $.ajax({
+                    url: 'slaveInfoCont',
+                    type: 'GET',
+                    async: true,
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    cache: false,
+                    data: {task: 'getFileNumber',image_folder:image_folder},
+                    success: function (response_data) {
+                        debugger;
+                        console.log(response_data);
+//                        document.getElementById(id).setAttribute("data-target","#myModal");
+//                        document.getElementById(id).setAttribute("data-toggle","modal");
+//                        $(id).trigger();
+                        //document.getElementById(id).value = response_data.side_name;
+                        
+                    },error: function (error) {  
+                        debugger;
+                        var response_data = 0,fileCount = 0
+                        response_data = error.responseJSON;
+                        document.getElementById(id).setAttribute("data-target","#myModal");
+                        document.getElementById(id).setAttribute("data-toggle","modal");
+                        var fileCount=response_data.fileCount;
+                        var trVar = document.getElementById("get_image");
+                        var file = image_folder.split("/")[1];
+                        
+                        for(var i=1;i<=fileCount;i++) {
+                            var image_file = image_folder+"/"+file+"_"+i;
+                            var newCell = trVar.insertCell(i-1);
+                            var element2 = document.createElement("img");
+                            element2.src = image_file;
+                            element2.alt = image_file;
+                            element2.width = 100;
+                            element2.height = 100;
+                            newCell.appendChild(element2);
+                        }
+                        $(id).trigger();
+                        
+                    }
+                });
+        
+    }
 
 
 

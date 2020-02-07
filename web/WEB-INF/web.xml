@@ -7,16 +7,16 @@
     </context-param>
     <context-param>
         <param-name>connectionString</param-name>
-        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan</param-value>
+        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan2</param-value>
     </context-param>
     <context-param>
         <param-name>db_userName</param-name>
-        <param-value>jpss_2</param-value>
+        <param-value>root</param-value>
     </context-param>
     <context-param>
         <description>	</description>
         <param-name>db_userPassword</param-name>
-        <param-value>jpss_1277</param-value>
+        <param-value>jpss</param-value>
     </context-param>
     <context-param>
         <description>This user does the registration of the users.</description>
@@ -57,6 +57,11 @@
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
         <!--<load-on-startup>1</load-on-startup>-->
     </servlet>
+    <servlet>
+        <servlet-name>PlanDetailIdController</servlet-name>
+        <servlet-class>com.ts.junction.Controller.PlanDetailIdController</servlet-class>
+    </servlet>
+   
     <servlet-mapping>
         <servlet-name>ServletAdaptor</servlet-name>
         <url-pattern>/api/*</url-pattern>
@@ -185,7 +190,7 @@
     </servlet-mapping>
     <servlet>
         <servlet-name>Model TimeShowerController</servlet-name>
-        <servlet-class>com.ts.general.Controller.TS_StatusShowerController1</servlet-class>
+        <servlet-class>com.ts.general.Controller.TS_StatusShowerController</servlet-class>
         <load-on-startup>4</load-on-startup>
     </servlet>
     <servlet-mapping>
@@ -394,8 +399,6 @@
         <servlet-name>getCordinateMapWindow1 view</servlet-name>
         <url-pattern>/getCordinate1</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet>
         <servlet-name>Log severity_level_view</servlet-name>
         <jsp-file>/view/log/severity_level.jsp</jsp-file>
@@ -403,7 +406,7 @@
     <servlet-mapping>
         <servlet-name>Log severity_level_view</servlet-name>
         <url-pattern>/severity_level_view</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
     <servlet>
         <servlet-name>SeverityLevelController</servlet-name>
         <servlet-class>com.ts.log.Controller.SeverityLevelController</servlet-class>
@@ -412,8 +415,6 @@
         <servlet-name>SeverityLevelController</servlet-name>
         <url-pattern>/SeverityLevelCont</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet>
         <servlet-name>Log severity_case_view</servlet-name>
         <jsp-file>/view/log/severity_case.jsp</jsp-file>
@@ -421,7 +422,7 @@
     <servlet-mapping>
         <servlet-name>Log severity_case_view</servlet-name>
         <url-pattern>/severity_case_view</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
     <servlet>
         <servlet-name>SeverityCaseController</servlet-name>
         <servlet-class>com.ts.log.Controller.SeverityCaseController</servlet-class>
@@ -430,8 +431,6 @@
         <servlet-name>SeverityCaseController</servlet-name>
         <url-pattern>/SeverityCaseCont</url-pattern>
     </servlet-mapping>
-    
-    
     <servlet>
         <servlet-name>Log log_table_view</servlet-name>
         <jsp-file>/view/log/log_table.jsp</jsp-file>
@@ -439,7 +438,7 @@
     <servlet-mapping>
         <servlet-name>Log log_table_view</servlet-name>
         <url-pattern>/log_table_view</url-pattern>
-    </servlet-mapping>    
+    </servlet-mapping>
     <servlet>
         <servlet-name>LogTableController</servlet-name>
         <servlet-class>com.ts.log.Controller.LogTableController</servlet-class>
@@ -448,7 +447,6 @@
         <servlet-name>LogTableController</servlet-name>
         <url-pattern>/LogTableCont</url-pattern>
     </servlet-mapping>
-    
     <servlet>
         <servlet-name>plan_details</servlet-name>
         <jsp-file>/view/junction/plan_details.jsp</jsp-file>
@@ -489,6 +487,7 @@
         <servlet-name>date_detail</servlet-name>
         <url-pattern>/date_detail</url-pattern>
     </servlet-mapping>
+   
     <servlet>
         <servlet-name>DateDetailsController</servlet-name>
         <servlet-class>com.ts.junction.Controller.DateDetailsController</servlet-class>
@@ -506,6 +505,14 @@
         <url-pattern>/junction_plan_map</url-pattern>
     </servlet-mapping>
     <servlet>
+        <servlet-name>plan_detail_id</servlet-name>
+        <jsp-file>/view/junction/plan_detail_id.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>plan_detail_id</servlet-name>
+        <url-pattern>/plan_detail_id</url-pattern>
+    </servlet-mapping>
+    <servlet>
         <servlet-name>JunctionPlanMapController</servlet-name>
         <servlet-class>com.ts.junction.Controller.JunctionPlanMapController</servlet-class>
     </servlet>
@@ -513,12 +520,136 @@
         <servlet-name>JunctionPlanMapController</servlet-name>
         <url-pattern>/JunctionPlanMapCont</url-pattern>
     </servlet-mapping>
-    
-    
+    <servlet>
+        <servlet-name>dataEntry camera_view</servlet-name>
+        <jsp-file>/view/dataEntry/camera.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry camera_view</servlet-name>
+        <url-pattern>/camera_view</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry CameraController</servlet-name>
+        <servlet-class>com.ts.dataEntry.Controller.CameraController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry CameraController</servlet-name>
+        <url-pattern>/CameraCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry camera_make_view</servlet-name>
+        <jsp-file>/view/dataEntry/camera_make.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry camera_make_view</servlet-name>
+        <url-pattern>/camera_make_view</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry Camera_MakeController</servlet-name>
+        <servlet-class>com.ts.dataEntry.Controller.Camera_MakeController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry Camera_MakeController</servlet-name>
+        <url-pattern>/CameraMakeCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry camera_type_view</servlet-name>
+        <jsp-file>/view/dataEntry/camera_type.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry camera_type_view</servlet-name>
+        <url-pattern>/camera_type_view</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry Camera_TypeController</servlet-name>
+        <servlet-class>com.ts.dataEntry.Controller.Camera_TypeController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry Camera_TypeController</servlet-name>
+        <url-pattern>/CameraTypeCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry position_view</servlet-name>
+        <jsp-file>/view/dataEntry/position.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry position_view</servlet-name>
+        <url-pattern>/position_view</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry PositionController</servlet-name>
+        <servlet-class>com.ts.dataEntry.Controller.PositionController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry PositionController</servlet-name>
+        <url-pattern>/positionCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry pole_type_view</servlet-name>
+        <jsp-file>/view/dataEntry/pole_type.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry pole_type_view</servlet-name>
+        <url-pattern>/pole_type_view</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>dataEntry Pole_TypeController</servlet-name>
+        <servlet-class>com.ts.dataEntry.Controller.Pole_TypeController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>dataEntry Pole_TypeController</servlet-name>
+        <url-pattern>/PoleTypeCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>Junction multipleImage</servlet-name>
+        <jsp-file>/view/junction/multipleImage.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>Junction multipleImage</servlet-name>
+        <url-pattern>/multipleImage</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>PhaseDataController</servlet-name>
+        <servlet-class>com.ts.junction.Controller.PhaseDataController</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>PhaseDataController</servlet-name>
+        <url-pattern>/PhaseDataCont</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>phase_data</servlet-name>
+        <jsp-file>/view/junction/phase_data.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>phase_data</servlet-name>
+        <url-pattern>/phase_data</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>plan_selection</servlet-name>
+        <jsp-file>/view/junction/plan_selection.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>plan_selection</servlet-name>
+        <url-pattern>/plan_selection</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>PlanDetailIdController</servlet-name>
+        <url-pattern>/PlanDetailIdController</url-pattern>
+    </servlet-mapping>
+   
+     <servlet>
+        <servlet-name>JunctionDetailsUpdate</servlet-name>
+        <servlet-class>com.ts.junction.Controller.JunctionDetailsUpdate</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>JunctionDetailsUpdate</servlet-name>
+        <url-pattern>/JunctionDetailsUpdate</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
         </session-timeout>
+       
     </session-config>
     <welcome-file-list>
         <welcome-file>/view/login/before_login.jsp</welcome-file>

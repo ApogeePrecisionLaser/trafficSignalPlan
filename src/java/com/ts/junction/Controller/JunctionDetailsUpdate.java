@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Shruti
  */
-public class JunctionController extends HttpServlet {
+public class JunctionDetailsUpdate extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -35,6 +35,7 @@ public class JunctionController extends HttpServlet {
         junctionModel.setConnection();
         String task = request.getParameter("task");
         String requester = request.getParameter("requester");
+        String junction_id_selected=request.getParameter("junction_id_selected");
         try {
             //----- This is only for Vendor key Person JQuery
             String jqstring = request.getParameter("action1");

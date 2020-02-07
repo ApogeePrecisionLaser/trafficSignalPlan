@@ -109,7 +109,9 @@ public class JunctionPlanMapController extends HttpServlet {
                 junctionPlanMap.setOff_time_hr(Integer.parseInt(off_time.split(":")[0]));
                 junctionPlanMap.setOff_time_min(Integer.parseInt(off_time.split(":")[1]));
                 junctionPlanMap.setOrder_no(Integer.parseInt(request.getParameter("order_no").trim()));
-                if(request.getParameter("date") != null && !request.getParameter("date").equals("")) {
+                String date = request.getParameter("date");
+                String day = request.getParameter("day");
+                if(request.getParameter("date") != null && !request.getParameter("date").equals("//")&& !request.getParameter("date").equals("")) {
                     String date_detail = request.getParameter("date").trim();
                     String from_date = date_detail.split("//")[0];
                     String to_date = date_detail.split("//")[1];
@@ -135,17 +137,15 @@ public class JunctionPlanMapController extends HttpServlet {
         
       
         
-//        if(task.equals("Delete")) {
-//            int plan_detail_id=Integer.parseInt(request.getParameter("plan_id").trim());
-//            try {
-//                planDetailModel.deleteRecord(plan_detail_id);
-//            } catch (SQLException e) {
-//                printStackTrace();
-//            }
-//  
-//            
-//              
-//        }
+        if(task.equals("Delete")) {
+            
+            int junction_plan_map_id = Integer.parseInt(request.getParameter("junction_plan_map_id").trim());
+            String junction_id = request.getParameter("junction_id");
+            junctionPlanMapModel.deleteRecord(junction_plan_map_id,Integer.parseInt(junction_id));
+  
+            
+              
+        }
 
         String searchCommandName = "";
         List<JunctionPlanMap> list1 = new ArrayList<>();
@@ -195,8 +195,8 @@ public class JunctionPlanMapController extends HttpServlet {
         if (task.equals("Save") || task.equals("Delete") || task.equals("Save AS New")) {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
-        
-        list1 = junctionPlanMapModel.showData(lowerLimit, noOfRowsToDisplay,searchCommandName);
+        String junction_id = request.getParameter("junction_id");
+        list1 = junctionPlanMapModel.showData(lowerLimit, noOfRowsToDisplay,searchCommandName,Integer.parseInt(junction_id));
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
       
@@ -209,14 +209,16 @@ public class JunctionPlanMapController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+        
         request.setAttribute("lowerLimit", lowerLimit);
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
         
         request.setAttribute("junctionPlanMapList", list1);
         
-        request.setAttribute("junction_id", request.getParameter("junction_id"));
+        request.setAttribute("junction_id", junction_id);
         request.setAttribute("no_of_sides", request.getParameter("no_of_sides"));
-        request.setAttribute("junction_name", request.getParameter("junction_name"));
+        String junction_name = junctionPlanMapModel.getJunctionDetail(Integer.parseInt(request.getParameter("junction_id"))).getJunction_name();
+        request.setAttribute("junction_name", junction_name);
         request.setAttribute("message", junctionPlanMapModel.getMessage());
         request.setAttribute("msgBgColor", junctionPlanMapModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

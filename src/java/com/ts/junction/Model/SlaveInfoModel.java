@@ -23,7 +23,7 @@ import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
  */
 public class SlaveInfoModel extends HttpServlet {
 
-    private Connection connection;
+    private static Connection connection;
     private String driverClass;
     private String connectionString;
     private String db_userName;
@@ -68,7 +68,7 @@ public class SlaveInfoModel extends HttpServlet {
     ///////////////////////upload image part start
     public String getRepositoryPath() {
         String destination_path = "";
-        String query = " SELECT destination_path FROM image_destination where image_destination_id = 2";
+        String query = " SELECT destination_path FROM image_destination where image_destination_id = 1";
 
         try {
             ResultSet rs = connection.prepareStatement(query).executeQuery();
@@ -535,7 +535,23 @@ public class SlaveInfoModel extends HttpServlet {
         }
         return junction_name;
     }
-
+  public String getSideNameImage(int junction_id, int side_no) {
+        String junction_name = null;
+        String query = " SELECT side" + side_no + "_name FROM junction "
+                + " WHERE junction_id="+junction_id+" AND side_no ="+side_no;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(query);
+          
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                junction_name = rset.getString("side" + side_no + "_name");
+            }
+        } catch (Exception e) {
+            System.out.println("SlaveInfoModel:getSideName() error " + e);
+        }
+        return junction_name;
+    }
     public boolean checkSlaveEntry(int junction_id, int program_version_no, int side_no) {
         int no = 0;
         String query1 = " SELECT count(*) AS c FROM side_detail WHERE junction_id = ? AND program_version_no= ? AND side_no= ? ";
@@ -643,7 +659,21 @@ public class SlaveInfoModel extends HttpServlet {
         }
         return position;
     }
+    public static String getImageDestinationPath(int imageid1) {
+        String image_folder = "";
 
+        String query = " SELECT image_folder  FROM  side_detail where side_detail_id=" + imageid1;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            if (rset.next()) {
+                image_folder = rset.getString("image_folder");
+
+            }
+        } catch (Exception ex) {
+            System.out.println("ERROR: " + ex);
+        }
+        return image_folder;
+    }
     public void setDriverClass(String driverclass) {
         this.driverClass = driverclass;
     }

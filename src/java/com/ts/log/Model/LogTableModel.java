@@ -32,7 +32,7 @@ public class LogTableModel {
     public List<LogTable> showData(int lowerLimit, int noOfRowsToDisplay) {
         List<LogTable> list = new ArrayList<LogTable>();
         try {
-            String query = "SELECT j.junction_id,side.side_detail_id,j.junction_name,side.side_name,l.log_table_id, l.sent_data, l.recieved_data, l.sms_sent_status, l.date_time, l.revision_no, l.active,s.severity_case_id, s.severity_case"
+            String query = "SELECT j.junction_id,side.side_detail_id,j.junction_name,side.side_name,l.log_table_id, s.send_data, s.recieved_data, l.sms_sent_status, l.date_time, l.revision_no, l.active,s.severity_case_id, s.severity_case"
                     + " from log_table AS l "
                     + "join severity_case As s on s.severity_case_id = l.case_id "
                     + "join side_detail As side on side.side_detail_id = l.side_detail_id "
@@ -48,7 +48,12 @@ public class LogTableModel {
                 logTable.setJunction_id(rset.getInt("junction_id"));
                 logTable.setSide_name(rset.getString("side_name"));
                 logTable.setSide_detail_id(rset.getInt("side_detail_id"));
-                
+                logTable.setLog_table_id(rset.getInt("log_table_id"));
+                logTable.setSend_data(rset.getString("send_data"));
+                logTable.setR_data(rset.getString("recieved_data"));
+                logTable.setSms_sent_status(rset.getString("sms_sent_status"));
+                logTable.setDate_time(rset.getString("date_time"));
+                logTable.setSeverity_case(rset.getString("severity_case"));
                 list.add(logTable);
             }
 //

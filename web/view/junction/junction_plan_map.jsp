@@ -32,14 +32,14 @@
                     }
                 });
                 
-                $("#start_time").autocomplete("JunctionPlanMapCont", {
-                    
-                    extraParams: {
-                        action1: function () {
-                            return "getOnOffTime";
-                        }
-                    }
-                });
+//                $("#start_time").autocomplete("JunctionPlanMapCont", {
+//                    
+//                    extraParams: {
+//                        action1: function () {
+//                            return "getOnOffTime";
+//                        }
+//                    }
+//                });
 
             });
 
@@ -75,8 +75,9 @@
                 }
             }
             function fillColumns(id) {
+                debugger;
                 var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
-                var noOfColumns = 8;
+                var noOfColumns =9;
                 var columnId = id;
             <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
                 columnId = columnId.substring(3, id.length);
@@ -103,6 +104,7 @@
                 document.getElementById("order_no").value = document.getElementById(t1id + (lowerLimit + 6)).innerHTML;
 //                document.getElementById("plan_no").value = document.getElementById(tlid + (lowerLimit + 8)).innerHTML;
                 // Now enable/disable various buttons.
+                document.getElementById("junction_id").value = document.getElementById(t1id + (lowerLimit + 7)).innerHTML;
                 document.getElementById("edit").disabled = false;
                 if (!document.getElementById("save").disabled) {
                     // if save button is already enabled, then make edit, and delete button enabled too.
@@ -205,6 +207,44 @@
                 }
                 
             }
+//            function testSelect(val)
+//            {
+//                alert(val);
+//             
+//            }
+      function planSelectionPopup(url,input_no,command_id) {
+        debugger;
+        var popup_height = 580;
+        var popup_width = 900;
+        var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+        var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+        url = url + "?input_no="+input_no+"&command_id="+command_id;
+        var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+        popupWindow = window.open(url, 'Selection Window', window_features);
+    } var popupwin = null;
+    function popup(url, window_name, popup_height, popup_width) {
+        var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+        var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+        popupwin = window.showModalDialog(url, window_name, "dialogWidth:" + popup_width + "px;" + " dialogHeight:" + popup_height + "px;" + " dialogLeft:" + popup_left_pos + "px;" + " dialogTop:" + popup_top_pos + "px;" + " resizable:no; center:yes");
+        popupwin.focus()
+    }
+
+    function openPopUp(url, window_name, popup_height, popup_width) {
+        var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+        var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+        var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+        popupwin = window.open(url, window_name, window_features);
+        //popupwin = window.showModalDialog(url,window_name,"dialogWidth:" +popup_width+"px;" + " dialogHeight:" +popup_height+ "px;"+" dialogLeft:" +popup_left_pos+ "px;"+" dialogTop:" +popup_top_pos+ "px;"+" resizable:no; center:yes");
+        window.focus();
+        return popupwin;
+    }
+    function myFunction() {
+       var url = "PlanDetailIdController?" ;
+        popupwin = openPopUp(url, "plan_detail_id", 580, 900);
+   
+
+    }
+    
         </script>
     </head>
     <body>
@@ -233,7 +273,6 @@
                                                     <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
                                                         <table border="1" id="table1" align="center" class="reference">
                                                             <tr>
-                                                                <th class="heading" style="visibility: hidden"><!-- City ID --></th>
                                                                 <th class="heading" >S.No.</th>
                                                                 <th class="heading" >Junction Name</th>
                                                                 <th class="heading" >To&From Date</th>
@@ -241,10 +280,12 @@
                                                                 <th class="heading" >Start Time</th>
                                                                 <th class="heading" >Order No</th>
                                                                 <th class="heading" >Plan No</th>
+                                                              
+                                                                
                                                             </tr>
                                                             <c:forEach var="planMap" items="${requestScope['junctionPlanMapList']}" varStatus="loopCounter">
-                                                                <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" style="visibility: hidden" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
+                                                                <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.from_date}//${planMap.to_date}</td>
@@ -252,6 +293,8 @@
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.on_time_hr}:${planMap.on_time_min}-${planMap.off_time_hr}:${planMap.off_time_min}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
+                                                                   
                                                                 </tr>
                                                             </c:forEach>
                                                             <tr>
@@ -293,7 +336,7 @@
                                                             <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
                                                             <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                             <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
-                                                            
+                                                            <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
                                                         </table>
                                                     </DIV>
                                                 </form>
@@ -314,18 +357,20 @@
                                                         <tr>
                                                             <th class="heading" >Junction Name</th>
                                                             <td><input class="input" type="text" id="junction_name" name="junction_name" value="${junction_name}" size="50" disabled>
-                                                                <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" disabled>
-                                                            <input class="input" type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" size="50" disabled></td>
+                                                                <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                            <input class="input" type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" size="50" ></td>
                                                         </tr>
                                                         <tr>
                                                             <th class="heading" >On Time -  Off Time</th>
-                                                            <td><input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="50" disabled ></td>  
+                                                            <td><input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="40" onkeyup="myFunction()" disabled >
+<!--                                                               <input class="button" type="button" name="ok" id="ok" value="ok" onclick="testSelect(name)"></td>-->
                                                         </tr>
                                     
                                                         
 
                                                         <tr><th class="heading" >Order No</th>
-                                                            <td><input class="input" type="text" id="order_no" name="order_no" value="" maxlength="6" size="50" disabled></td></tr>
+                                                            <td><input class="input" type="text" id="order_no" name="order_no" value="" maxlength="6" size="50" disabled>
+                                                               </td></tr>
 
 
                                                         <tr> <th class="heading" >Day</th>

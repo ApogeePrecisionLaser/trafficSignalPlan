@@ -13,6 +13,7 @@ import com.ts.junction.tableClasses.HighCourtInfo;
 import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.KatangaInfo;
+import com.ts.junction.tableClasses.LabourChowkInfo;
 import com.ts.junction.tableClasses.MadanMahalInfo;
 import com.ts.junction.tableClasses.PlanInfo;
 import com.ts.junction.tableClasses.RanitalInfo;
@@ -100,6 +101,7 @@ public class ClientResponderWS extends HttpServlet
     private static BloomChowkInfo bloomChowkInfoRefreshList = new BloomChowkInfo();
     private static MadanMahalInfo madanMahalInfoRefreshList = new MadanMahalInfo();
     private static BandariyaTirahaInfo bandariyaTirahaInfoRefreshList = new BandariyaTirahaInfo();
+    private static LabourChowkInfo labourChowkInfoRefreshList = new LabourChowkInfo();
     String currentTime;
     private String lastVisitedTime;
     DateFormat dateFormat;
@@ -178,6 +180,7 @@ public class ClientResponderWS extends HttpServlet
             this.async.setBloomChowkInfoRefreshList(this.bloomChowkInfoRefreshList);
             this.async.setMadanMahalInfoRefreshList(this.madanMahalInfoRefreshList);
             this.async.setBandariyaTirahaInfoRefreshList(this.bandariyaTirahaInfoRefreshList);
+            this.async.setLabourChowkInfoRefreshList(this.labourChowkInfoRefreshList);
             this.ctx.setAttribute("planInfoRefreshList", this.planInfoRefreshList);
             this.ctx.setAttribute("teenPattiInfoRefreshList", this.teenPattiInfoRefreshList);
             this.ctx.setAttribute("gohalPurInfoRefreshList", this.gohalPurInfoRefreshList);
@@ -191,6 +194,7 @@ public class ClientResponderWS extends HttpServlet
             this.ctx.setAttribute("bloomChowkInfoRefreshList", this.bloomChowkInfoRefreshList);
             this.ctx.setAttribute("madanMahalInfoRefreshList", this.madanMahalInfoRefreshList);
             this.ctx.setAttribute("bandariyaTirahaInfoRefreshList", this.bandariyaTirahaInfoRefreshList);
+              this.ctx.setAttribute("labourChowkInfoRefreshList", this.labourChowkInfoRefreshList);
             this.tsUpdaterCont.setCtx(this.ctx);
             this.ctx.setAttribute("junction", this.junction);
             this.modemResReadSaveCont.setCtx(this.ctx);
@@ -440,6 +444,11 @@ public class ClientResponderWS extends HttpServlet
                                     //System.out.println(res);
                                     sendResponse(res);
 
+                                } else if (functionNo == 17) {
+                                    res = phaseMapFunction(bytes, firstStartDataPosition);
+                                    //System.out.println(res);
+                                    sendResponse(res);
+
                                 }else {
                                     System.out.println("@@@@@@@@@@@@@@@@@@@@@@  Sent Error: Invalid function no  @@@@@@@@@@@@@@@@@@@@@@");
                                     sendErrorResponse(6);
@@ -563,7 +572,9 @@ public class ClientResponderWS extends HttpServlet
             return (dataLength == 18);
         } else if (functionNo == 16) {
             return (dataLength == 18);
-        } else {
+        } else if (functionNo == 17) {
+            return (dataLength == 18);
+        }else {
             return false;
         }
     }
@@ -1641,6 +1652,7 @@ public class ClientResponderWS extends HttpServlet
         MadanMahalInfo madanMahalInfo = new MadanMahalInfo();
 
         GohalPurInfo gohalPurInfo = new GohalPurInfo();
+         LabourChowkInfo labourChowkInfo = new LabourChowkInfo();
         TrafficSignalWebServices tsws = new TrafficSignalWebServices();
         String[] side13 = null;
         String[] side24 = null;
@@ -1670,7 +1682,7 @@ public class ClientResponderWS extends HttpServlet
 
             int unsignedMiscByte = dataToProcess[firstStartDataPosition + 12];// & 0xFF;
 
-            int plan_no = dataToProcess[firstStartDataPosition + 13];
+            int plan_id = dataToProcess[firstStartDataPosition + 13];
             int plan_mode = dataToProcess[firstStartDataPosition + 14];
             int activity = dataToProcess[firstStartDataPosition + 15];
             int activity1 = 1;
@@ -1680,15 +1692,15 @@ public class ClientResponderWS extends HttpServlet
             // String currentTimeSynchronizationStatus="Y";
             // data at firstStartDataPosition + 13/14/15 are default 1, when activity byte value is 2(clearance) then only firstStartDataPosition + 13 byte value will be used as clearance side.
 
-            String onTime = this.clientResponderModel.getPlanOnTime(junctionID, program_version_no, plan_no);
-            String offTime = this.clientResponderModel.getPlanOffTime(junctionID, program_version_no, plan_no);
+            String onTime = this.clientResponderModel.getPlanOnTime(junctionID, program_version_no, plan_id);
+            String offTime = this.clientResponderModel.getPlanOffTime(junctionID, program_version_no, plan_id);
 
             int juncHr = dataToProcess[firstStartDataPosition + 16];
             int juncMin = dataToProcess[firstStartDataPosition + 17];
             int juncDat = dataToProcess[firstStartDataPosition + 18];
             int juncMonth = dataToProcess[firstStartDataPosition + 19];
             int juncYear = dataToProcess[firstStartDataPosition + 20];
-            int phase_no = dataToProcess[firstStartDataPosition + 21];
+            int phase_id = dataToProcess[firstStartDataPosition + 21];
 
             int primary_side_1 = dataToProcess[firstStartDataPosition + 22] & 0xFF;
             int secondary_side_1 = dataToProcess[firstStartDataPosition + 23] & 0xFF;
@@ -1722,8 +1734,9 @@ public class ClientResponderWS extends HttpServlet
             
             int powerStatus = dataToProcess[firstStartDataPosition + 47];
             int communicationStatus = dataToProcess[firstStartDataPosition + 48];
+            int map_id = dataToProcess[firstStartDataPosition + 49];
 
-            for (int i = (firstStartDataPosition + 49); i <= (firstStartDataPosition + 55); i++) {
+            for (int i = (firstStartDataPosition + 50); i <= (firstStartDataPosition + 55); i++) {
                 //char ch = (char) dataToProcess[i];
                 if (extraBytes == "") {
                     extraBytes = extraBytes + dataToProcess[i];
@@ -1735,8 +1748,8 @@ public class ClientResponderWS extends HttpServlet
             int crc = dataToProcess[firstStartDataPosition + 56] & 0xFF;
             int firstLastDelimiter = dataToProcess[firstStartDataPosition + 57];
             int secLastDelimiter = firstLastDelimiter;
-
-            boolean match = this.clientResponderModel.sideColorMatch(junctionID, plan_no, phase_no, unsignedSide13Hex, unsignedSide24Hex, unsignedSide5Hex);
+            int fault = 0;
+            boolean match = this.clientResponderModel.sideColorMatch(junctionID, plan_id, phase_id, unsignedSide13, unsignedSide24, unsignedSide5,map_id);
             if (match) {
                 int unsignedSide13DB = 0;
                 int unsignedSide24DB = 0;
@@ -1751,7 +1764,7 @@ public class ClientResponderWS extends HttpServlet
                 String secondary3 = "";
                 String secondary4 = "";
                 String secondary5 = "";
-                List<Integer> sidevalue = this.clientResponderModel.getSideValue(junctionID, plan_no, phase_no);
+                List<Integer> sidevalue = this.clientResponderModel.getSideValue(junctionID, plan_id, phase_id, map_id);
                 unsignedSide13DB = sidevalue.get(0);
                 unsignedSide24DB = sidevalue.get(1);
                 unsignedSide5DB = sidevalue.get(2);
@@ -1762,6 +1775,7 @@ public class ClientResponderWS extends HttpServlet
                 String side2 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide24DB);
                 String side3 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide13DB);
                 String side4 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide24DB);
+                
                 switch (poleType) {
                     case 1:
                         primary1 = side1 + "0000";
@@ -1773,7 +1787,7 @@ public class ClientResponderWS extends HttpServlet
                         primary4 = side4 + "0000";
                         secondary4 = side4 + "0000";
                         
-                        matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
                                 Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
                                 primary1, primary2, primary3, primary4,
                                 secondary1, secondary2, secondary3, secondary4, junctionID);
@@ -1789,7 +1803,7 @@ public class ClientResponderWS extends HttpServlet
                         primary4 = side4 + side4;
                         secondary4 = side2 + side2;
                         
-                        matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
                                 Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
                                 primary1, primary2, primary3, primary4,
                                 secondary1, secondary2, secondary3, secondary4, junctionID);
@@ -1803,7 +1817,7 @@ public class ClientResponderWS extends HttpServlet
                         secondary3 = side1 + "0000";
                         primary4 = side4 + side4;
                         secondary4 = side2 + "0000";
-                        matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
                                 Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
                                 primary1, primary2, primary3, primary4,
                                 secondary1, secondary2, secondary3, secondary4, junctionID);
@@ -1881,7 +1895,7 @@ public class ClientResponderWS extends HttpServlet
 
             System.out.println("refresh  request from modem--- " + firstStartDelimiter + " " + secStartDelimiter + " " + dataSize1 + " " + dataSize2
                     + " " + junctionID + " " + program_version_no + " " + fileNo + " " + functionNo + " " + side1Time + " " + side2Time + " " + side3Time + " " + side4Time + " "
-                    + unsignedSide13 + " " + unsignedSide24 + " " + unsignedMiscByte + " " + plan_no + " " + plan_mode + " " + activity + " "
+                    + unsignedSide13 + " " + unsignedSide24 + " " + unsignedMiscByte + " " + plan_id + " " + plan_mode + " " + activity + " "
                     + juncHr + " " + juncMin + " " + juncDat + " " + juncMonth + " " + juncYear + " "
                     + crc + " " + firstLastDelimiter + " " + secLastDelimiter);
 
@@ -1951,7 +1965,7 @@ public class ClientResponderWS extends HttpServlet
                 planInfo.setJunction_id(junctionID);
                 planInfo.setProgram_version_no(program_version_no);
                 planInfo.setFileNo(fileNo);
-                planInfo.setPlan_no(plan_no);
+                planInfo.setPlan_no(plan_id);
                 planInfo.setOnTime(onTime);
                 planInfo.setOffTime(offTime);
                 planInfo.setMode(plan_mode == 1 ? "Blinker" : plan_mode == 2 ? "Signal" : "Signal With Pedestrian");
@@ -2063,7 +2077,7 @@ public class ClientResponderWS extends HttpServlet
                         yatayatThanaInfoRefreshList = yatayatThanaInfo;
                         this.ctx.setAttribute("yatayatThanaInfoList", this.yatayatThanaInfoRefreshList);
                     }
-                    if (junctionID == 4) {
+                    if (junctionID == 3) {
                         BeanUtils.copyProperties(katangaInfo, planInfo);
                         katangaInfoRefreshList = katangaInfo;
                         this.ctx.setAttribute("katangaInfoList", this.katangaInfoRefreshList);
@@ -2092,6 +2106,11 @@ public class ClientResponderWS extends HttpServlet
                         BeanUtils.copyProperties(madanMahalInfo, planInfo);
                         madanMahalInfoRefreshList = madanMahalInfo;
                         this.ctx.setAttribute("madanMahalInfoList", this.madanMahalInfoRefreshList);
+                    }
+                     if (junctionID == 15) {
+                        BeanUtils.copyProperties(labourChowkInfo, planInfo);
+                        labourChowkInfoRefreshList = labourChowkInfo;
+                        this.ctx.setAttribute("labourChowkInfoList", this.labourChowkInfoRefreshList);
                     }
                     this.ctx.setAttribute("junction", this.junction);
                     this.modemResReadSaveCont.setCtx(this.ctx);
@@ -2122,7 +2141,7 @@ public class ClientResponderWS extends HttpServlet
 //            
 
             System.out.println("activity bytes: " + activity + " " + activity1 + " " + activity2 + " " + activity3);
-            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " +fault+ " " + firstLastDelimiter + " " + firstLastDelimiter;
             System.out.println("response ::: " + response);
 
         } catch (Exception e) {
@@ -2140,58 +2159,116 @@ public class ClientResponderWS extends HttpServlet
 
     }
 
-    
-    
-    
-     public void matchSignal(String primary_side_1, String primary_side_2, String primary_side_3, String primary_side_4,
-            String secondary_side_1, String secondary_side_2, String secondary_side_3, String secondary_side_4,
-            String primary1, String primary2, String primary3, String primary4,
-            String secondary1, String secondary2, String secondary3, String secondary4 , int junctionID) {
-         if(primary_side_1.length() != 8) {
-            int no_of_zero = 8 - primary_side_1.length();
+    public String settingColorBit(String primary) {
+        if(primary.length() != 8) {
+            int no_of_zero = 8 - primary.length();
             String zero = ""; 
             for(int i=0;i<no_of_zero;i++){
                 zero = zero + "0";
             }
-            primary_side_1 = zero + primary_side_1;
+            primary = zero + primary;
         }
+        return primary;
+    }
+    
+    
+     public int matchSignal(String primary_side_1, String primary_side_2, String primary_side_3, String primary_side_4,
+            String secondary_side_1, String secondary_side_2, String secondary_side_3, String secondary_side_4,
+            String primary1, String primary2, String primary3, String primary4,
+            String secondary1, String secondary2, String secondary3, String secondary4 , int junctionID) {
+         
+         
+         int fault = 0;
          int programVersionNumber = 0;
         //Primary color match 
+        primary1 = settingColorBit(primary1);
+        primary_side_1 = settingColorBit(primary_side_1);
         Map<String,Object> side1Match = this.clientResponderModel.matchColor(primary1,primary_side_1);
         if(side1Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
-            int side1 = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
-            if(side1 > 0) {
-                sendSmsToAssignedFor("7248858155",side1Match.get("severity_case").toString());
+            fault = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side1Match.get("severity_case").toString());
             }
         }
         
-        Map<String,Object> side2Match = this.clientResponderModel.matchColor(primary_side_2, primary2);
+        primary2 = settingColorBit(primary2);
+        primary_side_2 = settingColorBit(primary_side_2);
+        Map<String,Object> side2Match = this.clientResponderModel.matchColor(primary2, primary_side_2);
         if(side2Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
-            int side2 = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
-            if(side2 > 0) {
-                sendSmsToAssignedFor("9013025498",side2Match.get("severity_case").toString());
+            fault = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side2Match.get("severity_case").toString());
             }
         }
 //        
-        Map<String,Object> side3Match = this.clientResponderModel.matchColor(primary_side_3, primary3);
+        primary3= settingColorBit(primary3);
+        primary_side_1 = settingColorBit(primary_side_3);
+        Map<String,Object> side3Match = this.clientResponderModel.matchColor(primary3, primary_side_3);
         if(side3Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
-            int side3 = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
-            if(side3 > 0) {
-                sendSmsToAssignedFor("9013025498",side3Match.get("severity_case").toString());
+            fault = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side3Match.get("severity_case").toString());
             }
         }
 //        
-//        Map<String,Object> side4Match = this.clientResponderModel.matchColor(primary_side_4, primary4);
-//        if(side1Match.isEmpty()) {
-//            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
-//            int side4 = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
-//            if(side4 > 0) {
-//                sendSmsToAssignedFor("9013025498",side4Match.get("severity_case").toString());
-//            }
-//        }
+        primary4 = settingColorBit(primary4);
+        primary_side_4 = settingColorBit(primary_side_4);
+        Map<String,Object> side4Match = this.clientResponderModel.matchColor(primary4, primary_side_4);
+        if(side1Match.isEmpty()) {
+            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
+            int side4 = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
+            if(side4 > 0) {
+                sendSmsToAssignedFor("",side4Match.get("severity_case").toString());
+            }
+        }
+        
+        secondary1 = settingColorBit(secondary1);
+        secondary_side_1 = settingColorBit(secondary_side_1);
+        Map<String,Object> side1SecondaryMatch = this.clientResponderModel.matchColor(secondary1,secondary_side_1);
+        if(side1SecondaryMatch.size() > 0) {
+            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
+            fault = this.clientResponderModel.insertIntoLogTable(side1SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side1SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side1SecondaryMatch.get("severity_case").toString());
+            }
+        }
+        
+        secondary2 = settingColorBit(secondary2);
+        secondary_side_2 = settingColorBit(secondary_side_2);
+        Map<String,Object> side2SecondaryMatch = this.clientResponderModel.matchColor(secondary2, secondary_side_2);
+        if(side2SecondaryMatch.size() > 0) {
+            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
+            fault = this.clientResponderModel.insertIntoLogTable(side2SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side2SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side2SecondaryMatch.get("severity_case").toString());
+            }
+        }
+//        
+        secondary3= settingColorBit(secondary3);
+        secondary_side_3 = settingColorBit(secondary_side_3);
+        Map<String,Object> side3SecondaryMatch = this.clientResponderModel.matchColor(secondary3, secondary_side_3);
+        if(side3SecondaryMatch.size() > 0) {
+            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
+            fault = this.clientResponderModel.insertIntoLogTable(side3SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side3SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
+            if(fault > 0) {
+                sendSmsToAssignedFor("",side3SecondaryMatch.get("severity_case").toString());
+            }
+        }
+//        
+        secondary4 = settingColorBit(secondary4);
+        secondary_side_4 = settingColorBit(secondary_side_4);
+        Map<String,Object> side4SecondaryMatch = this.clientResponderModel.matchColor(secondary4, secondary_side_4);
+        if(side1Match.isEmpty()) {
+            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
+            int side4 = this.clientResponderModel.insertIntoLogTable(side4SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side4SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
+            if(side4 > 0) {
+                sendSmsToAssignedFor("",side4SecondaryMatch.get("severity_case").toString());
+            }
+        }
+        return fault;
     }
 
     public String sendSmsToAssignedFor(String numberStr1, String messageStr1) {
@@ -2919,7 +2996,7 @@ public class ClientResponderWS extends HttpServlet
             secLastDelimiter = firstLastDelimiter;
             System.out.println("phase function first request -- " + firstStartDelimiter + " " + secStartDelimiter + " " + dataSize1 + " " + dataSize2 + " " + junctionID + " " + program_version_no + " " + fileNo + " " + functionNo + " " + planNo + " " + phaseNo + " " + extraByte + " " + crc + " " + firstLastDelimiter + " " + secLastDelimiter);
             try {
-                Map<String,String> phase_detail = this.clientResponderModel.getPhaseDetail(junctionID, planNo,planId, phaseNo);
+                Map<String,String> phase_detail = this.clientResponderModel.getPhaseDetail(junctionID, phaseNo);
                 
                 int phase_time = Integer.parseInt(phase_detail.get("phase_time"));
                 int phase_id = Integer.parseInt(phase_detail.get("phase_info_id"));
@@ -3039,7 +3116,7 @@ public class ClientResponderWS extends HttpServlet
                 imeiNo = imeiNo + ch;
             }
 
-            for (int i = (firstStartDataPosition + 19); i <= (firstStartDataPosition + 30); i++) {
+            for (int i = (firstStartDataPosition + 20); i <= (firstStartDataPosition + 30); i++) {
                 //char ch = (char) dataToProcess[i];
                 if (extraBytes == "") {
                     extraBytes = extraBytes + dataToProcess[i];
@@ -3067,14 +3144,14 @@ public class ClientResponderWS extends HttpServlet
             int noOfSides = this.clientResponderModel.getNoOfSides(junctIDFromDB, programVersionNoFromDB);
             int pedestrianTime = this.clientResponderModel.getPedestrianTime(junctIDFromDB, programVersionNoFromDB);
             int fileNoFromDB = this.clientResponderModel.getFileNo(junctIDFromDB, programVersionNoFromDB);
-
+            int totalNoOfPhase =  this.clientResponderModel.getTotalNoOfPhase(junctIDFromDB, programVersionNoFromDB);
             if (fileNo != fileNoFromDB) {
                 this.clientResponderModel.updateFileNo(junctIDFromDB, fileNo, programVersionNoFromDB);
             }
             fileNoFromDB = this.clientResponderModel.getFileNo(junctIDFromDB, programVersionNoFromDB);
 
             System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
-            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
             System.out.println(response);
         } catch (Exception e) {
             System.out.println("ClientResponder checkRegistration exception: " + e);
@@ -3088,6 +3165,7 @@ public class ClientResponderWS extends HttpServlet
         String extraBytes = "";
         try {
             int firstStartDelimiter = dataToProcess[firstStartDataPosition - 4];
+
             int secStartDelimiter = dataToProcess[firstStartDataPosition - 3];
             int dataSize1 = dataToProcess[firstStartDataPosition - 2];
             int dataSize2 = dataToProcess[firstStartDataPosition - 1];
@@ -3124,7 +3202,7 @@ public class ClientResponderWS extends HttpServlet
             String fromDateFromDB = dateDetail.get(0);
             String toDateFromDB = dateDetail.get(1);
             int date_detail_id = Integer.parseInt(dateDetail.get(2));
-            int planNoFromDB = this.clientResponderModel.getNoOfPlanInDate(junctionID, orderNoOfDateSlot);
+            int planNoFromDB = this.clientResponderModel.getNoOfPlanInDate(junctionID, orderNoOfDateSlot, date_detail_id);
             DateTimeFormatter df = DateTimeFormatter.ofPattern("dd-MM-yyyy");
             LocalDate fromDate = LocalDate.parse(fromDateFromDB, df);
             int fromYear = fromDate.getYear() - 2000;
@@ -3191,30 +3269,30 @@ public class ClientResponderWS extends HttpServlet
                 dayFromDB = "weekday";
                 planNoFromDB = this.clientResponderModel.getWeekDayNoOfPlanInDay(junctionID);
             } else {
-                dayFromDB = this.clientResponderModel.getDay(junctionID, orderNoOfDaySlot);
-                planNoFromDB = this.clientResponderModel.getNoOfPlanInDay(junctionID, orderNoOfDaySlot);
+                dayFromDB = this.clientResponderModel.getDay(junctionID, orderNoOfDaySlot, day_id);
+                planNoFromDB = this.clientResponderModel.getNoOfPlanInDay(junctionID, orderNoOfDaySlot, day_id);
             }
             int dayNo = 0;
-            switch (dayFromDB) {
-                case "Monday":
+            switch (dayFromDB.toLowerCase()) {
+                case "monday":
                     dayNo = 1;
                     break;
-                case "Tuesday":
+                case "tuesday":
                     dayNo = 2;
                     break;
-                case "WednesDay":
+                case "wednesday":
                     dayNo = 3;
                     break;
-                case "Thursday":
+                case "thursday":
                     dayNo = 4;
                     break;
-                case "Friday":
+                case "friday":
                     dayNo = 5;
                     break;
-                case "Saturday":
+                case "saturday":
                     dayNo = 6;
                     break;
-                case "Sunday":
+                case "sunday":
                     dayNo = 7;
                     break;
                 default:
@@ -3356,7 +3434,8 @@ public class ClientResponderWS extends HttpServlet
             int plan_id = junctionPlanDetail.get("plan_id");
             int order_no = junctionPlanDetail.get("order_no");
             int map_id = junctionPlanDetail.get("map_id");
-            for (int i = (firstStartDataPosition + 6) + 1; i <= (firstStartDataPosition + 18); i++) {
+            int noOfPhase = this.clientResponderModel.getPhaseNoMapDate(junctionID, date_id, plan_id);
+            for (int i = (firstStartDataPosition + 6) + 2; i <= (firstStartDataPosition + 18); i++) {
                 if (extraByte == "") {
                     extraByte = extraByte + dataToProcess[i];
                 } else {
@@ -3364,7 +3443,7 @@ public class ClientResponderWS extends HttpServlet
                 }
             }
             
-            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " + map_id + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " + map_id + " " + noOfPhase + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
             
             
         } catch (Exception e) {
@@ -3413,7 +3492,8 @@ public class ClientResponderWS extends HttpServlet
             int plan_id = junctionPlanDetail.get("plan_id");
             int order_no = junctionPlanDetail.get("order_no");
             int map_id = junctionPlanDetail.get("map_id");
-            for (int i = (firstStartDataPosition + 6) + 1; i <= (firstStartDataPosition + 18); i++) {
+            int noOfPhase = this.clientResponderModel.getPhaseNoMapDay(junctionID, day_id, plan_id);
+            for (int i = (firstStartDataPosition + 6) + 2; i <= (firstStartDataPosition + 18); i++) {
                 if (extraByte == "") {
                     extraByte = extraByte + dataToProcess[i];
                 } else {
@@ -3421,7 +3501,7 @@ public class ClientResponderWS extends HttpServlet
                 }
             }
             
-            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " +map_id+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " +map_id+ " " +noOfPhase+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
             
             
         } catch (Exception e) {
@@ -3430,4 +3510,71 @@ public class ClientResponderWS extends HttpServlet
 
         return responseVal;
     }
+    
+    public String phaseMapFunction(byte[] dataToProcess, int firstStartDataPosition) {
+
+        String responseVal = null;
+        String extraByte = "";
+        int firstStartDelimiter = dataToProcess[firstStartDataPosition - 4];
+        int secStartDelimiter = dataToProcess[firstStartDataPosition - 3];
+        int dataSize1 = dataToProcess[firstStartDataPosition - 2];
+        int dataSize2 = dataToProcess[firstStartDataPosition - 1];
+        int junctionID = dataToProcess[firstStartDataPosition];
+        int program_version_no = dataToProcess[firstStartDataPosition + 1];
+        int fileNo = dataToProcess[firstStartDataPosition + 2];
+        int functionNo = dataToProcess[firstStartDataPosition + 3];
+        
+        int map_id = 0;
+        int phase_no = 0;
+        int firstLastDelimiter = 0;
+        int secLastDelimiter = 0;
+        int crc = 0;
+        int fileNoFromDB = this.clientResponderModel.getFileNo(junctionID, program_version_no);
+        if (fileNo != fileNoFromDB) {
+            this.clientResponderModel.updateFileNo(junctionID, fileNo, program_version_no);
+        }
+        int programVersionNoFromDB = this.clientResponderModel.getProgramVersionNo(junctionID);
+
+        map_id = dataToProcess[firstStartDataPosition + 4];
+        phase_no = dataToProcess[firstStartDataPosition + 5];
+        crc = dataToProcess[firstStartDataPosition + 18] & 0xFF;
+        firstLastDelimiter = dataToProcess[firstStartDataPosition + 19];
+        //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
+        secLastDelimiter = firstLastDelimiter;
+        System.out.println("Junction_id" + junctionID);
+        
+        responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
+        try {
+            Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getPhaseMapDay(junctionID, map_id, phase_no);
+            
+            int phase_map_id = junctionPlanDetail.get("phase_map_id");
+            int phase_id = junctionPlanDetail.get("phase_id");
+            int order_no = junctionPlanDetail.get("order_no");
+            for (int i = (firstStartDataPosition + 6)+1; i <= (firstStartDataPosition + 18); i++) 
+            {
+                if (extraByte == "") {
+                    extraByte = extraByte + dataToProcess[i];
+                } else {
+                    extraByte = extraByte + " " + dataToProcess[i];
+                }
+            }
+//  for (int i = (firstStartDataPosition + 6)+1; i <= (firstStartDataPosition + 17); i++) 
+//            {
+//                if (extraByte == "") {
+//                    extraByte = extraByte + dataToProcess[i];
+//                } else {
+//                    extraByte = extraByte + " " + dataToProcess[i];
+//                }
+//            }
+            
+            responseVal = responseVal + " " + map_id + " " +phase_id+ " " +phase_map_id+ " " +order_no+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            
+            
+        } catch (Exception e) {
+            System.out.println("Error - clientResponder - " + e);
+        }
+
+        return responseVal;
+    }
+    
 }

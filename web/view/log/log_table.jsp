@@ -96,10 +96,9 @@
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">
                                                             ${lowerLimit - noOfRowsTraversed + loopCounter.count}
                                                             <input type="hidden" id="log_table_id${loopCounter.count}" value="${list.log_table_id}">
-                                                            <input type="hidden" id="revision_no${loopCounter.count}" value="${list.revision_no}">
                                                         </td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.send_data}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.recieved_data}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.r_data}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.severity_case}
                                                             <input type="hidden" id="severity_case_id${loopCounter.count}" value="${list.severity_case_id}">
                                                         </td>

@@ -191,7 +191,7 @@ public class SeverityCaseModel {
             if (rowsAffected > 0) {
                  pstmt.close();
                     pstmt = connection.prepareStatement(Query);
-                    pstmt.setInt(1, (junction_id + 1));
+                    pstmt.setInt(1, severityCase.getSeverity_case_id());
                     pstmt.setInt(2, severityCase.getSeverity_level_id());
                     pstmt.setString(3, severityCase.getSeverity_case());
                     pstmt.setString(4, severityCase.getRemark());

@@ -11,6 +11,7 @@ import com.ts.tcpServer.*;
 import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.KatangaInfo;
+import com.ts.junction.tableClasses.LabourChowkInfo;
 import com.ts.junction.tableClasses.MadanMahalInfo;
 import com.ts.junction.tableClasses.PlanInfo;
 import com.ts.junction.tableClasses.RanitalInfo;
@@ -62,6 +63,7 @@ public class Async extends HttpServlet
     private BloomChowkInfo bloomChowkInfoRefreshList;
     private MadanMahalInfo madanMahalInfoRefreshList;
     private BandariyaTirahaInfo bandariyaTirahaInfoRefreshList;
+    private  LabourChowkInfo labourChowkInfoRefreshList;
     private boolean responseFromModemForRefresh;
     private String ipAddress;
     private String ipPort;
@@ -338,9 +340,18 @@ public class Async extends HttpServlet
         return bandariyaTirahaInfoRefreshList;
     }
 
+ 
+
     public void setBandariyaTirahaInfoRefreshList(BandariyaTirahaInfo bandariyaTirahaInfoRefreshList) {
         this.bandariyaTirahaInfoRefreshList = bandariyaTirahaInfoRefreshList;
     }
+       public LabourChowkInfo getLabourChowkInfoRefreshList() {
+         return labourChowkInfoRefreshList;
+    }
+ public void setLabourChowkInfoRefreshList(LabourChowkInfo labourChowkInfoRefreshList) {
+        this.labourChowkInfoRefreshList =labourChowkInfoRefreshList;
+    }
+  
     
     
 

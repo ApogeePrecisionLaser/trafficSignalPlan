@@ -10,6 +10,7 @@ import com.ts.junction.tableClasses.GohalPurInfo;
 import com.ts.junction.tableClasses.HighCourtInfo;
 import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.KatangaInfo;
+import com.ts.junction.tableClasses.LabourChowkInfo;
 import com.ts.junction.tableClasses.MadanMahalInfo;
 import com.ts.junction.tableClasses.PlanInfo;
 import com.ts.junction.tableClasses.RanitalInfo;
@@ -50,7 +51,8 @@ public class TS_StatusShowerController extends HttpServlet {
     private MadanMahalInfo madanMahalInfoList;
     private GohalPurInfo gohalPurInfoList;
     private ClientResponder clientResponder;
-    private BandariyaTirahaInfo bandariyaTirahaInfoList;
+//    private BandariyaTirahaInfo labourChowkInfoList;
+    private  LabourChowkInfo  labourChowkInfoList;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -60,19 +62,19 @@ public class TS_StatusShowerController extends HttpServlet {
             // for testing
 
             HttpSession session = request.getSession(false);
-        if(session != null){
-            try{
-            String userName = session.getAttribute("userName").toString();
-            if(userName.equals("")){
-                request.getRequestDispatcher("/beforeLoginView").forward(request, response);
-                return;
-            }
-            }catch(Exception e){
-                System.out.println(e);
-                request.getRequestDispatcher("/beforeLoginView").forward(request, response);
-                return;
-            }
-        }
+//        if(session != null){
+//            try{
+//            String userName = session.getAttribute("userName").toString();
+//            if(userName.equals("")){
+//                request.getRequestDispatcher("/beforeLoginView").forward(request, response);
+//                return;
+//            }
+//            }catch(Exception e){
+//                System.out.println(e);
+//                request.getRequestDispatcher("/beforeLoginView").forward(request, response);
+//                return;
+//            }
+//        }
 
             ClientResponderModel clientResponderModel = new ClientResponderModel();
             ServletContext ctx1 = getServletContext();
@@ -139,7 +141,8 @@ public class TS_StatusShowerController extends HttpServlet {
                 this.bloomChowkInfoList = ((BloomChowkInfo) ctx.getAttribute("bloomChowkInfoList"));//ClientResponderWS.getPlanInfoRefreshList();
                 this.madanMahalInfoList = ((MadanMahalInfo) ctx.getAttribute("madanMahalInfoList"));//ClientResponderWS.getPlanInfoRefreshList();
                 this.gohalPurInfoList = ((GohalPurInfo) ctx.getAttribute("gohalPurInfoList"));//ClientResponderWS.getPlanInfoRefreshList();
-                this.bandariyaTirahaInfoList = ((BandariyaTirahaInfo) ctx.getAttribute("bandariyaTirahaInfoList"));//ClientResponderWS.getPlanInfoRefreshList();
+//                this.bandariyaTirahaInfoList = ((BandariyaTirahaInfo) ctx.getAttribute("bandariyaTirahaInfoList"));//ClientResponderWS.getPlanInfoRefreshList();
+                this.labourChowkInfoList = ((LabourChowkInfo) ctx.getAttribute("labourChowkInfoList"));
 //int junction_id1 = this.ranitalInfoList.getJunction_id();
 //                if(current_junction_id == 13){
 //                this.planInfoList = null;
@@ -276,60 +279,180 @@ public class TS_StatusShowerController extends HttpServlet {
                 // end for teen patti
                 
                 //start of bandariya tiraha
+//                if(current_junction_id == 15){
+//                if (this.bandariyaTirahaInfoList != null) {
+//                    boolean responseFromModemForRefresh = this.planInfoList.isResponseFromModemForRefresh();
+//                    //boolean responseFromModemForClearnace = this.planInfoList.isResponseFromModemForClearance();
+//
+//                   // if ((responseFromModemForRefresh == true) || (responseFromModemForClearnace == true)) {
+//                    if ((responseFromModemForRefresh == true)) {
+//                        //if(junction_id1 == 2){
+//                    int functionNo = this.bandariyaTirahaInfoList.getFunction_no();
+//                    int junction_id = this.bandariyaTirahaInfoList.getJunction_id();
+//                    int program_version_no = this.bandariyaTirahaInfoList.getProgram_version_no();
+//                    int fileNo = this.bandariyaTirahaInfoList.getFileNo();
+//                    int activity = this.bandariyaTirahaInfoList.getActivity();
+//                    int side_no = this.bandariyaTirahaInfoList.getSide_no();
+//                    int plan_no = this.bandariyaTirahaInfoList.getPlan_no();
+//                    String mode = this.bandariyaTirahaInfoList.getMode();
+//                    String junctionName = this.bandariyaTirahaInfoList.getJunction_name();
+//                    String sideName = this.bandariyaTirahaInfoList.getSideName();
+//
+//                    String onTime = this.bandariyaTirahaInfoList.getOnTime();
+//                    String offTime = this.bandariyaTirahaInfoList.getOffTime();
+//
+//                    String side1Name = this.bandariyaTirahaInfoList.getSide1Name();
+//                    String side2Name = this.bandariyaTirahaInfoList.getSide2Name();
+//                    String side3Name = this.bandariyaTirahaInfoList.getSide3Name();
+//                    String side4Name = this.bandariyaTirahaInfoList.getSide4Name();
+//                    String side5Name = this.bandariyaTirahaInfoList.getSide5Name();
+//
+//                    int side1Time = this.bandariyaTirahaInfoList.getSide1_time();
+//                    int side2Time = this.bandariyaTirahaInfoList.getSide2_time();
+//                    int side3Time = this.bandariyaTirahaInfoList.getSide3_time();
+//                    int side4Time = this.bandariyaTirahaInfoList.getSide4_time();
+//                    int side1LeftStatus = this.bandariyaTirahaInfoList.getSide1_left_status();
+//                    int side1RightStatus = this.bandariyaTirahaInfoList.getSide1_right_status();
+//                    int side1UpStatus = this.bandariyaTirahaInfoList.getSide1_up_status();
+//                    int side1DownStatus = this.bandariyaTirahaInfoList.getSide1_down_status();
+//                    int side2LeftStatus = this.bandariyaTirahaInfoList.getSide2_left_status();
+//                    int side2RightStatus = this.bandariyaTirahaInfoList.getSide2_right_status();
+//                    int side2UpStatus = this.bandariyaTirahaInfoList.getSide2_up_status();
+//                    int side2DownStatus = this.bandariyaTirahaInfoList.getSide2_down_status();
+//                    int side3LeftStatus = this.bandariyaTirahaInfoList.getSide3_left_status();
+//                    int side3RightStatus = this.bandariyaTirahaInfoList.getSide3_right_status();
+//                    int side3UpStatus = this.bandariyaTirahaInfoList.getSide3_up_status();
+//                    int side3DownStatus = this.bandariyaTirahaInfoList.getSide3_down_status();
+//                    int side4LeftStatus = this.bandariyaTirahaInfoList.getSide4_left_status();
+//                    int side4RightStatus = this.bandariyaTirahaInfoList.getSide4_right_status();
+//                    int side4UpStatus = this.bandariyaTirahaInfoList.getSide4_up_status();
+//                    int side4DownStatus = this.bandariyaTirahaInfoList.getSide4_down_status();
+//
+//                    int juncHr = this.bandariyaTirahaInfoList.getJuncHr();
+//                    int juncMin = this.bandariyaTirahaInfoList.getJuncMin();
+//                    int juncDat = this.bandariyaTirahaInfoList.getJuncDate();
+//                    int juncMonth = this.bandariyaTirahaInfoList.getJuncMonth();
+//                    int juncYear = this.bandariyaTirahaInfoList.getJuncYear();
+//
+//                        String response_data = "junction_id=" + junction_id + "#$" + "program_version_no=" + program_version_no + "#$" + "fileNo=" + fileNo
+//                                + "#$" + "functionNo=" + functionNo + "#$" + "activity=" + activity
+//                                + "#$" + "side_no=" + side_no + "#$" + "plan_no=" + plan_no
+//                                + "#$" + "junctionName=" + junctionName + "#$" + "sideName=" + sideName + "#$" + "onTime=" + onTime + "#$" + "offTime=" + offTime
+//                                + "#$" + "mode=" + mode + "#$" + "side1Name=" + side1Name + "#$" + "side2Name=" + side2Name + "#$" + "side3Name=" + side3Name
+//                                + "#$" + "side4Name=" + side4Name + "#$" + "side5Name=" + side5Name + "#$" + "side1Time=" + side1Time + "#$" + "side2Time=" + side2Time
+//                                + "#$" + "side3Time=" + side3Time + "#$" + "side4Time=" + side4Time + "#$" + "side1LeftStatus=" + side1LeftStatus
+//                                + "#$" + "side1RightStatus=" + side1RightStatus + "#$" + "side1UpStatus=" + side1UpStatus + "#$" + "side1DownStatus=" + side1DownStatus
+//                                + "#$" + "side2LeftStatus=" + side2LeftStatus + "#$" + "side2RightStatus=" + side2RightStatus + "#$" + "side2UpStatus=" + side2UpStatus
+//                                + "#$" + "side2DownStatus=" + side2DownStatus + "#$" + "side3LeftStatus=" + side3LeftStatus + "#$" + "side3RightStatus=" + side3RightStatus
+//                                + "#$" + "side3UpStatus=" + side3UpStatus + "#$" + "side3DownStatus=" + side3DownStatus + "#$" + "side4LeftStatus=" + side4LeftStatus
+//                                + "#$" + "side4RightStatus=" + side4RightStatus + "#$" + "side4UpStatus=" + side4UpStatus + "#$" + "side4DownStatus=" + side4DownStatus
+//                                + "#$" + "juncHr=" + juncHr + "#$" + "juncMin=" + juncMin + "#$" + "juncDat=" + juncDat + "#$" + "juncMonth=" + juncMonth
+//                                + "#$" + "juncYear=" + juncYear;
+//                        jsonObj.put("junction_id", junction_id + "");
+//                        jsonObj.put("program_version_no", program_version_no + "");
+//                        jsonObj.put("fileNo", fileNo + "");
+//                        jsonObj.put("functionNo", functionNo + "");
+//                        jsonObj.put("activity", activity + "");
+//                        jsonObj.put("side_no", side_no + "");
+//                        jsonObj.put("plan_no", plan_no + "");
+//                        jsonObj.put("junctionName", junctionName);
+//                        jsonObj.put("sideName", sideName);
+//                        jsonObj.put("onTime", onTime);
+//                        jsonObj.put("offTime", offTime);
+//                        jsonObj.put("mode", mode);
+//                        jsonObj.put("side1Name", side1Name);
+//                        jsonObj.put("side2Name", side2Name);
+//                        jsonObj.put("side3Name", side3Name);
+//                        jsonObj.put("side4Name", side4Name);
+//                        jsonObj.put("side5Name", side5Name);
+//                        jsonObj.put("side1Time", side1Time + "");
+//                        jsonObj.put("side2Time", side2Time + "");
+//                        jsonObj.put("side3Time", side3Time + "");
+//                        jsonObj.put("side4Time", side4Time + "");
+//                        jsonObj.put("side1LeftStatus", side1LeftStatus + "");
+//                        jsonObj.put("side1RightStatus", side1RightStatus + "");
+//                        jsonObj.put("side1UpStatus", side1UpStatus + "");
+//                        jsonObj.put("side1DownStatus", side1DownStatus + "");
+//                        jsonObj.put("side2LeftStatus", side2LeftStatus + "");
+//                        jsonObj.put("side2RightStatus", side2RightStatus + "");
+//                        jsonObj.put("side2UpStatus", side2UpStatus + "");
+//                        jsonObj.put("side2DownStatus", side2DownStatus + "");
+//                        jsonObj.put("side3LeftStatus", side3LeftStatus + "");
+//                        jsonObj.put("side3RightStatus", side3RightStatus + "");
+//                        jsonObj.put("side3UpStatus", side3UpStatus + "");
+//                        jsonObj.put("side3DownStatus", side3DownStatus + "");
+//                        jsonObj.put("side4LeftStatus", side4LeftStatus + "");
+//                        jsonObj.put("side4RightStatus", side4RightStatus + "");
+//                        jsonObj.put("side4UpStatus", side4UpStatus + "");
+//                        jsonObj.put("side4DownStatus", side4DownStatus + "");
+//                        jsonObj.put("juncHr", juncHr + "");
+//                        jsonObj.put("juncMin", juncMin + "");
+//                        jsonObj.put("juncDat", juncDat + "");
+//                        jsonObj.put("juncMonth", juncMonth + "");
+//                        jsonObj.put("juncYear", juncYear + "");
+//                        out.println(jsonObj);
+//                        out.flush();
+//                    }
+//                } else {
+//                    out.println("");
+//                }
+//                }
+//                //end of bandariya tiraha
+//start of bandariya tiraha
                 if(current_junction_id == 15){
-                if (this.bandariyaTirahaInfoList != null) {
+                if (this.labourChowkInfoList != null) {
                     boolean responseFromModemForRefresh = this.planInfoList.isResponseFromModemForRefresh();
                     //boolean responseFromModemForClearnace = this.planInfoList.isResponseFromModemForClearance();
 
                    // if ((responseFromModemForRefresh == true) || (responseFromModemForClearnace == true)) {
                     if ((responseFromModemForRefresh == true)) {
                         //if(junction_id1 == 2){
-                    int functionNo = this.bandariyaTirahaInfoList.getFunction_no();
-                    int junction_id = this.bandariyaTirahaInfoList.getJunction_id();
-                    int program_version_no = this.bandariyaTirahaInfoList.getProgram_version_no();
-                    int fileNo = this.bandariyaTirahaInfoList.getFileNo();
-                    int activity = this.bandariyaTirahaInfoList.getActivity();
-                    int side_no = this.bandariyaTirahaInfoList.getSide_no();
-                    int plan_no = this.bandariyaTirahaInfoList.getPlan_no();
-                    String mode = this.bandariyaTirahaInfoList.getMode();
-                    String junctionName = this.bandariyaTirahaInfoList.getJunction_name();
-                    String sideName = this.bandariyaTirahaInfoList.getSideName();
+                    int functionNo = this.labourChowkInfoList.getFunction_no();
+                    int junction_id = this.labourChowkInfoList.getJunction_id();
+                    int program_version_no = this.labourChowkInfoList.getProgram_version_no();
+                    int fileNo = this.labourChowkInfoList.getFileNo();
+                    int activity = this.labourChowkInfoList.getActivity();
+                    int side_no = this.labourChowkInfoList.getSide_no();
+                    int plan_no = this.labourChowkInfoList.getPlan_no();
+                    String mode = this.labourChowkInfoList.getMode();
+                    String junctionName = this.labourChowkInfoList.getJunction_name();
+                    String sideName = this.labourChowkInfoList.getSideName();
 
-                    String onTime = this.bandariyaTirahaInfoList.getOnTime();
-                    String offTime = this.bandariyaTirahaInfoList.getOffTime();
+                    String onTime = this.labourChowkInfoList.getOnTime();
+                    String offTime = this.labourChowkInfoList.getOffTime();
 
-                    String side1Name = this.bandariyaTirahaInfoList.getSide1Name();
-                    String side2Name = this.bandariyaTirahaInfoList.getSide2Name();
-                    String side3Name = this.bandariyaTirahaInfoList.getSide3Name();
-                    String side4Name = this.bandariyaTirahaInfoList.getSide4Name();
-                    String side5Name = this.bandariyaTirahaInfoList.getSide5Name();
+                    String side1Name = this.labourChowkInfoList.getSide1Name();
+                    String side2Name = this.labourChowkInfoList.getSide2Name();
+                    String side3Name = this.labourChowkInfoList.getSide3Name();
+                    String side4Name = this.labourChowkInfoList.getSide4Name();
+                    String side5Name = this.labourChowkInfoList.getSide5Name();
 
-                    int side1Time = this.bandariyaTirahaInfoList.getSide1_time();
-                    int side2Time = this.bandariyaTirahaInfoList.getSide2_time();
-                    int side3Time = this.bandariyaTirahaInfoList.getSide3_time();
-                    int side4Time = this.bandariyaTirahaInfoList.getSide4_time();
-                    int side1LeftStatus = this.bandariyaTirahaInfoList.getSide1_left_status();
-                    int side1RightStatus = this.bandariyaTirahaInfoList.getSide1_right_status();
-                    int side1UpStatus = this.bandariyaTirahaInfoList.getSide1_up_status();
-                    int side1DownStatus = this.bandariyaTirahaInfoList.getSide1_down_status();
-                    int side2LeftStatus = this.bandariyaTirahaInfoList.getSide2_left_status();
-                    int side2RightStatus = this.bandariyaTirahaInfoList.getSide2_right_status();
-                    int side2UpStatus = this.bandariyaTirahaInfoList.getSide2_up_status();
-                    int side2DownStatus = this.bandariyaTirahaInfoList.getSide2_down_status();
-                    int side3LeftStatus = this.bandariyaTirahaInfoList.getSide3_left_status();
-                    int side3RightStatus = this.bandariyaTirahaInfoList.getSide3_right_status();
-                    int side3UpStatus = this.bandariyaTirahaInfoList.getSide3_up_status();
-                    int side3DownStatus = this.bandariyaTirahaInfoList.getSide3_down_status();
-                    int side4LeftStatus = this.bandariyaTirahaInfoList.getSide4_left_status();
-                    int side4RightStatus = this.bandariyaTirahaInfoList.getSide4_right_status();
-                    int side4UpStatus = this.bandariyaTirahaInfoList.getSide4_up_status();
-                    int side4DownStatus = this.bandariyaTirahaInfoList.getSide4_down_status();
+                    int side1Time = this.labourChowkInfoList.getSide1_time();
+                    int side2Time = this.labourChowkInfoList.getSide2_time();
+                    int side3Time = this.labourChowkInfoList.getSide3_time();
+                    int side4Time = this.labourChowkInfoList.getSide4_time();
+                    int side1LeftStatus = this.labourChowkInfoList.getSide1_left_status();
+                    int side1RightStatus = this.labourChowkInfoList.getSide1_right_status();
+                    int side1UpStatus = this.labourChowkInfoList.getSide1_up_status();
+                    int side1DownStatus = this.labourChowkInfoList.getSide1_down_status();
+                    int side2LeftStatus = this.labourChowkInfoList.getSide2_left_status();
+                    int side2RightStatus = this.labourChowkInfoList.getSide2_right_status();
+                    int side2UpStatus = this.labourChowkInfoList.getSide2_up_status();
+                    int side2DownStatus = this.labourChowkInfoList.getSide2_down_status();
+                    int side3LeftStatus = this.labourChowkInfoList.getSide3_left_status();
+                    int side3RightStatus = this.labourChowkInfoList.getSide3_right_status();
+                    int side3UpStatus = this.labourChowkInfoList.getSide3_up_status();
+                    int side3DownStatus = this.labourChowkInfoList.getSide3_down_status();
+                    int side4LeftStatus = this.labourChowkInfoList.getSide4_left_status();
+                    int side4RightStatus = this.labourChowkInfoList.getSide4_right_status();
+                    int side4UpStatus = this.labourChowkInfoList.getSide4_up_status();
+                    int side4DownStatus = this.labourChowkInfoList.getSide4_down_status();
 
-                    int juncHr = this.bandariyaTirahaInfoList.getJuncHr();
-                    int juncMin = this.bandariyaTirahaInfoList.getJuncMin();
-                    int juncDat = this.bandariyaTirahaInfoList.getJuncDate();
-                    int juncMonth = this.bandariyaTirahaInfoList.getJuncMonth();
-                    int juncYear = this.bandariyaTirahaInfoList.getJuncYear();
+                    int juncHr = this.labourChowkInfoList.getJuncHr();
+                    int juncMin = this.labourChowkInfoList.getJuncMin();
+                    int juncDat = this.labourChowkInfoList.getJuncDate();
+                    int juncMonth = this.labourChowkInfoList.getJuncMonth();
+                    int juncYear = this.labourChowkInfoList.getJuncYear();
 
                         String response_data = "junction_id=" + junction_id + "#$" + "program_version_no=" + program_version_no + "#$" + "fileNo=" + fileNo
                                 + "#$" + "functionNo=" + functionNo + "#$" + "activity=" + activity
@@ -394,7 +517,8 @@ public class TS_StatusShowerController extends HttpServlet {
                     out.println("");
                 }
                 }
-                //end of bandariya tiraha
+                //end of  Labour Chowk
+
 
                 // start for damohnaka
 
@@ -766,7 +890,7 @@ public class TS_StatusShowerController extends HttpServlet {
                 // end for yatayat
                 // start for katanga
 
-                if(current_junction_id == 4){
+                if(current_junction_id == 3){
                 if (this.katangaInfoList != null) {
                     boolean responseFromModemForRefresh = this.planInfoList.isResponseFromModemForRefresh();
                     //boolean responseFromModemForClearnace = this.planInfoList.isResponseFromModemForClearance();
@@ -1836,7 +1960,8 @@ public class TS_StatusShowerController extends HttpServlet {
                 this.bloomChowkInfoList = ((BloomChowkInfo) ctx.getAttribute("bloomChowkInfoList"));
                 this.madanMahalInfoList = ((MadanMahalInfo) ctx.getAttribute("madanMahalInfoList"));
                 this.gohalPurInfoList = ((GohalPurInfo) ctx.getAttribute("gohalPurInfoList"));
-                this.bandariyaTirahaInfoList = ((BandariyaTirahaInfo) ctx.getAttribute("bandariyaTirahaInfoList"));
+//                this.labourChowkInfoList = ((BandariyaTirahaInfo) ctx.getAttribute("bandariyaTirahaInfoList"));
+                    this.labourChowkInfoList = ((LabourChowkInfo) ctx.getAttribute("labourChowkInfoList"));
                 //int junction_id1 = this.planInfoList.getJunction_id();
                 if(a == 11){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
@@ -1948,7 +2073,118 @@ public class TS_StatusShowerController extends HttpServlet {
                     return;
                 }
                 }
-                
+                ////////////// Dhmoh naka
+                 if(a == 2){
+                //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
+                if (this.planInfoList != null) {
+                    int functionNo = this.damohNakaInfoList.getFunction_no();
+                    int junction_id = this.damohNakaInfoList.getJunction_id();
+                    int program_version_no = this.damohNakaInfoList.getProgram_version_no();
+                    int fileNo = this.damohNakaInfoList.getFileNo();
+                    int activity = this.damohNakaInfoList.getActivity();
+                    int side_no = this.damohNakaInfoList.getSide_no();
+                    int plan_no = this.damohNakaInfoList.getPlan_no();
+                    String mode = this.damohNakaInfoList.getMode();
+                    String junctionName = this.damohNakaInfoList.getJunction_name();
+                    String sideName = this.damohNakaInfoList.getSideName();
+
+                    String onTime = this.damohNakaInfoList.getOnTime();
+                    String offTime = this.damohNakaInfoList.getOffTime();
+
+                    String side1Name = this.damohNakaInfoList.getSide1Name();
+                    String side2Name = this.damohNakaInfoList.getSide2Name();
+                    String side3Name = this.damohNakaInfoList.getSide3Name();
+                    String side4Name = this.damohNakaInfoList.getSide4Name();
+                    String side5Name = this.damohNakaInfoList.getSide5Name();
+
+                    int side1Time = this.damohNakaInfoList.getSide1_time();
+                    int side2Time = this.damohNakaInfoList.getSide2_time();
+                    int side3Time = this.damohNakaInfoList.getSide3_time();
+                    int side4Time = this.damohNakaInfoList.getSide4_time();
+                    int side1LeftStatus = this.damohNakaInfoList.getSide1_left_status();
+                    int side1RightStatus = this.damohNakaInfoList.getSide1_right_status();
+                    int side1UpStatus = this.damohNakaInfoList.getSide1_up_status();
+                    int side1DownStatus = this.damohNakaInfoList.getSide1_down_status();
+                    int side2LeftStatus = this.damohNakaInfoList.getSide2_left_status();
+                    int side2RightStatus = this.damohNakaInfoList.getSide2_right_status();
+                    int side2UpStatus = this.damohNakaInfoList.getSide2_up_status();
+                    int side2DownStatus = this.damohNakaInfoList.getSide2_down_status();
+                    int side3LeftStatus = this.damohNakaInfoList.getSide3_left_status();
+                    int side3RightStatus = this.damohNakaInfoList.getSide3_right_status();
+                    int side3UpStatus = this.damohNakaInfoList.getSide3_up_status();
+                    int side3DownStatus = this.damohNakaInfoList.getSide3_down_status();
+                    int side4LeftStatus = this.damohNakaInfoList.getSide4_left_status();
+                    int side4RightStatus = this.damohNakaInfoList.getSide4_right_status();
+                    int side4UpStatus = this.damohNakaInfoList.getSide4_up_status();
+                    int side4DownStatus = this.damohNakaInfoList.getSide4_down_status();
+
+                    int juncHr = this.damohNakaInfoList.getJuncHr();
+                    int juncMin = this.damohNakaInfoList.getJuncMin();
+                    int juncDat = this.damohNakaInfoList.getJuncDate();
+                    int juncMonth = this.damohNakaInfoList.getJuncMonth();
+                    int juncYear = this.damohNakaInfoList.getJuncYear();
+
+                    request.setAttribute("juncHr", juncHr);
+                    request.setAttribute("juncMin", juncMin);
+                    request.setAttribute("juncDat", juncDat);
+                    request.setAttribute("juncMonth", juncMonth);
+                    request.setAttribute("juncYear", juncYear);
+
+                    request.setAttribute("functionNo", Integer.valueOf(functionNo));
+                    request.setAttribute("junctionId", Integer.valueOf(junction_id));
+                    request.setAttribute("program_version_no", Integer.valueOf(program_version_no));
+                    request.setAttribute("fileNo", Integer.valueOf(fileNo));
+                    request.setAttribute("junctionName", junctionName);
+                    request.setAttribute("activity", activity);
+                    request.setAttribute("sideNo", Integer.valueOf(side_no));
+                    request.setAttribute("sideName", sideName);
+                    request.setAttribute("side1Name", side1Name);
+                    request.setAttribute("side2Name", side2Name);
+                    request.setAttribute("side3Name", side3Name);
+                    request.setAttribute("side4Name", side4Name);
+                    request.setAttribute("side5Name", side5Name);
+
+                    request.setAttribute("onTime", onTime);
+                    request.setAttribute("offTime", offTime);
+                    request.setAttribute("plan_no", plan_no);
+                    request.setAttribute("mode", mode);
+
+                    request.setAttribute("side1Time", Integer.valueOf(side1Time));
+                    request.setAttribute("side2Time", Integer.valueOf(side2Time));
+                    request.setAttribute("side3Time", Integer.valueOf(side3Time));
+                    request.setAttribute("side4Time", Integer.valueOf(side4Time));
+                    request.setAttribute("side1LeftStatus", Integer.valueOf(side1LeftStatus));
+                    request.setAttribute("side1RightStatus", Integer.valueOf(side1RightStatus));
+                    request.setAttribute("side1UpStatus", Integer.valueOf(side1UpStatus));
+                    request.setAttribute("side1DownStatus", Integer.valueOf(side1DownStatus));
+                    request.setAttribute("side2LeftStatus", Integer.valueOf(side2LeftStatus));
+                    request.setAttribute("side2RightStatus", Integer.valueOf(side2RightStatus));
+                    request.setAttribute("side2UpStatus", Integer.valueOf(side2UpStatus));
+                    request.setAttribute("side2DownStatus", Integer.valueOf(side2DownStatus));
+                    request.setAttribute("side3LeftStatus", Integer.valueOf(side3LeftStatus));
+                    request.setAttribute("side3RightStatus", Integer.valueOf(side3RightStatus));
+                    request.setAttribute("side3UpStatus", Integer.valueOf(side3UpStatus));
+                    request.setAttribute("side3DownStatus", Integer.valueOf(side3DownStatus));
+                    request.setAttribute("side4LeftStatus", Integer.valueOf(side4LeftStatus));
+                    request.setAttribute("side4RightStatus", Integer.valueOf(side4RightStatus));
+                    request.setAttribute("side4UpStatus", Integer.valueOf(side4UpStatus));
+                    request.setAttribute("side4DownStatus", Integer.valueOf(side4DownStatus));
+                    request.setAttribute("side4DownStatus", Integer.valueOf(side4DownStatus));
+                    if(map_junction_id!=""){
+                     request.getRequestDispatcher("/view/general/showMapOnTrafficSignal.jsp").forward(request, response);
+                    }else{
+                    request.getRequestDispatcher("ts_statusShower_view").forward(request, response);
+                    }
+                    return;
+                } else {
+                    String jSON_format = "Oops... No junction is active right now.";
+
+                    request.setAttribute("message", jSON_format);
+                    request.getRequestDispatcher("errorView").forward(request, response);
+                    return;
+                }
+                }
+                //////end of dhmoh naka
                 if(a == 11){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
                 if (this.planInfoList != null) {
@@ -2061,53 +2297,53 @@ public class TS_StatusShowerController extends HttpServlet {
                 }
                 if(a == 15){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
-                if (this.bandariyaTirahaInfoList != null) {
-                    int functionNo = this.bandariyaTirahaInfoList.getFunction_no();
-                    int junction_id = this.bandariyaTirahaInfoList.getJunction_id();
-                    int program_version_no = this.bandariyaTirahaInfoList.getProgram_version_no();
-                    int fileNo = this.bandariyaTirahaInfoList.getFileNo();
-                    int activity = this.bandariyaTirahaInfoList.getActivity();
-                    int side_no = this.bandariyaTirahaInfoList.getSide_no();
-                    int plan_no = this.bandariyaTirahaInfoList.getPlan_no();
-                    String mode = this.bandariyaTirahaInfoList.getMode();
-                    String junctionName = this.bandariyaTirahaInfoList.getJunction_name();
-                    String sideName = this.bandariyaTirahaInfoList.getSideName();
+                if (this.labourChowkInfoList != null) {
+                    int functionNo = this.labourChowkInfoList.getFunction_no();
+                    int junction_id = this.labourChowkInfoList.getJunction_id();
+                    int program_version_no = this.labourChowkInfoList.getProgram_version_no();
+                    int fileNo = this.labourChowkInfoList.getFileNo();
+                    int activity = this.labourChowkInfoList.getActivity();
+                    int side_no = this.labourChowkInfoList.getSide_no();
+                    int plan_no = this.labourChowkInfoList.getPlan_no();
+                    String mode = this.labourChowkInfoList.getMode();
+                    String junctionName = this.labourChowkInfoList.getJunction_name();
+                    String sideName = this.labourChowkInfoList.getSideName();
 
-                    String onTime = this.bandariyaTirahaInfoList.getOnTime();
-                    String offTime = this.bandariyaTirahaInfoList.getOffTime();
+                    String onTime = this.labourChowkInfoList.getOnTime();
+                    String offTime = this.labourChowkInfoList.getOffTime();
 
-                    String side1Name = this.bandariyaTirahaInfoList.getSide1Name();
-                    String side2Name = this.bandariyaTirahaInfoList.getSide2Name();
-                    String side3Name = this.bandariyaTirahaInfoList.getSide3Name();
-                    String side4Name = this.bandariyaTirahaInfoList.getSide4Name();
-                    String side5Name = this.bandariyaTirahaInfoList.getSide5Name();
+                    String side1Name = this.labourChowkInfoList.getSide1Name();
+                    String side2Name = this.labourChowkInfoList.getSide2Name();
+                    String side3Name = this.labourChowkInfoList.getSide3Name();
+                    String side4Name = this.labourChowkInfoList.getSide4Name();
+                    String side5Name = this.labourChowkInfoList.getSide5Name();
 
-                    int side1Time = this.bandariyaTirahaInfoList.getSide1_time();
-                    int side2Time = this.bandariyaTirahaInfoList.getSide2_time();
-                    int side3Time = this.bandariyaTirahaInfoList.getSide3_time();
-                    int side4Time = this.bandariyaTirahaInfoList.getSide4_time();
-                    int side1LeftStatus = this.bandariyaTirahaInfoList.getSide1_left_status();
-                    int side1RightStatus = this.bandariyaTirahaInfoList.getSide1_right_status();
-                    int side1UpStatus = this.bandariyaTirahaInfoList.getSide1_up_status();
-                    int side1DownStatus = this.bandariyaTirahaInfoList.getSide1_down_status();
-                    int side2LeftStatus = this.bandariyaTirahaInfoList.getSide2_left_status();
-                    int side2RightStatus = this.bandariyaTirahaInfoList.getSide2_right_status();
-                    int side2UpStatus = this.bandariyaTirahaInfoList.getSide2_up_status();
-                    int side2DownStatus = this.bandariyaTirahaInfoList.getSide2_down_status();
-                    int side3LeftStatus = this.bandariyaTirahaInfoList.getSide3_left_status();
-                    int side3RightStatus = this.bandariyaTirahaInfoList.getSide3_right_status();
-                    int side3UpStatus = this.bandariyaTirahaInfoList.getSide3_up_status();
-                    int side3DownStatus = this.bandariyaTirahaInfoList.getSide3_down_status();
-                    int side4LeftStatus = this.bandariyaTirahaInfoList.getSide4_left_status();
-                    int side4RightStatus = this.bandariyaTirahaInfoList.getSide4_right_status();
-                    int side4UpStatus = this.bandariyaTirahaInfoList.getSide4_up_status();
-                    int side4DownStatus = this.bandariyaTirahaInfoList.getSide4_down_status();
+                    int side1Time = this.labourChowkInfoList.getSide1_time();
+                    int side2Time = this.labourChowkInfoList.getSide2_time();
+                    int side3Time = this.labourChowkInfoList.getSide3_time();
+                    int side4Time = this.labourChowkInfoList.getSide4_time();
+                    int side1LeftStatus = this.labourChowkInfoList.getSide1_left_status();
+                    int side1RightStatus = this.labourChowkInfoList.getSide1_right_status();
+                    int side1UpStatus = this.labourChowkInfoList.getSide1_up_status();
+                    int side1DownStatus = this.labourChowkInfoList.getSide1_down_status();
+                    int side2LeftStatus = this.labourChowkInfoList.getSide2_left_status();
+                    int side2RightStatus = this.labourChowkInfoList.getSide2_right_status();
+                    int side2UpStatus = this.labourChowkInfoList.getSide2_up_status();
+                    int side2DownStatus = this.labourChowkInfoList.getSide2_down_status();
+                    int side3LeftStatus = this.labourChowkInfoList.getSide3_left_status();
+                    int side3RightStatus = this.labourChowkInfoList.getSide3_right_status();
+                    int side3UpStatus = this.labourChowkInfoList.getSide3_up_status();
+                    int side3DownStatus = this.labourChowkInfoList.getSide3_down_status();
+                    int side4LeftStatus = this.labourChowkInfoList.getSide4_left_status();
+                    int side4RightStatus = this.labourChowkInfoList.getSide4_right_status();
+                    int side4UpStatus = this.labourChowkInfoList.getSide4_up_status();
+                    int side4DownStatus = this.labourChowkInfoList.getSide4_down_status();
 
-                    int juncHr = this.bandariyaTirahaInfoList.getJuncHr();
-                    int juncMin = this.bandariyaTirahaInfoList.getJuncMin();
-                    int juncDat = this.bandariyaTirahaInfoList.getJuncDate();
-                    int juncMonth = this.bandariyaTirahaInfoList.getJuncMonth();
-                    int juncYear = this.bandariyaTirahaInfoList.getJuncYear();
+                    int juncHr = this.labourChowkInfoList.getJuncHr();
+                    int juncMin = this.labourChowkInfoList.getJuncMin();
+                    int juncDat = this.labourChowkInfoList.getJuncDate();
+                    int juncMonth = this.labourChowkInfoList.getJuncMonth();
+                    int juncYear = this.labourChowkInfoList.getJuncYear();
 
                     request.setAttribute("juncHr", juncHr);
                     request.setAttribute("juncMin", juncMin);
@@ -2391,7 +2627,7 @@ public class TS_StatusShowerController extends HttpServlet {
                     return;
                 }
                 }
-                if(a == 4){
+                if(a == 3){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
                 if (this.katangaInfoList != null) {
                     int functionNo = this.katangaInfoList.getFunction_no();

@@ -13,7 +13,7 @@ public class LogTable {
     
     int log_table_id;
     String send_data;
-    String recieved_data;
+    String r_data;
     int severity_case_id;
     String severity_case;
     String sms_sent_status;
@@ -41,13 +41,15 @@ public class LogTable {
         this.send_data = send_data;
     }
 
-    public String getRecieve_data() {
-        return recieved_data;
+    public String getR_data() {
+        return r_data;
     }
 
-    public void setRecieve_data(String recieve_data) {
-        this.recieved_data = recieve_data;
+    public void setR_data(String r_data) {
+        this.r_data = r_data;
     }
+
+    
 
     public int getSeverity_case_id() {
         return severity_case_id;

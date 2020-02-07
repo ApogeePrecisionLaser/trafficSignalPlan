@@ -94,7 +94,7 @@ public class LogTableController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
-        request.setAttribute("severity_case", list1);
+        request.setAttribute("log_table", list1);
         request.setAttribute("message", logTableModel.getMessage());
         request.setAttribute("msgBgColor", logTableModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

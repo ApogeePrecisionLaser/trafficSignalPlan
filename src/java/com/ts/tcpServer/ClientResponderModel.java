@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServlet;
  * @author Shruti
  */
 public class ClientResponderModel extends HttpServlet {
+    
 
     private Connection connection;
     private String driverClass;
@@ -837,7 +838,7 @@ public class ClientResponderModel extends HttpServlet {
         int noOfPlans = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT COUNT(*) FROM junction_plan_map WHERE junction_id= ? AND date_id IS NOT NULL AND active='Y'");
+            pstmt = connection.prepareStatement(" SELECT COUNT(Distinct date_id) FROM junction_plan_map WHERE junction_id= ? AND date_id IS NOT NULL AND active='Y'");
             pstmt.setInt(1, junction_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
@@ -853,7 +854,7 @@ public class ClientResponderModel extends HttpServlet {
         int noOfPlans = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT COUNT(*) FROM junction_plan_map WHERE junction_id= ? AND day_id IS NOT NULL AND active='Y'");
+            pstmt = connection.prepareStatement(" SELECT COUNT(Distinct day_id) FROM junction_plan_map WHERE junction_id= ? AND day_id IS NOT NULL AND active='Y'");
             pstmt.setInt(1, junction_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
@@ -905,15 +906,15 @@ public class ClientResponderModel extends HttpServlet {
         return fromDate;
     }
     
-    public String getDay(int junction_id, int order_no) {
+    public String getDay(int junction_id, int order_no, int day_id) {
         String day = "";
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(" SELECT d.day FROM junction_plan_map jp,day_detail d "
                     + "WHERE jp.day_id = d.day_detail_id AND jp.junction_id= ? AND jp.day_id IS NOT NULL "
-                    + "AND jp.order_no = ? AND jp.active='Y' AND d.active='Y'");
+                    + "AND jp.active='Y' AND d.active='Y' AND jp.day_id = ?");
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, order_no);
+            pstmt.setInt(2, day_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             day = rset.getString(1);
@@ -929,14 +930,21 @@ public class ClientResponderModel extends HttpServlet {
         int i = 1;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT jp.day_id FROM junction_plan_map jp,day_detail d "
+            pstmt = connection.prepareStatement(" SELECT distinct jp.day_id FROM junction_plan_map jp,day_detail d "
                     + "WHERE jp.day_id = d.day_detail_id AND jp.junction_id= ? AND jp.day_id IS NOT NULL "
-                    + "AND jp.order_no = ? AND jp.active='Y' AND d.active='Y' order by jp.order_no" );
+                    + "AND jp.active='Y' AND d.active='Y' " );
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, order_no);
             ResultSet rset = pstmt.executeQuery();
-            rset.next();
+            int j = 1;
+            while(rset.next()){
+                if(order_no == j) {
                     day = rset.getInt(1);
+                    break;
+                } else {
+                    j++;
+                }
+            }
+                    
                
             
             System.out.println(day);
@@ -964,15 +972,15 @@ public class ClientResponderModel extends HttpServlet {
         return day;
     }
     
-    public int getNoOfPlanInDate(int junction_id, int order_no) {
+    public int getNoOfPlanInDate(int junction_id, int order_no, int date_id) {
         int planNo = 0;
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(" SELECT count(plan_id) FROM junction_plan_map jp,date_detail d "
                     + "WHERE jp.date_id = d.date_detail_id AND jp.junction_id= ? AND jp.date_id IS NOT NULL "
-                    + "AND jp.order_no = ? AND jp.active='Y'");
+                    + "AND jp.active='Y' AND jp.date_id=?");
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, order_no);
+            pstmt.setInt(2, date_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             planNo = Integer.parseInt(rset.getString(1));
@@ -994,7 +1002,7 @@ public class ClientResponderModel extends HttpServlet {
                     + "p.side2_amber_time, p.side3_amber_time, p.side4_amber_time, p.side5_amber_time "
                     + "FROM junction_plan_map jp,plan_details p "
                     + "WHERE jp.plan_id = p.plan_id AND jp.junction_id= ? AND jp.active='Y' "
-                    + "AND p.active='Y'");
+                    + "AND p.active='Y' group by p.plan_id");
             pstmt.setInt(1, junction_id);
             ResultSet rset = pstmt.executeQuery();
             
@@ -1108,15 +1116,47 @@ public class ClientResponderModel extends HttpServlet {
         return planDetail;
     }
     
-    public int getNoOfPlanInDay(int junction_id, int order_no) {
+    public Map<String,Integer> getPhaseMapDay(int junction_id, int map_id, int phase_no) {
+        Map<String,Integer> phaseMapDetail = new HashMap<>();
+        PreparedStatement pstmt;
+        int i = 1;
+        try {
+           
+                 pstmt = connection.prepareStatement(" SELECT pm.phase_map_id, pm. phase_id, pm.order_no "
+                        + "FROM junction_plan_map jp, phase_map pm "
+                        + "WHERE jp.junction_id= ? AND jp.junction_plan_map_id = ? AND pm.active='Y' "
+                        + "AND jp.active='Y' AND jp.junction_plan_map_id = pm.junction_plan_map_id");
+                pstmt.setInt(1, junction_id);
+                pstmt.setInt(2, map_id);
+                ResultSet rset = pstmt.executeQuery();
+
+                while(rset.next()){
+                    if(i == phase_no) {
+                        phaseMapDetail.put("phase_map_id", rset.getInt(1));
+                        phaseMapDetail.put("phase_id", rset.getInt(2));
+                        phaseMapDetail.put("order_no", rset.getInt(3));
+                        break;
+                    } 
+                        i++;               
+                }
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getNoOfPlans() Error: " + e);
+        }
+        return phaseMapDetail;
+    }
+    
+    public int getNoOfPlanInDay(int junction_id, int order_no, int day_id) {
         int planNo = 0;
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(" SELECT count(plan_id) FROM junction_plan_map jp,day_detail d "
                     + "WHERE jp.day_id = d.day_detail_id AND jp.junction_id= ? AND jp.day_id IS NOT NULL "
-                    + "AND jp.order_no = ? AND jp.active='Y' AND d.active='Y'");
+                    + "AND jp.active='Y' AND d.active='Y' AND jp.day_id = ?");
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, order_no);
+            pstmt.setInt(2, day_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             planNo = Integer.parseInt(rset.getString(1));
@@ -1153,6 +1193,24 @@ public class ClientResponderModel extends HttpServlet {
             pstmt = connection.prepareStatement(" SELECT count(distinct plan_id) FROM junction_plan_map jp "
                     + "WHERE jp.junction_id= ? "
                     + "AND jp.active='Y' ");
+            pstmt.setInt(1, junction_id);
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            planNo = Integer.parseInt(rset.getString(1));
+            System.out.println(planNo);
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getNoOfPlans() Error: " + e);
+        }
+        return planNo;
+    }
+    
+    public int getTotalNoOfPhase(int junction_id, int programVersionNoFromDB) {
+        int planNo = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT count(distinct phase_id) FROM junction_plan_map jp , phase_map pm "
+                    + "WHERE jp.junction_plan_map_id = pm.junction_plan_map_id and jp.junction_id= ? "
+                    + "AND jp.active='Y'  AND pm.active='Y' ");
             pstmt.setInt(1, junction_id);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
@@ -1293,11 +1351,12 @@ public class ClientResponderModel extends HttpServlet {
         return result;
     }
 
-    public String getPlanOnTime(int junction_id, int program_version_no, int plan_no) {
+    public String getPlanOnTime(int junction_id, int program_version_no, int plan_id) {
         String onTime = "";
         String query = "SELECT "
-                + "CONCAT(on_time_hour,':',on_time_min) AS onTime FROM plan_info "
-                + "WHERE final_revision='VALID' AND junction_id = " + junction_id + " AND program_version_no= " + program_version_no + " AND plan_no= " + plan_no;
+                + "CONCAT(p.on_time_hour,':',p.on_time_min) AS onTime FROM junction_plan_map jp ,plan_details p "
+                + "WHERE jp.plan_id = p.plan_id AND p.active = 'Y' AND jp.junction_id = " + junction_id
+                + " AND jp.active='Y' AND p.plan_id= " + plan_id ;
         try {
             PreparedStatement pstmt = this.connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
@@ -1380,8 +1439,10 @@ public class ClientResponderModel extends HttpServlet {
     public String getPlanOffTime(int junction_id, int program_version_no, int plan_no) {
         String onTime = "";
         String query = "SELECT "
-                + "CONCAT(off_time_hour,':',off_time_min) AS offTime FROM plan_info "
-                + "WHERE final_revision='VALID' AND junction_id = " + junction_id + " AND program_version_no= " + program_version_no + " AND plan_no= " + plan_no;
+                + "CONCAT(off_time_hour,':',off_time_min) AS offTime FROM junction_plan_map jp ,plan_details p "
+                + "WHERE jp.plan_id = p.plan_id AND p.active = 'Y' AND jp.active='Y' "
+                + "AND junction_id = " + junction_id 
+                + "  AND plan_no= " + plan_no;
         try {
             PreparedStatement pstmt = this.connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
@@ -1632,12 +1693,19 @@ public class ClientResponderModel extends HttpServlet {
         this.db_userPassword = pass;
     }
 
-    public Map<String,String> getPhaseDetail(int junctionID, int planNo, int plan_id, int phaseNo) {
-        String query = "SELECT distinct pd.phase_info_id,pd.phase_no,pd.phase_time, pd.green1,pd.green2,pd.green3,pd.green4,pd.green5, "
+    public Map<String,String> getPhaseDetail(int junctionID, int phaseNo) {
+        /*String query = "SELECT distinct pd.phase_info_id,pd.phase_no,pd.phase_time, pd.green1,pd.green2,pd.green3,pd.green4,pd.green5, "
                        +"pd.side13, pd.side24, pd.side5,pd.left_green,pd.padestrian_info,pd.GPIO,pm.junction_plan_map_id "
                        +"FROM phase_map pm, phase_detail pd, junction_plan_map jp,plan_details p "
                        +"WHERE pm.junction_plan_map_id = jp.junction_plan_map_id and pm.phase_id = pd.phase_info_id and jp.plan_id = p.plan_id "
-                       +"and pm.active = 'Y' and jp.active='Y' and pd.active = 'Y' and p.active='Y' and jp.junction_id = ? and jp.plan_id = ? and p.plan_no = ? order by phase_info_id;";
+                       +"and pm.active = 'Y' and jp.active='Y' and pd.active = 'Y' and p.active='Y' and jp.junction_id = ? order by phase_info_id;";
+        */
+         String query = "SELECT distinct pd.phase_info_id,pd.phase_no,pd.phase_time, pd.green1,pd.green2,pd.green3,pd.green4,pd.green5, "
+                       +"pd.side13, pd.side24, pd.side5,pd.left_green,pd.padestrian_info,pd.GPIO,pm.junction_plan_map_id "
+                       +"FROM phase_map pm, phase_detail pd, junction_plan_map jp, plan_details p "
+                       +"WHERE pm.junction_plan_map_id = jp.junction_plan_map_id and pm.phase_id = pd.phase_info_id and jp.plan_id = p.plan_id "
+                       +"and pm.active = 'Y' and jp.active='Y' and pd.active = 'Y' and jp.junction_id = ? group by phase_info_id;";
+        
         int phaseTime = 0;
         PreparedStatement pstmt;
         ResultSet rset;
@@ -1646,8 +1714,6 @@ public class ClientResponderModel extends HttpServlet {
         try {
             pstmt = connection.prepareStatement(query);
             pstmt.setInt(1, junctionID);
-            pstmt.setInt(2, plan_id);
-            pstmt.setInt(3, planNo);
             rset = pstmt.executeQuery();
             while (rset.next()) {
                 if(i ==  phaseNo) {
@@ -1666,6 +1732,7 @@ public class ClientResponderModel extends HttpServlet {
                     planDetails.put("padestrian_info", rset.getString(13));
                     planDetails.put("GPIO", rset.getString(14));
                     planDetails.put("map_id", rset.getString(15));
+                    break;
                 }
                 i++;
                 
@@ -1692,6 +1759,66 @@ public class ClientResponderModel extends HttpServlet {
             }
         } catch (Exception e) {
             System.out.println("ClientResponderModel getPlanTiming() Error: " + e);
+        }
+        return phaseNo;
+    }
+    
+    public int getPhaseNoMapDate(int junctionID, int date_id, int plan_id) {
+        int phaseNo = 0;
+        String query = "Select count(distinct phase_id) from junction_plan_map jp, phase_map pm " +
+                        "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and jp.date_id = ?";
+        PreparedStatement pstmt;
+        ResultSet rset;
+        try {
+            pstmt = connection.prepareStatement(query);
+            pstmt.setInt(1, plan_id);
+            pstmt.setInt(2, junctionID);
+            pstmt.setInt(3, date_id);
+            rset = pstmt.executeQuery();
+            while (rset.next()) {
+                phaseNo = rset.getInt(1);
+            }
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getPlanTiming() Error: " + e);
+        }
+        return phaseNo;
+    }
+    
+    public int getPhaseNoMapDay(int junctionID, int day_id, int plan_id) {
+        int phaseNo = 0;
+        if(day_id > 0) {
+            String query = "Select count(distinct phase_id) from junction_plan_map jp, phase_map pm " +
+                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and jp.day_id = ?";
+            PreparedStatement pstmt;
+            ResultSet rset;
+            try {
+                pstmt = connection.prepareStatement(query);
+                pstmt.setInt(1, plan_id);
+                pstmt.setInt(2, junctionID);
+                pstmt.setInt(3, day_id);
+                rset = pstmt.executeQuery();
+                while (rset.next()) {
+                    phaseNo = rset.getInt(1);
+                }
+            } catch (Exception e) {
+                System.out.println("ClientResponderModel getPlanTiming() Error: " + e);
+            }
+        } else {
+            String query = "Select count(distinct phase_id) from junction_plan_map jp, phase_map pm " +
+                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and day_id IS NULL and date_id IS NULL";
+            PreparedStatement pstmt;
+            ResultSet rset;
+            try {
+                pstmt = connection.prepareStatement(query);
+                pstmt.setInt(1, plan_id);
+                pstmt.setInt(2, junctionID);
+                rset = pstmt.executeQuery();
+                while (rset.next()) {
+                    phaseNo = rset.getInt(1);
+                }
+            } catch (Exception e) {
+                System.out.println("ClientResponderModel getPlanTiming() Error: " + e);
+            }
         }
         return phaseNo;
     }
@@ -1769,16 +1896,17 @@ public class ClientResponderModel extends HttpServlet {
         return greenTime;
     }
 
-    public List<Integer> getSideValue(int junctionID, int planNo, int phaseNo) {
+    public List<Integer> getSideValue(int junctionID, int planNo, int phaseNo, int map_id) {
         List<Integer> sideValue = new ArrayList<Integer>();
-        String query = "SELECT side13,side24, side5 FROM phase_info where junction_id = ? and plan_no = ? and phase_no = ? and active = 'Y';";
+        String query = "Select jpm.junction_plan_map_id,pm.phase_id,side13,side24, side5,pm.order_no "
+                + "FROM phase_detail pd,junction_plan_map jpm, phase_map pm " 
+                + "Where pd.phase_info_id=pm.phase_id AND jpm.junction_plan_map_id = pm.junction_plan_map_id " 
+                + "AND junction_id = "+junctionID+" AND plan_id = "+planNo+" AND pd.phase_info_id= "+phaseNo+" AND pd.active='Y' AND pm.active='Y' "
+                + "AND jpm.active='Y' AND jpm.junction_plan_map_id = "+map_id;
         PreparedStatement pstmt;
         ResultSet rset;
         try {
             pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1, junctionID);
-            pstmt.setInt(2, planNo);
-            pstmt.setInt(3, phaseNo);
             rset = pstmt.executeQuery();
             while (rset.next()) {
                 int side13 = rset.getInt("side13");
@@ -1857,19 +1985,20 @@ public class ClientResponderModel extends HttpServlet {
         return GPIO;
     }
     
-    public Boolean sideColorMatch(int junctionID, int planNo, int phaseNo, int unsignedSide13, int unsignedSide24, int unsignedSide5) {
+    public Boolean sideColorMatch(int junctionID, int planNo, int phaseNo, int unsignedSide13, int unsignedSide24, int unsignedSide5,int map_id) {
         int side13 = 0;
         int side24 = 0;
         int side5 = 0;
         Boolean match = false;
-        String query = "SELECT side13,side24, side5 FROM phase_info where junction_id = ? and plan_no = ? and phase_no = ? and active = 'Y';";
+        String query = "Select jpm.junction_plan_map_id,pm.phase_id,side13,side24, side5,pm.order_no "
+                + "FROM phase_detail pd,junction_plan_map jpm, phase_map pm " 
+                + "Where pd.phase_info_id=pm.phase_id AND jpm.junction_plan_map_id = pm.junction_plan_map_id " 
+                + "AND junction_id = "+junctionID+" AND plan_id = "+planNo+" AND pd.phase_info_id= "+phaseNo+" AND pd.active='Y' AND pm.active='Y' "
+                + "AND jpm.active='Y' AND jpm.junction_plan_map_id = "+map_id;
         PreparedStatement pstmt;
         ResultSet rset;
         try {
             pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1, junctionID);
-            pstmt.setInt(2, planNo);
-            pstmt.setInt(3, phaseNo);
             rset = pstmt.executeQuery();
             while (rset.next()) {
                 side13 = rset.getInt("side13");
@@ -1892,8 +2021,8 @@ public class ClientResponderModel extends HttpServlet {
     public int[] decToBinary(int n) 
     { 
         // array to store binary number 
-        int[] binaryNum = new int[1000]; 
-        int[] binaryNum1 = new int[1000];
+        int[] binaryNum = new int[100]; 
+        int[] binaryNum1 = new int[100];
         // counter for binary array 
         int i = 0; 
         while (n > 0)  
@@ -1921,7 +2050,7 @@ public class ClientResponderModel extends HttpServlet {
         for (int i = 0; i < binaryNum.length; i++) {
             binary = binary + binaryNum[i];            
         }
-        String sideFirst = binary.substring(0, 3);
+        String sideFirst = binary.substring(0, 4);
         return sideFirst;
     }
     
@@ -1934,7 +2063,7 @@ public class ClientResponderModel extends HttpServlet {
         for (int i = 0; i < binaryNum.length; i++) {
             binary = binary + binaryNum[i];            
         }
-        String sideFirst = binary.substring(4, len-1);
+        String sideFirst = binary.substring(4, 8);
         return sideFirst;
     }
     
@@ -1943,11 +2072,10 @@ public class ClientResponderModel extends HttpServlet {
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(" Select pt.pole_type AS pole_type "
-                    + "from slave_info sl inner join pole_type pt on sl.pole_type_id = pt.pole_type_id " 
-                    + "where junction_id = ? and program_version_no = ? and final_revision = 'VALID' and side_no = ?");
+                    + "from side_detail sl inner join pole_type pt on sl.pole_type_id = pt.pole_type_id " 
+                    + "where junction_id = ? and sl.active = 'Y' and pt.active = 'Y' and side_no = ?");
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, program_version_no);
-            pstmt.setInt(3, side_no);
+            pstmt.setInt(2, side_no);
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             String poleTypeS = rset.getString("pole_type");
@@ -1967,8 +2095,8 @@ public class ClientResponderModel extends HttpServlet {
     
     public Map<String,Object> matchColor(String sendData, String recievedData) { 
         String query = "SELECT severity_case, severity_case_id "
-                + "FROM severity_case inner join log_table on severity_case.severity_case_id = log_table.case_id"
-                + " where send_data = ? and recieve_data = ? and active = 'Y';";
+                + "FROM severity_case "
+                + " where send_data = ? and recieved_data = ? and severity_case.active = 'Y';";
         PreparedStatement pstmt;
         ResultSet rset;
         int rowsReturned = 0;
@@ -1999,7 +2127,7 @@ public class ClientResponderModel extends HttpServlet {
         int rowsReturned = 0;
         if(severity_case_id > 0) {
                 String insertQyery = "INSERT INTO log_table(case_id, date_time, remark, side_detail_id) "
-                + " VALUES (?, ?, ?, ?, ?) ";
+                + " VALUES (?, ?, ?, ?) ";
                 try {
 //                    Date and time
                     SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

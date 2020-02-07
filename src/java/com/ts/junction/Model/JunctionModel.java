@@ -244,7 +244,7 @@ public class JunctionModel extends HttpServlet {
         return state_name;
     }
 
-    public boolean insertRecord(Junction junction) {
+     public boolean insertRecord(Junction junction) {
         String junctionQuery = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                 + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "

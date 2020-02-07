@@ -130,7 +130,7 @@ function makeEditable1()
             document.getElementById(t1id + (lower + i)).bgColor = "yellowgreen";        // set the background color of clicked row to yellow.
         }
 
-        document.getElementById("EDIT").disabled = false;
+        document.getElementById("DELETE").disabled = false;
         if (!document.getElementById("SAVE").disabled) {
             // if save button is already enabled, then make edit, and delete button enabled too.
             document.getElementById("DELETE").disabled = false;
@@ -543,8 +543,8 @@ function makeEditable1()
                                                                 <td align='center' colspan="10">
                                                                     <input class="button" type="submit" id="SAVE" name="task" value="Save" onclick="setStatus(id)" />
                                                                     <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id)"/>
-                                                                    <input class="button" type="button" id="EDIT" name="task" value="Edit" onclick="makeEditable(id)" disabled/>
-                                                                    <input class="button" type="submit" id="DELETE" name="task" value="Delete" onclick="setStatus(id)" disabled>
+                                                                    <input class="button" type="button" id="EDIT" name="task" value="Edit"  disabled/>
+                                                                    <input class="button" type="submit" id="DELETE" name="task" value="Delete" onclick="makeEditable(id)" disabled>
                                                                     <input class="button" type="submit" name="task" id="Save AS New" value="Save AS New" onclick="setStatus(id)" disabled>
                                                             </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
