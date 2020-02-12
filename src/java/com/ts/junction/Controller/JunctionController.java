@@ -205,7 +205,7 @@ public class JunctionController extends HttpServlet {
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("lowerLimit", lowerLimit);
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
-        request.getRequestDispatcher("view/junction/Junction_detail_update.jsp").forward(request, response);
+        request.getRequestDispatcher("view/junction/junction.jsp").forward(request, response);
 
     }
 

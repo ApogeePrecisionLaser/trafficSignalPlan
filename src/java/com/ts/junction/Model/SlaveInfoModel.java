@@ -4,6 +4,7 @@
  */
 package com.ts.junction.Model;
 
+import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.SlaveInfo;
 import java.io.File;
 import java.sql.Connection;
@@ -16,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import javax.servlet.http.HttpServlet;
 import static org.apache.tomcat.util.http.fileupload.FileUtils.deleteDirectory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -220,6 +223,126 @@ public class SlaveInfoModel extends HttpServlet {
         return set;
     }
     
+    public JSONObject showDataBean4()
+    {
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();      
+       // String query = " select position_data1,position_data2 from position where active='Y' order by position_id desc LIMIT 2";
+        String query = " SELECT distinct pole_type FROM pole_type WHERE active = 'Y' ";
+                   
+        try
+        {
+            java.sql.PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next())
+            {
+                JSONObject json1 = new JSONObject();
+                String pole_type1 = rset.getString("pole_type");                               
+                json1.put("pole_type1", pole_type1);                
+                jsonArray.add(json1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in ShowDataBean() :ShiftLoginModel" + e);
+        }
+        json.put("data", jsonArray);
+        json.put("cordinateLength", jsonArray.size());
+        return json;
+    }
+    public JSONObject showDataBean5()
+    {
+        JSONObject json = new JSONObject();
+        JSONArray jsonArray = new JSONArray();      
+       // String query = " select position_data1,position_data2 from position where active='Y' order by position_id desc LIMIT 2";
+        String query = " SELECT distinct position FROM position WHERE active = 'Y' ";
+                   
+        try
+        {
+            java.sql.PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next())
+            {
+                JSONObject json1 = new JSONObject();
+                String position1 = rset.getString("position");                               
+                json1.put("position1", position1);                
+                jsonArray.add(json1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in ShowDataBean() :ShiftLoginModel" + e);
+        }
+        System.out.println("json array size -"+jsonArray);
+        json.put("data", jsonArray);
+        json.put("cordinateLength", jsonArray.size());
+        return json;
+    }
+    //------------------------------------------------------
+     public List<History> showDataBean6() {
+        List<History> list = new ArrayList<History>();
+        String revision="VALID";
+        int rev = 3;
+        String query = "select junction_id,junction_name,no_of_sides,no_of_plans,latitude,longitude,path from junction where final_revision='VALID'";
+        try {
+            java.sql.PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                History bean = new History();
+                bean.setLatitude(rset.getString("latitude"));
+                bean.setLongitude(rset.getString("longitude"));
+                bean.setJunction_name(rset.getString("junction_name"));
+                bean.setNo_of_sides(rset.getInt("no_of_sides"));
+                bean.setNo_of_plans(rset.getInt("no_of_plans"));
+                int junction_id=rset.getInt("junction_id");
+                bean.setJunction_id(junction_id);
+                String active= getactiveJunction(junction_id);
+                if(active.equals("No")){
+                active = "NO";
+                bean.setActive(active);
+                }else{
+                active="YES";    
+                bean.setActive(active);
+                }
+               // bean.setActive(getactiveJunction(junction_id));
+                bean.setPath(rset.getString("path"));
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in ShowDataBean() :ShiftLoginModel" + e);
+        }
+        return list;
+    }
+    //-------------------------------------
+         
+    public String getactiveJunction(int junction_id) {
+        String onTime = "No";
+//        String query = "SELECT "
+//                + "junction_id  FROM time_synchronization_detail "
+//                + "WHERE junction_id = " + junction_id;
+         String query = " SELECT j.junction_id, junction_name, city_name, ip_address, port, j.program_version_no, j.file_no, "
+                    + " IF(synchronization_status is null or synchronization_status = '' ,'N',synchronization_status) AS synchronization_status ,"
+                    + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(application_hr,':',application_min,' ',application_date,'-',application_month,'-',application_year)) AS application_last_time, "
+                    + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(junction_hr,':',junction_min,' ',junction_date,'-',junction_month,'-',junction_year)) AS junction_last_time"
+                    + " FROM  junction AS j LEFT JOIN time_synchronization_detail AS tsd"
+                    + "  ON j.junction_id = tsd.junction_id AND tsd.final_revision='VALID' AND j.program_version_no=tsd.program_version_no "
+                    + ", log_history AS lh, city AS c  "
+                    + " WHERE j.junction_id=lh.junction_id AND j.city_id=c.city_id AND logout_timestamp_time is null AND j.final_revision='VALID' and j.junction_id =" + junction_id
+                    + " ORDER BY login_timestamp_date DESC, login_timestamp_time DESC ";
+
+        try {
+            PreparedStatement pstmt = this.connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            if (rset.next()) {
+                String junct=Integer.toString(rset.getInt("junction_id"));
+                if(junct!=" "){
+                onTime="Yes";
+                }else{
+                onTime="No";
+                }
+                //onTime = Integer.toString(rset.getInt("junction_id"));
+            }
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getPlanOnTime() Error: " + e);
+        }
+        return onTime;
+    }
     public List<String> getSideName(int junction_id, int side_no) {
         PreparedStatement pstmt;
          List<String> set = new ArrayList<String>();
@@ -289,7 +412,7 @@ public class SlaveInfoModel extends HttpServlet {
 
             String imageQuery = "INSERT INTO general_image_details (image_name, image_destination_id) "
                     + " VALUES(?, ?)";
-            String update_slave_query = "UPDATE side_detail SET final_revision = 'EXPIRED' WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+            String update_slave_query = "UPDATE side_detail SET final_revision = 'EXPIRED' WHERE junction_id= ? AND  final_revision='VALID' ";
 
             try {
                 boolean autoCommit = connection.getAutoCommit();
@@ -298,18 +421,18 @@ public class SlaveInfoModel extends HttpServlet {
                     //     for (SlaveInfo slaveInfo : slaveInfoList) {
                     rowsAffected = 0;
                     String pole_type = slaveInfoList.getPole_type();
-                    int pole_id = getPoleTypeId(pole_type);
+                    int pole_type_id = getPoleTypeId(pole_type);
                     String position = slaveInfoList.getPosition();
                     int position_id = getPositionId(position);
                     junction_id = slaveInfoList.getJunction_id();
                     program_version_no = slaveInfoList.getProgram_version_no();
 
                     // if this is first entry of plan_no, there won't be any record to update expire.
-                    boolean firstflag = checkSlaveEntry(junction_id, program_version_no, slaveInfoList.getSide_no());
+                    boolean firstflag = checkSlaveEntry(junction_id, slaveInfoList.getSide_no());
                     if (!firstflag && !isUpdated) {
                         pstmt = connection.prepareStatement(update_slave_query);
                         pstmt.setInt(1, slaveInfoList.getJunction_id());
-                        pstmt.setInt(2, slaveInfoList.getProgram_version_no());
+//                        pstmt.setInt(2, slaveInfoList.getProgram_version_no());
                         rowsAffected = pstmt.executeUpdate();
                         if (rowsAffected > 0) {
                             isUpdated = true;
@@ -325,7 +448,7 @@ public class SlaveInfoModel extends HttpServlet {
                     pstmt.setInt(2, slaveInfoList.getSide_no());
                     pstmt.setInt(3, slaveInfoList.getRevision_no());
                     pstmt.setString(4, slaveInfoList.getSideName());
-                    pstmt.setInt(5, pole_id);
+                    pstmt.setInt(5, pole_type_id);
                     pstmt.setInt(6, position_id);
                     pstmt.setInt(7, slaveInfoList.getPrimary_h_aspect_no());
                     pstmt.setInt(8, slaveInfoList.getPrimary_v_aspect_no());
@@ -552,14 +675,14 @@ public class SlaveInfoModel extends HttpServlet {
         }
         return junction_name;
     }
-    public boolean checkSlaveEntry(int junction_id, int program_version_no, int side_no) {
+    public boolean checkSlaveEntry(int junction_id,  int side_no) {
         int no = 0;
-        String query1 = " SELECT count(*) AS c FROM side_detail WHERE junction_id = ? AND program_version_no= ? AND side_no= ? ";
+        String query1 = " SELECT count(*) AS c FROM side_detail WHERE junction_id = ?  AND side_no= ? ";
         try {
             PreparedStatement pstmt = connection.prepareStatement(query1);
             pstmt.setInt(1, junction_id);
-            pstmt.setInt(2, program_version_no);
-            pstmt.setInt(3, side_no);
+//            pstmt.setInt(2, program_version_no);
+            pstmt.setInt(2, side_no);
             ResultSet rset = pstmt.executeQuery();
             while (rset.next()) {
                 no = rset.getInt(1);
@@ -569,6 +692,24 @@ public class SlaveInfoModel extends HttpServlet {
             System.out.println("SlaveInfoModel getFinalPlanRevisionNo() error" + e);
         }
         return no > 0 ? false : true;
+        
+    }
+        public int deleteRecord(int side_detail_id) {
+        String query = "DELETE FROM side_detail WHERE side_detail_id = "+side_detail_id ;
+        int rowsAffected = 0;
+        try {
+            rowsAffected = connection.prepareStatement(query).executeUpdate();
+        } catch (Exception e) {
+            System.out.println("SlaveInfoModel deleteRecord() Error: " + e);
+        }
+        if (rowsAffected >=0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
     }
 
     public List<SlaveInfo> showData(int junction_id, int program_version_no) {

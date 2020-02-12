@@ -27,6 +27,62 @@
        
     }
     
+    function fillColumns(id) {
+        debugger;
+        var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
+        var noOfColumns = 19;
+        var columnId = id;
+    <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
+        columnId = columnId.substring(3, id.length);
+    <%-- for e.g. suppose id is t1c3 we want characters after t1c i.e beginIndex = 3. --%>
+        var lowerLimit, higherLimit, rowNo = 0;
+        for (var i = 0; i < noOfRowsTraversed; i++) {
+            lowerLimit = i * noOfColumns + 1;       // e.g. 11 = (1 * 10 + 1)
+            higherLimit = (i + 1) * noOfColumns;    // e.g. 20 = ((1 + 1) * 10)
+            rowNo++;
+            if ((columnId >= lowerLimit) && (columnId <= higherLimit))
+                break;
+        }
+        var lower = lowerLimit;
+        setDefaultColor(noOfRowsTraversed, noOfColumns);        // set default color of rows (i.e. of multiple coloumns).
+        var t1id = "t1c";
+        //        alert(rowNo);
+//        document.getElementById("plan_id").value = document.getElementById("phase_info_id" + rowNo).value;
+        document.getElementById("plan_id").value = document.getElementById("plan_id" + rowNo).value;
+        document.getElementById("plan_no").value = document.getElementById(t1id + (lowerLimit + 1)).innerHTML;
+        document.getElementById("on_time_hour").value = document.getElementById(t1id + (lowerLimit + 2)).innerHTML;
+        document.getElementById("on_time_min").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+        document.getElementById("off_time_hour").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
+        document.getElementById("off_time_min").value = document.getElementById(t1id + (lowerLimit + 5)).innerHTML;
+        document.getElementById("mode").value = document.getElementById(t1id + (lowerLimit + 6)).innerHTML;
+        document.getElementById("side1_green_time").value = document.getElementById(t1id + (lowerLimit + 7)).innerHTML;
+        document.getElementById("side2_green_time").value = document.getElementById(t1id + (lowerLimit + 8)).innerHTML;
+        document.getElementById("side3_green_time").value = document.getElementById(t1id + (lowerLimit + 9)).innerHTML;
+        document.getElementById("side4_green_time").value = document.getElementById(t1id + (lowerLimit + 10)).innerHTML;
+        document.getElementById("side5_green_time").value = document.getElementById(t1id + (lowerLimit + 11)).innerHTML;
+        document.getElementById("side1_amber_time").value = document.getElementById(t1id + (lowerLimit + 12)).innerHTML;
+        document.getElementById("side2_amber_time").value = document.getElementById(t1id + (lowerLimit + 13)).innerHTML;
+        document.getElementById("side3_amber_time").value = document.getElementById(t1id + (lowerLimit + 14)).innerHTML;
+        document.getElementById("side4_amber_time").value = document.getElementById(t1id + (lowerLimit + 15)).innerHTML;
+        document.getElementById("side5_amber_time").value = document.getElementById(t1id + (lowerLimit + 16)).innerHTML;
+        document.getElementById("transferred_status").value = document.getElementById(t1id + (lowerLimit + 17)).innerHTML;
+        document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 18)).innerHTML;
+
+
+
+        for (var i = 0; i < noOfColumns; i++) {
+            document.getElementById(t1id + (lower + i)).bgColor = "yellowgreen";        // set the background color of clicked row to yellow.
+        }
+
+        document.getElementById("DELETE").disabled = false;
+        if (!document.getElementById("SAVE").disabled) {
+            // if save button is already enabled, then make edit, and delete button enabled too.
+            document.getElementById("DELETE").disabled = false;
+            document.getElementById("NEW").disabled = false;
+        }
+        $("#message").html('');
+    }
+    
     function setStatus(id) {
                 if (id == 'test') {
                     document.getElementById("clickedButton").value = "test";
@@ -65,7 +121,7 @@
                             <tr>
                                 <td>
                                     <div class="table-responsive" style="width: 990px;max-height: 340px;overflow: auto;margin-bottom: 20px">
-                                        <form name="form1" action="PlanDetailsCont" method="post">
+                                        <form name="form1" action="PlanDetailIdController" method="post">
                                             <table class="reference" border="1" align="center">
                                                 <tr>
                                                     <th class="heading"></th>
@@ -93,8 +149,8 @@
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['plandetails']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
-                                                        <td><input type="radio" name="gender" value="${list.plan_no}" onchange="myFunction('${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}')"><br></td>
-                                                        <td id="t1c${IDGenerator.uniqueID}" align="center">
+                                                        <td><input type="radio" name="plan" value="${list.plan_no}" onkeyup="myFunction('${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}')"><br></td>
+                                                        <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">
                                                             ${lowerLimit - noOfRowsTraversed + loopCounter.count}
 
                                                             <input type="hidden" id="plan_id${loopCounter.count}" name="plan_id${loopCounter.count}" value="${list.plan_id}">
@@ -103,25 +159,25 @@
                                                         </td>
 
 
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.plan_no}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.on_time_hour}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.on_time_min}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.off_time_hour}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.off_time_min}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.mode}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side1_green_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side2_green_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side3_green_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side4_green_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side5_green_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side1_amber_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side2_amber_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side3_amber_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side4_amber_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.side5_amber_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.transferred_status}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.plan_no}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.on_time_hour}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.on_time_min}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.off_time_hour}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.off_time_min}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.mode}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side1_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side2_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side3_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side1_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side2_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side3_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.transferred_status}</td>
 
-                                                        <td id="t1c${IDGenerator.uniqueID}">${list.remark}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.remark}</td>
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>
@@ -179,16 +235,16 @@
                                                             </td>
                                                         </tr>
                                                         <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form2 of table2. --%>
-<!--                                                        <input type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" disabled>
+                                                        <input type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" disabled>
                                                         <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                         <input type="hidden" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                                         <input type="hidden" id="clickedButton" value="">
                                                     </table>
 
-                                                </form>-->
+                                                </form>
                                             </td>
                                         </tr>                                                                                                                                                                                                                                                          
-                        </table>
+<!--                        </table>-->
                     </div>
                 </td>
             </tr>

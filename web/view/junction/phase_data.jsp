@@ -58,6 +58,96 @@
                                     </table> 
                                 </td> 
                             </tr>
+                             <tr>
+                                <td>
+                                    <table id="table1"  align="center" width="500">
+                                        <tr>
+                                            <td>
+                                                <form name="form3" method="POST" action="PhaseDataCont">
+                                                    <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
+                                                        <table border="1" id="table2" align="center" class="reference">
+                                                            <tr>
+                                                                <th class="heading" >S.No.</th>
+                                                                <th class="heading" >Junction Name</th>
+                                                                <th class="heading" >To&From Date</th>
+                                                                <th class="heading" >Day</th>
+                                                                <th class="heading" >Time</th>
+                                                                <th class="heading" >Order No</th>
+                                                                <th class="heading" >Plan No</th>
+                                                                 <th class="heading" >Phase No</th>
+                                                                  <th class="heading" >Side13</th>
+                                                                   <th class="heading" >Side24</th>
+                                                                    <th class="heading" >Padestrian Info</th>
+                                                                      <th class="heading" >Day Name</th>
+                                                                        <th class="heading" >Remark</th>
+                                                                
+                                                            </tr>
+                                                            <c:forEach var="planMap" items="${requestScope['junctionPlanMapPhaseList']}" varStatus="loopCounter">
+                                                                <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.from_date}//${planMap.to_date}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.on_time_hr}:${planMap.on_time_min}-${planMap.off_time_hr}:${planMap.off_time_min}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
+                                                                      <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.phase_no}</td>
+                                                                        <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side13}</td>
+                                                                          <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side24}</td>
+                                                                            <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.padestrian_info}</td>
+                                                                              <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day_name}</td>
+                                                                                <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.remark}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
+                                                                    
+
+                                                                </tr>
+                                                            </c:forEach>
+                                                            <tr>
+                                                                <td align='center' colspan="15">
+                                                                    <c:choose>
+                                                                        <c:when test="${showFirst eq 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='First' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='First'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showPrevious == 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Previous' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Previous'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showNext eq 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Next' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Next'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showLast == 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Last' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Last'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </td>
+                                                            </tr>
+                                                            <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                                            <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                            <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
+                                                            <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                        </table>
+                                                    </DIV>
+                                                </form>
+                                            </td>
+                                        </tr>
                             <tr> 
                                 <td> <div align="center">
                                     <form name="form0" method="POST" action="PhaseDataCont">

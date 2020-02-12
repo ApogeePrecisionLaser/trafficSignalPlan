@@ -215,7 +215,7 @@ public class PhaseDataController extends HttpServlet {
             }
         }
         String searchCommandName = "";
-        List<JunctionPlanMap> list1 = new ArrayList<>();
+        List<PhaseData> list1 = new ArrayList<>();
 
         searchCommandName = request.getParameter("searchParameterName");
 
@@ -285,7 +285,7 @@ public class PhaseDataController extends HttpServlet {
         request.setAttribute("lowerLimit", lowerLimit);
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
 
-        request.setAttribute("junctionPlanMapList", list1);
+        request.setAttribute("junctionPlanMapPhaseList", list1);
 
         request.setAttribute("junction_id", request.getParameter("junction_id"));
         request.setAttribute("no_of_sides", request.getParameter("no_of_sides"));

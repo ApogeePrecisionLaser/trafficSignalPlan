@@ -99,9 +99,9 @@
         //alert(noOfRowsTraversed);
         var noOfColumns = 22;
         var columnId = id;
-        <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
+    <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
         columnId = columnId.substring(3, id.length);
-        <%-- for e.g. suppose id is t1c3 we want characters after t1c i.e beginIndex = 3. --%>
+    <%-- for e.g. suppose id is t1c3 we want characters after t1c i.e beginIndex = 3. --%>
         var lowerLimit, higherLimit, rowNo = 0;
         for (var i = 0; i < noOfRowsTraversed; i++) {
             lowerLimit = i * noOfColumns + 1;       // e.g. 11 = (1 * 10 + 1)
@@ -470,27 +470,82 @@
         var queryString = "junction_id=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
         var url = "JunctionPlanMapCont?" + queryString;
         popupwin = openPopUp(url, "View PlanInfo ", 580, 900);
-        //                var bodyElementRef = null;
-        //                    var currentColor = '';
-        //                    var elementArray = document.getElementsByTagName('BODY');
-        //
-        //                    if ( elementArray.length > 0 )
-        //                    {
-        //                        bodyElementRef = elementArray[0];
-        //                        currentColor = bodyElementRef.style.backgroundColor;
-        //                        bodyElementRef.style.backgroundColor = 'Yellow';
-        //                    }
 
     }
 
- function Openform(junction_id, program_version_no, no_of_sides) {
-        var queryString = "junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
-        
+    function Openform(junction_id, program_version_no, no_of_sides) {
+        debugger;
+        var queryString = "task=SelectedJunctionPlans&junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
+
         var url = "JunctionDetailsUpdate?" + queryString;
-      
-     document.getElementById('form2').style.display = '';
+
+        window.location.href = url;
+        var x = document.getElementById('formPlan');
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+    function Openformphase(junction_plan_map_id, plan_no, junction_name, from_date, to_date, on_time_hr, off_time_hr, on_time_min, off_time_min, day,junction_id) {
+        debugger;
+        var queryString = "task=SelectedJunctionPhase&junction_plan_map_id_selected=" + junction_plan_map_id + "&plan_no=" + plan_no + "&junction_name=" + junction_name + "&from_date=" + from_date + "&to_date=" + to_date + "&on_time_hr=" + on_time_hr + "&off_time_hr=" + off_time_hr + "&on_time_min=" + on_time_min + "&off_time_min=" + off_time_min + "&day=" + day + "&junction_id=" + junction_id;
+
+        var url = "JunctionDetailsUpdate?" + queryString;
+
+        window.location.href = url;
+        var x1 = document.getElementById('formPhase');
+        var x2 = document.getElementById('formPhasedetail');
+        if (x1.style.display === "block") {
+            x1.style.display = "none";
+        } else {
+            x1.style.display = "block";
+        }
+
+        if (x2.style.display === "block") {
+            x2.style.display = "none";
+        } else {
+            x2.style.display = "block";
+        }
+//           document.getElementById('form2').style.display = '';formPhasedetail
+
 
     }
+
+//    function Openform(junction_id, program_version_no, no_of_sides) {
+//        debugger;
+////        var queryString = "task=SelectedJunctionPlans&junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
+////        
+////        var url = "JunctionDetailsUpdate?" + queryString;
+//        $.ajax({url: "JunctionDetailsUpdate?task=SelectedJunctionPlans&junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides,
+//            //type: 'POST',
+//            //  dataType: 'string',
+//            dataType: 'json',
+////                   data: JSON.stringify(json),
+//            //contentType: 'application/json',
+//            //context: document.body,
+//            success: function (list3)
+//            {
+//                alert('Yes');
+//                alert(data);
+//
+//            }
+//        });
+////          window.location.href = url;
+//        var x = document.getElementById('form2');
+//        if (x.style.display === "none") {
+//            x.style.display = "block";
+//        } else {
+//            x.style.display = "none";
+//        }
+////           document.getElementById('form2').style.display = '';
+//
+//
+//    }
+
+
+
+
 </script>
 <html>
     <head>
@@ -500,7 +555,7 @@
         <title>Junction Page</title>
     </head>
     <body>
-        <table align="center" cellpadding="0" cellspacing="0" class="main" >
+        <table align="center" cellpadding="0" cellspacing="0" class="main" border="1" >
             <!--DWLayoutDefaultTable-->
             <tr><td><%@include file="/layout/header.jsp" %></td></tr>
             <tr><td><%@include file="/layout/menu.jsp" %></td></tr>
@@ -519,12 +574,12 @@
                             <tr>
                                 <td>
                                     <div style="width: 990px;max-height: 340px;overflow: auto;margin-bottom: 20px; margin-top: 20px">
-                                        <form name="form1" action="junctionCont" method="post">
+                                        <form name="form1" action="JunctionDetailsUpdate" method="post">
                                             <table name="table1" border="1" width="100%" align="center" class="reference">
                                                 <tr>
                                                     <th class="heading">S.No.</th>
                                                     <th class="heading">Junction ID</th>
-                                                  
+
                                                     <th class="heading">Junction Name</th>
                                                     <th class="heading">Address 1</th>
                                                     <th class="heading">Address 2</th>
@@ -547,7 +602,7 @@
                                                     <th class="heading">Side4 Name</th>
                                                     <th class="heading">Side5 Name</th>
                                                     <th class="heading">File No</th>
-                                                      <th class="heading" >Plan Details</th>
+                                                    <th class="heading" >Plan Details</th>
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['junction']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
@@ -557,10 +612,10 @@
                                                             <input type="hidden" id="program_version_no${loopCounter.count}" value="${list.program_version_no}">
                                                             <input type="hidden" id="remark${loopCounter.count}" value="${list.remark}">
                                                             <input type="hidden" id="no_of_sides${loopCounter.count}" value="${list.no_of_sides}">
-                                                            
+
                                                         </td>
                                                         <td>${list.junction_id}</td>
-                                                      
+
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.junction_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.address1}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.address2}</td>
@@ -583,7 +638,7 @@
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.file_no}</td>
-                                                        <td><input class="button" type='button' name='planDetails' value='Plan Details' onclick="Openform('${list.junction_id}', '${list.program_version_no}', '${list.no_of_sides}')"></td>
+                                                        <td><input class="button" type='button' id='planDetails' name='planDetails' value='Plan Details' onclick="Openform('${list.junction_id}', '${list.program_version_no}', '${list.no_of_sides}')"></td>
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>
@@ -632,7 +687,7 @@
                             <tr>
                                 <td>
                                     <div style="width: 990px;overflow: auto ">
-                                        <form name="form"  action="junctionCont" method="post" onsubmit="return verify()">
+                                        <form name="form2"  action="junctionCont" method="post" onsubmit="return verify()">
                                             <table name="table" class="reference"  border="1" align="center">
                                                 <tr id="message">
                                                     <c:if test="${not empty message}">
@@ -760,8 +815,7 @@
                                                 <tr>
                                                     <td align='center' colspan="8">
                                                         <input class="button" type="submit" id="SAVE" name="task" value="Save" onclick="setStatus(id)" />
-                                                        <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id);
-                                                                setDefaullts();"/>
+                                                        <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id)"/>
                                                         <input class="button" type="button" id="EDIT" name="task" value="Edit" onclick="makeEditable(id)" disabled/>
                                                         <input class="button" type="submit" id="DELETE" name="task" value="Delete" onclick="setStatus(id)" disabled>
                                                         <input class="button1" type="submit" name="task" id="Save AS New" value="Save AS New" onclick="setStatus(id)" disabled>
@@ -779,12 +833,11 @@
                     </DIV>
                 </td>
             </tr>
-            <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
-        </table>
-      
-          <DIV  class="maindiv" id = "form2" style = "display:none">
+            <tr>
+                <td><br>
+                    <DIV  class="maindiv" id = "formPlan" style='block'>
                         <table align="center" width="1000" border="0" cellpadding="0" cellspacing="0" >
-                            <tr><td><table border="4" class="header_table" width="100%">
+                            <tr><td><table border="7" class="header_table" width="100%">
                                         <tr style="font-size:larger ;font-weight: 700;" align="center">
                                             <td>
                                                 Junction Plan Map Table
@@ -794,25 +847,25 @@
 
                             <tr>
                                 <td>
-                                    <table id="table0"  align="center" width="500">
+                                    <table id="table1"  align="center" width="500">
                                         <tr>
                                             <td>
-                                                <form name="form1" method="POST" action="JunctionPlanMapCont">
+                                                <form name="form3" method="POST" action="JunctionDetailsUpdate">
                                                     <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
-                                                        <table border="1" id="table1" align="center" class="reference">
+                                                        <table border="1" id="table3" align="center" class="reference">
                                                             <tr>
                                                                 <th class="heading" >S.No.</th>
                                                                 <th class="heading" >Junction Name</th>
                                                                 <th class="heading" >To&From Date</th>
                                                                 <th class="heading" >Day</th>
-                                                                <th class="heading" >Start Time</th>
+                                                                <th class="heading" >Time</th>
                                                                 <th class="heading" >Order No</th>
                                                                 <th class="heading" >Plan No</th>
-                                                              
-                                                                
+                                                                <th class="heading" >Phase Details</th>
                                                             </tr>
-                                                            <c:forEach var="planMap" items="${requestScope['junctionPlanMapList']}" varStatus="loopCounter">
-                                                                <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
+                                                            <c:forEach var="planMap" items="${requestScope['SelectedJunctionPlans1']}" varStatus="loopCounter">
+                                                                <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+
                                                                     <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
@@ -822,7 +875,8 @@
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
-                                                                   
+                                                                    <td><input class="button" type='button' id='phaseDetails' name='phaseDetails' value='Phase Details' onclick="Openformphase('${planMap.junction_plan_map_id}', '${planMap.plan_no}', '${planMap.junction_name}', '${planMap.from_date}', '${planMap.to_date}', '${planMap.on_time_hr}', '${planMap.on_time_min}', '${planMap.off_time_hr}', '${planMap.off_time_min}', '${planMap.day}', '${planMap.junction_id}')"></td>
+
                                                                 </tr>
                                                             </c:forEach>
                                                             <tr>
@@ -873,9 +927,9 @@
 
                                         <tr>
                                             <td>
-                                                <form name="form2" method="POST" action="JunctionPlanMapCont" onsubmit="return verify()">
+                                                <form name="form4" method="POST" action="JunctionPlanMapCont" onsubmit="return verify()">
 
-                                                    <table border="1"  id="table2" align="center"  class="reference">
+                                                    <table border="1"  id="table4" align="center"  class="reference">
                                                         <tr id="message">
                                                             <c:if test="${not empty message}">
                                                                 <td colspan="8" bgcolor="${msgBgColor}"><b>Result: ${message}</b></td>
@@ -886,19 +940,19 @@
                                                             <th class="heading" >Junction Name</th>
                                                             <td><input class="input" type="text" id="junction_name" name="junction_name" value="${junction_name}" size="50" disabled>
                                                                 <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
-                                                            <input class="input" type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" size="50" ></td>
+                                                                <input class="input" type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" size="50" ></td>
                                                         </tr>
                                                         <tr>
                                                             <th class="heading" >On Time -  Off Time</th>
                                                             <td><input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="40" onkeyup="myFunction()" disabled >
-<!--                                                               <input class="button" type="button" name="ok" id="ok" value="ok" onclick="testSelect(name)"></td>-->
+                                                                <!--                                                               <input class="button" type="button" name="ok" id="ok" value="ok" onclick="testSelect(name)"></td>-->
                                                         </tr>
-                                    
-                                                        
+
+
 
                                                         <tr><th class="heading" >Order No</th>
                                                             <td><input class="input" type="text" id="order_no" name="order_no" value="" maxlength="6" size="50" disabled>
-                                                               </td></tr>
+                                                            </td></tr>
 
 
                                                         <tr> <th class="heading" >Day</th>
@@ -942,7 +996,435 @@
                             </tr>
                         </table>
                     </DIV>
-  
+
+                </td>
+            </tr>
+
+            <tr><td>
+                    <DIV id="body" class="maindiv" id="formPhase">
+                        <table cellspacing="0" id="table9"  align="center" width="100%">
+                            <tr><td><table border="4" class="header_table" width="100%">
+                                        <tr style="font-size:larger ;font-weight: 700;" align="center">
+                                            <td>
+                                                Plan Details
+                                            </td>
+                                        </tr>
+                                    </table> </td> </tr>
+
+                            <tr>
+                                <td>
+                                    <div class="table-responsive" style="width: 990px;max-height: 340px;overflow: auto;margin-bottom: 20px">
+                                        <form name="form1" action="JunctionDetailsUpdate" method="post">
+                                            <table class="reference" border="1" align="center">
+                                                <tr>
+                                                    <th class="heading">S.No.</th>
+                                                    <th class="heading">Plan No</th>
+                                                    <th class="heading">On Time Hour</th>
+                                                    <th class="heading">On Time Min</th>
+                                                    <th class="heading">Off Time Hour</th>
+                                                    <th class="heading">Off Time Min</th>
+                                                    <th class="heading">Mode</th>
+
+                                                    <th class="heading">Green Time Side 1</th>
+                                                    <th class="heading">Green Time Side 2</th>
+                                                    <th class="heading">Green Time Side 3</th>
+                                                    <th class="heading">Green Time Side 4</th>
+                                                    <th class="heading">Green Time Side 5</th>
+                                                    <th class="heading">Amber Time Side 1</th>
+                                                    <th class="heading">Amber Time Side 2</th>
+                                                    <th class="heading">Amber Time Side 3</th>
+                                                    <th class="heading">Amber Time Side 4</th>
+                                                    <th class="heading">Amber Time Side 5</th>
+                                                    <th class="heading">Transferred Status</th>
+
+                                                    <th class="heading">Remark</th>
+                                                </tr>
+                                                <c:forEach var="list" items="${requestScope['plandetailsSelected']}" varStatus="loopCounter">
+                                                    <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+                                                        <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">
+                                                            ${lowerLimit - noOfRowsTraversed + loopCounter.count}
+
+                                                            <input type="hidden" id="plan_id${loopCounter.count}" name="plan_id${loopCounter.count}" value="${list.plan_id}">
+
+                                                            <input type="hidden" name="loopCounter" value="${loopCounter.count}">
+                                                        </td>
+
+
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.plan_no}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.on_time_hour}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.on_time_min}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.off_time_hour}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.off_time_min}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.mode}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side1_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side2_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side3_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_green_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side1_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side2_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side3_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_amber_time}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.transferred_status}</td>
+
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.remark}</td>
+                                                    </tr>
+                                                </c:forEach>
+                                                <tr>
+                                                    <td align='center' colspan="22">
+                                                        <c:choose>
+                                                            <c:when test="${showFirst eq 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='First' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input  class="button" type='submit' name='buttonAction' value='First'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showPrevious == 'false'}">
+                                                                <input  class="button" type='submit' name='buttonAction' value='Previous' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Previous'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showNext eq 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='Next' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Next'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showLast == 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='Last' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Last'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>  </tr>
+                                            </table>
+                                            <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                            <input type="hidden" id="lowerLimit" name="lowerLimit" value="${lowerLimit}">
+                                            <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
+                                        </form></div>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td>
+                                    <div style="overflow: scroll; height: 450px;">
+                                        <form name="form" id="form6"  action="PlanDetailsCont" method="post" onsubmit="return verify()">
+                                            <table name="table8" class="reference"  border="1" align="center" style="width: 80% !important;">
+                                                <tr id="message">
+                                                    <c:if test="${not empty message}">
+                                                        <td colspan="22" bgcolor="${msgBgColor}"><b>Result: ${message}</b></td>
+                                                    </c:if>
+                                                </tr>
+
+                                                <input class="input form-control"  size="15" type="hidden" id="plan_id" name="plan_id" value="" >
+
+                                                <tr align="center" class="incHeight" >
+                                                    <th  class="heading"  align="center" colspan="2">Plan No</th>
+                                                    <td colspan="2">
+                                                        <input class="input form-control"  size="15" type="text" id="plan_no" name="plan_no" value="" size="30" disabled><br>
+                                                    </td>
+
+                                                </tr>
+                                                <tr>
+                                                    <th  class="heading" align="center">On Time Hour</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="on_time_hour" name="on_time_hour" value="" maxlength="16" disabled><br>
+                                                    </td>
+
+                                                    <th  class="heading" align="center">On Time Min</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="on_time_min" name="on_time_min" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+
+
+
+
+                                                    <th  class="heading" align="center">Off Time Hour</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="off_time_hour" name="off_time_hour" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">off Time Min</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="off_time_min" name="off_time_min" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight" >
+                                                    <th  class="heading" align="center" colspan="2">MOde</th>
+                                                    <td colspan="2">
+                                                        <select class="select form-control" id="mode" name="mode" style="height: 20px;width: 80%;margin: 8px 0;display: inline-block;border: 1px solid #ccc;
+                                                                border-radius: 4px;box-sizing: border-box;" disabled>
+                                                            <option value="Signal" >Signal</option>
+                                                            <option value="Blinker" >Blinker</option>
+                                                            <option value="Off" >Off</option>
+                                                        </select><BR>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+                                                    <th  class="heading" align="center">Side1 Green Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side1_green_time" name="side1_green_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">Side2 Green Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side2_green_time" name="side2_green_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+                                                <tr align="center" class="incHeight">
+
+                                                    <th  class="heading" align="center">Side3 Green Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side3_green_time" name="side3_green_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">Side4 Green Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side4_green_time" name="side4_green_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+
+                                                    <th  class="heading" align="center">Side5 Green Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side5_green_time" name="side5_green_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">Side1 Amber Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side1_amber_time" name="side1_amber_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+
+                                                    <th  class="heading" align="center">Side2 Amber Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side2_amber_time" name="side2_amber_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">Side3 Amber Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side3_amber_time" name="side3_amber_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+
+                                                    <th  class="heading" align="center">Side4 Amber Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side4_amber_time" name="side4_amber_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                    <th  class="heading" align="center">Side5 Amber Time</th>
+                                                    <td>
+                                                        <input class="input form-control" size="15" type="text" id="side5_amber_time" name="side5_amber_time" value="" maxlength="16" disabled><br>
+                                                    </td>
+                                                </tr>
+
+                                                <tr align="center" class="incHeight">
+
+                                                    <th  class="heading"  align="center">Transferred Status</th>
+                                                    <td>
+                                                        <input class="input form-control"  type="text" id="transferred_status" name="transferred_status" maxlength="2" disabled><br>
+                                                    </td>
+                                                    <th  class="heading"  align="center" >Remark</th>
+                                                    <td colspan="3">
+                                                        <input class="input form-control"  type="text" id="remark" name="remark" maxlength="30" disabled><br>
+                                                    </td>
+                                                </tr>
+
+
+                                                <tr>
+                                                    <td align='center' colspan="10">
+                                                        <input class="button" type="submit" id="SAVE" name="task" value="Save" onclick="setStatus(id)" />
+                                                        <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id)"/>
+                                                        <input class="button" type="button" id="EDIT" name="task" value="Edit"  disabled/>
+                                                        <input class="button" type="submit" id="DELETE" name="task" value="Delete" onclick="makeEditable(id)" disabled>
+                                                        <input class="button" type="submit" name="task" id="Save AS New" value="Save AS New" onclick="setStatus(id)" disabled>
+                                                </tr>
+                                                <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
+                                                <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                <input type="hidden" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
+                                                <input type="hidden" id="clickedButton" value="">
+                                            </table>
+                                        </form>
+                                    </div>  </td>
+                            </tr>
+                        </table>
+                    </DIV>
+                </td></tr>
+
+
+            <tr><td>
+
+                    <DIV id="body" class="maindiv" id="formPhasedetail">
+                        <table align="center" width="1000" border="0" cellpadding="0" cellspacing="0" >
+                            <tr><td><table border="4" class="header_table" width="100%">
+                                        <tr style="font-size:larger ;font-weight: 700;" align="center">
+                                            <td>
+                                                Junction Phase Data
+                                            </td>
+                                        </tr>
+                                    </table> 
+                                </td> 
+                            </tr>
+                            <tr>
+                                <td>
+
+                                    <table id="table11"  align="center" width="500">
+                                        <tr>
+                                            <td>
+                                                <form name="form11" method="POST" action="JunctionDetailsUpdate">
+                                                    <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
+                                                        <table border="1" id="table12" align="center" class="reference">
+                                                            <tr>
+                                                                <th class="heading" >S.No.</th>
+                                                                <th class="heading" >Junction Name</th>
+                                                                <th class="heading" >To&From Date</th>
+                                                                <th class="heading" >Day</th>
+                                                                <th class="heading" >Time</th>
+                                                                <th class="heading" >Order No</th>
+                                                                <th class="heading" >Plan No</th>
+                                                                <th class="heading" >Phase No</th>
+                                                                <th class="heading" >Side13</th>
+                                                                <th class="heading" >Side24</th>
+                                                                <th class="heading" >Padestrian Info</th>
+                                                                <th class="heading" >Day Name</th>
+                                                                <th class="heading" >Remark</th>
+
+                                                            </tr>
+                                                            <c:forEach var="planMap" items="${requestScope['phasedetailsSelected']}" varStatus="loopCounter">
+                                                                <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.from_date}//${planMap.to_date}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.on_time_hr}:${planMap.on_time_min}-${planMap.off_time_hr}:${planMap.off_time_min}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.phase_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side13}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side24}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.padestrian_info}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day_name}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.remark}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
+
+
+                                                                </tr>
+                                                            </c:forEach>
+                                                            <tr>
+                                                                <td align='center' colspan="15">
+                                                                    <c:choose>
+                                                                        <c:when test="${showFirst eq 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='First' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='First'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showPrevious == 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Previous' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Previous'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showNext eq 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Next' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Next'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                    <c:choose>
+                                                                        <c:when test="${showLast == 'false'}">
+                                                                            <input class="button" type='submit' name='buttonAction' value='Last' disabled>
+                                                                        </c:when>
+                                                                        <c:otherwise>
+                                                                            <input class="button" type='submit' name='buttonAction' value='Last'>
+                                                                        </c:otherwise>
+                                                                    </c:choose>
+                                                                </td>
+                                                            </tr>
+                                                            <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                                            <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                            <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
+                                                            <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                        </table>
+                                                    </DIV>
+                                                </form>
+                                            </td>
+                                        </tr>
+                                        <tr> 
+                                            <td> <div align="center">
+                                                    <form name="form12" method="POST" action="PhaseDataCont">
+                                                        <table align="center" class="heading1" width="600">
+                                                            <tr>
+                                                                <td>Junction<input class="input" type="text" id="searchJunctionName" name="searchJunctionName" value="" size="20" ></td>
+                                                                <td>Day<select name="day" id="day" onchange="disableDate(this.value)">
+                                                                        <option value="0">--select--</option>
+                                                                        <option value="Monday">Monday</option>
+                                                                        <option value="Tuesday">Tuesday</option>
+                                                                        <option value="Wednesday">Wednesday</option>
+                                                                        <option value="Thursday">Thursday</option>
+                                                                        <option value="Friday">Friday</option>
+                                                                        <option value="Saturday">Saturday</option>
+                                                                        <option value="Sunday">Sunday</option></select></td>
+
+                                                                <td>Date<input class="input" type="text" id="date" name="date" value="" maxlength="5" size="20"></td>
+
+                                                                <td>ON&OFF Time<input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="20"></td>
+
+
+                                                                <!--                                                <td><input class="button" type="submit" name="task" id="searchIn" value="Search"></td>
+                                                                                                                <td><input class="button" type="submit" name="task" id="showAllRecords" value="Show All Records"></td>
+                                                                                                                <td><input class="button" type="button" name="task" id="nextPage" value="Next Page" onclick="goToDevice()"></td>
+                                                                                                                <td><input type="button" class="pdf_button" id="viewPdf" name="viewPdf" value="" onclick="displayMapList()"></td>-->
+                                                                <td>Save<input class="button" type="submit" name="task" id="ok" value="OK"></td>
+                                                            </tr>
+                                                            <input type="hidden" name="side_no" value="${side_no}">
+                                                            <input type="hidden" name="no_of_phase" value="${no_of_phase}">
+                                                            <input type="hidden" name="junction_name" value="${junction_name}">
+                                                            <input type="hidden" name="day_select" value="${day_select}">
+                                                            <input type="hidden" name="date_select" value="${date_select}">
+                                                            <input type="hidden" name="on_off_time_select" value="${on_off_time_select}">
+                                                        </table>
+                                                    </form>
+                                                </div>
+
+                                            </td>
+                                        </tr>
+                                        <tr id="mainTable">
+                                            <td>
+                                                <div id="tableDiv" class="divtab"></div>
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </td></tr>
+            <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
+        </table>
+
+
 
     </body>
 </html>

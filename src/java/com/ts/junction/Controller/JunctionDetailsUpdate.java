@@ -5,10 +5,16 @@
 package com.ts.junction.Controller;
 
 import com.ts.junction.Model.JunctionModel;
+import com.ts.junction.Model.JunctionPlanMapModel;
 import com.ts.junction.tableClasses.Junction;
+import com.ts.junction.tableClasses.JunctionPlanMap;
+import com.ts.junction.tableClasses.PhaseData;
+import com.ts.junction.tableClasses.PhaseInfo;
+import com.ts.junction.tableClasses.PlanDetails;
 import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
@@ -16,6 +22,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import org.json.JSONObject;
 
 /**
  *
@@ -27,15 +34,20 @@ public class JunctionDetailsUpdate extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         JunctionModel junctionModel = new JunctionModel();
+        JunctionPlanMapModel junctionPlanMapModel = new JunctionPlanMapModel();
         ServletContext ctx = getServletContext();
         junctionModel.setDriverClass(ctx.getInitParameter("driverClass"));
         junctionModel.setConnectionString(ctx.getInitParameter("connectionString"));
         junctionModel.setDb_userName(ctx.getInitParameter("db_userName"));
         junctionModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
         junctionModel.setConnection();
+
         String task = request.getParameter("task");
         String requester = request.getParameter("requester");
-        String junction_id_selected=request.getParameter("junction_id_selected");
+        List<JunctionPlanMap> list2 = new ArrayList<>();
+        List<PlanDetails> list3 = new ArrayList<>();
+        List<PhaseData> list4 = new ArrayList<>();
+
         try {
             //----- This is only for Vendor key Person JQuery
             String jqstring = request.getParameter("action1");
@@ -152,7 +164,6 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
         }
 
-
         noOfRowsInTable = junctionModel.getNoOfRows();                  // get the number of records (rows) in the table.
 
         try {
@@ -188,6 +199,51 @@ public class JunctionDetailsUpdate extends HttpServlet {
         }
 
         List<Junction> list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay);
+        if (task.equals("SelectedJunctionPlans")) {
+
+            int junction_id_selected = 0;
+            junction_id_selected = Integer.parseInt(request.getParameter("junction_id_selected").trim());
+            if (junction_id_selected != 0) {
+
+                try {
+
+                    list2 = junctionModel.showDataPlanMap(lowerLimit, noOfRowsToDisplay, junction_id_selected);
+
+//                            JSONObject gson = new JSONObject();
+//                     gson.put("list3",list2);
+                    // return;
+                } catch (Exception e) {
+                    System.out.println("\n Error --ClientPersonMapController get JQuery Parameters Part-" + e);
+                }
+
+            } else {
+                System.out.println("junction selected id is 0");
+            }
+        }
+        if (task.equals("SelectedJunctionPhase")) {
+            int junction_id_selected1=0;
+            int junction_plan_map_id_selected = 0;
+            junction_plan_map_id_selected = Integer.parseInt(request.getParameter("junction_plan_map_id_selected").trim());
+            junction_id_selected1 = Integer.parseInt(request.getParameter("junction_id").trim());
+            if (junction_plan_map_id_selected != 0) {
+
+                try {
+
+                    list3 = junctionModel.showDataPlans(lowerLimit, noOfRowsToDisplay, junction_id_selected1);
+                      list4 = junctionModel.showDataPhaseDetails(lowerLimit, noOfRowsToDisplay, junction_plan_map_id_selected);
+
+//                            JSONObject gson = new JSONObject();
+//                     gson.put("list3",list2);
+                    // return;
+                } catch (Exception e) {
+                    System.out.println("\n Error --ClientPersonMapController get JQuery Parameters Part-" + e);
+                }
+
+            } else {
+                System.out.println("junction selected id is 0");
+            }
+        }
+        //  SelectedJunctionPhase
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
 
@@ -201,6 +257,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
         }
 
         request.setAttribute("junction", list1);
+        request.setAttribute("SelectedJunctionPlans1", list2);
+        request.setAttribute("plandetailsSelected", list3);
+          request.setAttribute("phasedetailsSelected", list4);
         request.setAttribute("message", junctionModel.getMessage());
         request.setAttribute("msgBgColor", junctionModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

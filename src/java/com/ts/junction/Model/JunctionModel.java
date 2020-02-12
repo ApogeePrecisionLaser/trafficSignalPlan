@@ -5,6 +5,10 @@
 package com.ts.junction.Model;
 
 import com.ts.junction.tableClasses.Junction;
+import com.ts.junction.tableClasses.JunctionPlanMap;
+import com.ts.junction.tableClasses.PhaseData;
+import com.ts.junction.tableClasses.PhaseInfo;
+import com.ts.junction.tableClasses.PlanDetails;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -537,7 +541,216 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
+     public List<JunctionPlanMap> showDataPlanMap(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected) {
+        List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
+        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        if (lowerLimit == -1) {
+            addQuery = "";
+        }
 
+        String query2 = "SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
+                + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
+                + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
+                + "left join day_detail d on jp.day_id = d.day_detail_id "
+                + "inner join junction j on jp.junction_id = j.junction_id "
+                + "inner join plan_details p on jp.plan_id = p.plan_id "
+                + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and j.junction_id = " + junction_id_selected
+                + addQuery;
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                JunctionPlanMap bean = new JunctionPlanMap();
+                bean.setJunction_plan_map_id(rset.getInt(1));
+                bean.setOrder_no(rset.getInt(2));
+                bean.setFrom_date(rset.getString(3));
+                bean.setTo_date(rset.getString(4));
+                bean.setDay(rset.getString(5));
+                bean.setJunction_name(rset.getString(6));
+                bean.setOn_time_hr(rset.getInt(7));
+                bean.setOn_time_min(rset.getInt(8));
+                bean.setOff_time_hr(rset.getInt(9));
+                bean.setOff_time_min(rset.getInt(10));
+                bean.setPlan_no(rset.getInt(11));
+                bean.setJunction_id(rset.getInt(12));
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+       public String getPlans(int junction_id_selected1) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT plan_id "
+                + " FROM junction_plan_map where active='Y' and junction_id="+junction_id_selected1
+                + " ORDER BY order_no ";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+           
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String plan_id = rset.getString("plan_id");
+              
+                    list.add(plan_id);
+                   
+                }
+            }
+           
+         catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        String plansString="";
+        String plansString1= "";
+        for(int i=0;i<list.size();i++)
+        {
+            plansString=list.get(i);
+            plansString1=plansString1+","+plansString;
+        }
+        String plansString2=plansString1.substring(1);
+        return plansString2;
+       }
+     
+     
+ public List<PlanDetails> showDataPlans(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1) {
+         
+        List<PlanDetails> list = new ArrayList<PlanDetails>();
+         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+          if(lowerLimit == -1)
+            addQuery = "";
+          String plans= getPlans(junction_id_selected1);
+
+       String query2="select plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min,"
+               + " mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time,"
+               + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,"
+               + " transferred_status, remark"
+                     +" from plan_details s"
+                     +" where s.active='Y' and plan_id in("+ plans +") ORDER BY plan_no "
+                     + addQuery;
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                PlanDetails bean = new PlanDetails();
+                bean.setPlan_id(rset.getInt(1));
+                bean.setPlan_no(rset.getInt(2));
+                bean.setOn_time_hour(rset.getInt(3));
+                bean.setOn_time_min(rset.getInt(4));
+                bean.setOff_time_hour(rset.getInt(5));
+                bean.setOff_time_min(rset.getInt(6));
+                bean.setMode(rset.getString(7));
+                bean.setSide1_green_time(rset.getInt(8));
+                bean.setSide2_green_time(rset.getInt(9));
+                bean.setSide3_green_time(rset.getInt(10));
+                bean.setSide4_green_time(rset.getInt(11));
+                bean.setSide5_green_time(rset.getInt(12));
+                bean.setSide1_amber_time(rset.getInt(13));
+                bean.setSide2_amber_time(rset.getInt(14));
+                bean.setSide3_amber_time(rset.getInt(15));
+                bean.setSide4_amber_time(rset.getInt(16));
+                bean.setSide5_amber_time(rset.getInt(17));
+                bean.setTransferred_status(rset.getString(18));
+                bean.setRemark(rset.getString(19));
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+   public String getPhase(int junction_plan_map_id_selected1) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = " SELECT phase_id  FROM phase_map "
+                + " where active='Y' and junction_plan_map_id="+junction_plan_map_id_selected1
+                + " ORDER BY order_no ";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+           
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String phase_id = rset.getString("phase_id");
+              
+                    list.add(phase_id);
+                   
+                }
+            }
+           
+         catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        String phaseString="";
+        String phaseString1= "";
+        for(int i=0;i<list.size();i++)
+        {
+            phaseString=list.get(i);
+            phaseString1=phaseString1+","+phaseString;
+        }
+        String phaseString2=phaseString1.substring(1);
+        return phaseString2;
+       }
+     public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected) {
+        List<PhaseData> list = new ArrayList<PhaseData>();
+        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        if (lowerLimit == -1) {
+            addQuery = "";
+        }
+        String phaseString2=getPhase(junction_plan_map_id_selected);
+
+//       String query2="SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
+//                    + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no " 
+//                    +"FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
+//                    +"left join day_detail d on jp.day_id = d.day_detail_id " 
+//                    +"inner join junction j on jp.junction_id = j.junction_id " 
+//                    +"inner join plan_details p on jp.plan_id = p.plan_id "
+//                    +"where j.final_revision = 'VALID' and p.active = 'Y'  "
+//                    +addQuery;
+         String query2 = " SELECT pd.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dayd.day,j.junction_name,pld.on_time_hour,pld.on_time_min,pld.off_time_hour,pld.off_time_min, "
+                + " pld.plan_no,pd.side13,pd.side24,pd.phase_no,pd.padestrian_info,pd.remark,dayd.day_name "
+                + " from junction j,junction_plan_map jpm,phase_map pm,phase_detail pd ,day_detail dayd,date_detail dd,plan_details pld "
+                + " where pd.phase_info_id=pm.phase_id and pm.junction_plan_map_id=jpm.junction_plan_map_id and jpm.junction_id=j.junction_id "
+                + " and  jpm.plan_id=pld.plan_id and (jpm.day_id=dayd.day_detail_id or jpm.date_id=dd.date_detail_id) "
+                + " and pd.active='Y' and jpm.active='Y' "
+                + " and pld.active='Y' and dayd.active='Y' and dd.active='Y'  and pm.active='Y' and j.final_revision='VALID' and pd.phase_info_id in("+phaseString2+")" 
+                + addQuery;
+         
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                PhaseData bean = new PhaseData();
+//                bean.setJunction_plan_map_id(rset.getInt(1));
+                bean.setPhase_info_id(rset.getInt(1));
+                bean.setOrder_no(rset.getInt(2));
+                bean.setFrom_date(rset.getString(3));
+                bean.setTo_date(rset.getString(4));
+                bean.setDay(rset.getString(5));
+                bean.setJunction_name(rset.getString(6));
+                bean.setOn_time_hr(rset.getInt(7));
+                bean.setOn_time_min(rset.getInt(8));
+                bean.setOff_time_hr(rset.getInt(9));
+                bean.setOff_time_min(rset.getInt(10));
+                bean.setPlan_no(rset.getInt(11));
+
+//                bean.setOrder_no(rset.getInt(2));
+//                bean.setJunction_name(rset.getString(3));
+                bean.setSide13(rset.getInt(12));
+                bean.setSide24(rset.getInt(13));
+                bean.setPhase_no(rset.getInt(14));
+                bean.setPadestrian_info(rset.getString(15));
+                bean.setRemark(rset.getString(16));
+                    
+
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
     public boolean checkImei(String imei_no) {
         boolean result = false;
         String query1 = " SELECT count(*) AS c FROM junction WHERE imei_no = '" + imei_no + "' AND final_revision='VALID'";

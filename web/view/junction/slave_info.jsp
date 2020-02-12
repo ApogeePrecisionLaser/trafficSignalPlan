@@ -16,12 +16,32 @@
 <script type="text/javascript" src="JS/jquery-ui.min.js"></script>
 <script type="text/javascript" language="javascript">
 
-    function verify() {
-        var no_of_sides = document.getElementById("no_of_sides").value;
+//    function verify() {
+//        var no_of_sides = document.getElementById("no_of_sides").value;
+//       // alert(no_of_sides);
+//        if(document.getElementById("clickedButton").value == 'SAVE') {
+//            for(var i = 1; i<= parseInt(no_of_sides); i++) {
+//                var slave_id= $("#slave_id"+i).val();
+//               // alert(slave_id);
+//                if($.trim(slave_id).length == 0) {
+//                    var message = "<td colspan='6' bgcolor='coral'><b>Slave Id is required...</b></td>";
+//                    $("#message").html(message);
+//                    document.getElementById("slave_id"+i).focus();
+//                    return false; // code to stop from submitting the form2.
+//                }
+//            }
+//           // alert(result);
+//           return confirm("Do you want to save slave ids ?");
+//        }
+//    }
+
+  function verify() {
+      var result;
        // alert(no_of_sides);
-        if(document.getElementById("SAVE").value == 'SAVE') {
+        if(document.getElementById("clickedButton").value == 'SAVE') {
+              var no_of_sides = document.getElementById("no_of_sides").value;
             for(var i = 1; i<= parseInt(no_of_sides); i++) {
-                var slave_id= $("#slave_id"+i).val();
+                var slave_id= $("#no_of_sides"+i).val();
                // alert(slave_id);
                 if($.trim(slave_id).length == 0) {
                     var message = "<td colspan='6' bgcolor='coral'><b>Slave Id is required...</b></td>";
@@ -33,8 +53,8 @@
            // alert(result);
            return confirm("Do you want to save slave ids ?");
         }
+         return result;
     }
-
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -42,10 +62,27 @@
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-        <script src="//code.jquery.com/jquery-1.12.4.js"></script>
-        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+       <script src="//code.jquery.com/jquery-1.12.4.js"></script>
+<script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
+<!--        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-        <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
+    
+<script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
+          
+                     
+
+      <script type="text/javascript" language="javascript">
+          function setStatus(id) {
+        if (id == 'SAVE') 
+            document.getElementById("clickedButton").value = "SAVE";
+        else (id === 'DELETE')
+            document.getElementById("clickedButton").value = "DELETE";
+        }
+        function myFuntion(){
+        alert(" ");
+        }
+        
+          </script>
         <style>
             .modal-div {
                     height: 200px;
@@ -64,9 +101,9 @@
             </tr>
             <tr align="center">
                 <td>
-                    <input value="Add Plan" id="add_plan" onclick="addRow('dataTable')" type="button">
+                    <input value="Add Side" id="add_plan" onclick="addRow('dataTable')" type="button">
 
-           <input value="Delete Plan" onclick="deleteRow('dataTable')" type="button">
+<!--           <input value="Delete Side" onclick="deleteRow('dataTable')" type="button">-->
                 </td>
                 
             </tr>
@@ -95,7 +132,7 @@
                                     <th  class="heading">Vehicle Detection</th>
                                     <th  class="heading">Count Down</th>
                                     <th  class="heading">Number of Lane</th>
-                                    <th  class="heading">RLPD</th>
+                                    <th  class="heading">RLVD</th>
                                     <th  class="heading">ANPR</th>
                                     <th  class="heading">PA_System</th>
                                     <th  class="heading">Lattitude</th>
@@ -107,7 +144,7 @@
                                 <c:forEach var="list" items="${requestScope['slaveinfo']}" varStatus="loopCounter">
                                     <tr>
                                         
-                                        <td><input class="input" type="checkbox"  name="chk" id="checkbox${loopCounter.count}"  ></td>
+                                        <td><input class="input" type="checkbox"  name="chk" id="checkbox${loopCounter.count}"  onclick="myFunction()"></td>
                                         <td><input class="input" type="text" name="s_no${loopCounter.count}" id="s_no${loopCounter.count}" size="3" value="${loopCounter.count}" readonly style="background-color: #c3c3c3">
                                         </td>
                                         <td><input class="input" type="text" name="side_no${loopCounter.count}" id="side_no${loopCounter.count}" size="3" value="${list.side_no}"  >
@@ -117,9 +154,10 @@
                                         <input type="hidden" name="s_no_count" id="s_no_count" value="${loopCounter.count}"></td>
                                         <td><input class="input" type="text" name="side_name${loopCounter.count}" id="side_name${loopCounter.count}" value="${list.sideName}" onclick="getSideName(id,${junction_id},${list.side_no})" ></td>
                                         <td><select name="pole_type${loopCounter.count}" id="pole_type${loopCounter.count}">
-                                                <option value="Standard" ${list.pole_type=="Standard"?"selected":""}>Standard</option>
+                                          <option value="Standard" ${list.pole_type=="Standard"?"selected":""}>Standard</option>
                                                 <option value="Cantilever T" ${list.pole_type=="Cantilever T"?"selected":""}>Cantilever T</option>
                                                 <option value="Cantilever L" ${list.pole_type=="Cantilever L"?"selected":""}>Cantilever L</option>
+                                              
                                             </select> 
                                         <td><select name="position${loopCounter.count}" id="position${loopCounter.count}">
                                                 <option value="center" ${list.position=="center"?"selected":""}>center</option>
@@ -169,7 +207,7 @@
                                 </c:forEach>
                             </tbody>
                         </table>
-                        <input class="button" type="submit" id="SAVE" name="task" value="SAVE">
+                        <input class="button" type="submit" id="SAVE" name="task" value="SAVE" onclick="setStatus(id)">
                         <input type="hidden" id="junction_id" name="junction_id" value="${junction_id}">
                         <input type="hidden" id="program_version_no" name="program_version_no" value="${program_version_no}">
                         <input type="hidden" id="no_of_sides" name="no_of_sides" value="${no_of_sides}">
@@ -177,7 +215,7 @@
                 </td>
             </tr>
         </table>
-<div class="modal fade" id="myModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<!--<div class="modal fade" id="myModal" role="dialog" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-dialog-cente">
             <div class="modal-content">
                 <div class="modal-header">
@@ -194,7 +232,7 @@
                 </div>
             </div>
        </div>
-</div> 
+</div> -->
         <script type="text/javascript">
 
 
@@ -288,32 +326,84 @@
                     cell4.appendChild(element2);
 
                     var cell5 = row.insertCell(4);
-                    var modeElement = document.createElement("select");
-                    var poleTypeArray = ["Standard", "Cantilever T", "Cantilever L"];
-                    for (var i = 0; i < poleTypeArray.length; i++) {
-                        var opt = document.createElement("option");
-                        opt.text = poleTypeArray[i];
-                        opt.value = poleTypeArray[i];
-                        modeElement.options.add(opt);
-                    }
-                    modeElement.name = "pole_type" + rowCount;
-                    modeElement.id = "pole_type" + rowCount;
-                    modeElement.value = "";
-                    cell5.appendChild(modeElement);
-
-                    var cell6 = row.insertCell(5);
+                   var modeElement = document.createElement("select");
+                   var poleTypeArray = ["Standard", "Cantilever T", "Cantilever L"];
+                       
+                   $.ajax({url: "slaveInfoCont?task=poleType",
+                   //type: 'POST',
+                   dataType: 'json',
+                   //contentType: 'application/json',
+                   //context: document.body,
+                   success: function(response_data)
+                   {
+                     
+                       data=response_data.data;
+                       
+                       for (var i = 0; i < data.length; i++) {
+                       var opt = document.createElement("option");
+                       opt.text = data[i].pole_type1;
+                       opt.value = data[i].pole_type1;
+                     
+                       modeElement.options.add(opt);
+                     
+                       }
+                                     
+                   }
+               });
+                   
+                   modeElement.name = "pole_type1" + rowCount;
+                   modeElement.id = "pole_type1" + rowCount;
+                   modeElement.value = "";
+                   cell5.appendChild(modeElement);
+                   
+                   
+                   var cell6 = row.insertCell(5);
                     var modeElement1 = document.createElement("select");
                     var positionArray = ["Center", "Left side"];
-                    for (var i = 0; i < positionArray.length; i++) {
-                        var opt = document.createElement("option");
-                        opt.text = positionArray[i];
-                        opt.value = positionArray[i];
-                        modeElement1.options.add(opt);
+                    $.ajax({url: "slaveInfoCont?task=position",
+                   //type: 'POST',
+                   dataType: 'json',
+                   //contentType: 'application/json',
+                   //context: document.body,
+//                   success: function(response_data)
+//                   {                  
+//                       data=response_data.data;
+//                       for (var i = 0; i < data.length; i++) {
+//                       var opt = document.createElement("option");
+//                       opt.text = data[i].position1;
+//                       opt.value = data[i].position1;
+//                       alert("text ---"+opt.text);
+//                       alert("value ---"+opt.value);
+//                       modeElement1.options.add(opt);
+//                       }
+                                     
+                   
+                   
+                   success: function(response_data){
+                   
+                   data=response_data.data;
+                   for(var i = 0; i < data.length; i++){
+                     var opt = document.createElement("option");
+                       opt.text = data[i].position1;
+                       opt.value = data[i].position1;
+                      
+                       modeElement1.options.add(opt);  
+                   
+                    
                     }
-                    modeElement1.name = "position" + rowCount;
-                    modeElement1.id = "position" + rowCount;
+                   modeElement1.name = "position1" + rowCount;
+                    modeElement1.id = "position1" + rowCount;
                     modeElement1.value = "";
-                    cell6.appendChild(modeElement1);
+                    cell6.appendChild(modeElement1); 
+                   
+            }
+                   
+                   
+                   
+               });
+                     
+                    
+                    
 
                     var cell7 = row.insertCell(6);
                     var element2 = document.createElement("input");
@@ -370,32 +460,32 @@
                     cell10.appendChild(element2);
 
                     var cell11 = row.insertCell(11);
-                    var modeElement1 = document.createElement("select");
+                    var modeElement2 = document.createElement("select");
                     var vehicleDetectionArray = ["Yes", "No"];
                     for (var i = 0; i < vehicleDetectionArray.length; i++) {
                         var opt = document.createElement("option");
                         opt.text = vehicleDetectionArray[i];
                         opt.value = vehicleDetectionArray[i];
-                        modeElement1.options.add(opt);
+                        modeElement2.options.add(opt);
                     }
-                    modeElement1.name = "vehicle_detection" + rowCount;
-                    modeElement1.id = "vehicle_detection" + rowCount;
-                    modeElement1.value = "";
-                    cell11.appendChild(modeElement1);
+                    modeElement2.name = "vehicle_detection" + rowCount;
+                    modeElement2.id = "vehicle_detection" + rowCount;
+                    modeElement2.value = "";
+                    cell11.appendChild(modeElement2);
                    
                     var cell12 = row.insertCell(12);
-                    var modeElement1 = document.createElement("select");
+                    var modeElement2 = document.createElement("select");
                     var countDownArray = ["Yes", "No"];
                     for (var i = 0; i < countDownArray.length; i++) {
                         var opt = document.createElement("option");
                         opt.text = countDownArray[i];
                         opt.value = countDownArray[i];
-                        modeElement1.options.add(opt);
+                        modeElement2.options.add(opt);
                     }
-                    modeElement1.name = "count_down" + rowCount;
-                    modeElement1.id = "count_down" + rowCount;
-                    modeElement1.value = "";
-                    cell12.appendChild(modeElement1);
+                    modeElement2.name = "count_down" + rowCount;
+                    modeElement2.id = "count_down" + rowCount;
+                    modeElement2.value = "";
+                    cell12.appendChild(modeElement2);
 
                     var cell13 = row.insertCell(13);
                     var element2 = document.createElement("input");
@@ -407,18 +497,18 @@
                     cell13.appendChild(element2);
                     
                     var cell14 = row.insertCell(14);
-                    var modeElement1 = document.createElement("select");
+                    var modeElement2 = document.createElement("select");
                     var rlpdArray = ["Yes", "No"];
                     for (var i = 0; i < rlpdArray.length; i++) {
                         var opt = document.createElement("option");
                         opt.text = rlpdArray[i];
                         opt.value = rlpdArray[i];
-                        modeElement1.options.add(opt);
+                        modeElement2.options.add(opt);
                     }
-                    modeElement1.name = "rlpd" + rowCount;
-                    modeElement1.id = "rlpd" + rowCount;
-                    modeElement1.value = "";
-                    cell14.appendChild(modeElement1);
+                    modeElement2.name = "rlpd" + rowCount;
+                    modeElement2.id = "rlpd" + rowCount;
+                    modeElement2.value = "";
+                    cell14.appendChild(modeElement2);
                     
                     var cell15 = row.insertCell(15);
                     var element2 = document.createElement("input");
@@ -430,18 +520,18 @@
                     cell15.appendChild(element2);
                     
                     var cell16 = row.insertCell(16);
-                    var modeElement1 = document.createElement("select");
+                    var modeElement2 = document.createElement("select");
                     var paSystemArray = ["Yes", "No"];
                     for (var i = 0; i < paSystemArray.length; i++) {
                         var opt = document.createElement("option");
                         opt.text = paSystemArray[i];
                         opt.value = paSystemArray[i];
-                        modeElement1.options.add(opt);
+                        modeElement2.options.add(opt);
                     }
-                    modeElement1.name = "pa_system" + rowCount;
-                    modeElement1.id = "pa_system" + rowCount;
-                    modeElement1.value = "";
-                    cell16.appendChild(modeElement1);
+                    modeElement2.name = "pa_system" + rowCount;
+                    modeElement2.id = "pa_system" + rowCount;
+                    modeElement2.value = "";
+                    cell16.appendChild(modeElement2);
                     
                     var cell17 = row.insertCell(17);
                     var element2 = document.createElement("input");
@@ -582,7 +672,7 @@
                         }
                     }
                 }catch(e) {
-                   alert(e);
+                   alert("Do you wish to delete this side!!!");
                 }
     }
       var popupwin = null;
@@ -627,6 +717,7 @@
     function openMapForCord(count) {
         var url="slaveInfoCont?task=GetCordinates1&count="+count;//"getCordinate";
         popupwin = openPopUp(url, "",  600, 630);
+        
     }
  
           

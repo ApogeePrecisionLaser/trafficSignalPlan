@@ -5,7 +5,9 @@
 package com.ts.junction.Controller;
 
 import com.ts.junction.Model.SlaveInfoModel;
+import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.SlaveInfo;
+import com.ts.tcpServer.ClientResponderModel;
 import com.ts.util.xyz;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -28,8 +30,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
-import org.json.JSONException;
-import org.json.JSONObject;
+import org.json.simple.JSONObject;
+//import org.json.JSONException;
+//import org.json.JSONObject;
 
 /**
  *
@@ -42,6 +45,7 @@ public class SlaveInfoController extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+            ClientResponderModel clientResponderModel = new ClientResponderModel();
 
         SlaveInfoModel slaveinfoModel = new SlaveInfoModel();
         ServletContext ctx = getServletContext();
@@ -58,22 +62,29 @@ public class SlaveInfoController extends HttpServlet {
         String side1 = "";
         String task1 = request.getParameter("task");
         String task2 = request.getParameter("task2");
+        //---------------------
+        
+        //-------------------
+        
         if (task1 == null) {
             task1 = "";
         }
 
         List<File> list = new ArrayList<File>();
-        if ("poleType".equals(task1)) {
-            List<String> pole_type_list = slaveinfoModel.getPoleType();
+        if (task1.equals("poleType")) {
+          // List<String> pole_type_list = slaveinfoModel.getPoleType();
+            JSONObject json = slaveinfoModel.showDataBean4();
             PrintWriter out = response.getWriter();
             JSONObject jsonObj = new JSONObject();
             try {
                 jsonObj.put("pole_type", "testing");
-            } catch (JSONException ex) {
+            } catch (Exception ex) {
                 System.out.println("SlaveInfoController poleType() Error: " + ex);
             }
-            out.println(pole_type_list);
+            out.println(json);
+            //out.println(pole_type_list);
             out.flush();
+            return;
         }
 
         if (task1.equals("getSideName")) {
@@ -85,7 +96,7 @@ public class SlaveInfoController extends HttpServlet {
             JSONObject jsonObj = new JSONObject();
             try {
                 jsonObj.put("side_name", side_name_list.get(0));
-            } catch (JSONException ex) {
+            } catch (Exception ex) {
                 System.out.println("SlaveInfoController poleType() Error: " + ex);
             }
             response.setContentType("application/json");
@@ -93,18 +104,32 @@ public class SlaveInfoController extends HttpServlet {
             return;
 
         }
+        if (task1.equals("showAllStatus")) {
+            List<History> List = clientResponderModel.showDataBean();
+            int cordinateLength = List.size();
+            request.setAttribute("cordinateLength", cordinateLength);
+            request.setAttribute("CoordinatesList", List);
+            //request.getRequestDispatcher("/view/general/allStatusMapWindow.jsp").forward(request, response);
+            //request.getRequestDispatcher("/view/general/allJunctionMapBySupermap.jsp").forward(request, response);
+            request.getRequestDispatcher("/view/general/showJunctionLightsOnSupermap.jsp").forward(request, response);
+            return;
+        }
 
-        if ("position".equals(task1)) {
-            List<String> position_list = slaveinfoModel.getPosition();
+        if (task1.equals("position")) {
+        //  List<String> position_list = slaveinfoModel.getPosition();
+            JSONObject json = slaveinfoModel.showDataBean5();
             PrintWriter out = response.getWriter();
-            JSONObject jsonObj = new JSONObject();
-            try {
-                jsonObj.put("position", position_list);
-            } catch (JSONException ex) {
-                System.out.println("SlaveInfoController position() Error: " + ex);
-            }
-            out.println(position_list);
-            out.flush();
+//            JSONObject jsonObj = new JSONObject();
+//            try {
+//                jsonObj.put("position", "test");
+//            } catch (Exception ex) {
+//                System.out.println("SlaveInfoController position() Error: " + ex);
+//            }
+            System.out.println("json data -"+json);
+                   
+            out.println(json);
+            //out.flush();
+            return;
         }
 
         List image_name_list = new ArrayList();
@@ -280,7 +305,7 @@ public class SlaveInfoController extends HttpServlet {
         } catch (IOException | NumberFormatException | ServletException e) {
             System.out.println("exception in image view part" + e);
         }
-        if (task.equals("GetCordinates1")) {
+        if (task1.equals("GetCordinates1")) {
             String count = request.getParameter("count");
             String longi1 = request.getParameter("longitude" + count);
             String latti1 = request.getParameter("latitude" + count);
@@ -308,11 +333,17 @@ public class SlaveInfoController extends HttpServlet {
         int no_of_sides = (no_of_sidesS != null) ? Integer.parseInt(no_of_sidesS.trim()) : (no_of_sidesS1 != null) ? Integer.parseInt(no_of_sidesS1.trim()) : 0;
         int program_version_no = (program_version_noS != null) ? Integer.parseInt(program_version_noS.trim()) : (program_version_noS1 != null) ? Integer.parseInt(program_version_noS1.trim()) : 0;
         jId = junction_id;
-        if (task.equals("SAVE") || task.equals("Save AS New")) {
+        
+        if (task.equals("Delete")) {
+            slaveinfoModel.deleteRecord(Integer.parseInt(request.getParameter("state_detail_id"))); 
+        }
+        
+        
+        else if (task.equals("SAVE") || task.equals("Save AS New")) {
             // List<SlaveInfo> slaveInfoList = new ArrayList<SlaveInfo>();
             SlaveInfo slave_info = new SlaveInfo();
-            int no_of_cols = Integer.parseInt(map.get("s_no_count"));
-            for (int i = 1; i <= no_of_cols; i++) {
+           // int no_of_cols = Integer.parseInt(map.get("s_no_count"));
+            for (int i = 1; i <= 5; i++) {
 
                 try {
                     int side_no = Integer.parseInt(map.get("side_no" + i));
@@ -356,8 +387,8 @@ public class SlaveInfoController extends HttpServlet {
                     slave_info.setSecondary_h_aspect_no(Integer.parseInt(map.get("secondary_h_aspect_no" + i)));
                     slave_info.setPrimary_v_aspect_no(Integer.parseInt(map.get("primary_v_aspect_no" + i)));
                     slave_info.setPrimary_h_aspect_no(Integer.parseInt(map.get("primary_h_aspect_no" + i)));
-                    slave_info.setPosition(map.get("position" + i));
-                    slave_info.setPole_type(map.get("pole_type" + i));
+                    slave_info.setPosition(map.get("position1" + i));
+                    slave_info.setPole_type(map.get("pole_type1" + i));
                     slave_info.setVehicle_detection(map.get("vehicle_detection" + i));
                     slave_info.setCount_down(map.get("count_down" + i));
                     slave_info.setNo_of_lane(Integer.parseInt(map.get("no_of_lane" + i)));
