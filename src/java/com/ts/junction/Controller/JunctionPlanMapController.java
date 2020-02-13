@@ -124,8 +124,10 @@ public class JunctionPlanMapController extends HttpServlet {
                 }
                 
                 if (junction_plan_map_id == 0) {
+                    int selected_plan_id =0;
+                    selected_plan_id=Integer.parseInt(request.getParameter("selected_plan_id"));
                 // validation was successful so now insert record.
-                junctionPlanMapModel.insertRecord(junctionPlanMap);
+                junctionPlanMapModel.insertRecord(junctionPlanMap,selected_plan_id);
             } else {
                 // Get the error message regarding validate plans.
                 junctionPlanMapModel.updateRecord(junctionPlanMap);

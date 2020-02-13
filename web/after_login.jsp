@@ -12,6 +12,38 @@
         <link rel="stylesheet" href="style/style.css" media="screen">
         <link rel="stylesheet" href="style/Table_content.css" media="screen">
         <title>Traffic Signals Monitoring</title>
+         <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
+        
+        <script type="text/javascript" language="javascript">
+       
+        function web(id){
+             debugger;
+             alert(id);
+       
+       
+  $("button").toggle(
+    function(){$("button").css({"color": "red"});},
+    function(){$("button").css({"color": "blue"});},
+    function(){$("button").css({"color": "green"});
+  
+});
+}
+    function Openform(id) {
+        debugger;
+        var queryString = "task=StopWebServiceResponse";
+
+        var url = "loginCont?" + queryString;
+
+        window.location.href = url;
+//        var x = document.getElementById('formPlan');
+//        if (x.style.display === "none") {
+//            x.style.display = "block";
+//        } else {
+//            x.style.display = "none";
+//        }
+    }
+</script>
     </head>
     <body>
          <table align="center" cellpadding="0" cellspacing="0" class="main" >
@@ -21,7 +53,9 @@
             <tr>
                 <td>
                     <DIV id="body" class="maindiv">
-
+                        <form  method="post" action="loginCont">
+                        <input type="button" id="stopWebService" name="stopWebService" value="Stop WebService Response" onclick="Openform(id)">
+                        </form>
                     </DIV>
                 </td>
             </tr>

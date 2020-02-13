@@ -358,6 +358,7 @@
                                                             <th class="heading" >Junction Name</th>
                                                             <td><input class="input" type="text" id="junction_name" name="junction_name" value="${junction_name}" size="50" disabled>
                                                                 <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                                 <input class="input" type="hidden" id="selected_plan_id" name="selected_plan_id" value="" size="50" >
                                                             <input class="input" type="hidden" id="junction_plan_map_id" name="junction_plan_map_id" value="" size="50" ></td>
                                                         </tr>
                                                         <tr>

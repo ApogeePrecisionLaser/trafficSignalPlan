@@ -159,7 +159,7 @@ public class JunctionPlanMapModel {
         return plan_id;
     }
 
-    public boolean insertRecord(JunctionPlanMap junctionPlanMap) {
+    public boolean insertRecord(JunctionPlanMap junctionPlanMap,int selected_plan_id) {
         String insert_query = null;
         PreparedStatement pstmt = null;
         boolean errorOccured = false;
@@ -167,7 +167,8 @@ public class JunctionPlanMapModel {
         int rowsAffected = 0;
 
         int junction_plan_map_id = getMaxJunctionPlanId() + 1;
-       int plan_id = getPlanId(junctionPlanMap.getOn_time_hr(), junctionPlanMap.getOn_time_min(), junctionPlanMap.getOff_time_hr(), junctionPlanMap.getOff_time_min());
+//       int plan_id = getPlanId(junctionPlanMap.getOn_time_hr(), junctionPlanMap.getOn_time_min(), junctionPlanMap.getOff_time_hr(), junctionPlanMap.getOff_time_min());
+        int plan_id =selected_plan_id;
         int junction_id = getJunctionId(junctionPlanMap.getJunction_name());
         Junction junc = getJunctionDetail(junction_id);
         updateRecordOfJunction(junc);

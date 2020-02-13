@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.ts.junction.Controller;
 
 import com.ts.junction.Model.PlanDetailModel;
@@ -17,14 +12,17 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import org.json.JSONException;
+import org.json.JSONObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 /**
  *
  * @author DELL
  */
 public class PlanDetailIdController extends HttpServlet {
 
-   
+ 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
            PlanDetailModel planDetailModel = new PlanDetailModel();
@@ -34,6 +32,7 @@ public class PlanDetailIdController extends HttpServlet {
         planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
         planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
         planDetailModel.setConnection();
+         String task = request.getParameter("task");
         String searchCommandName = "";
              List<PlanDetails> list1 = new ArrayList<>();
              searchCommandName = request.getParameter("searchParameterName");
@@ -47,9 +46,8 @@ public class PlanDetailIdController extends HttpServlet {
              
          int lowerLimit=0, noOfRowsTraversed, noOfRowsToDisplay = 5, noOfRowsInTable;
            noOfRowsInTable = planDetailModel.getNoOfRows();
-           
-           
-           
+         
+       
           try {
             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
             noOfRowsTraversed = Integer.parseInt(request.getParameter("noOfRowsTraversed"));
@@ -60,13 +58,7 @@ public class PlanDetailIdController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        if (buttonAction.equals("Next")) // lowerLimit already has value such that it shows forward records, so do nothing here.
-            {
-            lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
-            if (lowerLimit < 0) {
-                lowerLimit = 0;
-            }
-        }
+         if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
@@ -83,7 +75,7 @@ public class PlanDetailIdController extends HttpServlet {
                 lowerLimit = 0;
             }
         }
-    
+   
          
         list1 = planDetailModel.showData(lowerLimit, noOfRowsToDisplay,searchCommandName);
                lowerLimit = lowerLimit + list1.size();

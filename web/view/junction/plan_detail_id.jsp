@@ -13,12 +13,15 @@
 <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
 <script>
-    function myFunction(t1,t2,t3,t4){
+    function myFunction(t1,t2,t3,t4,t5){
         var time =t1+":"+t2+"-"+t3+":"+t4;    
         document.getElementById("test1").value = time;
           if (window.opener != null && !window.opener.closed) {
             var txtName = window.opener.document.getElementById("start_time");
+            var txtName1 = window.opener.document.getElementById("selected_plan_id");
             txtName.value = document.getElementById("test1").value;
+            txtName1.value = t5;
+            alert(t5);
         }
         window.close();      
     }
@@ -149,7 +152,7 @@
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['plandetails']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
-                                                        <td><input type="radio" name="plan" value="${list.plan_no}" onkeyup="myFunction('${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}')"><br></td>
+                                                        <td><input type="radio" name="plan" value="${list.plan_no}" onkeyup="myFunction('${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}','${list.plan_id}')"><br></td>
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">
                                                             ${lowerLimit - noOfRowsTraversed + loopCounter.count}
 

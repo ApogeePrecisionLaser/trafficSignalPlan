@@ -52,6 +52,8 @@ public class PhaseDataController extends HttpServlet {
         Map<String, String> map = new HashMap<>();
         Map<String, String> map1 = new HashMap<>();
         int side_no = 0;
+        int selected_plan_id=0;
+              int selected_plan_id1=0;
         String mode_name = "";
         int no_of_phase = 0;
         try {
@@ -62,9 +64,9 @@ public class PhaseDataController extends HttpServlet {
             PrintWriter out = response.getWriter();
             if (jqstring != null) {
                 List<String> list = null;
-                if (jqstring.equals("getOnOffTime")) {
-                    list = phaseDataModel.getOnOffTime(q, request.getParameter("action2"), request.getParameter("action3"), request.getParameter("action4"));
-                }
+//                if (jqstring.equals("getOnOffTime")) {
+//                    list = phaseDataModel.getOnOffTime(q, request.getParameter("action2"), request.getParameter("action3"), request.getParameter("action4"));
+//                }
 
                 if (jqstring.equals("getDate")) {
                     list = phaseDataModel.getDateTime(q, request.getParameter("action2"));
@@ -95,6 +97,8 @@ public class PhaseDataController extends HttpServlet {
             task = "";
         }
         if (task.equals("OK")) {
+              
+                    selected_plan_id=Integer.parseInt(request.getParameter("selected_plan_id"));
             side_no = phaseDataModel.getSidesOfJunction(junction_name_select);
             mode_name = phaseDataModel.getModeName(on_off_time_select);
             if (mode_name.equals("Blinker")) {
@@ -123,6 +127,8 @@ public class PhaseDataController extends HttpServlet {
             day1 = request.getParameter("day_select");
             on_off_time_select1 = request.getParameter("on_off_time_select");
             junction_name = request.getParameter("junction_name");
+         
+                  selected_plan_id1=Integer.parseInt(request.getParameter("selected_plan_id1"));
             String select_color = "";
             for (int i = 0; i < no_of_phase1; i++) {
 
@@ -200,7 +206,8 @@ public class PhaseDataController extends HttpServlet {
                 phaseData.setSide24(Integer.parseInt(side24[i], 2));
                 if (phase_info_id == 0) {
                     // validation was successful so now insert record.
-                    phaseDataModel.insertRecord(phaseData);
+                 
+                    phaseDataModel.insertRecord(phaseData,selected_plan_id1);
                 }
             }
         }
@@ -286,7 +293,7 @@ public class PhaseDataController extends HttpServlet {
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
 
         request.setAttribute("junctionPlanMapPhaseList", list1);
-
+ request.setAttribute("selected_plan_id1", selected_plan_id);
         request.setAttribute("junction_id", request.getParameter("junction_id"));
         request.setAttribute("no_of_sides", request.getParameter("no_of_sides"));
         request.setAttribute("junction_name", junction_name_select);
