@@ -2,6 +2,24 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Controller/PlanDetailIdController.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/webservice/TrafficSignalWebServices.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionPlanMapController.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Controller/PhaseDataController.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/general/Controller/TS_StatusShowerController.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Model/PhaseDataModel.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/webservice/ClientResponderWS1.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/webservice/ClientResponderWS.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/web/view/junction/plan_detail_id.jsp</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/web/view/junction/phase_data.jsp</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Controller/DateDetailsController.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Model/JunctionPlanMapModel.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/web/view/junction/junction_plan_map.jsp</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Model/PlanDetailModel.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/src/java/com/ts/junction/Model/DayDetailModel.java</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/web/WEB-INF/web.xml</file>
+            <file>file:/C:/Users/Administrator/Desktop/Prachi/trafficSignal%20and%20Ble%20on%20Git/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
+        </group>
     </open-files>
 </project-private>

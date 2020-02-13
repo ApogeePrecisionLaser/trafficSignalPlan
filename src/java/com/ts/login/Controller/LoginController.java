@@ -45,6 +45,10 @@ public class LoginController extends HttpServlet {
                 request.getRequestDispatcher("/beforeLoginView").forward(request, response);
             }
         }
+        if(task == "StopWebServiceResponse")
+        {
+        System.out.println("StopWebServiceResponse task");
+        }
     }
 
     @Override

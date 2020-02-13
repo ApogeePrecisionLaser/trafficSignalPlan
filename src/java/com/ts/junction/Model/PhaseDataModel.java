@@ -87,7 +87,7 @@ public class PhaseDataModel {
             String date1[] = date.split("//");
             String from_date = date1[0];
             String to_date = date1[1];
-            String query = "SELECT distinct on_time_hour, on_time_min, off_time_hour, off_time_min "
+            String query = "SELECT on_time_hour, on_time_min, off_time_hour, off_time_min "
                     + " FROM plan_details pd,junction_plan_map jpm,date_detail dd,junction j WHERE dd.date_detail_id=jpm.date_id "
                     + " and pd.plan_id=jpm.plan_id and j.junction_id=jpm.junction_id and dd.from_date='" + from_date + "' and dd.to_date='" + to_date + "' and j.junction_id='" + junction_id + "' "
                     + " and jpm.active = 'Y' and  dd.active='Y' and pd.active='Y' and j.final_revision='VALID'"
@@ -114,7 +114,7 @@ public class PhaseDataModel {
                 System.out.println("Error: " + e);
             }
         } else if (day.equals("")) {
-            String query = "SELECT distinct on_time_hour, on_time_min, off_time_hour, off_time_min "
+            String query = "SELECT on_time_hour, on_time_min, off_time_hour, off_time_min "
                     + " FROM plan_details pd,junction_plan_map jpm,day_detail dd,junction j WHERE dd.day_detail_id=jpm.day_id "
                     + " and pd.plan_id=jpm.plan_id and j.junction_id=jpm.junction_id and dd.day='" + day + "' and j.junction_id='" + junction_id + "' "
                     + " and jpm.active = 'Y' and  dd.active='Y' and pd.active='Y' and j.final_revision='VALID'"
@@ -294,7 +294,7 @@ public class PhaseDataModel {
         return plan_id;
     }
 
-    public boolean insertRecord(PhaseData phaseData) {
+    public boolean insertRecord(PhaseData phaseData,int selected_plan_id) {
         String insert_query = null;
         String insert_phase_query = null;
         PreparedStatement pstmt = null;
@@ -305,7 +305,8 @@ public class PhaseDataModel {
         int rowsAffected = 0;
         int program_version_no = 0;
 
-        int plan_id = getPlanId(phaseData.getOn_time_hr(), phaseData.getOn_time_min(), phaseData.getOff_time_hr(), phaseData.getOff_time_min());
+//        int plan_id = getPlanId(phaseData.getOn_time_hr(), phaseData.getOn_time_min(), phaseData.getOff_time_hr(), phaseData.getOff_time_min());
+int plan_id=selected_plan_id;
         int junction_id = getJunctionId(phaseData.getJunction_name());
         int date_id = getDateId(phaseData.getFrom_date(), phaseData.getTo_date());
         int day_id = getDayId(phaseData.getDay());
