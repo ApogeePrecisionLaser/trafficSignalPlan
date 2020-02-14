@@ -11,6 +11,7 @@ import com.ts.junction.Model.PlanInfoModel;
 import com.ts.junction.Model.TrafficSignalWebServiceModel;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.PlanInfo;
+import com.ts.login.Controller.LoginController;
 import com.ts.webservice.Async;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
@@ -39,8 +40,9 @@ import org.codehaus.jettison.json.JSONException;
 @Path("/")
 public class TrafficSignalWebServices {
 
-    final Junction junction = new Junction();
+     final Junction junction = new Junction();
     public static String arr2;
+    //public static String start_stop="start";
     public static String mapData = null;
     public static int flag = 0;
     Map<Integer, Junction> junctionList;
@@ -55,6 +57,9 @@ public class TrafficSignalWebServices {
     public byte[] insertTrafficSignalData(@Context HttpServletRequest requestContext, byte[] receivedBytes) {
         byte[] response = null;
           byte[] responseBytes = {120};
+        LoginController lc = new  LoginController(); 
+        String start_stop_web = lc.start_stop1;
+        if(start_stop_web.equalsIgnoreCase("start")){                 
         String result = "Sorry!! something went wrong. ";
         System.out.println("data at " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime()) + ": " + requestContext.getRemoteAddr());
         for (int i = 0; i < receivedBytes.length; i++) {
@@ -114,9 +119,13 @@ public class TrafficSignalWebServices {
             }
         }
         System.out.println("result : " + result + " response");
+        
+        }else{
+            
+        System.out.println("In stop web service part response");
+        }
         return response;
     }
-
     @POST
     @Path("/junctionData")
     @Produces(MediaType.APPLICATION_JSON)//http://192.168.1.15:8084/trafficSignals_new/api/service/hello

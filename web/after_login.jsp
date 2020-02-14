@@ -13,22 +13,42 @@
         <link rel="stylesheet" href="style/Table_content.css" media="screen">
         <title>Traffic Signals Monitoring</title>
          <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
+         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
         <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
         
         <script type="text/javascript" language="javascript">
        
-        function web(id){
-             debugger;
-             alert(id);
-       
-       
-  $("button").toggle(
-    function(){$("button").css({"color": "red"});},
-    function(){$("button").css({"color": "blue"});},
-    function(){$("button").css({"color": "green"});
-  
-});
+function myFunction(id) {
+    debugger;
+  var x = document.getElementById("stopWebService");
+   var x1 = document.getElementById("startWebService");
+  if (x.style.display === "none") {
+    x.style.display = "block";
+  } else {
+    x.style.display = "none";
+  }
+  if(id==="stopWebService"){
+if(x.value === "stopWebService")
+{
+      var queryString = "task=StopWebServiceResponse";
+
+        var url = "loginCont?" + queryString;
+
+        window.location.href = url; 
 }
+else{
+ if(x1.value === "startWebService")
+ {
+    var queryString = "task=StartWebServiceResponse";
+
+        var url = "loginCont?" + queryString;
+
+        window.location.href = url; 
+}
+}
+}
+}
+
     function Openform(id) {
         debugger;
         var queryString = "task=StopWebServiceResponse";
@@ -42,6 +62,24 @@
 //        } else {
 //            x.style.display = "none";
 //        }
+document.getElementById("stopWebService").style.display = "none";
+document.getElementById("startWebService").style.display = "block";
+    }
+      function Openform1(id) {
+        debugger;
+        var queryString = "task=StartWebServiceResponse";
+
+        var url = "loginCont?" + queryString;
+
+        window.location.href = url;
+//        var x = document.getElementById('formPlan');
+//        if (x.style.display === "none") {
+//            x.style.display = "block";
+//        } else {
+//            x.style.display = "none";
+//        }
+document.getElementById("startWebService").style.display = "none";
+document.getElementById("stopWebService").style.display = "block";
     }
 </script>
     </head>
@@ -54,7 +92,13 @@
                 <td>
                     <DIV id="body" class="maindiv">
                         <form  method="post" action="loginCont">
-                        <input type="button" id="stopWebService" name="stopWebService" value="Stop WebService Response" onclick="Openform(id)">
+<!--                        <input type="button" id="stopWebService" name="stopWebService" value="Stop WebService Response" onclick="web(id)">
+                         <input type="button" id="startWebService" name="startWebService" value="Start WebService Response" onclick="web(id)">-->
+                  
+                         <input type="button" name="stopWebService" value="stopWebService" id="stopWebService" onclick="Openform(id)">
+                         <input type="button" style="display: none" name="startWebService" value="startWebService" id="startWebService" onclick="Openform1(id)">
+
+
                         </form>
                     </DIV>
                 </td>
