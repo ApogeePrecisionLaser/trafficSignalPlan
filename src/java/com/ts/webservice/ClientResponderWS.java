@@ -1689,6 +1689,7 @@ public class ClientResponderWS extends HttpServlet
             int activity2 = 1;
             int activity3 = 1;
             int receivedActivity = activity;
+          
             // String currentTimeSynchronizationStatus="Y";
             // data at firstStartDataPosition + 13/14/15 are default 1, when activity byte value is 2(clearance) then only firstStartDataPosition + 13 byte value will be used as clearance side.
 
@@ -2061,7 +2062,7 @@ public class ClientResponderWS extends HttpServlet
                         teenPattiInfoRefreshList = teenPattiInfo;
                         this.ctx.setAttribute("teenPattiInfoList", this.teenPattiInfoRefreshList);
                     }
-                    if (junctionID == 14) {
+                    if (junctionID == 6) {
                         BeanUtils.copyProperties(gohalPurInfo, planInfo);
                         gohalPurInfoRefreshList = gohalPurInfo;
                         this.ctx.setAttribute("gohalPurInfoList", this.gohalPurInfoRefreshList);
@@ -2087,7 +2088,7 @@ public class ClientResponderWS extends HttpServlet
                         baldeobagInfoRefreshList = baldeobagInfo;
                         this.ctx.setAttribute("baldeobagInfoList", this.baldeobagInfoRefreshList);
                     }
-                    if (junctionID == 6) {
+                    if (junctionID == 14) {
                         BeanUtils.copyProperties(deendayalChowkInfo, planInfo);
                         deendayalChowkInfoRefreshList = deendayalChowkInfo;
                         this.ctx.setAttribute("deendayalChowkInfoList", this.deendayalChowkInfoRefreshList);

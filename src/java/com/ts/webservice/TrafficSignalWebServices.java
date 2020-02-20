@@ -13,6 +13,7 @@ import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.PlanInfo;
 import com.ts.login.Controller.LoginController;
 import com.ts.webservice.Async;
+import com.ts.webserviceModel.tsWebserviceModel;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,6 +33,7 @@ import javax.ws.rs.core.MediaType;
 
 import org.json.simple.JSONObject;
 import org.codehaus.jettison.json.JSONException;
+import org.json.simple.JSONArray;
 
 /**
  *
@@ -505,6 +507,38 @@ public class TrafficSignalWebServices {
             TrafficSignalWebServices.mapData = receivedBytes;
        
     }
+@POST
+    @Path("/getAndroidResponse")
+    @Produces(MediaType.APPLICATION_JSON)//http://192.168.1.15:8084/trafficSignals_new/api/service/getAndroidResponse
+    @Consumes(MediaType.APPLICATION_JSON)
+    public JSONObject traficsignalRecordsnew(String dataString) {
+        JSONObject obj = new JSONObject();
+           tsWebserviceModel tsweb = new tsWebserviceModel();
+        try{
+       
+        tsweb.setConnection();
+        //JSONObject obj = new JSONObject();
+        JSONArray json = null;
 
+         json = tsweb.getJunctionRecords();
+         obj.put("junction", json);
+         json = tsweb.getDayDetailsRecords();
+         obj.put("day_details", json);
+         json = tsweb.getDateDetailsRecords();
+         obj.put("date_details", json);
+         json = tsweb.getPlanDetailsRecords();
+         obj.put("plan_details", json);
+         json = tsweb.getJunctionPlanMapRecords();
+         obj.put("junction_plan_map", json);
+         json = tsweb.getPhaseDetailsRecords();
+         obj.put("phase_detail", json);
+         json = tsweb.getPhaseMapRecords();
+         obj.put("phase_map", json);
+         
+        }catch(Exception e){
+            System.out.println("Error in traffic Signal 'requestData' url calling ..."+e);
+        }
+        return obj;
+    } 
 
 }

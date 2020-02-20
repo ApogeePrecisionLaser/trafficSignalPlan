@@ -111,7 +111,7 @@
                 });
                 ChangeStatus();
                 setActivity();
-                setTimeout("loadContents()", 500);//1 * 50);
+               setTimeout("loadContents()", 500);//1 * 50);
 //                setInterval("changeActivityFn()",500);
             }
 

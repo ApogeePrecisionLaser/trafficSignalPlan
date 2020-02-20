@@ -19,7 +19,7 @@
     <body>
         <ul class="menu">
 
-            <li><a href="#" class="home">Home</a></li>
+            <li><a href="after_login.jsp" class="home">Home</a></li>
             <li><a href="loggedInJunctionCont" class="signal">View Signal Status</a></li>
             <li><a href="junctionCont" class="junction">Junction Detail</a></li>
              <li><a href="JunctionDetailsUpdate" class="junction">Junction Detail Update</a></li>

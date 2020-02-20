@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Shruti
  */
 public class LoginController extends HttpServlet {
- public static String start_stop1;
+ public static String start_stop1="start";
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -46,19 +46,26 @@ public class LoginController extends HttpServlet {
                 request.getRequestDispatcher("/beforeLoginView").forward(request, response);
             }
         }
-         if(task.equals("StopWebServiceResponse"))
+         
+         if(task.equals("stopWebService"))
         {
             start_stop1 = "stop";
         System.out.println("StopWebServiceResponse task");
-         request.getRequestDispatcher("/after_login.jsp").forward(request, response);
+          request.setAttribute("show_button", "start");
+        request.getRequestDispatcher("/after_login.jsp").forward(request, response);
+         
         }
-          if(task.equals("StartWebServiceResponse"))
+          if(task.equals("startWebService"))
         {
         TrafficSignalWebServices ts = new  TrafficSignalWebServices();
         start_stop1 = "start";
         System.out.println("StartWebServiceResponse task");
-         request.getRequestDispatcher("/after_login.jsp").forward(request, response);
+          request.setAttribute("show_button", "stop");    
+          request.getRequestDispatcher("/after_login.jsp").forward(request, response);
+   
         }
+          
+  
     }
 
     @Override

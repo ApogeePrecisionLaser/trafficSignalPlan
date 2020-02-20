@@ -1136,7 +1136,7 @@ public class TS_StatusShowerController extends HttpServlet {
                 // end for baldeobag
                 // start for deendayal
                 
-                if(current_junction_id == 6){
+                if(current_junction_id == 14){
                 if (this.deendayalChowkInfoList != null) {
                     boolean responseFromModemForRefresh = this.planInfoList.isResponseFromModemForRefresh();
                     //boolean responseFromModemForClearnace = this.planInfoList.isResponseFromModemForClearance();
@@ -1627,7 +1627,7 @@ public class TS_StatusShowerController extends HttpServlet {
                 
                 // start for gohalpur
                 
-                if(current_junction_id == 14){
+                if(current_junction_id == 6){
                 if (this.gohalPurInfoList != null) {
                     boolean responseFromModemForRefresh = this.gohalPurInfoList.isResponseFromModemForRefresh();
                     //boolean responseFromModemForClearnace = this.planInfoList.isResponseFromModemForClearance();
@@ -2847,7 +2847,7 @@ public class TS_StatusShowerController extends HttpServlet {
                     return;
                 }
                 }
-                if(a == 6){
+                if(a == 14){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
                 if (this.deendayalChowkInfoList != null) {
                     int functionNo = this.deendayalChowkInfoList.getFunction_no();
@@ -3288,7 +3288,7 @@ public class TS_StatusShowerController extends HttpServlet {
                 }
                 }
                 
-                if(a == 14){
+                if(a == 6){
                 //BeanUtils.copyProperties(planInfoList, ranitalInfoList);
                 if (this.gohalPurInfoList != null) {
                     int functionNo = this.gohalPurInfoList.getFunction_no();
