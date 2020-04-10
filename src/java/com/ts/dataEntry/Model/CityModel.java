@@ -56,7 +56,7 @@ public class CityModel {
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
         String query = "SELECT c.city_id, c.city_name, d.district_name, s.state_name, c.pin_code, c.std_code "
                 + "FROM city AS c, district AS d, state AS s "
-                + "WHERE c.district_id = d.district_id AND c.state_id = s.state_id "
+                + "WHERE c.district_id = d.district_id AND d.state_id = s.state_id "
                 + "ORDER BY s.state_name, d.district_name, c.city_name "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {

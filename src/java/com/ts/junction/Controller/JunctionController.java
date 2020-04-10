@@ -75,9 +75,10 @@ public class JunctionController extends HttpServlet {
         }
 
         if (task.equals("Save") || task.equals("Save AS New")) {
-            String side_1_name, side_3_name = null, side_4_name = null, side_5_name = null, side_2_name;
+             String side_1_name, side_3_name = null, side_4_name = null, side_5_name = null, side_2_name;
             Junction junction = new Junction();
             String junction_name = request.getParameter("junction_name");
+            String bluetooth_address = request.getParameter("bluetooth_address");
             String address_1 = request.getParameter("address_1");
             String address_2 = request.getParameter("address_2");
             String state_name = request.getParameter("state_name");
@@ -96,6 +97,7 @@ public class JunctionController extends HttpServlet {
             junction.setPedestrian_time(Integer.parseInt(request.getParameter("pedestrian_time")));
             junction.setFile_no(Integer.parseInt(request.getParameter("file_no")));
             junction.setRemark(request.getParameter("remark"));
+            junction.setBluetooth_address(request.getParameter("bluetooth_address"));
 
             side_1_name = request.getParameter("side_1_name");
             side_2_name = request.getParameter("side_2_name");
@@ -138,6 +140,7 @@ public class JunctionController extends HttpServlet {
             junction.setSide3_name(side_3_name);
             junction.setSide4_name(side_4_name);
             junction.setSide5_name(side_5_name);
+            junction.setBluetooth_address(bluetooth_address);
             if (id == 0) {
                 if (!junctionModel.checkImei(imei_no)) {
                     junctionModel.insertRecord(junction);

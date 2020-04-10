@@ -59,6 +59,8 @@
         document.getElementById("side_4_name").disabled = false;
         document.getElementById("file_no").disabled = false;
         document.getElementById("remark").disabled = false;
+          document.getElementById("bluetooth_address").disabled = false;
+       
         //        document.getElementById("side_5_name").disabled = false;
         if (id == 'NEW') {
             $("#message").html('');
@@ -97,7 +99,7 @@
     function fillColumns(id) {
         var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
         //alert(noOfRowsTraversed);
-        var noOfColumns = 22;
+        var noOfColumns = 24;
         var columnId = id;
         <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
         columnId = columnId.substring(3, id.length);
@@ -142,6 +144,8 @@
         document.getElementById("side_4_name").value = document.getElementById(t1id + (lowerLimit + 19)).innerHTML;
         document.getElementById("side_5_name").value = document.getElementById(t1id + (lowerLimit + 20)).innerHTML;
         document.getElementById("file_no").value = document.getElementById(t1id + (lowerLimit + 21)).innerHTML;
+        document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 22)).innerHTML;
+        document.getElementById("bluetooth_address").value = document.getElementById(t1id + (lowerLimit + 23)).innerHTML;
         // Now enable/disable various buttons.
 
         for (var i = 0; i < noOfColumns; i++) {
@@ -559,6 +563,9 @@
                                                     <th class="heading">Side4 Name</th>
                                                     <th class="heading">Side5 Name</th>
                                                     <th class="heading">File No</th>
+                                                     <th class="heading">Remark</th>
+                                                    
+                                                      <th class="heading">Bluetooth Address</th>
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['junction']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
@@ -596,6 +603,8 @@
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side4_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side5_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.file_no}</td>
+                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.remark}</td>
+                                                          <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.bluetooth_address}</td>
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>
@@ -767,6 +776,10 @@
                                                     <th  class="heading">Remark</th>
                                                     <td>
                                                         <input class="input" size="20" type="text" id="remark" name="remark"  value="" disabled><br>
+                                                    </td>
+                                                     <th  class="heading">Bluetooth Address</th>
+                                                    <td>
+                                                        <input class="input" size="20" type="text" id="bluetooth_address" name="bluetooth_address"  value="" disabled><br>
                                                     </td>
                                                 </tr>
                                                 <tr>

@@ -479,8 +479,9 @@
 
                             <tr>
                                 <td>
-                                    <div style="width: 990px;overflow: auto ">
+                                  
                                         <form name="form"  action="SeverityLevelCont" method="post" onsubmit="return verify()">
+                                            <DIV STYLE="overflow: auto; width: 500px; max-height: 410px; padding:0px; margin-bottom: 20px; align-self:center ">
                                             <table name="table" class="reference"  border="1" align="center">
                                                 <tr id="message">
                                                     <c:if test="${not empty message}">
@@ -514,8 +515,9 @@
                                                 <input type="hidden" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                                 <input type="hidden" id="clickedButton" value="">
                                             </table>
+                                              </div>
                                         </form>
-                                    </div>  </td>
+                                     </td>
                             </tr>
                         </table>
                     </DIV>

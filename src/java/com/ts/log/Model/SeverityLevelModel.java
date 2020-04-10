@@ -171,7 +171,25 @@ public class SeverityLevelModel {
         return !errorOccured;
     }
 
-    
+    public int deleteRecord(int severity_level_id) {
+        String query = "UPDATE severity_level SET ACTIVE='N' WHERE severity_level_id = " + severity_level_id;
+// String query = "delete pole_type_id WHERE pole_type_id = " + pole_type_id +"and active='Y'";
+        int rowsAffected = 0;
+        try {
+            rowsAffected = connection.prepareStatement(query).executeUpdate();
+        } catch (Exception e) {
+            System.out.println("Pole_TypeModel deleteRecord() Error: " + e);
+        }
+        if (rowsAffected > 0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
+    }
+
     
     public void setDriverClass(String driverclass) {
         this.driverClass = driverclass;

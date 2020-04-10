@@ -1,4 +1,4 @@
-<%-- 
+ <%--
     Document   : slave_info
     Created on : Aug 14, 2012, 11:25:00 AM
     Author     : Shruti
@@ -66,14 +66,14 @@
 <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
 <!--        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>-->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    
+   
 <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
-          
+         
                      
 
       <script type="text/javascript" language="javascript">
           function setStatus(id) {
-        if (id == 'SAVE') 
+        if (id == 'SAVE')
             document.getElementById("clickedButton").value = "SAVE";
         else (id === 'DELETE')
             document.getElementById("clickedButton").value = "DELETE";
@@ -81,7 +81,7 @@
         function myFuntion(){
         alert(" ");
         }
-        
+       
           </script>
         <style>
             .modal-div {
@@ -105,7 +105,7 @@
 
 <!--           <input value="Delete Side" onclick="deleteRow('dataTable')" type="button">-->
                 </td>
-                
+               
             </tr>
             <tr id="message">
                 <c:if test="${not empty message}">
@@ -126,8 +126,9 @@
                                     <th  class="heading">Position</th>
                                     <th  class="heading">Primary Horizontal Aspect Number</th>
                                     <th  class="heading">Primary Vertical Aspect Number</th>
+                                   
                                     <th  class="heading">Secondary Horizontal Aspect Number</th>
-                                    <th  class="heading">Secondary Vertical Aspect Number</th>
+                                     <th  class="heading">Secondary Vertical Aspect Number</th>
                                     <th class="heading">Image</th>                              
                                     <th  class="heading">Vehicle Detection</th>
                                     <th  class="heading">Count Down</th>
@@ -143,7 +144,7 @@
                                 </tr>
                                 <c:forEach var="list" items="${requestScope['slaveinfo']}" varStatus="loopCounter">
                                     <tr>
-                                        
+                                       
                                         <td><input class="input" type="checkbox"  name="chk" id="checkbox${loopCounter.count}"  onclick="myFunction()"></td>
                                         <td><input class="input" type="text" name="s_no${loopCounter.count}" id="s_no${loopCounter.count}" size="3" value="${loopCounter.count}" readonly style="background-color: #c3c3c3">
                                         </td>
@@ -157,31 +158,37 @@
                                           <option value="Standard" ${list.pole_type=="Standard"?"selected":""}>Standard</option>
                                                 <option value="Cantilever T" ${list.pole_type=="Cantilever T"?"selected":""}>Cantilever T</option>
                                                 <option value="Cantilever L" ${list.pole_type=="Cantilever L"?"selected":""}>Cantilever L</option>
-                                              
-                                            </select> 
+                                             
+                                            </select>
                                         <td><select name="position${loopCounter.count}" id="position${loopCounter.count}">
                                                 <option value="center" ${list.position=="center"?"selected":""}>center</option>
                                                 <option value="Left side" ${list.position=="Left side"?"selected":""}>Left side</option>
-                                            </select> 
+                                            </select>
                                         <td><input class="input" type="text" name="primary_h_aspect_no${loopCounter.count}" id="primary_h_aspect_no${loopCounter.count}" value="${list.primary_h_aspect_no}"></td>
                                         <td><input class="input" type="text" name="primary_v_aspect_no${loopCounter.count}" id="primary_v_aspect_no${loopCounter.count}" value="${list.primary_v_aspect_no}"></td>
-                                        <td><input class="input" type="text" name="secondary_v_aspect_no${loopCounter.count}" id="secondary_v_aspect_no${loopCounter.count}" value="${list.secondary_v_aspect_no}"></td>
-                                        <td><input class="input" type="text" name="secondary_h_aspect_no${loopCounter.count}" id="secondary_h_aspect_no${loopCounter.count}" value="${list.secondary_h_aspect_no}"></td>
-<!--                                        <td><input class="input" type="file"  name="image_name" id="image_name${loopCounter.count}" value="${slave_info.image_name}" value="" size="35" multiple="muliple"></td>-->
                                        
-                                        
-                                        
+
+                                        <td><input class="input" type="text" name="secondary_h_aspect_no${loopCounter.count}" id="secondary_h_aspect_no${loopCounter.count}" value="${list.secondary_h_aspect_no}"></td>
+ <td><input class="input" type="text" name="secondary_v_aspect_no${loopCounter.count}" id="secondary_v_aspect_no${loopCounter.count}" value="${list.secondary_v_aspect_no}"></td>
+                                       
+                                       
+                                        <!--                                      
+
+<td><input class="input" type="file"  name="image_name" id="image_name${loopCounter.count}" value="${slave_info.image_name}" value="" size="35" multiple="muliple"></td>-->
+                                       
+                                       
+                                       
 <!--                                        <td><input type="file" id="image_name" name="image_name" value="" size="35" multiple="muliple"></td>-->
 <!--                                       <td><input type="file" id="image_name" name="image_name${loopCounter.count}" value="" size="35" multiple="muliple" >
                                          </td>-->
-                                          
-                                              
+                                         
+                                             
 
-                                        
+                                       
                                    
-                                        
+                                       
                                        <td><a href="#" onclick="ViewPlanInfo('${list.side_detail_id}', '${list.sideName}', '${junction_id}');">View image</a></td>
-                                          
+                                         
                                        
 <!-- <td><button type="button"  onclick="addRow()" style="height:200px;width:200px" >Upload</button></td>-->
                                         <td><input class="input" type="text" name="vehicle_detection${loopCounter.count}" id="vehicle_detection${loopCounter.count}" value="${list.vehicle_detection}"></td>
@@ -200,10 +207,9 @@
                                             <td><input type="text" id="longitude${loopCounter.count}" name="longitude${loopCounter.count}" value="${list.longitude}" ></td>
                                             <td><input class="button" type="button" id="get_cordinate" value="Get Cordinate" onclick="openMapForCord(${loopCounter.count})"></td>
                                             <td><a href="#" onclick="ViewCameraInfo('${list.junction_id}','${list.side_no}');">View Camera Details</a></td>
-                                            
+                                           
                                     </tr>
-                                              
-                                                
+                                                 
                                 </c:forEach>
                             </tbody>
                         </table>
@@ -228,7 +234,7 @@
                         <tr id="get_image">
                         </tr>
                     </table>
-                    
+                   
                 </div>
             </div>
        </div>
@@ -259,8 +265,8 @@
                     //element1.style.display = "none";
 
                     cell1.appendChild(element1);
-                    
-        
+                   
+       
         var cell2 = row.insertCell(1);
                     var element1 = document.createElement("input");
                     element1.type = "text";
@@ -313,8 +319,8 @@
                     element4.value = rowCount;
                     //element2.readonly =true;                    
                     cell3.appendChild(element4);
-                    
-                    
+                   
+                   
                     var cell4 = row.insertCell(3);
                     var element2 = document.createElement("input");
                     element2.type = "text";
@@ -386,61 +392,336 @@
                      var opt = document.createElement("option");
                        opt.text = data[i].position1;
                        opt.value = data[i].position1;
-                      
+                     
                        modeElement1.options.add(opt);  
                    
-                    
+                   
                     }
                    modeElement1.name = "position1" + rowCount;
                     modeElement1.id = "position1" + rowCount;
                     modeElement1.value = "";
-                    cell6.appendChild(modeElement1); 
+                    cell6.appendChild(modeElement1);
                    
             }
                    
                    
                    
                });
-                     
-                    
-                    
-
+                   
                     var cell7 = row.insertCell(6);
                     var element2 = document.createElement("input");
-                    element2.type = "number";
-                    element2.name = "primary_h_aspect_no" + rowCount;
-                    element2.id = "primary_h_aspect_no" + rowCount;
-                    element2.size = 2;
-                    element2.value = "";
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no1" + rowCount;
+                    element2.id = "primary_h_aspect_no1" + rowCount;
+                    element2.size = 1;
+                    element2.value = "r";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "R";
                     cell7.appendChild(element2);
+                     cell7.appendChild(newlabel);
+                     
+                    var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no2" + rowCount;
+                    element2.id = "primary_h_aspect_no2" + rowCount;
+                    element2.size = 1;
+                    element2.value = "y";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "Y";
+                    cell7.appendChild(element2);
+                    cell7.appendChild(newlabel);
+                     
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no3" + rowCount;
+                    element2.id = "primary_h_aspect_no3" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g1";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "G1";
+                    cell7.appendChild(element2);
+                    cell7.appendChild(newlabel);
+                     
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no4" + rowCount;
+                    element2.id = "primary_h_aspect_no4" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g2";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "G2";
+                    cell7.appendChild(element2);
+                     cell7.appendChild(newlabel);
+                   
+            var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no5" + rowCount;
+                    element2.id = "primary_h_aspect_no5" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g3";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "G3";
+                    cell7.appendChild(element2);
+                     cell7.appendChild(newlabel);
+                 
+            var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no6" + rowCount;
+                    element2.id = "primary_h_aspect_no6" + rowCount;
+                    element2.size = 1;
+                    element2.value = "hv";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "H/V";
+                    cell7.appendChild(element2);
+                     cell7.appendChild(newlabel);
+                     
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_h_aspect_no7" + rowCount;
+                    element2.id = "primary_h_aspect_no7" + rowCount;
+                    element2.size = 1;
+                     
+                    element2.value = "c";
+                    var newlabel = document.createElement("Label");
+                    newlabel.innerHTML = "C";
+                    cell7.appendChild(element2);
+                     cell7.appendChild(newlabel);
 
                     var cell8 = row.insertCell(7);
                     var element2 = document.createElement("input");
-                    element2.type = "number";
-                    element2.name = "primary_v_aspect_no" + rowCount;
-                    element2.id = "primary_v_aspect_no" + rowCount;
-                    element2.size = 2;
-                    element2.value = "";
-                    cell8.appendChild(element2);
-
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no1" + rowCount;
+                    element2.id = "primary_v_aspect_no1" + rowCount;
+                    element2.size = 1;
+                    element2.value = "r";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "R";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no2" + rowCount;
+                    element2.id = "primary_v_aspect_no2" + rowCount;
+                    element2.size = 1;
+                    element2.value = "y";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "Y";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no3" + rowCount;
+                    element2.id = "primary_v_aspect_no3" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g1";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G1";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no4" + rowCount;
+                    element2.id = "primary_v_aspect_no4" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g2";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G2";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no5" + rowCount;
+                    element2.id = "primary_v_aspect_no5" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g3";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G3";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no6" + rowCount;
+                    element2.id = "primary_v_aspect_no6" + rowCount;
+                    element2.size = 1;
+                    element2.value = "hv";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "H/v";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+                     var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "primary_v_aspect_no7" + rowCount;
+                    element2.id = "primary_v_aspect_no7" + rowCount;
+                    element2.size = 1;
+                    element2.value = "c";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "C";
+           
+                    cell8.appendChild(element2);cell8.appendChild(newlabel);
+                   
+ 
                     var cell9 = row.insertCell(8);
                     var element2 = document.createElement("input");
-                    element2.type = "number";
-                    element2.name = "secondary_h_aspect_no" + rowCount;
-                    element2.id = "secondary_h_aspect_no" + rowCount;
-                    element2.size = 2;
-                    element2.value = "";
-                    cell9.appendChild(element2);
-
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no1" + rowCount;
+                    element2.id = "secondary_h_aspect_no1" + rowCount;
+                    element2.size = 1;
+                    element2.value = "r";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "R";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no2" + rowCount;
+                    element2.id = "secondary_h_aspect_no2" + rowCount;
+                    element2.size = 1;
+                    element2.value = "y";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "Y";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no3" + rowCount;
+                    element2.id = "secondary_h_aspect_no3" + rowCount;
+                    element2.size =1;
+                    element2.value = "g1";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G1";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no4" + rowCount;
+                    element2.id = "secondary_h_aspect_no4" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g2";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G2";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no5" + rowCount;
+                    element2.id = "secondary_h_aspect_no5" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g3";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "G3";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no6" + rowCount;
+                    element2.id = "secondary_h_aspect_no6" + rowCount;
+                    element2.size = 1;
+                    element2.value = "hv";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "H/V";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                   
+                   
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_h_aspect_no7" + rowCount;
+                    element2.id = "secondary_h_aspect_no7" + rowCount;
+                    element2.size = 1;
+                    element2.value = "c";
+                      var newlabel = document.createElement("Label");
+                        newlabel.innerHTML = "C";
+           
+                    cell9.appendChild(element2);  cell9.appendChild(newlabel);
+                   
+///////////////////////////////
                     var cell10 = row.insertCell(9);
+                     
+                     
                     var element2 = document.createElement("input");
-                    element2.type = "number";
-                    element2.name = "secondary_v_aspect_no" + rowCount;
-                    element2.id = "secondary_v_aspect_no" + rowCount;
-                    element2.size = 2;
-                    element2.value = "";
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no1" + rowCount;
+                    element2.id = "secondary_v_aspect_no1" + rowCount;
+                    element2.size = 1;
+                    element2.value = "r";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "R";
+           
+                    cell10.appendChild(element2); cell10.appendChild(newlabel);
+                     
+             
+            var element2 = document.createElement("input");
+                     
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no2" + rowCount;
+                    element2.id = "secondary_v_aspect_no2" + rowCount;
+                    element2.size = 1;
+                    element2.value = "y";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "Y";
+           
+ 
+                    cell10.appendChild(element2); cell10.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no3" + rowCount;
+                    element2.id = "secondary_v_aspect_no3" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g1";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "G1";
+           
+                    cell10.appendChild(element2);  cell10.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no4" + rowCount;
+                    element2.id = "secondary_v_aspect_no4" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g2";
+                     
+    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "G2";
+           
+                   
+                    cell10.appendChild(element2); cell10.appendChild(newlabel);
+                      var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no5" + rowCount;
+                    element2.id = "secondary_v_aspect_no5" + rowCount;
+                    element2.size = 1;
+                    element2.value = "g3";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "G3";
+             
+                    cell10.appendChild(element2);cell10.appendChild(newlabel);
+ var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no6" + rowCount;
+                    element2.id = "secondary_v_aspect_no6" + rowCount;
+                    element2.size = 1;
+                    element2.value = "hv";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "H/V";
+             
+                    cell10.appendChild(element2);cell10.appendChild(newlabel);
+                    var element2 = document.createElement("input");
+                    element2.type = "checkbox";
+                    element2.name = "secondary_v_aspect_no7" + rowCount;
+                    element2.id = "secondary_v_aspect_no7" + rowCount;
+                    element2.size = 1;
+                    element2.value = "c";
+                    var newlabel = document.createElement("Label");
+ newlabel.innerHTML = "C";
+           
                     cell10.appendChild(element2);
-
+                     cell10.appendChild(newlabel);
 //                    var cell10 = row.insertCell(10);
 //                     var x = document.createElement("BUTTON");
 //                    element2.type = "text";
@@ -495,7 +776,7 @@
                     element2.size = 2;
                     element2.value = "";
                     cell13.appendChild(element2);
-                    
+                   
                     var cell14 = row.insertCell(14);
                     var modeElement2 = document.createElement("select");
                     var rlpdArray = ["Yes", "No"];
@@ -509,7 +790,7 @@
                     modeElement2.id = "rlpd" + rowCount;
                     modeElement2.value = "";
                     cell14.appendChild(modeElement2);
-                    
+                   
                     var cell15 = row.insertCell(15);
                     var element2 = document.createElement("input");
                     element2.type = "number";
@@ -518,7 +799,7 @@
                     element2.size = 2;
                     element2.value = "";
                     cell15.appendChild(element2);
-                    
+                   
                     var cell16 = row.insertCell(16);
                     var modeElement2 = document.createElement("select");
                     var paSystemArray = ["Yes", "No"];
@@ -532,7 +813,7 @@
                     modeElement2.id = "pa_system" + rowCount;
                     modeElement2.value = "";
                     cell16.appendChild(modeElement2);
-                    
+                   
                     var cell17 = row.insertCell(17);
                     var element2 = document.createElement("input");
                     element2.type = "text";
@@ -540,7 +821,7 @@
                     element2.id = "latitude" + rowCount;
                     element2.value = "";
                     cell17.appendChild(element2);
-                    
+                   
                     var cell18 = row.insertCell(18);
                     var element2 = document.createElement("input");
                     element2.type = "text";
@@ -548,7 +829,7 @@
                     element2.id = "longitude" + rowCount;
                     element2.value = "";
                     cell18.appendChild(element2);
-                    
+                   
                     var cell19 = row.insertCell(19);
                     var element2 = document.createElement("input");
                     element2.class = "button";
@@ -558,8 +839,8 @@
                     element2.value = "Get Cordinate";
                     element2.setAttribute("onclick", 'openMapForCord('+rowCount+')');
                     cell19.appendChild(element2);
-              
-                    
+             
+                   
                     var cell20 = row.insertCell(20);
                     var element2 = document.createElement("a");
                     debugger;
@@ -567,14 +848,14 @@
                     element2.setAttribute("onclick", 'ViewCameraInfo('+junction_id+','+side_num+')');
                     element2.innerHTML = "View Camera Details";
                     cell20.appendChild(element2);
-                    
-                    
+                   
+                   
                 }
 
 
 
             }
-            
+           
             function getSideName(id,junction_id,side_no) {
                 debugger;
                 var poleTypeArray;
@@ -592,7 +873,7 @@
                     }, error: function (error) {
                         debugger;
                         console.log(error.responseJSON.side_name);
-                        
+                       
                     }
 
                 });
@@ -646,7 +927,7 @@
                 }
                 $("#message").html(message);
             }
-            
+           
     function deleteRow(tableID) {
                 try {
                     // alert(tableID);
@@ -713,14 +994,14 @@
 
     }
 
-    
+   
     function openMapForCord(count) {
         var url="slaveInfoCont?task=GetCordinates1&count="+count;//"getCordinate";
         popupwin = openPopUp(url, "",  600, 630);
-        
+       
     }
  
-          
+         
 
 
 
@@ -733,3 +1014,7 @@
     </body>
 </html>
 
+
+	
+	
+	

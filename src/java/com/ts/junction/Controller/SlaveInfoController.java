@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -63,9 +64,9 @@ public class SlaveInfoController extends HttpServlet {
         String task1 = request.getParameter("task");
         String task2 = request.getParameter("task2");
         //---------------------
-        
+       
         //-------------------
-        
+       
         if (task1 == null) {
             task1 = "";
         }
@@ -158,6 +159,8 @@ public class SlaveInfoController extends HttpServlet {
                 FileItem item = (FileItem) itr.next();
                 if (item.isFormField()) {
                     System.out.println("File Name = " + item.getFieldName() + ", Value = " + item.getString() + "\n");//(getString())its for form field
+                   
+                   
                     map.put(item.getFieldName(), item.getString("UTF-8"));
 
                 }
@@ -235,7 +238,7 @@ public class SlaveInfoController extends HttpServlet {
                 junctionName = slaveinfoModel.getjunctionName(Integer.parseInt(request.getParameter("junction_id")));
                 List imageList = new ArrayList();
                 String destinationPath = "";
-//                       int general_image_details_id=Integer.parseInt(request.getParameter("general_image_details_id"));                       
+//                       int general_image_details_id=Integer.parseInt(request.getParameter("general_image_details_id"));                      
                 String destination = slaveinfoModel.getImageDestinationPath(imageid1);
 //                         String task2=request.getParameter("task1");
 
@@ -247,7 +250,7 @@ public class SlaveInfoController extends HttpServlet {
                     if (listOfFiles[i].isFile()) {
 //                      
                         String name1 = listOfFiles[i].getName();
-                        /////////////////////////////////////filterImageName//////////////////////////////////////////////                                                       
+                        /////////////////////////////////////filterImageName//////////////////////////////////////////////                                                      
                         SlaveInfo fd = new SlaveInfo();
                         fd.setImage_name(name1);
 //                                   fd.setTask(task2);
@@ -333,12 +336,12 @@ public class SlaveInfoController extends HttpServlet {
         int no_of_sides = (no_of_sidesS != null) ? Integer.parseInt(no_of_sidesS.trim()) : (no_of_sidesS1 != null) ? Integer.parseInt(no_of_sidesS1.trim()) : 0;
         int program_version_no = (program_version_noS != null) ? Integer.parseInt(program_version_noS.trim()) : (program_version_noS1 != null) ? Integer.parseInt(program_version_noS1.trim()) : 0;
         jId = junction_id;
-        
+       
         if (task.equals("Delete")) {
-            slaveinfoModel.deleteRecord(Integer.parseInt(request.getParameter("state_detail_id"))); 
+            slaveinfoModel.deleteRecord(Integer.parseInt(request.getParameter("state_detail_id")));
         }
-        
-        
+       
+       
         else if (task.equals("SAVE") || task.equals("Save AS New")) {
             // List<SlaveInfo> slaveInfoList = new ArrayList<SlaveInfo>();
             SlaveInfo slave_info = new SlaveInfo();
@@ -370,6 +373,9 @@ public class SlaveInfoController extends HttpServlet {
 //                    if(slaveinfoModel.checkSideNoExsist(side_no, junction_id)) {
 //                        continue;
 //                    } else {
+
+//    String[] a=request.getParameterValues("secondary_v_aspect_no");
+//    List listli = Arrays.asList(a);
                     slave_info.setJunction_id(id);
                     slave_info.setProgram_version_no(prog_version);
                     slave_info.setSide_no(side_no);
@@ -381,12 +387,270 @@ public class SlaveInfoController extends HttpServlet {
                     slave_info.setVehicle_detection(map.get("vehicle_detection" + i));
                     image_folder = destination_path;
 //                    image_folder = imagePath;
-
+//                    String[] s1 = request.getParameterValues("secondary_v_aspect_no"+i);
+//                    for (int j = 0; j < s1.length; j++) {
+//                        System.out.println("aaaaaaaaaaaaaaa"+s1[i]);
+//                    }
+//                int i1=Integer.parseInt(map.get("secondary_v_aspect_no" + i));
+//                    System.out.println("ddddddddddddddddddddddddddd"+i1);
                     slave_info.setImage_folder(image_folder);
-                    slave_info.setSecondary_v_aspect_no(Integer.parseInt(map.get("secondary_v_aspect_no" + i)));
-                    slave_info.setSecondary_h_aspect_no(Integer.parseInt(map.get("secondary_h_aspect_no" + i)));
-                    slave_info.setPrimary_v_aspect_no(Integer.parseInt(map.get("primary_v_aspect_no" + i)));
-                    slave_info.setPrimary_h_aspect_no(Integer.parseInt(map.get("primary_h_aspect_no" + i)));
+                    int svan=0;
+                    int shan=0;
+                    int pvan=0;
+                    int phan=0;
+                    String svan1="";
+                       String svan2="";
+                          String svan3="";   String svan4="";   String svan5="";   String svan6="";   String svan7="";
+                           
+                    if(map.get("secondary_v_aspect_no1" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan1="1";
+                    } else{
+                    svan1="0";
+                    }
+                     if(map.get("secondary_v_aspect_no2" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan2="1";
+                    } else{
+                    svan2="0";
+                    }
+                      if(map.get("secondary_v_aspect_no3" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan3="1";
+                    } else{
+                    svan3="0";
+                    }
+                       if(map.get("secondary_v_aspect_no4" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan4="1";
+                    } else{
+                    svan4="0";
+                    }
+                        if(map.get("secondary_v_aspect_no5" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan5="1";
+                    } else{
+                    svan5="0";
+                    }
+                         if(map.get("secondary_v_aspect_no6" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan6="1";
+                    } else{
+                    svan6="0";
+                    }
+                          if(map.get("secondary_v_aspect_no7" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan7="1";
+                    } else{
+                    svan7="0";
+                    }
+                           String sv=(svan1.concat(svan2).concat(svan3).concat(svan4).concat(svan5).concat(svan6).concat(svan7));
+                        svan=Integer.parseInt(sv,2);
+                       
+                       
+                            if(map.get("secondary_h_aspect_no1" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan1="1";
+                    } else{
+                    svan1="0";
+                    }
+                     if(map.get("secondary_h_aspect_no2" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan2="1";
+                    } else{
+                    svan2="0";
+                    }
+                      if(map.get("secondary_h_aspect_no3" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan3="1";
+                    } else{
+                    svan3="0";
+                    }
+                       if(map.get("secondary_h_aspect_no4" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan4="1";
+                    } else{
+                    svan4="0";
+                    }
+                        if(map.get("secondary_h_aspect_no5" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan5="1";
+                    } else{
+                    svan5="0";
+                    }
+                         if(map.get("secondary_h_aspect_no6" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan6="1";
+                    } else{
+                    svan6="0";
+                    }
+                          if(map.get("secondary_h_aspect_no7" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan7="1";
+                    } else{
+                    svan7="0";
+                    }
+                     
+                          String sv1=(svan1.concat(svan2).concat(svan3).concat(svan4).concat(svan5).concat(svan6).concat(svan7));
+                        shan=Integer.parseInt(sv1,2);
+                       
+                       
+                               if(map.get("primary_v_aspect_no1" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan1="1";
+                    } else{
+                    svan1="0";
+                    }
+                     if(map.get("primary_v_aspect_no2" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan2="1";
+                    } else{
+                    svan2="0";
+                    }
+                      if(map.get("primary_v_aspect_no3" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan3="1";
+                    } else{
+                    svan3="0";
+                    }
+                       if(map.get("primary_v_aspect_no4" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan4="1";
+                    } else{
+                    svan4="0";
+                    }
+                        if(map.get("primary_v_aspect_no5" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan5="1";
+                    } else{
+                    svan5="0";
+                    }
+                         if(map.get("primary_v_aspect_no6" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan6="1";
+                    } else{
+                    svan6="0";
+                    }
+                          if(map.get("primary_v_aspect_no7" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan7="1";
+                    } else{
+                    svan7="0";
+                    }
+                     
+                          String sv2=(svan1.concat(svan2).concat(svan3).concat(svan4).concat(svan5).concat(svan6).concat(svan7));
+                        pvan=Integer.parseInt(sv2,2);
+                       
+                       if(map.get("primary_h_aspect_no1" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan1="1";
+                    } else{
+                    svan1="0";
+                    }
+                     if(map.get("primary_h_aspect_no2" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan2="1";
+                    } else{
+                    svan2="0";
+                    }
+                      if(map.get("primary_h_aspect_no3" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan3="1";
+                    } else{
+                    svan3="0";
+                    }
+                       if(map.get("primary_h_aspect_no4" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan4="1";
+                    } else{
+                    svan4="0";
+                    }
+                        if(map.get("primary_h_aspect_no5" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan5="1";
+                    } else{
+                    svan5="0";
+                    }
+                         if(map.get("primary_h_aspect_no6" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan6="1";
+                    } else{
+                    svan6="0";
+                    }
+                          if(map.get("primary_h_aspect_no7" + i)!=null){
+                   
+                         //   String binaryString="1000000";  
+                            //svan=Integer.parseInt(binaryString,2);
+                     svan7="1";
+                    } else{
+                    svan7="0";
+                    }
+                     
+                          String sv3=(svan1.concat(svan2).concat(svan3).concat(svan4).concat(svan5).concat(svan6).concat(svan7));
+                        phan=Integer.parseInt(sv3,2);
+                       
+             
+                   
+                 
+                   
+                    slave_info.setSecondary_v_aspect_no(svan);
+                    slave_info.setSecondary_h_aspect_no(shan);
+                    slave_info.setPrimary_v_aspect_no(pvan);
+                    slave_info.setPrimary_h_aspect_no(phan);
                     slave_info.setPosition(map.get("position1" + i));
                     slave_info.setPole_type(map.get("pole_type1" + i));
                     slave_info.setVehicle_detection(map.get("vehicle_detection" + i));
@@ -430,3 +694,4 @@ public class SlaveInfoController extends HttpServlet {
         doPost(request, response);
     }
 }
+

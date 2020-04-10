@@ -38,6 +38,7 @@ public class Junction {
     private String side4_name;
     private String side5_name;
     private String remark;
+    private String bluetooth_address;
     private int file_no;
 // these fields r NOT the part of the junction table it only belongs to the Registration Status.
     private boolean registration_status;
@@ -305,4 +306,13 @@ public class Junction {
     public void setProgram_version_no(int program_version_no) {
         this.program_version_no = program_version_no;
     }
+
+    public String getBluetooth_address() {
+        return bluetooth_address;
+    }
+
+    public void setBluetooth_address(String bluetooth_address) {
+        this.bluetooth_address = bluetooth_address;
+    }
+    
 }

@@ -48,6 +48,8 @@ private Connection connection;
         }
         return noOfRows;
     }
+  
+
     
     public int getLastId() {
         int noOfRows = 0;
@@ -66,7 +68,8 @@ private Connection connection;
     public List<Camera_Type> showData(int lowerLimit, int noOfRowsToDisplay) {
         List<Camera_Type> list = new ArrayList<Camera_Type>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM camera_type ORDER BY camera_type_id LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        String query = "SELECT * FROM camera_type as c where c.active='Y' ORDER BY camera_type_id  "
+                + " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
@@ -83,14 +86,14 @@ private Connection connection;
     }
 
     public int insertRecord(Camera_Type camera_type) {
-        String query = "INSERT INTO camera_type (camera_type_id,camera_type,remark) VALUES(?,?,?) ";
-        int last_id = getLastId();
+        String query = "INSERT INTO camera_type (camera_type,remark) VALUES(?,?) ";
+      
         int rowsAffected = 0;
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1,last_id+1 );
-            pstmt.setString(2, camera_type.getCamera_type());
-            pstmt.setString(3, camera_type.getRemark());
+//            pstmt.setInt(1,last_id+1 );
+            pstmt.setString(1, camera_type.getCamera_type());
+            pstmt.setString(2, camera_type.getRemark());
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("Camera_TypeModel insertRecord() Error: " + e);
@@ -113,7 +116,6 @@ private Connection connection;
             pstmt.setString(1, camera_type.getCamera_type());
              pstmt.setString(2, camera_type.getRemark());
             pstmt.setInt(3, camera_type.getCamera_type_id());
-//            pstmt.setString(2, position.getPosition());
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("Camera_TypeModel updateRecord() Error: " + e);
@@ -129,7 +131,7 @@ private Connection connection;
     }
 
     public int deleteRecord(int camera_type_id) {
-        String query = "DELETE FROM camera_type WHERE camera_type_id = " + camera_type_id;
+        String query = "UPDATE camera_type SET ACTIVE='N' WHERE camera_type_id =  " + camera_type_id;
         int rowsAffected = 0;
         try {
             rowsAffected = connection.prepareStatement(query).executeUpdate();

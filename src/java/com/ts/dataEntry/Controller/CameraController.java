@@ -52,10 +52,14 @@ public class CameraController extends HttpServlet {
        }
         String junctionId = request.getParameter("junction_id1");
         String side_no1 = request.getParameter("side_no_details");
+//        int camera_id;
+//        camera_id = Integer.parseInt(request.getParameter("camera_id"));
         int junction_id = junctionId != null ? Integer.parseInt(junctionId) : 0;
-        String junctionName = cameraModel.getJunctionName(junction_id);
-
+//      String junctionName = cameraModel.getJunctionName(junction_id);
+        String junctionName ="";
+        
         try {
+             String q = request.getParameter("q"); 
             String JQstring = request.getParameter("action1");
             if (JQstring != null) {
                 PrintWriter out = response.getWriter();
@@ -63,8 +67,11 @@ public class CameraController extends HttpServlet {
 
                 if (JQstring.equals("getCameraMake")) {
                     list = cameraModel.getCameraMake();
-                } else if (JQstring.equals("getCameraType")) {
+                }  if (JQstring.equals("getCameraType")) {
                     list = cameraModel.getCameraType();
+                }
+                if (JQstring.equals("getsearchJunctionName")) {
+                    list = cameraModel.getsearchJunctionName(q);
                 }
 
                 Iterator<String> iter = list.iterator();
@@ -83,19 +90,19 @@ public class CameraController extends HttpServlet {
          
         int side_no2 = side_no1 != null ? Integer.parseInt(side_no1) : 0;
         if (task.equals("Delete")) {
-            cameraModel.deleteRecord(Integer.parseInt(request.getParameter("camera_id")));  // Pretty sure that state_id will be available.
+            cameraModel.deleteRecord(Integer.parseInt(request.getParameter("camera_id")));  // Pretty sure that camera_id will be available.
         } else if (task.equals("Save")) {
             //////////////////
 
             //////////////
-            int camera_id = 0;
+         int camera_id;
             try {
                 // state_id may or may NOT be available i.e. it can be update or new record.
                 camera_id = Integer.parseInt(request.getParameter("camera_id"));
             } catch (Exception e) {
                 camera_id = 0;
             }
-            junction_id = Integer.parseInt(request.getParameter("junction_id"));
+//           junction_id = Integer.parseInt(request.getParameter("junction_id"));
             junctionName = request.getParameter("junction_name");
             side_no2 = Integer.parseInt(request.getParameter("side_no"));
             Camera camera = new Camera();
@@ -158,7 +165,9 @@ public class CameraController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay, junction_id, side_no2);
+        List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay);
+//                List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay, junction_id, side_no2);
+//     System.out.println(camera_id);
         lowerLimit = lowerLimit + cameraList.size();
         noOfRowsTraversed = cameraList.size();
 
@@ -167,6 +176,7 @@ public class CameraController extends HttpServlet {
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
         request.setAttribute("cameraList", cameraList);
         request.setAttribute("junction_id", junction_id);
+//         request.setAttribute("camera_id", camera_id);
         request.setAttribute("junction_name", junctionName);
         request.setAttribute("side_no", side_no2);
         if ((lowerLimit - noOfRowsTraversed) == 0) {     // if this is the only data in the table or when viewing the data 1st time.

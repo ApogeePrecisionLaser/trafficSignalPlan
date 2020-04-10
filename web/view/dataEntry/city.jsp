@@ -220,7 +220,7 @@
                                                     <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
                                                         <table border="1" id="table1" align="center" class="reference">
                                                             <tr>
-                                                                <th class="heading" style="visibility: hidden"><!-- City ID --></th>
+                                                                <th class="heading" style="display: none"><!-- City ID --></th>
                                                                 <th class="heading" >S.No.</th>
                                                                 <th class="heading" >City Name</th>
                                                                 <th class="heading" >District</th>

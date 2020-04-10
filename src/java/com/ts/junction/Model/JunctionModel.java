@@ -164,7 +164,8 @@ public class JunctionModel extends HttpServlet {
 
     public int deleteRecord(int junction_id) {
         String junctionQuery = "UPDATE junction SET final_revision = 'EXPIRED' WHERE junction_id= " + junction_id + " AND final_revision = 'VALID'";
-        String planQuery = "UPDATE plan_info SET final_revision = 'EXPIRED' WHERE junction_id= " + junction_id + " AND final_revision = 'VALID'";
+    // String planQuery = "UPDATE plan_info SET final_revision = 'EXPIRED' WHERE junction_id= " + junction_id + " AND final_revision = 'VALID'";
+     String planQuery = "UPDATE junction_plan_map SET active = 'N' WHERE junction_id= " + junction_id + " AND active = 'Y' ";
         int rowsAffected = 0;
         try {
             connection.setAutoCommit(false);
@@ -251,8 +252,8 @@ public class JunctionModel extends HttpServlet {
      public boolean insertRecord(Junction junction) {
         String junctionQuery = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
-                + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
-                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark,bluetooth_address, created_by) "
+                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ";
 
         String slave_insert_query = "INSERT into slave_info(junction_id, program_version_no, side_no, side_revision_no, side_name) "
                 + " VALUES(?, ?, ?, ?, ?) ";
@@ -302,7 +303,8 @@ public class JunctionModel extends HttpServlet {
             pstmt.setString(23, "NO");
             pstmt.setInt(24, junction.getFile_no());
             pstmt.setString(25, junction.getRemark());
-            pstmt.setInt(26, 1);
+            pstmt.setString(26, junction.getBluetooth_address());
+            pstmt.setInt(27, 1);
             rowsAffected = pstmt.executeUpdate();
             for (int i = 0; i < junction.getNo_of_sides() && rowsAffected > 0; i++) {
                 rowsAffected = 0;
@@ -350,8 +352,8 @@ public class JunctionModel extends HttpServlet {
         int program_version_no = getFinalProgramVersionNo(junction.getJunction_id());
         query = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
-                + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
-                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+                + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark,bluetooth_address, created_by) "
+                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?) ";
 
         String updateStatus = "UPDATE junction SET final_revision='EXPIRED' WHERE junction_id = ? AND program_version_no = ? ";
 
@@ -400,7 +402,8 @@ public class JunctionModel extends HttpServlet {
                 pstmt.setString(23, "NO");
                 pstmt.setInt(24, junction.getFile_no());
                 pstmt.setString(25, junction.getRemark());
-                pstmt.setInt(26, 1);
+                pstmt.setString(26, junction.getBluetooth_address());
+                pstmt.setInt(27, 1);
                 rowsAffected = pstmt.executeUpdate();
                 if (rowsAffected > 0) {
                     pstmt.close();
@@ -499,7 +502,7 @@ public class JunctionModel extends HttpServlet {
         try {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
-                    + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
+                    + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark,bluetooth_address "
                     + " from junction AS j, city AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' "
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
@@ -533,6 +536,7 @@ public class JunctionModel extends HttpServlet {
                 junction.setFile_no(rset.getInt("file_no"));
                 junction.setProgram_version_no(rset.getInt("program_version_no"));
                 junction.setRemark(rset.getString("remark"));
+                junction.setBluetooth_address(rset.getString("bluetooth_address"));
                 list.add(junction);
             }
 

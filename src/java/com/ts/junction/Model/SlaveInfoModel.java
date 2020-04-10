@@ -803,18 +803,20 @@ public class SlaveInfoModel extends HttpServlet {
     public static String getImageDestinationPath(int imageid1) {
         String image_folder = "";
 
-        String query = " SELECT image_folder  FROM  side_detail where side_detail_id=" + imageid1;
+        //String query = " SELECT image_folder  FROM  side_detail where side_detail_id=" + imageid1;
+        String query = " SELECT  destination_path  FROM image_destination";
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             if (rset.next()) {
-                image_folder = rset.getString("image_folder");
-
+               // image_folder = rset.getString("image_folder");
+                  image_folder = rset.getString("destination_path");
             }
         } catch (Exception ex) {
             System.out.println("ERROR: " + ex);
         }
         return image_folder;
     }
+    
     public void setDriverClass(String driverclass) {
         this.driverClass = driverclass;
     }

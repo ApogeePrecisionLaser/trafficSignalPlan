@@ -54,7 +54,7 @@ private Connection connection;
     public List<Pole_Type> showData(int lowerLimit, int noOfRowsToDisplay) {
         List<Pole_Type> list = new ArrayList<Pole_Type>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM pole_type ORDER BY pole_type LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        String query = "SELECT * FROM pole_type as pt where pt.active='Y' ORDER BY pole_type LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
@@ -112,7 +112,8 @@ private Connection connection;
     }
 
     public int deleteRecord(int pole_type_id) {
-        String query = "DELETE FROM pole_type WHERE pole_type_id = " + pole_type_id;
+        String query = "UPDATE pole_type SET ACTIVE='N' WHERE pole_type_id = " + pole_type_id;
+// String query = "delete pole_type_id WHERE pole_type_id = " + pole_type_id +"and active='Y'";
         int rowsAffected = 0;
         try {
             rowsAffected = connection.prepareStatement(query).executeUpdate();

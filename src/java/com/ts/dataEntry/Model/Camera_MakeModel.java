@@ -66,7 +66,8 @@ private Connection connection;
     public List<Camera_Make> showData(int lowerLimit, int noOfRowsToDisplay) {
         List<Camera_Make> list = new ArrayList<Camera_Make>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM camera_make ORDER BY camera_make LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        String query = "SELECT * FROM camera_make as c where c.active='Y' ORDER BY camera_make_id "
+                + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
@@ -83,14 +84,14 @@ private Connection connection;
     }
 
     public int insertRecord(Camera_Make camera_make) {
-        String query = "INSERT INTO camera_make (camera_make_id,camera_make,remark) VALUES(?,?,?) ";
-        int last_id = getLastId();
+        String query = "INSERT INTO camera_make (camera_make,remark) VALUES(?,?) ";
+//        int last_id = getLastId();
         int rowsAffected = 0;
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
-            pstmt.setInt(1,last_id+1 );
-            pstmt.setString(2, camera_make.getCamera_make());
-            pstmt.setString(3, camera_make.getRemark());
+//            pstmt.setInt(1,last_id+1 );
+            pstmt.setString(1, camera_make.getCamera_make());
+            pstmt.setString(2, camera_make.getRemark());
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("Camera_MakeModel insertRecord() Error: " + e);
@@ -129,7 +130,7 @@ private Connection connection;
     }
 
     public int deleteRecord(int camera_make_id) {
-        String query = "DELETE FROM camera_make WHERE camera_make_id = " + camera_make_id;
+        String query = "UPDATE camera_make SET ACTIVE='N' WHERE camera_make_id = " + camera_make_id;
         int rowsAffected = 0;
         try {
             rowsAffected = connection.prepareStatement(query).executeUpdate();

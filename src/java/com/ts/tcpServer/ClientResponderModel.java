@@ -5,6 +5,7 @@
 package com.ts.tcpServer;
 
 import com.ts.junction.tableClasses.History;
+import com.ts.junction.tableClasses.SlaveInfo;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -536,7 +537,17 @@ public class ClientResponderModel extends HttpServlet {
     public List<History> showLoggedInJunctionDetails() {
         List<History> list = new ArrayList<History>();
         try {
-            String query = " SELECT j.junction_id, junction_name, city_name, ip_address, port, j.program_version_no, j.file_no, "
+//            String query = " SELECT distinct j.junction_id, junction_name, city_name, ip_address, port, j.program_version_no, j.file_no, "
+//                    + " IF(synchronization_status is null or synchronization_status = '' ,'N',synchronization_status) AS synchronization_status ,"
+//                    + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(application_hr,':',application_min,' ',application_date,'-',application_month,'-',application_year)) AS application_last_time, "
+//                    + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(junction_hr,':',junction_min,' ',junction_date,'-',junction_month,'-',junction_year)) AS junction_last_time"
+//                    + " FROM  junction AS j LEFT JOIN time_synchronization_detail AS tsd"
+//                    + "  ON j.junction_id = tsd.junction_id AND tsd.final_revision='VALID' AND j.program_version_no=tsd.program_version_no "
+//                    + ", log_history AS lh, city AS c  "
+//                    + " WHERE j.junction_id=lh.junction_id AND j.city_id=c.city_id AND logout_timestamp_time is null AND j.final_revision='VALID' "
+//                    + "ORDER BY login_timestamp_date DESC, login_timestamp_time DESC ";
+             //multiple rows show solution query
+              String query = " SELECT max(j.timestamp), j.junction_id, junction_name, city_name, ip_address, port, j.program_version_no, j.file_no, "
                     + " IF(synchronization_status is null or synchronization_status = '' ,'N',synchronization_status) AS synchronization_status ,"
                     + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(application_hr,':',application_min,' ',application_date,'-',application_month,'-',application_year)) AS application_last_time, "
                     + " IF(synchronization_status is null or synchronization_status = '','Not Set',CONCAT(junction_hr,':',junction_min,' ',junction_date,'-',junction_month,'-',junction_year)) AS junction_last_time"
@@ -544,7 +555,7 @@ public class ClientResponderModel extends HttpServlet {
                     + "  ON j.junction_id = tsd.junction_id AND tsd.final_revision='VALID' AND j.program_version_no=tsd.program_version_no "
                     + ", log_history AS lh, city AS c  "
                     + " WHERE j.junction_id=lh.junction_id AND j.city_id=c.city_id AND logout_timestamp_time is null AND j.final_revision='VALID' "
-                    + "ORDER BY login_timestamp_date DESC, login_timestamp_time DESC ";
+                    + " group by j.junction_id ORDER BY login_timestamp_date DESC, login_timestamp_time DESC ";
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 History log_history = new History();
@@ -1147,6 +1158,70 @@ public class ClientResponderModel extends HttpServlet {
         }
         return phaseMapDetail;
     }
+    
+     public List<SlaveInfo> getsidedata(int junction_id, int map_id, int phase_no) {
+         List<SlaveInfo> li=new ArrayList<>();
+        PreparedStatement pstmt;
+        int i = 1;
+        try {
+           
+                 pstmt = connection.prepareStatement("SELECT s.pole_type_id,s.primary_h_aspect_no,s.primary_v_aspect_no,s.secondary_h_aspect_no,s.secondary_v_aspect_no,s.side_no " +
+"FROM traffic_signal_plan1.side_detail s where s.junction_id=? and s.active='Y'");
+                pstmt.setInt(1, junction_id);
+              //  pstmt.setInt(2, map_id);
+                ResultSet rset = pstmt.executeQuery();
+SlaveInfo si=new SlaveInfo();
+                while(rset.next()){
+                     si.setPole_type_id(rset.getInt("pole_type_id"));
+                      si.setPrimary_h_aspect_no(rset.getInt("primary_h_aspect_no"));
+                      si.setPrimary_v_aspect_no(rset.getInt("primary_v_aspect_no"));
+                      si.setSecondary_h_aspect_no(rset.getInt("secondary_h_aspect_no"));
+                      si.setSecondary_v_aspect_no(rset.getInt("secondary_v_aspect_no"));
+                      li.add(si);
+                }
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getNoOfPlans() Error: " + e);
+        }
+        return li;
+    }
+    
+     public List<SlaveInfo> getsidedatalist(int junction_id) {
+         List<SlaveInfo> li=new ArrayList<>();
+        PreparedStatement pstmt;
+        int i = 1;
+        try {
+           
+                 pstmt = connection.prepareStatement("SELECT s.pole_type_id,s.primary_h_aspect_no,s.primary_v_aspect_no,s.secondary_h_aspect_no,s.secondary_v_aspect_no,s.side_no,s.side_name " +
+"FROM traffic_signal_plan1.side_detail s where s.junction_id=? and s.active='Y'");
+                pstmt.setInt(1, junction_id);
+              //  pstmt.setInt(2, map_id);
+                ResultSet rset = pstmt.executeQuery();
+SlaveInfo si=new SlaveInfo();
+                while(rset.next()){
+                     si.setPole_type_id(rset.getInt("pole_type_id"));
+                      si.setPrimary_h_aspect_no(rset.getInt("primary_h_aspect_no"));
+                      si.setPrimary_v_aspect_no(rset.getInt("primary_v_aspect_no"));
+                      si.setSecondary_h_aspect_no(rset.getInt("secondary_h_aspect_no"));
+                      si.setSecondary_v_aspect_no(rset.getInt("secondary_v_aspect_no"));
+                      si.setSideName(rset.getString("s.side_name"));
+                      
+                      li.add(si);
+                }
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getNoOfPlans() Error: " + e);
+        }
+        return li;
+    }
+    
+    
+    
+    
     
     public int getNoOfPlanInDay(int junction_id, int order_no, int day_id) {
         int planNo = 0;
@@ -2092,11 +2167,39 @@ public class ClientResponderModel extends HttpServlet {
         }
         return poleType;
     }
+    //--------
+     public int getPoleType1(int junction_id, int programVersionNoFromDB, int side_no) {
+        int poleType = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" Select pt.pole_type AS pole_type "
+                    + "from side_detail sl inner join pole_type pt on sl.pole_type_id = pt.pole_type_id " 
+                    + "where junction_id = ? and sl.active = 'Y' and pt.active = 'Y' and side_no = ?");
+            pstmt.setInt(1, junction_id);
+            pstmt.setInt(2, side_no);
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            String poleTypeS = rset.getString("pole_type");
+            if(poleTypeS.equals("Standard")) {
+                poleType = 1;
+            } else if(poleTypeS.equals("Cantilever T")){
+                poleType =2;
+            } else if(poleTypeS.equals("Cantilever L")) {
+                poleType = 3;
+            }
+            //System.out.println(fileNo);
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getPoleType() Error: " + e);
+        }
+        return poleType;
+    }
+    
+    //-----
     
     public Map<String,Object> matchColor(String sendData, String recievedData) { 
         String query = "SELECT severity_case, severity_case_id "
                 + "FROM severity_case "
-                + " where send_data = ? and recieved_data = ? and severity_case.active = 'Y';";
+                + " where send_data = ? and recieved_data = ? and severity_case.active = 'Y'";
         PreparedStatement pstmt;
         ResultSet rset;
         int rowsReturned = 0;

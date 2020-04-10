@@ -74,6 +74,9 @@ public class SeverityLevelController extends HttpServlet {
                 severityLevelModel.updateRecord(severityLevel);
             }
         }
+         if (task.equals("Delete")) {
+            severityLevelModel.deleteRecord(Integer.parseInt(request.getParameter("severity_level_id")));  // Pretty sure that camera_id will be available.
+        }
         
         
         noOfRowsInTable = severityLevelModel.getNoOfRows(); // get the number of records (rows) in the table.

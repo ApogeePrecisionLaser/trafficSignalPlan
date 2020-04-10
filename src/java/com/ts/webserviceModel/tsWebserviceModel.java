@@ -247,7 +247,7 @@ public class tsWebserviceModel {
                     obj.put("timestamp",rset.getString("timestamp"));
                      obj.put("created_by",rset.getString("created_by"));
                       obj.put("remark",rset.getString("remark"));
-                    obj.put("junction_plan_id",rset.getInt("junction_plan_id"));
+                   // obj.put("junction_plan_id",rset.getInt("junction_plan_id"));
                   
                  rowData.add(obj);
            }
@@ -292,7 +292,7 @@ public class tsWebserviceModel {
         try {
             System.out.println("hii inside setConnection() method");
             Class.forName("com.mysql.jdbc.Driver");
-            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/traffic_signal_plan2", "jpss_2", "jpss_1277");
+            connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/traffic_signal_plan1", "jpss_2", "jpss_1277");
         } catch (Exception e) {
             System.out.println("BLEWebServicesModel setConnection() Error: " + e);
         }

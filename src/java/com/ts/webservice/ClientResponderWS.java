@@ -1,5 +1,6 @@
 package com.ts.webservice;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.ts.general.Controller.ModemResReadSaveController;
 import com.ts.general.Controller.TS_StatusShowerController;
 import com.ts.general.Controller.TS_StatusUpdaterController;
@@ -17,6 +18,7 @@ import com.ts.junction.tableClasses.LabourChowkInfo;
 import com.ts.junction.tableClasses.MadanMahalInfo;
 import com.ts.junction.tableClasses.PlanInfo;
 import com.ts.junction.tableClasses.RanitalInfo;
+import com.ts.junction.tableClasses.SlaveInfo;
 import com.ts.junction.tableClasses.TeenPatti_Info;
 import com.ts.junction.tableClasses.YatayatThanaInfo;
 import com.ts.tcpServer.ClientResponderModel;
@@ -46,6 +48,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -102,6 +105,10 @@ public class ClientResponderWS extends HttpServlet
     private static MadanMahalInfo madanMahalInfoRefreshList = new MadanMahalInfo();
     private static BandariyaTirahaInfo bandariyaTirahaInfoRefreshList = new BandariyaTirahaInfo();
     private static LabourChowkInfo labourChowkInfoRefreshList = new LabourChowkInfo();
+    // private static SlaveInfo sidelist;
+      Integer arrdata[];
+     List<SlaveInfo> sidelistdata;
+          List<SlaveInfo> sideinfolist=new ArrayList<>();    
     String currentTime;
     private String lastVisitedTime;
     DateFormat dateFormat;
@@ -400,6 +407,7 @@ public class ClientResponderWS extends HttpServlet
 
                                 } else if (functionNo == 8) {
 
+
                                     res = JunctionRefreshFunction(bytes, firstStartDataPosition, testRequestFromJunction);
 
                                     //System.out.println(res);
@@ -446,6 +454,11 @@ public class ClientResponderWS extends HttpServlet
 
                                 } else if (functionNo == 17) {
                                     res = phaseMapFunction(bytes, firstStartDataPosition);
+                                    //System.out.println(res);
+                                    sendResponse(res);
+
+                                }else if (functionNo == 18) {
+                                    res = SideDataFunction(bytes, firstStartDataPosition);
                                     //System.out.println(res);
                                     sendResponse(res);
 
@@ -555,7 +568,7 @@ public class ClientResponderWS extends HttpServlet
         } else if (functionNo == 7) {
             return (dataLength == 5);
         } else if (functionNo == 8) {
-            return (dataLength == 19 || dataLength == 31 || dataLength == 56);
+            return (dataLength == 19 || dataLength == 31 || dataLength == 56 || dataLength == 66  );
         } else if (functionNo == 9) {
             return (dataLength == 9 || dataLength == 21);
         } else if (functionNo == 10) {
@@ -574,6 +587,8 @@ public class ClientResponderWS extends HttpServlet
             return (dataLength == 18);
         } else if (functionNo == 17) {
             return (dataLength == 18);
+        }else if (functionNo == 18) {
+            return (dataLength == 14);
         }else {
             return false;
         }
@@ -1636,7 +1651,7 @@ public class ClientResponderWS extends HttpServlet
         return response;
     }*/
 
-    String JunctionRefreshFunction(byte[] dataToProcess, int firstStartDataPosition, boolean testRequestFromJunction) {
+                 String JunctionRefreshFunction(byte[] dataToProcess, int firstStartDataPosition, boolean testRequestFromJunction) {
         String response = null;
         String extraBytes = "";
         PlanInfo planInfo = new PlanInfo();
@@ -1689,7 +1704,6 @@ public class ClientResponderWS extends HttpServlet
             int activity2 = 1;
             int activity3 = 1;
             int receivedActivity = activity;
-          
             // String currentTimeSynchronizationStatus="Y";
             // data at firstStartDataPosition + 13/14/15 are default 1, when activity byte value is 2(clearance) then only firstStartDataPosition + 13 byte value will be used as clearance side.
 
@@ -1703,41 +1717,51 @@ public class ClientResponderWS extends HttpServlet
             int juncYear = dataToProcess[firstStartDataPosition + 20];
             int phase_id = dataToProcess[firstStartDataPosition + 21];
 
-            int primary_side_1 = dataToProcess[firstStartDataPosition + 22] & 0xFF;
-            int secondary_side_1 = dataToProcess[firstStartDataPosition + 23] & 0xFF;
-            int hunderedth_place_side_1 = dataToProcess[firstStartDataPosition + 24];// & 0xFF;
-            int tenth_place_side_1 = dataToProcess[firstStartDataPosition + 25];// & 0xFF;
-            int once_place_side_1 = dataToProcess[firstStartDataPosition + 25];// & 0xFF;
+            int primary_horizontal_for_side1 = dataToProcess[firstStartDataPosition + 22] & 0xFF;
+            int primary_Vertical_for_side1 = dataToProcess[firstStartDataPosition + 23] & 0xFF;
+            int secondry_horizontal_for_side1 = dataToProcess[firstStartDataPosition + 24];// & 0xFF;
+             int secondry_verticalfor_side1 = dataToProcess[firstStartDataPosition + 25];
+              int hundred_place_side_1 = dataToProcess[firstStartDataPosition + 26];// & 0xFF;
+            int tenth_place_side_1 = dataToProcess[firstStartDataPosition + 27];// & 0xFF;
+            int once_place_side_1 = dataToProcess[firstStartDataPosition + 28];// & 0xFF;
 
-            int primary_side_2 = dataToProcess[firstStartDataPosition + 27] & 0xFF;
-            int secondary_side_2 = dataToProcess[firstStartDataPosition + 28] & 0xFF;
-            int hunderedth_place_side_2 = dataToProcess[firstStartDataPosition + 29];// & 0xFF;
-            int tenth_place_side_2 = dataToProcess[firstStartDataPosition + 30];// & 0xFF;
-            int once_place_side_2 = dataToProcess[firstStartDataPosition + 31];// & 0xFF;
-
-            int primary_side_3 = dataToProcess[firstStartDataPosition + 32] & 0xFF;
-            int secondary_side_3 = dataToProcess[firstStartDataPosition + 33] & 0xFF;
-            int hunderedth_place_side_3 = dataToProcess[firstStartDataPosition + 34];// & 0xFF;
-            int tenth_place_side_3 = dataToProcess[firstStartDataPosition + 35];// & 0xFF;
-            int once_place_side_3 = dataToProcess[firstStartDataPosition + 36];// & 0xFF;
-
-            int primary_side_4 = dataToProcess[firstStartDataPosition + 37] & 0xFF;
-            int secondary_side_4 = dataToProcess[firstStartDataPosition + 38] & 0xFF;
-            int hunderedth_place_side_4 = dataToProcess[firstStartDataPosition + 39];// & 0xFF;
-            int tenth_place_side_4 = dataToProcess[firstStartDataPosition + 40];// & 0xFF;
-            int once_place_side_4 = dataToProcess[firstStartDataPosition + 41];// & 0xFF;
-
-            int primary_side_5 = dataToProcess[firstStartDataPosition + 42] & 0xFF;
-            int secondary_side_5 = dataToProcess[firstStartDataPosition + 43] & 0xFF;
-            int hunderedth_place_side_5 = dataToProcess[firstStartDataPosition + 44];// & 0xFF;
-            int tenth_place_side_5 = dataToProcess[firstStartDataPosition + 45];// & 0xFF;
-            int once_place_side_5 = dataToProcess[firstStartDataPosition + 46];// & 0xFF;
+         int primary_horizontal_for_side2 = dataToProcess[firstStartDataPosition + 29] & 0xFF;
+            int primary_Vertical_for_side2 = dataToProcess[firstStartDataPosition + 30] & 0xFF;
+            int secondry_horizontal_for_side2 = dataToProcess[firstStartDataPosition + 31];// & 0xFF;
+             int secondry_verticalfor_side2 = dataToProcess[firstStartDataPosition + 32];
+              int hundred_place_side_2 = dataToProcess[firstStartDataPosition + 33];// & 0xFF;
+            int tenth_place_side_2 = dataToProcess[firstStartDataPosition + 34];// & 0xFF;
+            int once_place_side_2 = dataToProcess[firstStartDataPosition + 35];// & 0xFF;
             
-            int powerStatus = dataToProcess[firstStartDataPosition + 47];
-            int communicationStatus = dataToProcess[firstStartDataPosition + 48];
-            int map_id = dataToProcess[firstStartDataPosition + 49];
+            int primary_horizontal_for_side3 = dataToProcess[firstStartDataPosition + 36] & 0xFF;
+            int primary_Vertical_for_side3 = dataToProcess[firstStartDataPosition + 37] & 0xFF;
+            int secondry_horizontal_for_side3 = dataToProcess[firstStartDataPosition + 38];// & 0xFF;
+             int secondry_verticalfor_side3 = dataToProcess[firstStartDataPosition + 39];
+              int hundred_place_side_3 = dataToProcess[firstStartDataPosition + 40];// & 0xFF;
+            int tenth_place_side_3 = dataToProcess[firstStartDataPosition + 41];// & 0xFF;
+            int once_place_side_3 = dataToProcess[firstStartDataPosition + 42];// & 0xFF;
+            
+            int primary_horizontal_for_side4 = dataToProcess[firstStartDataPosition + 43] & 0xFF;
+            int primary_Vertical_for_side4 = dataToProcess[firstStartDataPosition + 44] & 0xFF;
+            int secondry_horizontal_for_side4 = dataToProcess[firstStartDataPosition + 45];// & 0xFF;
+             int secondry_verticalfor_side4 = dataToProcess[firstStartDataPosition + 46];
+              int hundred_place_side_4 = dataToProcess[firstStartDataPosition + 47];// & 0xFF;
+            int tenth_place_side_4 = dataToProcess[firstStartDataPosition + 48];// & 0xFF;
+            int once_place_side_4 = dataToProcess[firstStartDataPosition + 49];// & 0xFF;
+            
+            int primary_horizontal_for_side5 = dataToProcess[firstStartDataPosition + 50] & 0xFF;
+            int primary_Vertical_for_side5 = dataToProcess[firstStartDataPosition + 51] & 0xFF;
+            int secondry_horizontal_for_side5 = dataToProcess[firstStartDataPosition + 52];// & 0xFF;
+             int secondry_verticalfor_side5 = dataToProcess[firstStartDataPosition + 53];
+              int hundred_place_side_5 = dataToProcess[firstStartDataPosition + 54];// & 0xFF;
+            int tenth_place_side_5 = dataToProcess[firstStartDataPosition + 55];// & 0xFF;
+            int once_place_side_5 = dataToProcess[firstStartDataPosition + 56];// & 0xFF;
+            
+            int powerStatus = dataToProcess[firstStartDataPosition + 57];
+            int communicationStatus = dataToProcess[firstStartDataPosition + 58];
+            int map_id = dataToProcess[firstStartDataPosition + 59];
 
-            for (int i = (firstStartDataPosition + 50); i <= (firstStartDataPosition + 55); i++) {
+            for (int i = (firstStartDataPosition + 60); i <= (firstStartDataPosition + 65); i++) {
                 //char ch = (char) dataToProcess[i];
                 if (extraBytes == "") {
                     extraBytes = extraBytes + dataToProcess[i];
@@ -1746,8 +1770,8 @@ public class ClientResponderWS extends HttpServlet
                 }
 
             }
-            int crc = dataToProcess[firstStartDataPosition + 56] & 0xFF;
-            int firstLastDelimiter = dataToProcess[firstStartDataPosition + 57];
+            int crc = dataToProcess[firstStartDataPosition + 66] & 0xFF;
+            int firstLastDelimiter = dataToProcess[firstStartDataPosition + 67];
             int secLastDelimiter = firstLastDelimiter;
             int fault = 0;
             boolean match = this.clientResponderModel.sideColorMatch(junctionID, plan_id, phase_id, unsignedSide13, unsignedSide24, unsignedSide5,map_id);
@@ -1772,60 +1796,79 @@ public class ClientResponderWS extends HttpServlet
 
                 //side1
                 int poleType = this.clientResponderModel.getPoleType(junctionID, program_version_no, 1);
+                
+                //int poleType =0;
                 String side1 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide13DB);
                 String side2 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide24DB);
                 String side3 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide13DB);
                 String side4 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide24DB);
-                
-                switch (poleType) {
-                    case 1:
-                        primary1 = side1 + "0000";
-                        secondary1 = side1 + "0000";
-                        primary2 = side2 + "0000";
-                        secondary2 = side2 + "0000";
-                        primary3 = side3 + "0000";
-                        secondary3 = side3 + "0000";
-                        primary4 = side4 + "0000";
-                        secondary4 = side4 + "0000";
-                        
-                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
-                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
-                                primary1, primary2, primary3, primary4,
-                                secondary1, secondary2, secondary3, secondary4, junctionID);
-
-                        break;
-                    case 2:
-                        primary1 = side1 + side1;
-                        secondary1 = side3 + side3;
-                        primary2 = side2 + side2;
-                        secondary2 = side4 + side4;
-                        primary3 = side3 + side3;
-                        secondary3 = side1 + side1;
-                        primary4 = side4 + side4;
-                        secondary4 = side2 + side2;
-                        
-                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
-                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
-                                primary1, primary2, primary3, primary4,
-                                secondary1, secondary2, secondary3, secondary4, junctionID);
-                        break;
-                    case 3:
-                        primary1 = side1 + side1;
-                        secondary1 = side3 + "0000";
-                        primary2 = side2 + side2;
-                        secondary2 = side4 + "0000";
-                        primary3 = side3 + side3;
-                        secondary3 = side1 + "0000";
-                        primary4 = side4 + side4;
-                        secondary4 = side2 + "0000";
-                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
-                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
-                                primary1, primary2, primary3, primary4,
-                                secondary1, secondary2, secondary3, secondary4, junctionID);
-                        break;
-                    default:
-                        break;
-                }
+       //List of Side Details         
+               
+                int size=sideinfolist.size();
+    
+                System.out.println("");
+//                
+//                switch (poleType) {
+//                    case 1:
+//                        primary1 = side1 + "0000";
+//                        secondary1 = side1 + "0000";
+//                        primary2 = side2 + "0000";
+//                        secondary2 = side2 + "0000";
+//                        primary3 = side3 + "0000";
+//                        secondary3 = side3 + "0000";
+//                        primary4 = side4 + "0000";
+//                        secondary4 = side4 + "0000";
+//                        
+//                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+//                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
+//                                primary1, primary2, primary3, primary4,
+//                                secondary1, secondary2, secondary3, secondary4, junctionID);
+//
+//                        break;
+//                    case 2:
+//                        primary1 = side1 + side1;
+//                        secondary1 = side3 + side3;
+//                        primary2 = side2 + side2;
+//                        secondary2 = side4 + side4;
+//                        primary3 = side3 + side3;
+//                        secondary3 = side1 + side1;
+//                        primary4 = side4 + side4;
+//                        secondary4 = side2 + side2;
+////                      String  primary_side_11=primary1;
+////                         String    secondary_side_11= secondary1;  
+////                           String     primary_side_12=primary2;
+////                           String     secondary_side_12=secondary2;
+////                             String   primary_side_13=primary3;
+////                             String     secondary_side_13 =secondary3;   
+////                                    String    primary_side_14= primary4;
+////                                         String       secondary_side_14=secondary4;
+//
+//                                                fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+//                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
+//                                primary1, primary2, primary3, primary4,
+//                                secondary1, secondary2, secondary3, secondary4, junctionID);
+////                                                  fault = matchSignal(primary_side_11, primary_side_12,primary_side_13, primary_side_14,
+////                               secondary_side_11, secondary_side_12, secondary_side_13, secondary_side_14,
+////                                primary1, primary2, primary3, primary4,
+////                                secondary1, secondary2, secondary3, secondary4, junctionID);
+//                        break;
+//                    case 3:
+//                        primary1 = side1 + side1;
+//                        secondary1 = side3 + "0000";
+//                        primary2 = side2 + side2;
+//                        secondary2 = side4 + "0000";
+//                        primary3 = side3 + side3;
+//                        secondary3 = side1 + "0000";
+//                        primary4 = side4 + side4;
+//                        secondary4 = side2 + "0000";
+//                        fault = matchSignal(Integer.toBinaryString(primary_side_1), Integer.toBinaryString(primary_side_2), Integer.toBinaryString(primary_side_3), Integer.toBinaryString(primary_side_4),
+//                                Integer.toBinaryString(secondary_side_1), Integer.toBinaryString(secondary_side_2), Integer.toBinaryString(secondary_side_3), Integer.toBinaryString(secondary_side_4),
+//                                primary1, primary2, primary3, primary4,
+//                                secondary1, secondary2, secondary3, secondary4, junctionID);
+//                        break;
+//                    default:
+//                        break;
+//                }
 
             }
 
@@ -2053,64 +2096,80 @@ public class ClientResponderWS extends HttpServlet
                     this.planInfoRefreshList = planInfo;
                     this.ctx.setAttribute("planInfolist", this.planInfoRefreshList);
                     if (junctionID == 2) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(damohNakaInfo, planInfo);
                         damohNakaInfoRefreshList = damohNakaInfo;
                         this.ctx.setAttribute("damohNakaInfoList", this.damohNakaInfoRefreshList);
                     }
                     if (junctionID == 13) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(teenPattiInfo, planInfo);
                         teenPattiInfoRefreshList = teenPattiInfo;
                         this.ctx.setAttribute("teenPattiInfoList", this.teenPattiInfoRefreshList);
                     }
-                    if (junctionID == 6) {
+                    if (junctionID == 6) 
+                    {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(gohalPurInfo, planInfo);
                         gohalPurInfoRefreshList = gohalPurInfo;
                         this.ctx.setAttribute("gohalPurInfoList", this.gohalPurInfoRefreshList);
                     }
 
                     if (junctionID == 11) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(ranitalInfo, planInfo);
                         ranitalInfoRefreshList = ranitalInfo;
                         this.ctx.setAttribute("ranitalInfoList", this.ranitalInfoRefreshList);
                     }
                     if (junctionID == 1) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(yatayatThanaInfo, planInfo);
                         yatayatThanaInfoRefreshList = yatayatThanaInfo;
                         this.ctx.setAttribute("yatayatThanaInfoList", this.yatayatThanaInfoRefreshList);
                     }
                     if (junctionID == 3) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(katangaInfo, planInfo);
                         katangaInfoRefreshList = katangaInfo;
                         this.ctx.setAttribute("katangaInfoList", this.katangaInfoRefreshList);
                     }
                     if (junctionID == 5) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(baldeobagInfo, planInfo);
                         baldeobagInfoRefreshList = baldeobagInfo;
                         this.ctx.setAttribute("baldeobagInfoList", this.baldeobagInfoRefreshList);
                     }
                     if (junctionID == 14) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(deendayalChowkInfo, planInfo);
                         deendayalChowkInfoRefreshList = deendayalChowkInfo;
                         this.ctx.setAttribute("deendayalChowkInfoList", this.deendayalChowkInfoRefreshList);
                     }
                     if (junctionID == 7) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(highCourtInfo, planInfo);
                         highCourtInfoRefreshList = highCourtInfo;
                         this.ctx.setAttribute("highCourtInfoList", this.highCourtInfoRefreshList);
                     }
                     if (junctionID == 8) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(bloomChowkInfo, planInfo);
                         bloomChowkInfoRefreshList = bloomChowkInfo;
                         this.ctx.setAttribute("bloomChowkInfoList", this.bloomChowkInfoRefreshList);
                     }
                     if (junctionID == 12) {
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
                         BeanUtils.copyProperties(madanMahalInfo, planInfo);
                         madanMahalInfoRefreshList = madanMahalInfo;
                         this.ctx.setAttribute("madanMahalInfoList", this.madanMahalInfoRefreshList);
                     }
                      if (junctionID == 15) {
-                        BeanUtils.copyProperties(labourChowkInfo, planInfo);
+                         sideinfolist=clientResponderModel.getsidedatalist(junctionID);
+                         BeanUtils.copyProperties(labourChowkInfo, planInfo);
+                        
                         labourChowkInfoRefreshList = labourChowkInfo;
+                        sidelistdata=new ArrayList<>();
+                        clientResponderModel.getsidedatalist(junctionID);
                         this.ctx.setAttribute("labourChowkInfoList", this.labourChowkInfoRefreshList);
                     }
                     this.ctx.setAttribute("junction", this.junction);
@@ -2120,7 +2179,45 @@ public class ClientResponderWS extends HttpServlet
                     System.out.println("ClientResponder junctionRefresh PlanInfoListContext error :" + e);
                 }
             }
-
+        sideinfolist.size();
+       
+        for(int i=0; i<sideinfolist.size(); i++){
+            
+              // SlaveInfo
+              
+           //    String[] arr = sideinfolist.toArray(new String[0]); 
+  
+      int a0=0;int a1=0;int a2=0;int a3=0;
+                     a0= sideinfolist.get(i).getPrimary_h_aspect_no();
+                      a1= sideinfolist.get(i).getPrimary_v_aspect_no();
+                         a2=sideinfolist.get(i).getSecondary_h_aspect_no();
+                          a3=sideinfolist.get(i).getSecondary_v_aspect_no();
+                         for(int j=0; j<4;j++){
+                             String d="a"+j;
+                           if(j==0){
+                              int  p=j;
+                         arrdata[p]=arrdata[Integer.parseInt(d)];
+                           } 
+                           else if(j==1){
+                              int  p=3;
+                         arrdata[++p]=arrdata[Integer.parseInt(d)];
+                           }
+                           else if(j==2){
+                              int  p=7;
+                         arrdata[++p]=arrdata[Integer.parseInt(d)];
+                           }
+                           else if(j==3){
+                              int  p=11;
+                         arrdata[++p]=arrdata[Integer.parseInt(d)];
+                           }
+                         }
+ 
+                          System.out.println("sss ");
+            
+            
+        }
+     sideinfolist.toArray();
+            int primary_Vertical_for_side11 = primary_Vertical_for_side1;
             activity = program_version_no == programVersionNoFromDB ? fileNo == fileNoFromDB ? currentTimeSynchronizationStatus.equals("Y") ? activity : testRequestFromJunction ? 1 : 9 : 8 : 7;
             activity1 = activity == 7 || activity == 8 || activity == 9 ? 1 : activity1;
 
@@ -2272,7 +2369,7 @@ public class ClientResponderWS extends HttpServlet
         return fault;
     }
 
-    public String sendSmsToAssignedFor(String numberStr1, String messageStr1) {
+      public String sendSmsToAssignedFor(String numberStr1, String messageStr1) {
         String result = "";
         try {
             String host_url = "http://login.smsgatewayhub.com/api/mt/SendSMS?";//"http://api.mVaayoo.com/mvaayooapi/MessageCompose?";
@@ -3117,7 +3214,8 @@ public class ClientResponderWS extends HttpServlet
                 imeiNo = imeiNo + ch;
             }
 
-            for (int i = (firstStartDataPosition + 20); i <= (firstStartDataPosition + 30); i++) {
+        //    for (int i = (firstStartDataPosition + 20); i <= (firstStartDataPosition + 30); i++) {
+           for (int i = (firstStartDataPosition + 25); i <= (firstStartDataPosition + 30); i++) {
                 //char ch = (char) dataToProcess[i];
                 if (extraBytes == "") {
                     extraBytes = extraBytes + dataToProcess[i];
@@ -3146,14 +3244,30 @@ public class ClientResponderWS extends HttpServlet
             int pedestrianTime = this.clientResponderModel.getPedestrianTime(junctIDFromDB, programVersionNoFromDB);
             int fileNoFromDB = this.clientResponderModel.getFileNo(junctIDFromDB, programVersionNoFromDB);
             int totalNoOfPhase =  this.clientResponderModel.getTotalNoOfPhase(junctIDFromDB, programVersionNoFromDB);
+            ////// adding sides pole type
+            int Side1poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 1);
+            int Side2poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 2);
+            int Side3poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 3);
+            int Side4poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 4);
+            int Side5poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 5);
+            
+            //////////
             if (fileNo != fileNoFromDB) {
                 this.clientResponderModel.updateFileNo(junctIDFromDB, fileNo, programVersionNoFromDB);
             }
             fileNoFromDB = this.clientResponderModel.getFileNo(junctIDFromDB, programVersionNoFromDB);
 
-            System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
-            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            System.out.println(response);
+//            System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
+//            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            
+
+         
+System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
+          response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + Side1poleType + " " + Side2poleType + " " + Side3poleType + " " + Side4poleType + " " + Side5poleType + " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            
+
+
+         System.out.println(response);
         } catch (Exception e) {
             System.out.println("ClientResponder checkRegistration exception: " + e);
         }
@@ -3569,6 +3683,222 @@ public class ClientResponderWS extends HttpServlet
 //            }
             
             responseVal = responseVal + " " + map_id + " " +phase_id+ " " +phase_map_id+ " " +order_no+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            
+            
+        } catch (Exception e) {
+            System.out.println("Error - clientResponder - " + e);
+        }
+
+        return responseVal;
+    }
+     public String SideDataFunction(byte[] dataToProcess, int firstStartDataPosition) {
+
+        String responseVal = null;
+        String extraByte = "";
+        int firstStartDelimiter = dataToProcess[firstStartDataPosition - 4];
+        int secStartDelimiter = dataToProcess[firstStartDataPosition - 3];
+        int dataSize1 = dataToProcess[firstStartDataPosition - 2];
+        int dataSize2 = dataToProcess[firstStartDataPosition - 1];
+        int junctionID = dataToProcess[firstStartDataPosition];
+        int program_version_no = dataToProcess[firstStartDataPosition + 1];
+        int fileNo = dataToProcess[firstStartDataPosition + 2];
+        int functionNo = dataToProcess[firstStartDataPosition + 3];
+        
+        int map_id = 0;
+        int phase_no = 0;
+        int firstLastDelimiter = 0;
+        int secLastDelimiter = 0;
+        int crc = 0;
+        int fileNoFromDB = this.clientResponderModel.getFileNo(junctionID, program_version_no);
+        if (fileNo != fileNoFromDB) {
+            this.clientResponderModel.updateFileNo(junctionID, fileNo, program_version_no);
+        }
+        int programVersionNoFromDB = this.clientResponderModel.getProgramVersionNo(junctionID);
+
+      int  noofside = dataToProcess[firstStartDataPosition + 4];
+        //phase_no = dataToProcess[firstStartDataPosition + 5];
+        crc = dataToProcess[firstStartDataPosition + 14] & 0xFF;
+        firstLastDelimiter = dataToProcess[firstStartDataPosition + 15];
+        //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
+        secLastDelimiter = firstLastDelimiter;
+        System.out.println("Junction_id" + junctionID);
+        
+        responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
+        int side1poletype = 0,side1primary_h_aspect_no = 0,side1primary_v_aspect_no = 0,side1secondary_h_aspect_no = 0,side1secondary_v_aspect_no=0,side1sideno = 0;
+        int side2poletype=0,side2primary_h_aspect_no=0,side2primary_v_aspect_no=0,side2secondary_h_aspect_no=0,side2secondary_v_aspect_no=0,side2sideno=0;
+        int side3poletype=0,side3primary_h_aspect_no=0,side3primary_v_aspect_no=0,side3secondary_h_aspect_no=0,side3secondary_v_aspect_no=0,side3sideno=0;
+        int side4poletype=0,side4primary_h_aspect_no=0,side4primary_v_aspect_no=0,side4secondary_h_aspect_no=0,side4secondary_v_aspect_no=0,side4sideno=0;
+        int side5poletype=0,side5primary_h_aspect_no=0,side5primary_v_aspect_no=0,side5secondary_h_aspect_no=0,side5secondary_v_aspect_no=0,side5sideno=0;
+        try {
+            if(noofside==3){
+              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+            Map<String ,Integer> mp=new HashMap<>();
+            for(int a=1; a<=3; a++){
+                
+              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
+             mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
+               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
+                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
+                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
+                   
+            
+            }
+          side1poletype=mp.get("side1poletypeid");
+          side1primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
+          side1primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
+          side1secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
+          side1secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
+           
+           
+           
+            side2poletype=mp.get("side2poletypeid");
+          side2primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
+          side2primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
+          side2secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
+          side2secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
+           
+           
+            side3poletype=mp.get("side3poletypeid");
+          side3primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
+          side3primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
+          side3secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
+          side3secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
+          
+           
+             side4poletype=0;
+          side4primary_h_aspect_no=0;
+          side4primary_v_aspect_no=0;
+          side4secondary_h_aspect_no=0;
+          side4secondary_v_aspect_no=0;
+           side4sideno= 0;
+           
+            side5poletype=0;
+          side5primary_h_aspect_no=0;
+          side5primary_v_aspect_no=0;
+          side5secondary_h_aspect_no=0;
+          side5secondary_v_aspect_no=0;
+          
+             
+            }
+             if(noofside==4){
+              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+            Map<String ,Integer> mp=new HashMap<>();
+            for(int a=0; a<4; a++){
+                
+              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
+                mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
+               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
+                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
+                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
+                    mp.put("side"+a+"sideno",jp.get(a).getSide_no());
+             // side1poletype=mp.get("side1poletypeid");
+            }
+          side1poletype=mp.get("side0poletypeid");
+          side1primary_h_aspect_no=mp.get("side0primary_h_aspect_no");
+          side1primary_v_aspect_no=mp.get("side0primary_v_aspect_no");
+          side1secondary_h_aspect_no=mp.get("side0secondary_h_aspect_no");
+          side1secondary_v_aspect_no=mp.get("side0secondary_v_aspect_no");
+           
+           
+           
+            side2poletype=mp.get("side1poletypeid");
+          side2primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
+          side2primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
+          side2secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
+          side2secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
+           
+           
+            side3poletype=mp.get("side3poletypeid");
+          side3primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
+          side3primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
+          side3secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
+          side3secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
+           
+           
+             side4poletype=mp.get("side3poletypeid");
+          side4primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
+          side4primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
+          side4secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
+          side4secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
+          
+           
+            side5poletype=0;
+          side5primary_h_aspect_no=0;
+          side5primary_v_aspect_no=0;
+          side5secondary_h_aspect_no=0;
+          side5secondary_v_aspect_no=0;
+            
+             
+            }
+             
+               if(noofside==5){
+              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+            Map<String ,Integer> mp=new HashMap<>();
+            for(int a=1; a<=5; a++){
+                
+              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
+             mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
+               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
+                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
+                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
+                    mp.put("side"+a+"sideno",jp.get(a).getSide_no());
+            
+            }
+          side1poletype=mp.get("side1poletypeid");
+          side1primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
+          side1primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
+          side1secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
+          side1secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
+          
+           
+            side2poletype=mp.get("side2poletypeid");
+          side2primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
+          side2primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
+          side2secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
+          side2secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
+            
+            side3poletype=mp.get("side3poletypeid");
+          side3primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
+          side3primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
+          side3secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
+          side3secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
+          
+             side4poletype=mp.get("side4poletypeid");
+          side4primary_h_aspect_no=mp.get("side4primary_h_aspect_no");
+          side4primary_v_aspect_no=mp.get("side4primary_v_aspect_no");
+          side4secondary_h_aspect_no=mp.get("side4secondary_h_aspect_no");
+          side4secondary_v_aspect_no=mp.get("side4secondary_v_aspect_no");
+            
+            side5poletype=mp.get("side5poletypeid");
+          side5primary_h_aspect_no=mp.get("side5primary_h_aspect_no");
+          side5primary_v_aspect_no=mp.get("side5primary_v_aspect_no");
+          side5secondary_h_aspect_no=mp.get("side5secondary_h_aspect_no");
+          side5secondary_v_aspect_no=mp.get("side5secondary_v_aspect_no");
+              
+            }
+//            Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+//            
+//            int phase_map_id = junctionPlanDetail.get("phase_map_id");
+//            int phase_id = junctionPlanDetail.get("phase_id");
+//            int order_no = junctionPlanDetail.get("order_no");
+//            for (int i = (firstStartDataPosition + 6)+1; i <= (firstStartDataPosition + 18); i++) 
+//            {
+//                if (extraByte == "") {
+//                    extraByte = extraByte + dataToProcess[i];
+//                } else {
+//                    extraByte = extraByte + " " + dataToProcess[i];
+//                }
+//            }
+  for (int i = (firstStartDataPosition + 4)+1; i <= (firstStartDataPosition + 13); i++) 
+            {
+                if (extraByte == "") {
+                   extraByte = extraByte + dataToProcess[i];
+                } else {
+                    extraByte = extraByte + " " + dataToProcess[i];
+                }
+            }
+            
+           responseVal = responseVal + " " + side1poletype + " " +side1primary_h_aspect_no+ " " +side1primary_v_aspect_no+ " " +side1secondary_h_aspect_no+ " " +side1secondary_v_aspect_no+" "+side2poletype + " " +side2primary_h_aspect_no+ " " +side2primary_v_aspect_no+ " " +side2secondary_h_aspect_no+" "+side2secondary_v_aspect_no+" "+ side3poletype + " " +side3primary_h_aspect_no+ " " +side3primary_v_aspect_no+ " " +side3secondary_h_aspect_no+" "+side3secondary_v_aspect_no+" "+side4poletype + " " +side4primary_h_aspect_no+ " " +side4primary_v_aspect_no+ " " +side4secondary_h_aspect_no+" "+side4secondary_v_aspect_no+ " " +side5poletype + " " +side5primary_h_aspect_no+ " " +side5primary_v_aspect_no+ " " +side5secondary_h_aspect_no+" "+side5secondary_v_aspect_no+ " " + extraByte+" "+ crc+ " " + firstLastDelimiter + " " + firstLastDelimiter;
             
             
         } catch (Exception e) {

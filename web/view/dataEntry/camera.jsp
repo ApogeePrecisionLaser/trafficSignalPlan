@@ -56,7 +56,7 @@
             }
             function fillColumns(id) {
                 var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
-                var noOfColumns = 4;
+                var noOfColumns = 8;
                 var columnId = id;
                 <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
                 columnId = columnId.substring(3, id.length);
@@ -72,12 +72,15 @@
                 var t1id = "t1c";       // particular column id of table 1 e.g. t1c3.
                 for (var i = 0; i < noOfColumns; i++) {
                     // set the background color of clicked/selected row to yellow.
-                    document.getElementById(t1id + (lowerLimit + i)).bgColor = "lightgray";
+                    document.getElementById(t1id + (lowerLimit + i)).bgColor = "yellowgreen";
                 }
                 // Now get clicked row data, and set these into the below edit table.
                 document.getElementById("camera_id").value = document.getElementById(t1id + (lowerLimit + 0)).innerHTML;
                 document.getElementById("camera_ip").value = document.getElementById(t1id + (lowerLimit + 2)).innerHTML;
-                document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+                 document.getElementById("camera_make").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
+                 document.getElementById("camera_type").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+                 document.getElementById("junction_name").value = document.getElementById(t1id + (lowerLimit + 5)).innerHTML;
+                document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 7)).innerHTML;
                 // Now enable/disable various buttons.
                 document.getElementById("edit").disabled = false;
                 if (!document.getElementById("save").disabled) {
@@ -145,6 +148,13 @@
                         }
                     }
                 });
+                 $("#junction_name").autocomplete("CameraCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchJunctionName";
+                        }
+                    }
+                });
 
             });
         </script>
@@ -156,7 +166,7 @@
             <tr><td><%@include file="/layout/menu.jsp" %></td></tr>
             <tr>
                 <td>
-                    <DIV id="body" class="maindiv" >
+                    <div id="body" class="maindiv" >
                         <table align="center" width="1000" border="0" cellpadding="0" cellspacing="0">
                             <tr><td>
                                     <table  class="header_table" width="100%">
@@ -170,34 +180,34 @@
                             <tr>
                                 <td align="center">
                                     <form name="form1" method="POST" action="CameraCont">
-                                        <DIV STYLE="overflow: auto; width: 400px; max-height: 410px; padding:0px; margin-bottom: 20px; margin-top:20px">
-                                            <table id="rcorners3" align="center" class="reference">
+                                        <div STYLE="overflow: auto; width: 750px; max-height: 410px; padding:0px; margin-bottom: 20px; margin-top:20px">
+                                            <table id="rcorners3" align="center" class="reference" border="1">
                                                 <tr>
                                                     <th class="heading" style="display: none"> Camera ID</th>
                                                     <th class="heading">S.No.</th>
-                                                    <th class="heading" >Camera IP</th>
+                                                    <th class="heading" >Camera_IP</th>
                                                     <th class="heading" >Camera Type</th>
                                                     <th class="heading" >Camera Make</th>
-                                                    <th class="heading" >Junction Id</th>
+<!--                                                    <th class="heading" >Junction Id</th>-->
                                                     <th class="heading" >Junction Name</th>
                                                     <th class="heading" >Side No</th>
                                                     <th class="heading" >Remark</th>
                                                 </tr>
                                                 <c:forEach var="camera" items="${requestScope['cameraList']}" varStatus="loopCounter">
-                                                    <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+                                                    <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" style="display: none">${camera.camera_id}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.camera_ip}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.camera_type}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.camera_make}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.junction_id}</td>
+                                                     
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.junction_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.side_no}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" >${camera.remark}</td>
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>
-                                                    <td align='center' colspan="6">
+                                                    <td align='center' colspan="10">
                                                         <c:choose>
                                                             <c:when test="${showFirst eq 'false'}">
                                                                 <input class="button" type='submit' name='buttonAction' value='First' disabled>
@@ -235,7 +245,7 @@
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                 <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                             </table>
-                                        </DIV>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>
@@ -243,7 +253,7 @@
                             <tr>
                                 <td align="center">
                                     <form name="form3" method="POST" action="CameraCont" onsubmit="return verify()" >
-                                        <DIV STYLE="overflow: auto; width: 800px;padding:0px; margin: 0px">
+                                        <div STYLE="overflow: auto; width: 800px;padding:0px; margin: 0px">
                                             <table class="divv" border="1" border-color="blue">
                                                 <tr id="message">
                                                     <c:if test="${not empty message}">
@@ -258,18 +268,20 @@
 
                                                 </tr>
                                                 <tr>
-                                                    <th class="heading">Junction Id</th><td><input class="input" type="text" id="junction_id" name="junction_id" size="38" value="${junction_id}" disabled></td>
+                                                    <th class="heading">Camera_Type</th><td><input class="input" type="text" id="camera_type" name="camera_type" size="38" value="" autocomplete="on" disabled></td>
+                                                   
+                                                    
                                                     <th class="heading">Junction Name</th><td><input class="input" type="text" id="junction_name" name="junction_name" size="38" value="${junction_name}" disabled></td>
 
                                                 </tr>
                                                 <tr>
                                                     <th class="heading">Side_No</th><td><input class="input" type="text" id="side_no" name="side_no" size="38" value="${side_no}" disabled></td>
-                                                    <th class="heading">Camera_Type</th><td><input class="input" type="text" id="camera_type" name="camera_type" size="38" value="" autocomplete="on" disabled></td>
+                                                     <th class="heading">Remark</th><td><input class="input" type="text" id="remark" name="remark" size="38" value="" disabled></td>
 
                                                 </tr>
                                                
                                                 <tr>
-                                                    <th class="heading">Remark</th><td><input class="input" type="text" id="remark" name="remark" size="38" value="" disabled></td>
+                                                    
                                                 </tr>
 
 
@@ -282,20 +294,23 @@
                                                     </td>
                                                 </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form2 of table2. --%>
+                                                <input type="hidden" id="junction_id" name="junction_id"  value=" ">
+                                                 <input type="hidden" id="side_detail_id" name="side_detail_id" value="" disabled>
                                                 <input type="hidden" id="camera_id" name="camera_id" value="" disabled>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                 <input type="hidden" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                                 <input type="hidden" id="clickedButton" value="">
                                             </table>
-                                        </DIV>
+                                        </div>
                                     </form>
                                 </td>
                             </tr>
                         </table>
-                    </DIV>
+                    </div>
                 </td>
             </tr>
-            <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
+
+ <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
         </table>
 
     </body>
