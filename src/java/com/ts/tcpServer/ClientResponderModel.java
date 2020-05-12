@@ -6,6 +6,7 @@ package com.ts.tcpServer;
 
 import com.ts.junction.tableClasses.History;
 import com.ts.junction.tableClasses.SlaveInfo;
+import com.ts.log.tableClasses.SeverityCase;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -23,7 +24,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.http.HttpServlet;
-
+import java.util.*;
 /**
  *
  * @author Shruti
@@ -1219,6 +1220,35 @@ SlaveInfo si=new SlaveInfo();
         return li;
     }
     
+     
+       public List<SeverityCase> getseveritydatalist(String side) {
+         List<SeverityCase> li=new ArrayList<>();
+         String query="SELECT  severity_case, remark, send_data, recieved_data FROM severity_case"
+                 + " where  (remark='low' or remark='middle') and active='y' and send_data=?";
+        PreparedStatement pstmt;
+        int i = 1;
+        try {
+           
+                 pstmt = connection.prepareStatement(query);
+                pstmt.setString(1, side);
+             
+                ResultSet rset = pstmt.executeQuery();
+SeverityCase si=new SeverityCase();
+                while(rset.next()){
+                    si.setSeverity_case(rset.getString(1));
+                    si.setRemark(rset.getString(2));
+                     si.setSent_data(rset.getString(3));
+                      si.setReceived_data(rset.getString(4));
+                      li.add(si);
+                }
+            
+            
+            
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel getNoOfPlans() Error: " + e);
+        }
+        return li;
+    }
     
     
     
@@ -2119,12 +2149,27 @@ SlaveInfo si=new SlaveInfo();
     public String decToBinaryAndSplitFirst(int n) 
     { 
         //perform decToBinary
-        int[] binaryNum = decToBinary(n);
-        int len = binaryNum.length;
-        String binary = "";
-        for (int i = 0; i < binaryNum.length; i++) {
-            binary = binary + binaryNum[i];            
-        }
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+         String binary = Integer.toBinaryString(n);
+      int a=binary.length();
+      String remain="";
+      String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      binary=str.concat(binary);
+}
+
         String sideFirst = binary.substring(0, 4);
         return sideFirst;
     }
@@ -2132,12 +2177,25 @@ SlaveInfo si=new SlaveInfo();
     public String decToBinaryAndSplitLater(int n) 
     { 
         //perform decToBinary
-        int[] binaryNum = decToBinary(n);
-        int len = binaryNum.length;
-        String binary = "";
-        for (int i = 0; i < binaryNum.length; i++) {
-            binary = binary + binaryNum[i];            
-        }
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+         String binary = Integer.toBinaryString(n);
+      int a=binary.length();
+       String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      binary=str.concat(binary);
+}
         String sideFirst = binary.substring(4, 8);
         return sideFirst;
     }
