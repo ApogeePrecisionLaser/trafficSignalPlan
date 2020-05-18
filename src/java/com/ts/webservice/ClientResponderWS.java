@@ -1,6 +1,5 @@
 package com.ts.webservice;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
 import com.ts.general.Controller.ModemResReadSaveController;
 import com.ts.general.Controller.TS_StatusShowerController;
 import com.ts.general.Controller.TS_StatusUpdaterController;
@@ -107,10 +106,10 @@ public class ClientResponderWS extends HttpServlet
     private static BandariyaTirahaInfo bandariyaTirahaInfoRefreshList = new BandariyaTirahaInfo();
     private static LabourChowkInfo labourChowkInfoRefreshList = new LabourChowkInfo();
     // private static SlaveInfo sidelist;
-      int[] arrdata;
-     List<SlaveInfo> sidelistdata;
-          List<SlaveInfo> sideinfolist=new ArrayList<>();   
-          HashMap<String,Integer> hmap=new HashMap();
+    int[] arrdata;
+    List<SlaveInfo> sidelistdata;
+    List<SlaveInfo> sideinfolist = new ArrayList<>();
+    HashMap<String, Integer> hmap = new HashMap();
     String currentTime;
     private String lastVisitedTime;
     DateFormat dateFormat;
@@ -203,7 +202,7 @@ public class ClientResponderWS extends HttpServlet
             this.ctx.setAttribute("bloomChowkInfoRefreshList", this.bloomChowkInfoRefreshList);
             this.ctx.setAttribute("madanMahalInfoRefreshList", this.madanMahalInfoRefreshList);
             this.ctx.setAttribute("bandariyaTirahaInfoRefreshList", this.bandariyaTirahaInfoRefreshList);
-              this.ctx.setAttribute("labourChowkInfoRefreshList", this.labourChowkInfoRefreshList);
+            this.ctx.setAttribute("labourChowkInfoRefreshList", this.labourChowkInfoRefreshList);
             this.tsUpdaterCont.setCtx(this.ctx);
             this.ctx.setAttribute("junction", this.junction);
             this.modemResReadSaveCont.setCtx(this.ctx);
@@ -261,7 +260,7 @@ public class ClientResponderWS extends HttpServlet
         this.clientResponderModel.closeConnection();
     }
 
-     public String readClientResponse(byte[] receivedBytes)
+    public String readClientResponse(byte[] receivedBytes)
             throws IOException {
         boolean isConnectionClosed = false;
         String currentVisitedTime = null;
@@ -409,7 +408,6 @@ public class ClientResponderWS extends HttpServlet
 
                                 } else if (functionNo == 8) {
 
-
                                     res = JunctionRefreshFunction(bytes, firstStartDataPosition, testRequestFromJunction);
 
                                     //System.out.println(res);
@@ -459,12 +457,12 @@ public class ClientResponderWS extends HttpServlet
                                     //System.out.println(res);
                                     sendResponse(res);
 
-                                }else if (functionNo == 18) {
+                                } else if (functionNo == 18) {
                                     res = SideDataFunction(bytes, firstStartDataPosition);
                                     //System.out.println(res);
                                     sendResponse(res);
 
-                                }else {
+                                } else {
                                     System.out.println("@@@@@@@@@@@@@@@@@@@@@@  Sent Error: Invalid function no  @@@@@@@@@@@@@@@@@@@@@@");
                                     sendErrorResponse(6);
                                 }
@@ -570,7 +568,7 @@ public class ClientResponderWS extends HttpServlet
         } else if (functionNo == 7) {
             return (dataLength == 5);
         } else if (functionNo == 8) {
-            return (dataLength == 19 || dataLength == 31 || dataLength == 56 || dataLength == 66  );
+            return (dataLength == 19 || dataLength == 31 || dataLength == 56 || dataLength == 66);
         } else if (functionNo == 9) {
             return (dataLength == 9 || dataLength == 21);
         } else if (functionNo == 10) {
@@ -589,9 +587,9 @@ public class ClientResponderWS extends HttpServlet
             return (dataLength == 18);
         } else if (functionNo == 17) {
             return (dataLength == 18);
-        }else if (functionNo == 18) {
+        } else if (functionNo == 18) {
             return (dataLength == 14);
-        }else {
+        } else {
             return false;
         }
     }
@@ -969,7 +967,7 @@ public class ClientResponderWS extends HttpServlet
         int juncDat = dataToProcess[firstStartDataPosition + 6];
         int juncMonth = dataToProcess[firstStartDataPosition + 7];
         int juncYear = dataToProcess[firstStartDataPosition + 8];
-        for (int i = (firstStartDataPosition + 9)+1; i <= (firstStartDataPosition + 20); i++) {
+        for (int i = (firstStartDataPosition + 9) + 1; i <= (firstStartDataPosition + 20); i++) {
             //char ch = (char) dataToProcess[i];
             if (extraBytes == "") {
                 extraBytes = extraBytes + dataToProcess[i];
@@ -989,8 +987,8 @@ public class ClientResponderWS extends HttpServlet
 
         String appDate = dateTime.split(" ")[0];
         String appTime = dateTime.split(" ")[1];
-         String appWeekDay = dateTime.split(" ")[2];
-         System.out.println(appWeekDay);
+        String appWeekDay = dateTime.split(" ")[2];
+        System.out.println(appWeekDay);
         String time[] = appTime.split(":");
         String dte[] = appDate.split("-");
 
@@ -1002,28 +1000,28 @@ public class ClientResponderWS extends HttpServlet
         appYear = Integer.parseInt(dte[0].substring(2));
         int dayNo = 0;
         switch (appWeekDay) {
-                case "Monday":
-                    dayNo = 1;
-                    break;
-                case "Tuesday":
-                    dayNo = 2;
-                    break;
-                case "WednesDay":
-                    dayNo = 3;
-                    break;
-                case "Thursday":
-                    dayNo = 4;
-                    break;
-                case "Friday":
-                    dayNo = 5;
-                    break;
-                case "Saturday":
-                    dayNo = 6;
-                    break;
-                case "Sunday":
-                    dayNo = 7;
-                    break;
-            }
+            case "Monday":
+                dayNo = 1;
+                break;
+            case "Tuesday":
+                dayNo = 2;
+                break;
+            case "WednesDay":
+                dayNo = 3;
+                break;
+            case "Thursday":
+                dayNo = 4;
+                break;
+            case "Friday":
+                dayNo = 5;
+                break;
+            case "Saturday":
+                dayNo = 6;
+                break;
+            case "Sunday":
+                dayNo = 7;
+                break;
+        }
 
         /*---------------------------- code started to manage one minute difference in junction time and in application time  ------------------------------------------*/
         int monthNo = (juncMonth - appMonth) == Math.abs(1) ? juncMonth > appMonth ? appMonth : juncMonth : 0;
@@ -1065,7 +1063,7 @@ public class ClientResponderWS extends HttpServlet
 
         System.out.println("junction time info request--- " + firstStartDelimiter + " " + secStartDelimiter + " " + dataSize1 + " " + dataSize2 + " " + junctionID + " " + program_version_no + " " + fileNo + " " + functionNo + " " + juncHr + " " + juncMin + " " + juncDat + " " + juncMonth + " " + juncYear + " " + extraBytes + " " + crc + " " + firstLastDelimiter + " " + secLastDelimiter);
 
-        response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + appHr + " " + appMin + " " + appDat + " " + appMonth + " " + appYear + " " + currTimeSynchronizationStatus + " " +dayNo+ " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
+        response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + appHr + " " + appMin + " " + appDat + " " + appMonth + " " + appYear + " " + currTimeSynchronizationStatus + " " + dayNo + " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
 
         //System.out.println("Response of junction info:" + response);
         return response;
@@ -1355,7 +1353,7 @@ public class ClientResponderWS extends HttpServlet
             appYear = Integer.parseInt(dte[0].substring(2));
 
             /*---------------------------- code started to manage one minute difference in junction time and in application time  ------------------------------------------*/
-            /*int monthNo = (juncMonth - appMonth) == Math.abs(1) ? juncMonth > appMonth ? appMonth : juncMonth : 0;
+ /*int monthNo = (juncMonth - appMonth) == Math.abs(1) ? juncMonth > appMonth ? appMonth : juncMonth : 0;
 
             if (((juncYear - appYear) == Math.abs(1)) && ((juncMonth - appMonth) == Math.abs(11)) && ((juncDat - appDat) == Math.abs(30)) && ((juncHr - appHr) == Math.abs(23)) && ((juncMin - appMin) == Math.abs(59))) { //last minute of last hour of last day of last month of a year
                 juncHr = appHr;
@@ -1379,9 +1377,8 @@ public class ClientResponderWS extends HttpServlet
                 juncMin = appMin;
             }
             /*---------------------------- code endeded to manage one minute difference in junction time and in application time  ------------------------------------------*/
-
-            //   String currentTimeSynchronizationStatus = this.clientResponderModel.getCurrentTimeSynchronizationStatus(juncHr, juncMin, juncDat, juncMonth, juncYear, appHr, appMin, appDat, appMonth, appYear);
-            /*String side13Status = Integer.toBinaryString(unsignedSide13);
+    //   String currentTimeSynchronizationStatus = this.clientResponderModel.getCurrentTimeSynchronizationStatus(juncHr, juncMin, juncDat, juncMonth, juncYear, appHr, appMin, appDat, appMonth, appYear);
+    /*String side13Status = Integer.toBinaryString(unsignedSide13);
             String side24Status = Integer.toBinaryString(unsignedSide24);
 
             String miscByte = Integer.toBinaryString(unsignedMiscByte);
@@ -1652,8 +1649,7 @@ public class ClientResponderWS extends HttpServlet
         }
         return response;
     }*/
-
-                 String JunctionRefreshFunction(byte[] dataToProcess, int firstStartDataPosition, boolean testRequestFromJunction) {
+    String JunctionRefreshFunction(byte[] dataToProcess, int firstStartDataPosition, boolean testRequestFromJunction) {
         String response = null;
         String extraBytes = "";
         PlanInfo planInfo = new PlanInfo();
@@ -1669,7 +1665,7 @@ public class ClientResponderWS extends HttpServlet
         MadanMahalInfo madanMahalInfo = new MadanMahalInfo();
 
         GohalPurInfo gohalPurInfo = new GohalPurInfo();
-         LabourChowkInfo labourChowkInfo = new LabourChowkInfo();
+        LabourChowkInfo labourChowkInfo = new LabourChowkInfo();
         TrafficSignalWebServices tsws = new TrafficSignalWebServices();
         String[] side13 = null;
         String[] side24 = null;
@@ -1695,7 +1691,7 @@ public class ClientResponderWS extends HttpServlet
             int unsignedSide5Hex = dataToProcess[firstStartDataPosition + 11];// & 0xFF;
             int unsignedSide13 = dataToProcess[firstStartDataPosition + 9] & 0xFF;
             int unsignedSide24 = dataToProcess[firstStartDataPosition + 10] & 0xFF;
-            int unsignedSide5 = dataToProcess[firstStartDataPosition + 11]& 0xFF;
+            int unsignedSide5 = dataToProcess[firstStartDataPosition + 11] & 0xFF;
 
             int unsignedMiscByte = dataToProcess[firstStartDataPosition + 12];// & 0xFF;
 
@@ -1722,43 +1718,43 @@ public class ClientResponderWS extends HttpServlet
             int primary_horizontal_for_side1 = dataToProcess[firstStartDataPosition + 22] & 0xFF;
             int primary_Vertical_for_side1 = dataToProcess[firstStartDataPosition + 23] & 0xFF;
             int secondry_horizontal_for_side1 = dataToProcess[firstStartDataPosition + 24];// & 0xFF;
-             int secondry_verticalfor_side1 = dataToProcess[firstStartDataPosition + 25];
-              int hundred_place_side_1 = dataToProcess[firstStartDataPosition + 26];// & 0xFF;
+            int secondry_verticalfor_side1 = dataToProcess[firstStartDataPosition + 25];
+            int hundred_place_side_1 = dataToProcess[firstStartDataPosition + 26];// & 0xFF;
             int tenth_place_side_1 = dataToProcess[firstStartDataPosition + 27];// & 0xFF;
             int once_place_side_1 = dataToProcess[firstStartDataPosition + 28];// & 0xFF;
 
-         int primary_horizontal_for_side2 = dataToProcess[firstStartDataPosition + 29] & 0xFF;
+            int primary_horizontal_for_side2 = dataToProcess[firstStartDataPosition + 29] & 0xFF;
             int primary_Vertical_for_side2 = dataToProcess[firstStartDataPosition + 30] & 0xFF;
             int secondry_horizontal_for_side2 = dataToProcess[firstStartDataPosition + 31];// & 0xFF;
-             int secondry_verticalfor_side2 = dataToProcess[firstStartDataPosition + 32];
-              int hundred_place_side_2 = dataToProcess[firstStartDataPosition + 33];// & 0xFF;
+            int secondry_verticalfor_side2 = dataToProcess[firstStartDataPosition + 32];
+            int hundred_place_side_2 = dataToProcess[firstStartDataPosition + 33];// & 0xFF;
             int tenth_place_side_2 = dataToProcess[firstStartDataPosition + 34];// & 0xFF;
             int once_place_side_2 = dataToProcess[firstStartDataPosition + 35];// & 0xFF;
-            
+
             int primary_horizontal_for_side3 = dataToProcess[firstStartDataPosition + 36] & 0xFF;
             int primary_Vertical_for_side3 = dataToProcess[firstStartDataPosition + 37] & 0xFF;
             int secondry_horizontal_for_side3 = dataToProcess[firstStartDataPosition + 38];// & 0xFF;
-             int secondry_verticalfor_side3 = dataToProcess[firstStartDataPosition + 39];
-              int hundred_place_side_3 = dataToProcess[firstStartDataPosition + 40];// & 0xFF;
+            int secondry_verticalfor_side3 = dataToProcess[firstStartDataPosition + 39];
+            int hundred_place_side_3 = dataToProcess[firstStartDataPosition + 40];// & 0xFF;
             int tenth_place_side_3 = dataToProcess[firstStartDataPosition + 41];// & 0xFF;
             int once_place_side_3 = dataToProcess[firstStartDataPosition + 42];// & 0xFF;
-            
+
             int primary_horizontal_for_side4 = dataToProcess[firstStartDataPosition + 43] & 0xFF;
             int primary_Vertical_for_side4 = dataToProcess[firstStartDataPosition + 44] & 0xFF;
             int secondry_horizontal_for_side4 = dataToProcess[firstStartDataPosition + 45];// & 0xFF;
-             int secondry_verticalfor_side4 = dataToProcess[firstStartDataPosition + 46];
-              int hundred_place_side_4 = dataToProcess[firstStartDataPosition + 47];// & 0xFF;
+            int secondry_verticalfor_side4 = dataToProcess[firstStartDataPosition + 46];
+            int hundred_place_side_4 = dataToProcess[firstStartDataPosition + 47];// & 0xFF;
             int tenth_place_side_4 = dataToProcess[firstStartDataPosition + 48];// & 0xFF;
             int once_place_side_4 = dataToProcess[firstStartDataPosition + 49];// & 0xFF;
-            
+
             int primary_horizontal_for_side5 = dataToProcess[firstStartDataPosition + 50] & 0xFF;
             int primary_Vertical_for_side5 = dataToProcess[firstStartDataPosition + 51] & 0xFF;
             int secondry_horizontal_for_side5 = dataToProcess[firstStartDataPosition + 52];// & 0xFF;
-             int secondry_verticalfor_side5 = dataToProcess[firstStartDataPosition + 53];
-              int hundred_place_side_5 = dataToProcess[firstStartDataPosition + 54];// & 0xFF;
+            int secondry_verticalfor_side5 = dataToProcess[firstStartDataPosition + 53];
+            int hundred_place_side_5 = dataToProcess[firstStartDataPosition + 54];// & 0xFF;
             int tenth_place_side_5 = dataToProcess[firstStartDataPosition + 55];// & 0xFF;
             int once_place_side_5 = dataToProcess[firstStartDataPosition + 56];// & 0xFF;
-            
+
             int powerStatus = dataToProcess[firstStartDataPosition + 57];
             int communicationStatus = dataToProcess[firstStartDataPosition + 58];
             int map_id = dataToProcess[firstStartDataPosition + 59];
@@ -1776,11 +1772,12 @@ public class ClientResponderWS extends HttpServlet
             int firstLastDelimiter = dataToProcess[firstStartDataPosition + 67];
             int secLastDelimiter = firstLastDelimiter;
             int fault = 0;
-            boolean match = this.clientResponderModel.sideColorMatch(junctionID, plan_id, phase_id, unsignedSide13, unsignedSide24, unsignedSide5,map_id);
+            boolean match = this.clientResponderModel.sideColorMatch(junctionID, plan_id, phase_id, unsignedSide13, unsignedSide24, unsignedSide5, map_id);
+            int unsignedSide13DB = 0;
+            int unsignedSide24DB = 0;
+            int unsignedSide5DB = 0;
             if (match) {
-                int unsignedSide13DB = 0;
-                int unsignedSide24DB = 0;
-                int unsignedSide5DB = 0;
+
                 String primary1 = "";
                 String primary2 = "";
                 String primary3 = "";
@@ -1798,77 +1795,8 @@ public class ClientResponderWS extends HttpServlet
 
                 //side1
                 int poleType = this.clientResponderModel.getPoleType(junctionID, program_version_no, 1);
-                
-                String[] side1Arr = new String[5];
-                side1Arr[0]=Integer.toBinaryString(primary_horizontal_for_side1);
-                side1Arr[1]=Integer.toBinaryString(primary_Vertical_for_side1);
-                side1Arr[2]=Integer.toBinaryString(secondry_horizontal_for_side3);
-                side1Arr[3]=Integer.toBinaryString(secondry_verticalfor_side3);
-                
-                 String[] side2Arr = new String[5];
-                side2Arr[0]=Integer.toBinaryString(primary_horizontal_for_side2);
-                side2Arr[1]=Integer.toBinaryString(primary_Vertical_for_side2);
-                side2Arr[2]=Integer.toBinaryString(secondry_horizontal_for_side4);
-                side2Arr[3]=Integer.toBinaryString(secondry_verticalfor_side4);
- 
-                String[] side3Arr = new String[5];
-                side3Arr[0]=Integer.toBinaryString(primary_horizontal_for_side3);
-                side3Arr[1]=Integer.toBinaryString(primary_Vertical_for_side3);
-                side3Arr[2]=Integer.toBinaryString(secondry_horizontal_for_side1);
-                side3Arr[3]=Integer.toBinaryString(secondry_verticalfor_side1);
-                
-                 String[] side4Arr = new String[5];
-                side4Arr[0]=Integer.toBinaryString(primary_horizontal_for_side4);
-                side4Arr[1]=Integer.toBinaryString(primary_Vertical_for_side4);
-                side4Arr[2]=Integer.toBinaryString(secondry_horizontal_for_side2);
-                side4Arr[3]=Integer.toBinaryString(secondry_verticalfor_side2);
-                System.out.println("aaaaaaaaaaaaaaaaaaaaaaaaaa"+side1Arr+"cccccccccccccccccccccc"+side2Arr+"vvvvvvv"+side3Arr+"bbbbbbb"+side4Arr);
-                //int poleType =0;
-                String side1 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide13DB);
-                String side2 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide24DB);
-                String side3 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide13DB);
-                String side4 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide24DB);
-                String side5="00000000";
-       //List of Side Details         
-               
-//Severity Case Work Start
-//  sideinfolist=clientResponderModel.getseveritydatalist(14);
-                            side1=side1.concat("0000");
-                             side2=side2.concat("0000");
-                              side3=side3.concat("0000");
-                               side4=side4.concat("0000");
-                                
-                               
-                              int faults= matchSignalNew(side1,side2,side3,side4,side5,side1Arr[0],side1Arr[1],side1Arr[2],side1Arr[3],side2Arr[0],side2Arr[1],side2Arr[2],side2Arr[3]
-                                       ,side3Arr[0],side3Arr[1],side3Arr[2],side3Arr[3]
-                                       ,side4Arr[0],side4Arr[1],side4Arr[2],side4Arr[3],
-                                       Integer.toBinaryString(primary_horizontal_for_side5),Integer.toBinaryString(primary_Vertical_for_side5),
-                                       Integer.toBinaryString(secondry_horizontal_for_side5),Integer.toBinaryString(secondry_verticalfor_side5), junctionID);
-                              
 
-                              
- // List<SeverityCase> caselist1=clientResponderModel.getseveritydatalist(side1);
-  //List<SeverityCase> caselist2=clientResponderModel.getseveritydatalist(side2);
-  //List<SeverityCase> caselist3=clientResponderModel.getseveritydatalist(side3);
-  //List<SeverityCase> caselist4=clientResponderModel.getseveritydatalist(side4);
-                System.out.println("he"+faults);
-          
-
-
-
-
-
-
-
-
-       
-       
-       
 //Severity Case Work End       
-       
-       
- 
-
             }
 
             int appHr = 0, appMin = 0, appDat = 0, appMonth = 0, appYear = 0;
@@ -2095,79 +2023,78 @@ public class ClientResponderWS extends HttpServlet
                     this.planInfoRefreshList = planInfo;
                     this.ctx.setAttribute("planInfolist", this.planInfoRefreshList);
                     if (junctionID == 2) {
-                         sideinfolist=clientResponderModel.getsidedatalist(2);
+                        sideinfolist = clientResponderModel.getsidedatalist(2);
                         BeanUtils.copyProperties(damohNakaInfo, planInfo);
                         damohNakaInfoRefreshList = damohNakaInfo;
                         this.ctx.setAttribute("damohNakaInfoList", this.damohNakaInfoRefreshList);
                     }
                     if (junctionID == 13) {
-                         sideinfolist=clientResponderModel.getsidedatalist(13);
+                        sideinfolist = clientResponderModel.getsidedatalist(13);
                         BeanUtils.copyProperties(teenPattiInfo, planInfo);
                         teenPattiInfoRefreshList = teenPattiInfo;
                         this.ctx.setAttribute("teenPattiInfoList", this.teenPattiInfoRefreshList);
                     }
-                    if (junctionID == 6) 
-                    {
-                         sideinfolist=clientResponderModel.getsidedatalist(6);
+                    if (junctionID == 6) {
+                        sideinfolist = clientResponderModel.getsidedatalist(6);
                         BeanUtils.copyProperties(gohalPurInfo, planInfo);
                         gohalPurInfoRefreshList = gohalPurInfo;
                         this.ctx.setAttribute("gohalPurInfoList", this.gohalPurInfoRefreshList);
                     }
 
                     if (junctionID == 11) {
-                         sideinfolist=clientResponderModel.getsidedatalist(11);
+                        sideinfolist = clientResponderModel.getsidedatalist(11);
                         BeanUtils.copyProperties(ranitalInfo, planInfo);
                         ranitalInfoRefreshList = ranitalInfo;
                         this.ctx.setAttribute("ranitalInfoList", this.ranitalInfoRefreshList);
                     }
                     if (junctionID == 1) {
-                         sideinfolist=clientResponderModel.getsidedatalist(1);
+                        sideinfolist = clientResponderModel.getsidedatalist(1);
                         BeanUtils.copyProperties(yatayatThanaInfo, planInfo);
                         yatayatThanaInfoRefreshList = yatayatThanaInfo;
                         this.ctx.setAttribute("yatayatThanaInfoList", this.yatayatThanaInfoRefreshList);
                     }
                     if (junctionID == 3) {
-                         sideinfolist=clientResponderModel.getsidedatalist(3);
+                        sideinfolist = clientResponderModel.getsidedatalist(3);
                         BeanUtils.copyProperties(katangaInfo, planInfo);
                         katangaInfoRefreshList = katangaInfo;
                         this.ctx.setAttribute("katangaInfoList", this.katangaInfoRefreshList);
                     }
                     if (junctionID == 5) {
-                         sideinfolist=clientResponderModel.getsidedatalist(5);
+                        sideinfolist = clientResponderModel.getsidedatalist(5);
                         BeanUtils.copyProperties(baldeobagInfo, planInfo);
                         baldeobagInfoRefreshList = baldeobagInfo;
                         this.ctx.setAttribute("baldeobagInfoList", this.baldeobagInfoRefreshList);
                     }
                     if (junctionID == 14) {
-                         sideinfolist=clientResponderModel.getsidedatalist(14);
+                        sideinfolist = clientResponderModel.getsidedatalist(14);
                         BeanUtils.copyProperties(deendayalChowkInfo, planInfo);
                         deendayalChowkInfoRefreshList = deendayalChowkInfo;
                         this.ctx.setAttribute("deendayalChowkInfoList", this.deendayalChowkInfoRefreshList);
                     }
                     if (junctionID == 7) {
-                         sideinfolist=clientResponderModel.getsidedatalist(7);
+                        sideinfolist = clientResponderModel.getsidedatalist(7);
                         BeanUtils.copyProperties(highCourtInfo, planInfo);
                         highCourtInfoRefreshList = highCourtInfo;
                         this.ctx.setAttribute("highCourtInfoList", this.highCourtInfoRefreshList);
                     }
                     if (junctionID == 8) {
-                         sideinfolist=clientResponderModel.getsidedatalist(8);
+                        sideinfolist = clientResponderModel.getsidedatalist(8);
                         BeanUtils.copyProperties(bloomChowkInfo, planInfo);
                         bloomChowkInfoRefreshList = bloomChowkInfo;
                         this.ctx.setAttribute("bloomChowkInfoList", this.bloomChowkInfoRefreshList);
                     }
                     if (junctionID == 12) {
-                         sideinfolist=clientResponderModel.getsidedatalist(12);
+                        sideinfolist = clientResponderModel.getsidedatalist(12);
                         BeanUtils.copyProperties(madanMahalInfo, planInfo);
                         madanMahalInfoRefreshList = madanMahalInfo;
                         this.ctx.setAttribute("madanMahalInfoList", this.madanMahalInfoRefreshList);
                     }
-                     if (junctionID == 15) {
-                         sideinfolist=clientResponderModel.getsidedatalist(15);
-                         BeanUtils.copyProperties(labourChowkInfo, planInfo);
-                        
+                    if (junctionID == 15) {
+                        sideinfolist = clientResponderModel.getsidedatalist(15);
+                        BeanUtils.copyProperties(labourChowkInfo, planInfo);
+
                         labourChowkInfoRefreshList = labourChowkInfo;
-                        sidelistdata=new ArrayList<>();
+                        sidelistdata = new ArrayList<>();
                         clientResponderModel.getsidedatalist(junctionID);
                         this.ctx.setAttribute("labourChowkInfoList", this.labourChowkInfoRefreshList);
                     }
@@ -2180,106 +2107,374 @@ public class ClientResponderWS extends HttpServlet
             }
 
             sideinfolist.size();
-            int dbside1primary_h_no=0;
-         int dbside1Primary_v_aspect_no=0;
-         int dbside1Secondary_h_aspect_no=0;
-         int dbside1Secondary_v_aspect_no=0;
-         int dbside2primary_h_no=0;
-         int dbside2Primary_v_aspect_no=0;
-         int dbside2Secondary_h_aspect_no=0;
-         int dbside2Secondary_v_aspect_no=0;
-         int dbside3primary_h_no=0;
-         int dbside3Primary_v_aspect_no=0;
-         int dbside3Secondary_h_aspect_no=0;
-         int dbside3Secondary_v_aspect_no=0;
-         int dbside4primary_h_no=0;
-         int dbside4Primary_v_aspect_no=0;
-         int dbside4Secondary_h_aspect_no=0;
-         int dbside4Secondary_v_aspect_no=0;
-         int dbside5primary_h_no=0;
-         int dbside5Primary_v_aspect_no=0;
-         int dbside5Secondary_h_aspect_no=0;
-         int dbside5Secondary_v_aspect_no=0;
-     // arrdata= new int[100];
-        for(int i=0; i<sideinfolist.size(); i++){
+            int dbside1primary_h_no = 0;
+            int dbside1Primary_v_aspect_no = 0;
+            int dbside1Secondary_h_aspect_no = 0;
+            int dbside1Secondary_v_aspect_no = 0;
+            int dbside2primary_h_no = 0;
+            int dbside2Primary_v_aspect_no = 0;
+            int dbside2Secondary_h_aspect_no = 0;
+            int dbside2Secondary_v_aspect_no = 0;
+            int dbside3primary_h_no = 0;
+            int dbside3Primary_v_aspect_no = 0;
+            int dbside3Secondary_h_aspect_no = 0;
+            int dbside3Secondary_v_aspect_no = 0;
+            int dbside4primary_h_no = 0;
+            int dbside4Primary_v_aspect_no = 0;
+            int dbside4Secondary_h_aspect_no = 0;
+            int dbside4Secondary_v_aspect_no = 0;
+            int dbside5primary_h_no = 0;
+            int dbside5Primary_v_aspect_no = 0;
+            int dbside5Secondary_h_aspect_no = 0;
+            int dbside5Secondary_v_aspect_no = 0;
+            // arrdata= new int[100];
+            for (int i = 0; i < sideinfolist.size(); i++) {
+
+                // SlaveInfo
+                //    String[] arr = sideinfolist.toArray(new String[0]); 
+                int a0 = 0;
+                int a1 = 0;
+                int a2 = 0;
+                int a3 = 0;
+
+                a0 = sideinfolist.get(i).getPrimary_h_aspect_no();
+                a1 = sideinfolist.get(i).getPrimary_v_aspect_no();
+                a2 = sideinfolist.get(i).getSecondary_h_aspect_no();
+                a3 = sideinfolist.get(i).getSecondary_v_aspect_no();
+                hmap.put("dbside" + i + "primary_h_no", a0);
+                hmap.put("dbside" + i + "Primary_v_aspect_no", a1);
+                hmap.put("dbside" + i + "Secondary_h_aspect_no", a2);
+                hmap.put("dbside" + i + "Secondary_v_aspect_no", a3);
+
+                System.out.println("sss " + hmap);
+
+            }
+            //  System.out.println("sss "+hmap);
+            //sideinfolist.toArray();
+            String[] side3Arr = new String[5];
+            String[] side2Arr = new String[5];
+            String[] side1Arr = new String[5];
+            String[] side4Arr = new String[5];
+
+            if (noOfSides == 3) {
+                dbside1primary_h_no = hmap.get("dbside0primary_h_no");
+                dbside1Primary_v_aspect_no = hmap.get("dbside0Primary_v_aspect_no");
+                dbside1Secondary_h_aspect_no = hmap.get("dbside0Secondary_h_aspect_no");
+                dbside1Secondary_v_aspect_no = hmap.get("dbside0Secondary_v_aspect_no");
+                dbside2primary_h_no = hmap.get("dbside1primary_h_no");
+                dbside2Primary_v_aspect_no = hmap.get("dbside1Primary_v_aspect_no");
+                dbside2Secondary_h_aspect_no = hmap.get("dbside1Secondary_h_aspect_no");
+                dbside2Secondary_v_aspect_no = hmap.get("dbside1Secondary_v_aspect_no");
+                dbside3primary_h_no = hmap.get("dbside2primary_h_no");
+                dbside3Primary_v_aspect_no = hmap.get("dbside2Primary_v_aspect_no");
+                dbside3Secondary_h_aspect_no = hmap.get("dbside2Secondary_h_aspect_no");
+                dbside3Secondary_v_aspect_no = hmap.get("dbside2Secondary_v_aspect_no");
+
+                if (dbside1primary_h_no > 0) {
+                    side1Arr[0] = Integer.toBinaryString(primary_horizontal_for_side1);
+                } else {
+                    side1Arr[0] = "0";
+                }
+                if (dbside1Primary_v_aspect_no > 0) {
+                    side1Arr[1] = Integer.toBinaryString(primary_Vertical_for_side1);
+                } else {
+                    side1Arr[1] = "0";
+                }
+                if (dbside3Secondary_h_aspect_no > 0) {
+                    side1Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side3);
+                } else {
+                    side1Arr[2] = "0";
+                }
+                if (dbside3Secondary_v_aspect_no > 0) {
+                    side1Arr[3] = Integer.toBinaryString(secondry_verticalfor_side3);
+                } else {
+                    side1Arr[3] = "0";
+                }
+
+                if (dbside2primary_h_no > 0) {
+                    side2Arr[0] = Integer.toBinaryString(primary_horizontal_for_side2);
+                } else {
+                    side2Arr[3] = "0";
+                }
+                if (dbside2Primary_v_aspect_no > 0) {
+                    side2Arr[1] = Integer.toBinaryString(primary_Vertical_for_side2);
+                } else {
+                    side2Arr[3] = "0";
+                }
+
+                if (dbside4Secondary_h_aspect_no > 0) {
+                    side2Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side4);
+                } else {
+                    side2Arr[3] = "0";
+                }
+                if (dbside4Secondary_v_aspect_no > 0) {
+                    side2Arr[3] = Integer.toBinaryString(secondry_verticalfor_side4);
+                } else {
+                    side2Arr[3] = "0";
+                }
+
+                if (dbside3primary_h_no > 0) {
+                    side3Arr[0] = Integer.toBinaryString(primary_horizontal_for_side3);
+                } else {
+                    side3Arr[0] = "0";
+                }
+                if (dbside3Primary_v_aspect_no > 0) {
+                    side3Arr[1] = Integer.toBinaryString(primary_Vertical_for_side3);
+                } else {
+                    side3Arr[1] = "0";
+                }
+                if (dbside1Secondary_h_aspect_no > 0) {
+                    side3Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side1);
+                } else {
+                    side3Arr[2] = "0";
+                }
+                if (dbside1Secondary_v_aspect_no > 0) {
+                    side3Arr[3] = Integer.toBinaryString(secondry_verticalfor_side1);
+                } else {
+                    side3Arr[3] = "0";
+                }
+
+                side4Arr[0] = "0";
+                side4Arr[1] = "0";
+                side4Arr[2] = "0";
+                side4Arr[3] = "0";
+
+            } else if (noOfSides == 4) {
+                dbside1primary_h_no = hmap.get("dbside0primary_h_no");
+                dbside1Primary_v_aspect_no = hmap.get("dbside0Primary_v_aspect_no");
+                dbside1Secondary_h_aspect_no = hmap.get("dbside0Secondary_h_aspect_no");
+                dbside1Secondary_v_aspect_no = hmap.get("dbside0Secondary_v_aspect_no");
+                dbside2primary_h_no = hmap.get("dbside1primary_h_no");
+                dbside2Primary_v_aspect_no = hmap.get("dbside1Primary_v_aspect_no");
+                dbside2Secondary_h_aspect_no = hmap.get("dbside1Secondary_h_aspect_no");
+                dbside2Secondary_v_aspect_no = hmap.get("dbside1Secondary_v_aspect_no");
+                dbside3primary_h_no = hmap.get("dbside2primary_h_no");
+                dbside3Primary_v_aspect_no = hmap.get("dbside2Primary_v_aspect_no");
+                dbside3Secondary_h_aspect_no = hmap.get("dbside2Secondary_h_aspect_no");
+                dbside3Secondary_v_aspect_no = hmap.get("dbside2Secondary_v_aspect_no");
+                dbside4primary_h_no = hmap.get("dbside3primary_h_no");
+                dbside4Primary_v_aspect_no = hmap.get("dbside3Primary_v_aspect_no");
+                dbside4Secondary_h_aspect_no = hmap.get("dbside3Secondary_h_aspect_no");
+                dbside4Secondary_v_aspect_no = hmap.get("dbside3Secondary_v_aspect_no");
+                if (dbside1primary_h_no > 0) {
+                    side1Arr[0] = Integer.toBinaryString(primary_horizontal_for_side1);
+                } else {
+                    side1Arr[0] = "0";
+                }
+                if (dbside1Primary_v_aspect_no > 0) {
+                    side1Arr[1] = Integer.toBinaryString(primary_Vertical_for_side1);
+                } else {
+                    side1Arr[1] = "0";
+                }
+                if (dbside3Secondary_h_aspect_no > 0) {
+                    side1Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side3);
+                } else {
+                    side1Arr[2] = "0";
+                }
+                if (dbside3Secondary_v_aspect_no > 0) {
+                    side1Arr[3] = Integer.toBinaryString(secondry_verticalfor_side3);
+                } else {
+                    side1Arr[3] = "0";
+                }
+
+                if (dbside2primary_h_no > 0) {
+                    side2Arr[0] = Integer.toBinaryString(primary_horizontal_for_side2);
+                } else {
+                    side2Arr[0] = "0";
+                }
+                if (dbside2Primary_v_aspect_no > 0) {
+                    side2Arr[1] = Integer.toBinaryString(primary_Vertical_for_side2);
+                } else {
+                    side2Arr[1] = "0";
+                }
+
+                if (dbside4Secondary_h_aspect_no > 0) {
+                    side2Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side4);
+                } else {
+                    side2Arr[2] = "0";
+                }
+                if (dbside4Secondary_v_aspect_no > 0) {
+                    side2Arr[3] = Integer.toBinaryString(secondry_verticalfor_side4);
+                } else {
+                    side2Arr[3] = "0";
+                }
+
+                if (dbside3primary_h_no > 0) {
+                    side3Arr[0] = Integer.toBinaryString(primary_horizontal_for_side3);
+                } else {
+                    side3Arr[0] = "0";
+                }
+                if (dbside3Primary_v_aspect_no > 0) {
+                    side3Arr[1] = Integer.toBinaryString(primary_Vertical_for_side3);
+                } else {
+                    side3Arr[1] = "0";
+                }
+                if (dbside1Secondary_h_aspect_no > 0) {
+                    side3Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side1);
+                } else {
+                    side3Arr[2] = "0";
+                }
+                if (dbside1Secondary_v_aspect_no > 0) {
+                    side3Arr[3] = Integer.toBinaryString(secondry_verticalfor_side1);
+                } else {
+                    side3Arr[3] = "0";
+                }
+
+                if (dbside4primary_h_no > 0) {
+                    side4Arr[0] = Integer.toBinaryString(primary_horizontal_for_side4);
+                } else {
+                    side4Arr[0] = "0";
+                }
+                if (dbside4Primary_v_aspect_no > 0) {
+                    side4Arr[1] = Integer.toBinaryString(primary_Vertical_for_side4);
+                } else {
+                    side4Arr[1] = "0";
+                }
+                if (dbside2Secondary_h_aspect_no > 0) {
+                    side4Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side2);
+                } else {
+                    side4Arr[2] = "0";
+                }
+                if (dbside2Secondary_v_aspect_no > 0) {
+                    side4Arr[3] = Integer.toBinaryString(secondry_verticalfor_side2);
+                } else {
+                    side4Arr[3] = "0";
+                }
+
+            } else {
+                dbside1primary_h_no = hmap.get("dbside0primary_h_no");
+                dbside1Primary_v_aspect_no = hmap.get("dbside0Primary_v_aspect_no");
+                dbside1Secondary_h_aspect_no = hmap.get("dbside0Secondary_h_aspect_no");
+                dbside1Secondary_v_aspect_no = hmap.get("dbside0Secondary_v_aspect_no");
+                dbside2primary_h_no = hmap.get("dbside1primary_h_no");
+                dbside2Primary_v_aspect_no = hmap.get("dbside1Primary_v_aspect_no");
+                dbside2Secondary_h_aspect_no = hmap.get("dbside1Secondary_h_aspect_no");
+                dbside2Secondary_v_aspect_no = hmap.get("dbside1Secondary_v_aspect_no");
+                dbside3primary_h_no = hmap.get("dbside2primary_h_no");
+                dbside3Primary_v_aspect_no = hmap.get("dbside2Primary_v_aspect_no");
+                dbside3Secondary_h_aspect_no = hmap.get("dbside2Secondary_h_aspect_no");
+                dbside3Secondary_v_aspect_no = hmap.get("dbside2Secondary_v_aspect_no");
+                dbside4primary_h_no = hmap.get("dbside3primary_h_no");
+                dbside4Primary_v_aspect_no = hmap.get("dbside3Primary_v_aspect_no");
+                dbside4Secondary_h_aspect_no = hmap.get("dbside3Secondary_h_aspect_no");
+                dbside4Secondary_v_aspect_no = hmap.get("dbside3Secondary_v_aspect_no");
+                dbside5primary_h_no = hmap.get("dbside4primary_h_no");
+                dbside5Primary_v_aspect_no = hmap.get("dbside4Primary_v_aspect_no");
+                dbside5Secondary_h_aspect_no = hmap.get("dbside4Secondary_h_aspect_no");
+                dbside5Secondary_v_aspect_no = hmap.get("dbside4Secondary_v_aspect_no");
+
+                if (dbside1primary_h_no > 0) {
+                    side1Arr[0] = Integer.toBinaryString(primary_horizontal_for_side1);
+                } else {
+                    side1Arr[0] = "0";
+                }
+                if (dbside1Primary_v_aspect_no > 0) {
+                    side1Arr[1] = Integer.toBinaryString(primary_Vertical_for_side1);
+                } else {
+                    side1Arr[1] = "0";
+                }
+                if (dbside3Secondary_h_aspect_no > 0) {
+                    side1Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side3);
+                } else {
+                    side1Arr[2] = "0";
+                }
+                if (dbside3Secondary_v_aspect_no > 0) {
+                    side1Arr[3] = Integer.toBinaryString(secondry_verticalfor_side3);
+                } else {
+                    side1Arr[3] = "0";
+                }
+
+                if (dbside2primary_h_no > 0) {
+                    side2Arr[0] = Integer.toBinaryString(primary_horizontal_for_side2);
+                } else {
+                    side2Arr[0] = "0";
+                }
+                if (dbside2Primary_v_aspect_no > 0) {
+                    side2Arr[1] = Integer.toBinaryString(primary_Vertical_for_side2);
+                } else {
+                    side2Arr[1] = "0";
+                }
+
+                if (dbside4Secondary_h_aspect_no > 0) {
+                    side2Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side4);
+                } else {
+                    side2Arr[2] = "0";
+                }
+                if (dbside4Secondary_v_aspect_no > 0) {
+                    side2Arr[3] = Integer.toBinaryString(secondry_verticalfor_side4);
+                } else {
+                    side2Arr[3] = "0";
+                }
+
+                if (dbside3primary_h_no > 0) {
+                    side3Arr[0] = Integer.toBinaryString(primary_horizontal_for_side3);
+                } else {
+                    side3Arr[0] = "0";
+                }
+                if (dbside3Primary_v_aspect_no > 0) {
+                    side3Arr[1] = Integer.toBinaryString(primary_Vertical_for_side3);
+                } else {
+                    side3Arr[1] = "0";
+                }
+                if (dbside1Secondary_h_aspect_no > 0) {
+                    side3Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side1);
+                } else {
+                    side3Arr[2] = "0";
+                }
+                if (dbside1Secondary_v_aspect_no > 0) {
+                    side3Arr[3] = Integer.toBinaryString(secondry_verticalfor_side1);
+                } else {
+                    side3Arr[3] = "0";
+                }
+
+                if (dbside4primary_h_no > 0) {
+                    side4Arr[0] = Integer.toBinaryString(primary_horizontal_for_side4);
+                } else {
+                    side4Arr[0] = "0";
+                }
+                if (dbside4Primary_v_aspect_no > 0) {
+                    side4Arr[1] = Integer.toBinaryString(primary_Vertical_for_side4);
+                } else {
+                    side4Arr[1] = "0";
+                }
+                if (dbside2Secondary_h_aspect_no > 0) {
+                    side4Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side2);
+                } else {
+                    side4Arr[2] = "0";
+                }
+                if (dbside2Secondary_v_aspect_no > 0) {
+                    side4Arr[3] = Integer.toBinaryString(secondry_verticalfor_side2);
+                } else {
+                    side4Arr[3] = "0";
+                }
+            }
             
-              // SlaveInfo
-              
-           //    String[] arr = sideinfolist.toArray(new String[0]); 
-  
-      int a0=0;int a1=0;int a2=0;int a3=0;
-      
-                     a0= sideinfolist.get(i).getPrimary_h_aspect_no();
-                      a1= sideinfolist.get(i).getPrimary_v_aspect_no();
-                         a2=sideinfolist.get(i).getSecondary_h_aspect_no();
-                          a3=sideinfolist.get(i).getSecondary_v_aspect_no();
-                          hmap.put("dbside"+i+"primary_h_no", a0);
-                           hmap.put("dbside"+i+"Primary_v_aspect_no", a1);
-                            hmap.put("dbside"+i+"Secondary_h_aspect_no", a2);
-                             hmap.put("dbside"+i+"Secondary_v_aspect_no", a3);
-                        
- 
-                          System.out.println("sss "+hmap);
             
+            String side1 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide13DB);
+            String side2 = this.clientResponderModel.decToBinaryAndSplitFirst(unsignedSide24DB);
+            String side3 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide13DB);
+            String side4 = this.clientResponderModel.decToBinaryAndSplitLater(unsignedSide24DB);
+            String side5 = "00000000";
+            //List of Side Details         
+
+//Severity Case Work Start
+//  sideinfolist=clientResponderModel.getseveritydatalist(14);
+            side1 = side1.concat("0000");
+            side2 = side2.concat("0000");
+            side3 = side3.concat("0000");
+            side4 = side4.concat("0000");
+
+            fault = matchSignalNew(side1, side2, side3, side4, side5, side1Arr[0], side1Arr[1], side1Arr[2], side1Arr[3], side2Arr[0], side2Arr[1], side2Arr[2], side2Arr[3],
+                     side3Arr[0], side3Arr[1], side3Arr[2], side3Arr[3],
+                     side4Arr[0], side4Arr[1], side4Arr[2], side4Arr[3],
+                    "0", "0",
+                    "0", "0", junctionID);
+
+            // List<SeverityCase> caselist1=clientResponderModel.getseveritydatalist(side1);
+            //List<SeverityCase> caselist2=clientResponderModel.getseveritydatalist(side2);
+            //List<SeverityCase> caselist3=clientResponderModel.getseveritydatalist(side3);
+            //List<SeverityCase> caselist4=clientResponderModel.getseveritydatalist(side4);
             
-        }
-        //  System.out.println("sss "+hmap);
-     //sideinfolist.toArray();
-      
-     if(noOfSides==3){
-           dbside1primary_h_no=hmap.get("dbside0primary_h_no");
-           dbside1Primary_v_aspect_no=hmap.get("dbside0Primary_v_aspect_no");
-           dbside1Secondary_h_aspect_no=hmap.get("dbside0Secondary_h_aspect_no");
-           dbside1Secondary_v_aspect_no=hmap.get("dbside0Secondary_v_aspect_no");
-           dbside2primary_h_no=hmap.get("dbside1primary_h_no");
-           dbside2Primary_v_aspect_no=hmap.get("dbside1Primary_v_aspect_no");
-           dbside2Secondary_h_aspect_no=hmap.get("dbside1Secondary_h_aspect_no");
-           dbside2Secondary_v_aspect_no=hmap.get("dbside1Secondary_v_aspect_no");
-           dbside3primary_h_no=hmap.get("dbside2primary_h_no");
-           dbside3Primary_v_aspect_no=hmap.get("dbside2Primary_v_aspect_no");
-           dbside3Secondary_h_aspect_no=hmap.get("dbside2Secondary_h_aspect_no");
-           dbside3Secondary_v_aspect_no=hmap.get("dbside2Secondary_v_aspect_no");
-     }else if(noOfSides==4){
-           dbside1primary_h_no=hmap.get("dbside0primary_h_no");
-           dbside1Primary_v_aspect_no=hmap.get("dbside0Primary_v_aspect_no");
-           dbside1Secondary_h_aspect_no=hmap.get("dbside0Secondary_h_aspect_no");
-           dbside1Secondary_v_aspect_no=hmap.get("dbside0Secondary_v_aspect_no");
-           dbside2primary_h_no=hmap.get("dbside1primary_h_no");
-           dbside2Primary_v_aspect_no=hmap.get("dbside1Primary_v_aspect_no");
-           dbside2Secondary_h_aspect_no=hmap.get("dbside1Secondary_h_aspect_no");
-           dbside2Secondary_v_aspect_no=hmap.get("dbside1Secondary_v_aspect_no");
-           dbside3primary_h_no=hmap.get("dbside2primary_h_no");
-           dbside3Primary_v_aspect_no=hmap.get("dbside2Primary_v_aspect_no");
-           dbside3Secondary_h_aspect_no=hmap.get("dbside2Secondary_h_aspect_no");
-           dbside3Secondary_v_aspect_no=hmap.get("dbside2Secondary_v_aspect_no");
-           dbside4primary_h_no=hmap.get("dbside3primary_h_no");
-           dbside4Primary_v_aspect_no=hmap.get("dbside3Primary_v_aspect_no");
-           dbside4Secondary_h_aspect_no=hmap.get("dbside3Secondary_h_aspect_no");
-           dbside4Secondary_v_aspect_no=hmap.get("dbside3Secondary_v_aspect_no");
-     }else{
-          dbside1primary_h_no=hmap.get("dbside0primary_h_no");
-           dbside1Primary_v_aspect_no=hmap.get("dbside0Primary_v_aspect_no");
-           dbside1Secondary_h_aspect_no=hmap.get("dbside0Secondary_h_aspect_no");
-           dbside1Secondary_v_aspect_no=hmap.get("dbside0Secondary_v_aspect_no");
-           dbside2primary_h_no=hmap.get("dbside1primary_h_no");
-           dbside2Primary_v_aspect_no=hmap.get("dbside1Primary_v_aspect_no");
-           dbside2Secondary_h_aspect_no=hmap.get("dbside1Secondary_h_aspect_no");
-           dbside2Secondary_v_aspect_no=hmap.get("dbside1Secondary_v_aspect_no");
-           dbside3primary_h_no=hmap.get("dbside2primary_h_no");
-           dbside3Primary_v_aspect_no=hmap.get("dbside2Primary_v_aspect_no");
-           dbside3Secondary_h_aspect_no=hmap.get("dbside2Secondary_h_aspect_no");
-           dbside3Secondary_v_aspect_no=hmap.get("dbside2Secondary_v_aspect_no");
-           dbside4primary_h_no=hmap.get("dbside3primary_h_no");
-           dbside4Primary_v_aspect_no=hmap.get("dbside3Primary_v_aspect_no");
-           dbside4Secondary_h_aspect_no=hmap.get("dbside3Secondary_h_aspect_no");
-           dbside4Secondary_v_aspect_no=hmap.get("dbside3Secondary_v_aspect_no");
-            dbside5primary_h_no=hmap.get("dbside4primary_h_no");
-           dbside5Primary_v_aspect_no=hmap.get("dbside4Primary_v_aspect_no");
-           dbside5Secondary_h_aspect_no=hmap.get("dbside4Secondary_h_aspect_no");
-           dbside5Secondary_v_aspect_no=hmap.get("dbside4Secondary_v_aspect_no");
-     }
-            System.out.println(dbside1Primary_v_aspect_no);
-     
             int primary_Vertical_for_side11 = primary_Vertical_for_side1;
             activity = program_version_no == programVersionNoFromDB ? fileNo == fileNoFromDB ? currentTimeSynchronizationStatus.equals("Y") ? activity : testRequestFromJunction ? 1 : 9 : 8 : 7;
             activity1 = activity == 7 || activity == 8 || activity == 9 ? 1 : activity1;
@@ -2302,7 +2497,7 @@ public class ClientResponderWS extends HttpServlet
 //            
 
             System.out.println("activity bytes: " + activity + " " + activity1 + " " + activity2 + " " + activity3);
-            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " +fault+ " " + firstLastDelimiter + " " + firstLastDelimiter;
+            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " + fault + " " + firstLastDelimiter + " " + firstLastDelimiter;
             System.out.println("response ::: " + response);
 
         } catch (Exception e) {
@@ -2310,241 +2505,344 @@ public class ClientResponderWS extends HttpServlet
         }
         return response;
     }
-                public int matchSignalNew(String side1, String side2, String side3, String side4, String side5,
-            String primary_horizontal_for_side1, String primary_Vertical_for_side1, String secondry_horizontal_for_side3, String secondry_verticalfor_side3
-             ,String primary_horizontal_for_side2, String primary_Vertical_for_side2, String secondry_horizontal_for_side4, String secondry_verticalfor_side4,
-             String primary_horizontal_for_side3, String primary_Vertical_for_side3, String secondry_horizontal_for_side1, String secondry_verticalfor_side1,
-            String primary_horizontal_for_side4, String primary_Vertical_for_side4, String secondry_horizontal_for_side2, String secondry_verticalfor_side2 ,
-            String primary_horizontal_for_side5,String primary_vertical_for_side5,String secondry_horizontal_for_side5,String secondry_vertical_for_side5,int junctionID) {
-         
-         
-         int fault = 0;
-         int programVersionNumber = 0;
+ 
+    public int matchSignalNew(String side1, String side2, String side3, String side4, String side5,
+            String primary_horizontal_for_side1, String primary_Vertical_for_side1, String secondry_horizontal_for_side3, String secondry_verticalfor_side3,
+             String primary_horizontal_for_side2, String primary_Vertical_for_side2, String secondry_horizontal_for_side4, String secondry_verticalfor_side4,
+            String primary_horizontal_for_side3, String primary_Vertical_for_side3, String secondry_horizontal_for_side1, String secondry_verticalfor_side1,
+            String primary_horizontal_for_side4, String primary_Vertical_for_side4, String secondry_horizontal_for_side2, String secondry_verticalfor_side2,
+            String primary_horizontal_for_side5, String primary_vertical_for_side5, String secondry_horizontal_for_side5, String secondry_vertical_for_side5, int junctionID) {
+
+        int fault = 0;
+        int programVersionNumber = 0;
         //primary_horizontal_for_side1 color match 
+        if(!"0".equals(primary_horizontal_for_side1)){
         primary_horizontal_for_side1 = settingColorBit(primary_horizontal_for_side1);
-       // primary_side_1 = settingColorBit(primary_side_1);
-        Map<String,Object> side1Match = this.clientResponderModel.matchColor(side1,primary_horizontal_for_side1);
-        if(side1Match.size() > 0) {
+        // primary_side_1 = settingColorBit(primary_side_1);
+        Map<String, Object> side1Match = this.clientResponderModel.matchColor(side1, primary_horizontal_for_side1);
+        if (side1Match.size() > 0) {
+            if(side1Match.get("remark").equals("high")){
+            fault=1;
+            }else if(side1Match.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1Match.get("severity_case").toString());
+           int  faults = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side1Match.get("severity_case").toString());
             }
         }
-        
+}
+        if(!"0".equals(primary_Vertical_for_side1)){
         primary_Vertical_for_side1 = settingColorBit(primary_Vertical_for_side1);
-      //  primary_side_2 = settingColorBit(primary_side_2);
-        Map<String,Object> side2Match = this.clientResponderModel.matchColor(side1, primary_Vertical_for_side1);
-        if(side2Match.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2Match.get("severity_case").toString());
+        //  primary_side_2 = settingColorBit(primary_side_2);
+        Map<String, Object> side2Match = this.clientResponderModel.matchColor(side1, primary_Vertical_for_side1);
+        if (side2Match.size() > 0) {
+            if(side2Match.get("remark").equals("high")){
+            fault=1;
+            }else if(side2Match.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side2Match.get("severity_case").toString());
+            }
+        }}
 //        
-        
+if(!"0".equals(secondry_horizontal_for_side3)){
         secondry_horizontal_for_side3 = settingColorBit(secondry_horizontal_for_side3);
-        Map<String,Object> side3Match = this.clientResponderModel.matchColor(side1, secondry_horizontal_for_side3);
-        if(side3Match.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3Match.get("severity_case").toString());
+        Map<String, Object> side3Match = this.clientResponderModel.matchColor(side1, secondry_horizontal_for_side3);
+        if (side3Match.size() > 0) {
+            if(side3Match.get("remark").equals("high")){
+            fault=1;
+            }else if(side3Match.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+                //sendSmsToAssignedFor("", side3Match.get("severity_case").toString());
+            }
+        }}
 //        
-        secondry_verticalfor_side3 = settingColorBit(secondry_verticalfor_side3);
-      //  primary_side_4 = settingColorBit(primary_side_4);
-        Map<String,Object> side4Match = this.clientResponderModel.matchColor(side1, secondry_verticalfor_side3);
-        if(side4Match.size()>0) {
+if(!"0".equals(secondry_verticalfor_side3)){        
+secondry_verticalfor_side3 = settingColorBit(secondry_verticalfor_side3);
+        //  primary_side_4 = settingColorBit(primary_side_4);
+        Map<String, Object> side4Match = this.clientResponderModel.matchColor(side1, secondry_verticalfor_side3);
+        if (side4Match.size() > 0) {
+             if(side4Match.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match.get("severity_case").toString());
             }
         }
-        
-        
-        
-         primary_horizontal_for_side2 = settingColorBit(primary_horizontal_for_side2);
-       // primary_side_1 = settingColorBit(primary_side_1);
-        Map<String,Object> side1Matchs = this.clientResponderModel.matchColor(side2,primary_horizontal_for_side2);
-        if(side1Matchs.size() > 0) {
+}if(!"0".equals(primary_horizontal_for_side2)){
+        primary_horizontal_for_side2 = settingColorBit(primary_horizontal_for_side2);
+        // primary_side_1 = settingColorBit(primary_side_1);
+        Map<String, Object> side1Matchs = this.clientResponderModel.matchColor(side2, primary_horizontal_for_side2);
+        if (side1Matchs.size() > 0) {
+             if(side1Matchs.get("remark").equals("high")){
+            fault=1;
+            }else if(side1Matchs.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side1Matchs.get("severity_case").toString(), Integer.parseInt(side1Matchs.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1Matchs.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side1Matchs.get("severity_case").toString(), Integer.parseInt(side1Matchs.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+              //  sendSmsToAssignedFor("", side1Matchs.get("severity_case").toString());
             }
         }
-        
+}if(!"0".equals(primary_Vertical_for_side2)){
         primary_Vertical_for_side2 = settingColorBit(primary_Vertical_for_side2);
-      //  primary_side_2 = settingColorBit(primary_side_2);
-        Map<String,Object> side2Match1 = this.clientResponderModel.matchColor(side2, primary_Vertical_for_side2);
-        if(side2Match1.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side2Match1.get("severity_case").toString(), Integer.parseInt(side2Match1.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2Match1.get("severity_case").toString());
+        //  primary_side_2 = settingColorBit(primary_side_2);
+        Map<String, Object> side2Match1 = this.clientResponderModel.matchColor(side2, primary_Vertical_for_side2);
+        if (side2Match1.size() > 0) {
+             if(side2Match1.get("remark").equals("high")){
+            fault=1;
+            }else if(side2Match1.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side2Match1.get("severity_case").toString(), Integer.parseInt(side2Match1.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side2Match1.get("severity_case").toString());
+            }
+        }}
 //        
-        
+if(!"0".equals(secondry_horizontal_for_side4)){
         secondry_horizontal_for_side4 = settingColorBit(secondry_horizontal_for_side4);
-        Map<String,Object> side3Match3 = this.clientResponderModel.matchColor(side2, secondry_horizontal_for_side4);
-        if(side3Match3.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side3Match3.get("severity_case").toString(), Integer.parseInt(side3Match3.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3Match3.get("severity_case").toString());
+        Map<String, Object> side3Match3 = this.clientResponderModel.matchColor(side2, secondry_horizontal_for_side4);
+        if (side3Match3.size() > 0) {
+             if(side3Match3.get("remark").equals("high")){
+            fault=1;
+            }else if(side3Match3.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side3Match3.get("severity_case").toString(), Integer.parseInt(side3Match3.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side3Match3.get("severity_case").toString());
+            }
+        }}
 //        
-        secondry_verticalfor_side4 = settingColorBit(secondry_verticalfor_side4);
-      //  primary_side_4 = settingColorBit(primary_side_4);
-        Map<String,Object> side4Match12 = this.clientResponderModel.matchColor(side2, secondry_verticalfor_side4);
-        if(side4Match12.size()>0) {
+        if(!"0".equals(secondry_verticalfor_side4)){
+            secondry_verticalfor_side4 = settingColorBit(secondry_verticalfor_side4);
+         
+        //  primary_side_4 = settingColorBit(primary_side_4);
+        Map<String, Object> side4Match12 = this.clientResponderModel.matchColor(side2, secondry_verticalfor_side4);
+        if (side4Match12.size() > 0) {
+             if(side4Match12.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match12.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match12.get("severity_case").toString(), Integer.parseInt(side4Match12.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match12.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side4Match12.get("severity_case").toString(), Integer.parseInt(side4Match12.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+             //   sendSmsToAssignedFor("", side4Match12.get("severity_case").toString());
             }
-        }
-        
-        
-        
-        
-          primary_horizontal_for_side3 = settingColorBit(primary_horizontal_for_side3);
-       // primary_side_1 = settingColorBit(primary_side_1);
-        Map<String,Object> side1Matchs21 = this.clientResponderModel.matchColor(side3,primary_horizontal_for_side3);
-        if(side1Matchs21.size() > 0) {
+        }}
+if(!"0".equals(primary_horizontal_for_side3)){
+        primary_horizontal_for_side3 = settingColorBit(primary_horizontal_for_side3);
+        // primary_side_1 = settingColorBit(primary_side_1);
+        Map<String, Object> side1Matchs21 = this.clientResponderModel.matchColor(side3, primary_horizontal_for_side3);
+        if (side1Matchs21.size() > 0) {
+             if(side1Matchs21.get("remark").equals("high")){
+            fault=1;
+            }else if(side1Matchs21.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side1Matchs21.get("severity_case").toString(), Integer.parseInt(side1Matchs21.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1Matchs21.get("severity_case").toString());
+           int  faults = this.clientResponderModel.insertIntoLogTable(side1Matchs21.get("severity_case").toString(), Integer.parseInt(side1Matchs21.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side1Matchs21.get("severity_case").toString());
             }
-        }
-        
+        }}
+if(!"0".equals(primary_Vertical_for_side3)){
         primary_Vertical_for_side3 = settingColorBit(primary_Vertical_for_side3);
-      //  primary_side_2 = settingColorBit(primary_side_2);
-        Map<String,Object> side2Match122 = this.clientResponderModel.matchColor(side3, primary_Vertical_for_side3);
-        if(side2Match122.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side2Match122.get("severity_case").toString(), Integer.parseInt(side2Match122.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2Match122.get("severity_case").toString());
+        //  primary_side_2 = settingColorBit(primary_side_2);
+        Map<String, Object> side2Match122 = this.clientResponderModel.matchColor(side3, primary_Vertical_for_side3);
+        if (side2Match122.size() > 0) {
+             if(side2Match122.get("remark").equals("high")){
+            fault=1;
+            }else if(side2Match122.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side2Match122.get("severity_case").toString(), Integer.parseInt(side2Match122.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+             //   sendSmsToAssignedFor("", side2Match122.get("severity_case").toString());
+            }
+        }}
 //        
-        
+if(!"0".equals(secondry_horizontal_for_side1)){
         secondry_horizontal_for_side1 = settingColorBit(secondry_horizontal_for_side1);
-        Map<String,Object> side3Match23 = this.clientResponderModel.matchColor(side3, secondry_horizontal_for_side1);
-        if(side3Match23.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side3Match23.get("severity_case").toString(), Integer.parseInt(side3Match23.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3Match23.get("severity_case").toString());
+        Map<String, Object> side3Match23 = this.clientResponderModel.matchColor(side3, secondry_horizontal_for_side1);
+        if (side3Match23.size() > 0) {
+             if(side3Match23.get("remark").equals("high")){
+            fault=1;
+            }else if(side3Match23.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side3Match23.get("severity_case").toString(), Integer.parseInt(side3Match23.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+              //  sendSmsToAssignedFor("", side3Match23.get("severity_case").toString());
+            }
+        }}
 //        
-        secondry_verticalfor_side1 = settingColorBit(secondry_verticalfor_side1);
-      //  primary_side_4 = settingColorBit(primary_side_4);
-        Map<String,Object> side4Match124 = this.clientResponderModel.matchColor(side3, secondry_verticalfor_side1);
-        if(side4Match124.size()>0) {
+if(!"0".equals(secondry_verticalfor_side1)){       
+secondry_verticalfor_side1 = settingColorBit(secondry_verticalfor_side1);
+        //  primary_side_4 = settingColorBit(primary_side_4);
+        Map<String, Object> side4Match124 = this.clientResponderModel.matchColor(side3, secondry_verticalfor_side1);
+        if (side4Match124.size() > 0) {
+             if(side4Match124.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match124.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match124.get("severity_case").toString(), Integer.parseInt(side4Match124.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match124.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side4Match124.get("severity_case").toString(), Integer.parseInt(side4Match124.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+              //  sendSmsToAssignedFor("", side4Match124.get("severity_case").toString());
             }
-        }
-        
-        
-        
-          primary_horizontal_for_side2 = settingColorBit(primary_horizontal_for_side4);
-       // primary_side_1 = settingColorBit(primary_side_1);
-        Map<String,Object> side1Matchs214 = this.clientResponderModel.matchColor(side4,primary_horizontal_for_side4);
-        if(side1Matchs214.size() > 0) {
+        }}
+if(!"0".equals(primary_horizontal_for_side2)){
+        primary_horizontal_for_side2 = settingColorBit(primary_horizontal_for_side4);
+        // primary_side_1 = settingColorBit(primary_side_1);
+        Map<String, Object> side1Matchs214 = this.clientResponderModel.matchColor(side4, primary_horizontal_for_side4);
+        if (side1Matchs214.size() > 0) {
+             if(side1Matchs214.get("remark").equals("high")){
+            fault=1;
+            }else if(side1Matchs214.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side1Matchs214.get("severity_case").toString(), Integer.parseInt(side1Matchs214.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1Matchs214.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side1Matchs214.get("severity_case").toString(), Integer.parseInt(side1Matchs214.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+             //   sendSmsToAssignedFor("", side1Matchs214.get("severity_case").toString());
             }
-        }
-        
+        }}
+if(!"0".equals(primary_Vertical_for_side4)){
         primary_Vertical_for_side4 = settingColorBit(primary_Vertical_for_side4);
-      //  primary_side_2 = settingColorBit(primary_side_2);
-        Map<String,Object> side2Match1224 = this.clientResponderModel.matchColor(side4, primary_Vertical_for_side4);
-        if(side2Match1224.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side2Match1224.get("severity_case").toString(), Integer.parseInt(side2Match1224.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2Match1224.get("severity_case").toString());
+        //  primary_side_2 = settingColorBit(primary_side_2);
+        Map<String, Object> side2Match1224 = this.clientResponderModel.matchColor(side4, primary_Vertical_for_side4);
+        if (side2Match1224.size() > 0) {
+             if(side2Match1224.get("remark").equals("high")){
+            fault=1;
+            }else if(side2Match1224.get("remark").equals("middle")){
+            fault=2;
             }
-        }
+            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(side2Match1224.get("severity_case").toString(), Integer.parseInt(side2Match1224.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side2Match1224.get("severity_case").toString());
+            }
+        }}
 //        
-        
+if(!"0".equals(secondry_horizontal_for_side2)){
         secondry_horizontal_for_side2 = settingColorBit(secondry_horizontal_for_side2);
-        Map<String,Object> side3Match232 = this.clientResponderModel.matchColor(side4, secondry_horizontal_for_side2);
-        if(side3Match232.size() > 0) {
-            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side3Match232.get("severity_case").toString(), Integer.parseInt(side3Match232.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3Match232.get("severity_case").toString());
+        Map<String, Object> side3Match232 = this.clientResponderModel.matchColor(side4, secondry_horizontal_for_side2);
+        if (side3Match232.size() > 0) {
+             if(side3Match232.get("remark").equals("high")){
+            fault=1;
+            }else if(side3Match232.get("remark").equals("middle")){
+            fault=2;
             }
+            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
+           int faults = this.clientResponderModel.insertIntoLogTable(side3Match232.get("severity_case").toString(), Integer.parseInt(side3Match232.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side3Match232.get("severity_case").toString());
+            }}
         }
 //        
+if(!"0".equals(secondry_verticalfor_side2)){
         secondry_verticalfor_side2 = settingColorBit(secondry_verticalfor_side2);
-      //  primary_side_4 = settingColorBit(primary_side_4);
-        Map<String,Object> side4Match1242 = this.clientResponderModel.matchColor(side4, secondry_verticalfor_side2);
-        if(side4Match1242.size()>0) {
+        //  primary_side_4 = settingColorBit(primary_side_4);
+        Map<String, Object> side4Match1242 = this.clientResponderModel.matchColor(side4, secondry_verticalfor_side2);
+        if (side4Match1242.size() > 0) {
+             if(side4Match1242.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match1242.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match1242.get("severity_case").toString(), Integer.parseInt(side4Match1242.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match1242.get("severity_case").toString());
+           int faults = this.clientResponderModel.insertIntoLogTable(side4Match1242.get("severity_case").toString(), Integer.parseInt(side4Match1242.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+             //   sendSmsToAssignedFor("", side4Match1242.get("severity_case").toString());
             }
-        }
-         primary_horizontal_for_side5 = settingColorBit(primary_horizontal_for_side5);
-      // for side5
-        Map<String,Object> side4Match5 = this.clientResponderModel.matchColor(side5, primary_horizontal_for_side5);
-        if(side4Match5.size()>0) {
+        }}
+if(!"0".equals(primary_horizontal_for_side5)){
+        primary_horizontal_for_side5 = settingColorBit(primary_horizontal_for_side5);
+        // for side5
+        Map<String, Object> side4Match5 = this.clientResponderModel.matchColor(side5, primary_horizontal_for_side5);
+        if (side4Match5.size() > 0) {
+             if(side4Match5.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match5.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match5.get("severity_case").toString(), Integer.parseInt(side4Match5.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match5.get("severity_case").toString());
+             int faults = this.clientResponderModel.insertIntoLogTable(side4Match5.get("severity_case").toString(), Integer.parseInt(side4Match5.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+              //  sendSmsToAssignedFor("", side4Match5.get("severity_case").toString());
             }
-        }
-          primary_vertical_for_side5 = settingColorBit(primary_vertical_for_side5);
-      // for side5
-        Map<String,Object> side4Match52 = this.clientResponderModel.matchColor(side5, primary_vertical_for_side5);
-        if(side4Match52.size()>0) {
+        }}
+if(!"0".equals(primary_vertical_for_side5)){
+        primary_vertical_for_side5 = settingColorBit(primary_vertical_for_side5);
+        // for side5
+        Map<String, Object> side4Match52 = this.clientResponderModel.matchColor(side5, primary_vertical_for_side5);
+        if (side4Match52.size() > 0) {
+             if(side4Match52.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match52.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match52.get("severity_case").toString(), Integer.parseInt(side4Match52.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match52.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side4Match52.get("severity_case").toString(), Integer.parseInt(side4Match52.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match52.get("severity_case").toString());
             }
-        }
-         secondry_horizontal_for_side5 = settingColorBit(secondry_horizontal_for_side5);
-      // for side5
-        Map<String,Object> side4Match53 = this.clientResponderModel.matchColor(side5, secondry_horizontal_for_side5);
-        if(side4Match53.size()>0) {
+        }}
+if(!"0".equals(secondry_horizontal_for_side5)){
+        secondry_horizontal_for_side5 = settingColorBit(secondry_horizontal_for_side5);
+        // for side5
+        Map<String, Object> side4Match53 = this.clientResponderModel.matchColor(side5, secondry_horizontal_for_side5);
+        if (side4Match53.size() > 0) {
+             if(side4Match53.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match53.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match53.get("severity_case").toString(), Integer.parseInt(side4Match53.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match53.get("severity_case").toString());
+           int faults= this.clientResponderModel.insertIntoLogTable(side4Match53.get("severity_case").toString(), Integer.parseInt(side4Match53.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match53.get("severity_case").toString());
             }
-        }
-          secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
-      // for side5
-        Map<String,Object> side4Match54 = this.clientResponderModel.matchColor(side5, secondry_vertical_for_side5);
-        if(side4Match54.size()>0) {
+        }}
+if(!"0".equals(secondry_vertical_for_side5)){
+        secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> side4Match54 = this.clientResponderModel.matchColor(side5, secondry_vertical_for_side5);
+        if (side4Match54.size() > 0) {
+             if(side4Match54.get("remark").equals("high")){
+            fault=1;
+            }else if(side4Match54.get("remark").equals("middle")){
+            fault=2;
+            }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
-            fault = this.clientResponderModel.insertIntoLogTable(side4Match54.get("severity_case").toString(), Integer.parseInt(side4Match54.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match54.get("severity_case").toString());
+            int faults = this.clientResponderModel.insertIntoLogTable(side4Match54.get("severity_case").toString(), Integer.parseInt(side4Match54.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
         }
-         
-         
+}
         return fault;
     }
 
@@ -2558,118 +2856,116 @@ public class ClientResponderWS extends HttpServlet
     }
 
     public String settingColorBit(String primary) {
-        if(primary.length() != 8) {
+        if (primary.length() != 8) {
             int no_of_zero = 8 - primary.length();
-            String zero = ""; 
-            for(int i=0;i<no_of_zero;i++){
+            String zero = "";
+            for (int i = 0; i < no_of_zero; i++) {
                 zero = zero + "0";
             }
             primary = zero + primary;
         }
         return primary;
     }
-    
-    
-     public int matchSignal(String primary_side_1, String primary_side_2, String primary_side_3, String primary_side_4,
+
+    public int matchSignal(String primary_side_1, String primary_side_2, String primary_side_3, String primary_side_4,
             String secondary_side_1, String secondary_side_2, String secondary_side_3, String secondary_side_4,
             String primary1, String primary2, String primary3, String primary4,
-            String secondary1, String secondary2, String secondary3, String secondary4 , int junctionID) {
-         
-         
-         int fault = 0;
-         int programVersionNumber = 0;
+            String secondary1, String secondary2, String secondary3, String secondary4, int junctionID) {
+
+        int fault = 0;
+        int programVersionNumber = 0;
         //Primary color match 
         primary1 = settingColorBit(primary1);
         primary_side_1 = settingColorBit(primary_side_1);
-        Map<String,Object> side1Match = this.clientResponderModel.matchColor(primary1,primary_side_1);
-        if(side1Match.size() > 0) {
+        Map<String, Object> side1Match = this.clientResponderModel.matchColor(primary1, primary_side_1);
+        if (side1Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1Match.get("severity_case").toString());
+            if (fault > 0) {
+                //sendSmsToAssignedFor("", side1Match.get("severity_case").toString());
             }
         }
-        
+
         primary2 = settingColorBit(primary2);
         primary_side_2 = settingColorBit(primary_side_2);
-        Map<String,Object> side2Match = this.clientResponderModel.matchColor(primary2, primary_side_2);
-        if(side2Match.size() > 0) {
+        Map<String, Object> side2Match = this.clientResponderModel.matchColor(primary2, primary_side_2);
+        if (side2Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2Match.get("severity_case").toString());
+            if (fault > 0) {
+               // sendSmsToAssignedFor("", side2Match.get("severity_case").toString());
             }
         }
 //        
-        primary3= settingColorBit(primary3);
+        primary3 = settingColorBit(primary3);
         primary_side_1 = settingColorBit(primary_side_3);
-        Map<String,Object> side3Match = this.clientResponderModel.matchColor(primary3, primary_side_3);
-        if(side3Match.size() > 0) {
+        Map<String, Object> side3Match = this.clientResponderModel.matchColor(primary3, primary_side_3);
+        if (side3Match.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3Match.get("severity_case").toString());
+            if (fault > 0) {
+              //  sendSmsToAssignedFor("8318275529", side3Match.get("severity_case").toString());
             }
         }
 //        
         primary4 = settingColorBit(primary4);
         primary_side_4 = settingColorBit(primary_side_4);
-        Map<String,Object> side4Match = this.clientResponderModel.matchColor(primary4, primary_side_4);
-        if(side1Match.isEmpty()) {
+        Map<String, Object> side4Match = this.clientResponderModel.matchColor(primary4, primary_side_4);
+        if (side1Match.isEmpty()) {
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
             int side4 = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
-            if(side4 > 0) {
-                sendSmsToAssignedFor("8318275529",side4Match.get("severity_case").toString());
+            if (side4 > 0) {
+             //   sendSmsToAssignedFor("", side4Match.get("severity_case").toString());
             }
         }
-        
+
         secondary1 = settingColorBit(secondary1);
         secondary_side_1 = settingColorBit(secondary_side_1);
-        Map<String,Object> side1SecondaryMatch = this.clientResponderModel.matchColor(secondary1,secondary_side_1);
-        if(side1SecondaryMatch.size() > 0) {
+        Map<String, Object> side1SecondaryMatch = this.clientResponderModel.matchColor(secondary1, secondary_side_1);
+        if (side1SecondaryMatch.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side1SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side1SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side1SecondaryMatch.get("severity_case").toString());
+            if (fault > 0) {
+           //     sendSmsToAssignedFor("", side1SecondaryMatch.get("severity_case").toString());
             }
         }
-        
+
         secondary2 = settingColorBit(secondary2);
         secondary_side_2 = settingColorBit(secondary_side_2);
-        Map<String,Object> side2SecondaryMatch = this.clientResponderModel.matchColor(secondary2, secondary_side_2);
-        if(side2SecondaryMatch.size() > 0) {
+        Map<String, Object> side2SecondaryMatch = this.clientResponderModel.matchColor(secondary2, secondary_side_2);
+        if (side2SecondaryMatch.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side2SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side2SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side2SecondaryMatch.get("severity_case").toString());
+            if (fault > 0) {
+              //  sendSmsToAssignedFor("", side2SecondaryMatch.get("severity_case").toString());
             }
         }
 //        
-        secondary3= settingColorBit(secondary3);
+        secondary3 = settingColorBit(secondary3);
         secondary_side_3 = settingColorBit(secondary_side_3);
-        Map<String,Object> side3SecondaryMatch = this.clientResponderModel.matchColor(secondary3, secondary_side_3);
-        if(side3SecondaryMatch.size() > 0) {
+        Map<String, Object> side3SecondaryMatch = this.clientResponderModel.matchColor(secondary3, secondary_side_3);
+        if (side3SecondaryMatch.size() > 0) {
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             fault = this.clientResponderModel.insertIntoLogTable(side3SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side3SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
-            if(fault > 0) {
-                sendSmsToAssignedFor("8318275529",side3SecondaryMatch.get("severity_case").toString());
+            if (fault > 0) {
+             //   sendSmsToAssignedFor("", side3SecondaryMatch.get("severity_case").toString());
             }
         }
 //        
         secondary4 = settingColorBit(secondary4);
         secondary_side_4 = settingColorBit(secondary_side_4);
-        Map<String,Object> side4SecondaryMatch = this.clientResponderModel.matchColor(secondary4, secondary_side_4);
-        if(side1Match.isEmpty()) {
+        Map<String, Object> side4SecondaryMatch = this.clientResponderModel.matchColor(secondary4, secondary_side_4);
+        if (side1Match.isEmpty()) {
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
             int side4 = this.clientResponderModel.insertIntoLogTable(side4SecondaryMatch.get("severity_case").toString(), Integer.parseInt(side4SecondaryMatch.get("severity_case_id").toString()), sideDetailId);
-            if(side4 > 0) {
-                sendSmsToAssignedFor("8318275529",side4SecondaryMatch.get("severity_case").toString());
+            if (side4 > 0) {
+               // sendSmsToAssignedFor("", side4SecondaryMatch.get("severity_case").toString());
             }
         }
         return fault;
     }
 
-      public String sendSmsToAssignedFor(String numberStr1, String messageStr1) {
+    public String sendSmsToAssignedFor(String numberStr1, String messageStr1) {
         String result = "";
         try {
             String host_url = "http://login.smsgatewayhub.com/api/mt/SendSMS?";//"http://api.mVaayoo.com/mvaayooapi/MessageCompose?";
@@ -3352,7 +3648,6 @@ public class ClientResponderWS extends HttpServlet
 //        boolean regisStatus = juncID.isRegistration_status();
         return responseVal;
     }*/
-    
     private String phaseFunction(byte[] dataToProcess, int firstStartDataPosition) {
         String responseVal = null;
         String extraByte = "";
@@ -3394,29 +3689,28 @@ public class ClientResponderWS extends HttpServlet
             secLastDelimiter = firstLastDelimiter;
             System.out.println("phase function first request -- " + firstStartDelimiter + " " + secStartDelimiter + " " + dataSize1 + " " + dataSize2 + " " + junctionID + " " + program_version_no + " " + fileNo + " " + functionNo + " " + planNo + " " + phaseNo + " " + extraByte + " " + crc + " " + firstLastDelimiter + " " + secLastDelimiter);
             try {
-                Map<String,String> phase_detail = this.clientResponderModel.getPhaseDetail(junctionID, phaseNo);
-                
+                Map<String, String> phase_detail = this.clientResponderModel.getPhaseDetail(junctionID, phaseNo);
+
                 int phase_time = Integer.parseInt(phase_detail.get("phase_time"));
                 int phase_id = Integer.parseInt(phase_detail.get("phase_info_id"));
                 int phase_no = Integer.parseInt(phase_detail.get("phase_no"));
-                int green1   = Integer.parseInt(phase_detail.get("green1"));
+                int green1 = Integer.parseInt(phase_detail.get("green1"));
                 int green2 = Integer.parseInt(phase_detail.get("green2"));
                 int green3 = Integer.parseInt(phase_detail.get("green3"));
                 int green4 = Integer.parseInt(phase_detail.get("green4"));
                 int green5 = Integer.parseInt(phase_detail.get("green5"));
 
-                
                 int side13 = Integer.parseInt(phase_detail.get("side13"));
-                int side24 =Integer.parseInt(phase_detail.get("side24"));
+                int side24 = Integer.parseInt(phase_detail.get("side24"));
                 int side5 = Integer.parseInt(phase_detail.get("side5"));
 
                 int leftGreen = Integer.parseInt(phase_detail.get("left_green"));
                 int padestrianTime = Integer.parseInt(phase_detail.get("padestrian_info"));
-                
+
                 int GPIO = Integer.parseInt(phase_detail.get("GPIO"));
                 int map_id = Integer.parseInt(phase_detail.get("map_id"));
 
-                responseVal = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + planNo + " " +planId+ " " +map_id+ " " +phase_id+ " " + phase_time + " " + green1 + " " + green2 + " " + green3 + " " + green4 + " " + green5 + " " + side13 + " " + side24 + " " + side5 + " " + leftGreen + " " + padestrianTime + " " + GPIO;
+                responseVal = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + planNo + " " + planId + " " + map_id + " " + phase_id + " " + phase_time + " " + green1 + " " + green2 + " " + green3 + " " + green4 + " " + green5 + " " + side13 + " " + side24 + " " + side5 + " " + leftGreen + " " + padestrianTime + " " + GPIO;
 
                 responseVal = responseVal + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
             } catch (Exception e) {
@@ -3456,24 +3750,23 @@ public class ClientResponderWS extends HttpServlet
             System.out.println("phase function second request -- " + firstStartDelimiter + " " + secStartDelimiter + " " + dataSize1 + " " + dataSize2 + " " + junctionID + " " + program_version_no + " " + fileNo + " " + functionNo + " " + planNo + " " + phaseNo + " " + phaseTime + " " + green1 + " " + green2 + " " + green3 + " " + green4 + " " + green5 + " " + side13 + " " + side24 + " " + side5 + " " + leftGreen + " " + padestrianTime + " " + gpio + " " + extraByte + " " + crc + " " + firstLastDelimiter + " " + secLastDelimiter);
             try {
                 int phaseStatus = 0;
-                Map<String,String> phase_detail = this.clientResponderModel.getPhaseDetailCheck(junctionID, planNo, planId, phaseNo);
+                Map<String, String> phase_detail = this.clientResponderModel.getPhaseDetailCheck(junctionID, planNo, planId, phaseNo);
                 int phase_timeR = Integer.parseInt(phase_detail.get("phase_time"));
                 int phase_idR = Integer.parseInt(phase_detail.get("phase_info_id"));
                 int phase_noR = Integer.parseInt(phase_detail.get("phase_no"));
-                int green1R  = Integer.parseInt(phase_detail.get("green1"));
+                int green1R = Integer.parseInt(phase_detail.get("green1"));
                 int green2R = Integer.parseInt(phase_detail.get("green2"));
                 int green3R = Integer.parseInt(phase_detail.get("green3"));
                 int green4R = Integer.parseInt(phase_detail.get("green4"));
                 int green5R = Integer.parseInt(phase_detail.get("green5"));
 
-                
                 int side13R = Integer.parseInt(phase_detail.get("side13"));
-                int side24R =Integer.parseInt(phase_detail.get("side24"));
+                int side24R = Integer.parseInt(phase_detail.get("side24"));
                 int side5R = Integer.parseInt(phase_detail.get("side5"));
 
                 int leftGreenR = Integer.parseInt(phase_detail.get("left_green"));
                 int padestrianTimeR = Integer.parseInt(phase_detail.get("padestrian_info"));
-                
+
                 int GPIOR = Integer.parseInt(phase_detail.get("GPIO"));
                 int map_idR = Integer.parseInt(phase_detail.get("map_id"));
                 if (phaseTime == phase_timeR && phase_id == phase_idR && phaseNo == phase_noR && green1 == green1R && green2 == green2R && green3 == green3R
@@ -3482,7 +3775,7 @@ public class ClientResponderWS extends HttpServlet
                     phaseStatus = 1;
                 }
 
-                responseVal = firstStartDelimiter + " " + firstStartDelimiter + " " + firstStartDelimiter + " " + firstStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + planNo + " " +planId+ " " + map_idR + " " +phase_id+ " " + phaseTime;
+                responseVal = firstStartDelimiter + " " + firstStartDelimiter + " " + firstStartDelimiter + " " + firstStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + planNo + " " + planId + " " + map_idR + " " + phase_id + " " + phaseTime;
                 responseVal = responseVal + " " + green1 + " " + green2 + " " + green3 + " " + green4 + " " + green5 + " " + side13 + " " + side24 + " " + side5 + " " + leftGreen + " " + padestrianTime + " " + gpio + " " + phaseStatus;
                 responseVal = responseVal + " " + extraByte + " " + firstLastDelimiter + " " + secLastDelimiter;
             } catch (Exception e) {
@@ -3514,8 +3807,8 @@ public class ClientResponderWS extends HttpServlet
                 imeiNo = imeiNo + ch;
             }
 
-        //    for (int i = (firstStartDataPosition + 20); i <= (firstStartDataPosition + 30); i++) {
-           for (int i = (firstStartDataPosition + 25); i <= (firstStartDataPosition + 30); i++) {
+            //    for (int i = (firstStartDataPosition + 20); i <= (firstStartDataPosition + 30); i++) {
+            for (int i = (firstStartDataPosition + 25); i <= (firstStartDataPosition + 30); i++) {
                 //char ch = (char) dataToProcess[i];
                 if (extraBytes == "") {
                     extraBytes = extraBytes + dataToProcess[i];
@@ -3543,14 +3836,14 @@ public class ClientResponderWS extends HttpServlet
             int noOfSides = this.clientResponderModel.getNoOfSides(junctIDFromDB, programVersionNoFromDB);
             int pedestrianTime = this.clientResponderModel.getPedestrianTime(junctIDFromDB, programVersionNoFromDB);
             int fileNoFromDB = this.clientResponderModel.getFileNo(junctIDFromDB, programVersionNoFromDB);
-            int totalNoOfPhase =  this.clientResponderModel.getTotalNoOfPhase(junctIDFromDB, programVersionNoFromDB);
+            int totalNoOfPhase = this.clientResponderModel.getTotalNoOfPhase(junctIDFromDB, programVersionNoFromDB);
             ////// adding sides pole type
             int Side1poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 1);
             int Side2poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 2);
             int Side3poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 3);
             int Side4poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 4);
             int Side5poleType = this.clientResponderModel.getPoleType(junctIDFromDB, programVersionNoFromDB, 5);
-            
+
             //////////
             if (fileNo != fileNoFromDB) {
                 this.clientResponderModel.updateFileNo(junctIDFromDB, fileNo, programVersionNoFromDB);
@@ -3559,15 +3852,10 @@ public class ClientResponderWS extends HttpServlet
 
 //            System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
 //            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
+            System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
+            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase + " " + Side1poleType + " " + Side2poleType + " " + Side3poleType + " " + Side4poleType + " " + Side5poleType + " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
 
-         
-System.out.println("register modem request--- FirstStartDelimliter=" + firstStartDelimiter + " SecondStartDelimliter=" + secStartDelimiter + " dataSize1=" + dataSize1 + " dataSize2=" + dataSize2 + " junctionID=" + junctionID + " program_version_no=" + program_version_no + " file_no=" + fileNo + " functionNo=" + functionNo + " imeiNo= " + imeiNo + " crc=" + crc + " firstLastDelimiter= " + firstLastDelimiter + " secLastDelimiter= " + secLastDelimiter);
-          response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctIDFromDB + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + registrationStatus + " " + noOfSides + " " + noOfDateSlot + " " + noOfDaySlot + " " + totalNoOfPlan + " " + pedestrianTime + " " + totalNoOfPhase+ " " + Side1poleType + " " + Side2poleType + " " + Side3poleType + " " + Side4poleType + " " + Side5poleType + " " + extraBytes + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
-
-
-         System.out.println(response);
+            System.out.println(response);
         } catch (Exception e) {
             System.out.println("ClientResponder checkRegistration exception: " + e);
         }
@@ -3841,11 +4129,11 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
         secLastDelimiter = firstLastDelimiter;
         System.out.println("Junction_id" + junctionID);
-        
+
         responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
         try {
             Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getJunctionPlanMapDate(junctionID, date_id, plan_no);
-            
+
             int plan_id = junctionPlanDetail.get("plan_id");
             int order_no = junctionPlanDetail.get("order_no");
             int map_id = junctionPlanDetail.get("map_id");
@@ -3857,17 +4145,16 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
                     extraByte = extraByte + " " + dataToProcess[i];
                 }
             }
-            
-            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " + map_id + " " + noOfPhase + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
-            
+
+            responseVal = responseVal + " " + date_id + " " + day_id + " " + plan_id + " " + order_no + " " + map_id + " " + noOfPhase + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+
         } catch (Exception e) {
             System.out.println("Error - clientResponder - " + e);
         }
 
         return responseVal;
     }
-    
+
     public String junctionPlanMapDayFunction(byte[] dataToProcess, int firstStartDataPosition) {
 
         String responseVal = null;
@@ -3899,11 +4186,11 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
         secLastDelimiter = firstLastDelimiter;
         System.out.println("Junction_id" + junctionID);
-        
+
         responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
         try {
             Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getJunctionPlanMapDay(junctionID, day_id, plan_no);
-            
+
             int plan_id = junctionPlanDetail.get("plan_id");
             int order_no = junctionPlanDetail.get("order_no");
             int map_id = junctionPlanDetail.get("map_id");
@@ -3915,17 +4202,16 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
                     extraByte = extraByte + " " + dataToProcess[i];
                 }
             }
-            
-            responseVal = responseVal + " " + date_id + " " +day_id+ " " +plan_id+ " " + order_no + " " +map_id+ " " +noOfPhase+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
-            
+
+            responseVal = responseVal + " " + date_id + " " + day_id + " " + plan_id + " " + order_no + " " + map_id + " " + noOfPhase + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+
         } catch (Exception e) {
             System.out.println("Error - clientResponder - " + e);
         }
 
         return responseVal;
     }
-    
+
     public String phaseMapFunction(byte[] dataToProcess, int firstStartDataPosition) {
 
         String responseVal = null;
@@ -3938,7 +4224,7 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         int program_version_no = dataToProcess[firstStartDataPosition + 1];
         int fileNo = dataToProcess[firstStartDataPosition + 2];
         int functionNo = dataToProcess[firstStartDataPosition + 3];
-        
+
         int map_id = 0;
         int phase_no = 0;
         int firstLastDelimiter = 0;
@@ -3957,16 +4243,15 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
         secLastDelimiter = firstLastDelimiter;
         System.out.println("Junction_id" + junctionID);
-        
+
         responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
         try {
             Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getPhaseMapDay(junctionID, map_id, phase_no);
-            
+
             int phase_map_id = junctionPlanDetail.get("phase_map_id");
             int phase_id = junctionPlanDetail.get("phase_id");
             int order_no = junctionPlanDetail.get("order_no");
-            for (int i = (firstStartDataPosition + 6)+1; i <= (firstStartDataPosition + 18); i++) 
-            {
+            for (int i = (firstStartDataPosition + 6) + 1; i <= (firstStartDataPosition + 18); i++) {
                 if (extraByte == "") {
                     extraByte = extraByte + dataToProcess[i];
                 } else {
@@ -3981,17 +4266,17 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
 //                    extraByte = extraByte + " " + dataToProcess[i];
 //                }
 //            }
-            
-            responseVal = responseVal + " " + map_id + " " +phase_id+ " " +phase_map_id+ " " +order_no+ " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
-            
+
+            responseVal = responseVal + " " + map_id + " " + phase_id + " " + phase_map_id + " " + order_no + " " + extraByte + " " + firstLastDelimiter + " " + firstLastDelimiter;
+
         } catch (Exception e) {
             System.out.println("Error - clientResponder - " + e);
         }
 
         return responseVal;
     }
-     public String SideDataFunction(byte[] dataToProcess, int firstStartDataPosition) {
+
+    public String SideDataFunction(byte[] dataToProcess, int firstStartDataPosition) {
 
         String responseVal = null;
         String extraByte = "";
@@ -4003,7 +4288,7 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         int program_version_no = dataToProcess[firstStartDataPosition + 1];
         int fileNo = dataToProcess[firstStartDataPosition + 2];
         int functionNo = dataToProcess[firstStartDataPosition + 3];
-        
+
         int map_id = 0;
         int phase_no = 0;
         int firstLastDelimiter = 0;
@@ -4015,166 +4300,153 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
         }
         int programVersionNoFromDB = this.clientResponderModel.getProgramVersionNo(junctionID);
 
-      int  noofside = dataToProcess[firstStartDataPosition + 4];
+        int noofside = dataToProcess[firstStartDataPosition + 4];
         //phase_no = dataToProcess[firstStartDataPosition + 5];
         crc = dataToProcess[firstStartDataPosition + 14] & 0xFF;
         firstLastDelimiter = dataToProcess[firstStartDataPosition + 15];
         //secLastDelimiter = dataToProcess[firstStartDataPosition + 7];
         secLastDelimiter = firstLastDelimiter;
         System.out.println("Junction_id" + junctionID);
-        
+
         responseVal = firstStartDelimiter + " " + secStartDelimiter + " " + firstStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNo + " " + functionNo;
-        int side1poletype = 0,side1primary_h_aspect_no = 0,side1primary_v_aspect_no = 0,side1secondary_h_aspect_no = 0,side1secondary_v_aspect_no=0,side1sideno = 0;
-        int side2poletype=0,side2primary_h_aspect_no=0,side2primary_v_aspect_no=0,side2secondary_h_aspect_no=0,side2secondary_v_aspect_no=0,side2sideno=0;
-        int side3poletype=0,side3primary_h_aspect_no=0,side3primary_v_aspect_no=0,side3secondary_h_aspect_no=0,side3secondary_v_aspect_no=0,side3sideno=0;
-        int side4poletype=0,side4primary_h_aspect_no=0,side4primary_v_aspect_no=0,side4secondary_h_aspect_no=0,side4secondary_v_aspect_no=0,side4sideno=0;
-        int side5poletype=0,side5primary_h_aspect_no=0,side5primary_v_aspect_no=0,side5secondary_h_aspect_no=0,side5secondary_v_aspect_no=0,side5sideno=0;
+        int side1poletype = 0, side1primary_h_aspect_no = 0, side1primary_v_aspect_no = 0, side1secondary_h_aspect_no = 0, side1secondary_v_aspect_no = 0, side1sideno = 0;
+        int side2poletype = 0, side2primary_h_aspect_no = 0, side2primary_v_aspect_no = 0, side2secondary_h_aspect_no = 0, side2secondary_v_aspect_no = 0, side2sideno = 0;
+        int side3poletype = 0, side3primary_h_aspect_no = 0, side3primary_v_aspect_no = 0, side3secondary_h_aspect_no = 0, side3secondary_v_aspect_no = 0, side3sideno = 0;
+        int side4poletype = 0, side4primary_h_aspect_no = 0, side4primary_v_aspect_no = 0, side4secondary_h_aspect_no = 0, side4secondary_v_aspect_no = 0, side4sideno = 0;
+        int side5poletype = 0, side5primary_h_aspect_no = 0, side5primary_v_aspect_no = 0, side5secondary_h_aspect_no = 0, side5secondary_v_aspect_no = 0, side5sideno = 0;
         try {
-            if(noofside==3){
-              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
-            Map<String ,Integer> mp=new HashMap<>();
-            for(int a=1; a<=3; a++){
-                
-              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
-             mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
-               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
-                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
-                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
-                   
-            
+            if (noofside == 3) {
+                List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+                Map<String, Integer> mp = new HashMap<>();
+                for (int a = 1; a <= 3; a++) {
+
+                    mp.put("side" + a + "poletypeid", jp.get(a).getPole_type_id());
+                    mp.put("side" + a + "primary_h_aspect_no", jp.get(a).getPrimary_h_aspect_no());
+                    mp.put("side" + a + "primary_v_aspect_no", jp.get(a).getPrimary_v_aspect_no());
+                    mp.put("side" + a + "secondary_h_aspect_no", jp.get(a).getSecondary_h_aspect_no());
+                    mp.put("side" + a + "secondary_v_aspect_no", jp.get(a).getSecondary_v_aspect_no());
+
+                }
+                side1poletype = mp.get("side1poletypeid");
+                side1primary_h_aspect_no = mp.get("side1primary_h_aspect_no");
+                side1primary_v_aspect_no = mp.get("side1primary_v_aspect_no");
+                side1secondary_h_aspect_no = mp.get("side1secondary_h_aspect_no");
+                side1secondary_v_aspect_no = mp.get("side1secondary_v_aspect_no");
+
+                side2poletype = mp.get("side2poletypeid");
+                side2primary_h_aspect_no = mp.get("side2primary_h_aspect_no");
+                side2primary_v_aspect_no = mp.get("side2primary_v_aspect_no");
+                side2secondary_h_aspect_no = mp.get("side2secondary_h_aspect_no");
+                side2secondary_v_aspect_no = mp.get("side2secondary_v_aspect_no");
+
+                side3poletype = mp.get("side3poletypeid");
+                side3primary_h_aspect_no = mp.get("side3primary_h_aspect_no");
+                side3primary_v_aspect_no = mp.get("side3primary_v_aspect_no");
+                side3secondary_h_aspect_no = mp.get("side3secondary_h_aspect_no");
+                side3secondary_v_aspect_no = mp.get("side3secondary_v_aspect_no");
+
+                side4poletype = 0;
+                side4primary_h_aspect_no = 0;
+                side4primary_v_aspect_no = 0;
+                side4secondary_h_aspect_no = 0;
+                side4secondary_v_aspect_no = 0;
+                side4sideno = 0;
+
+                side5poletype = 0;
+                side5primary_h_aspect_no = 0;
+                side5primary_v_aspect_no = 0;
+                side5secondary_h_aspect_no = 0;
+                side5secondary_v_aspect_no = 0;
+
             }
-          side1poletype=mp.get("side1poletypeid");
-          side1primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
-          side1primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
-          side1secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
-          side1secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
-           
-           
-           
-            side2poletype=mp.get("side2poletypeid");
-          side2primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
-          side2primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
-          side2secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
-          side2secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
-           
-           
-            side3poletype=mp.get("side3poletypeid");
-          side3primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
-          side3primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
-          side3secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
-          side3secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
-          
-           
-             side4poletype=0;
-          side4primary_h_aspect_no=0;
-          side4primary_v_aspect_no=0;
-          side4secondary_h_aspect_no=0;
-          side4secondary_v_aspect_no=0;
-           side4sideno= 0;
-           
-            side5poletype=0;
-          side5primary_h_aspect_no=0;
-          side5primary_v_aspect_no=0;
-          side5secondary_h_aspect_no=0;
-          side5secondary_v_aspect_no=0;
-          
-             
+            if (noofside == 4) {
+                List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+                Map<String, Integer> mp = new HashMap<>();
+                for (int a = 0; a < 4; a++) {
+
+                    mp.put("side" + a + "poletypeid", jp.get(a).getPole_type_id());
+                    mp.put("side" + a + "primary_h_aspect_no", jp.get(a).getPrimary_h_aspect_no());
+                    mp.put("side" + a + "primary_v_aspect_no", jp.get(a).getPrimary_v_aspect_no());
+                    mp.put("side" + a + "secondary_h_aspect_no", jp.get(a).getSecondary_h_aspect_no());
+                    mp.put("side" + a + "secondary_v_aspect_no", jp.get(a).getSecondary_v_aspect_no());
+                    mp.put("side" + a + "sideno", jp.get(a).getSide_no());
+                    // side1poletype=mp.get("side1poletypeid");
+                }
+                side1poletype = mp.get("side0poletypeid");
+                side1primary_h_aspect_no = mp.get("side0primary_h_aspect_no");
+                side1primary_v_aspect_no = mp.get("side0primary_v_aspect_no");
+                side1secondary_h_aspect_no = mp.get("side0secondary_h_aspect_no");
+                side1secondary_v_aspect_no = mp.get("side0secondary_v_aspect_no");
+
+                side2poletype = mp.get("side1poletypeid");
+                side2primary_h_aspect_no = mp.get("side1primary_h_aspect_no");
+                side2primary_v_aspect_no = mp.get("side1primary_v_aspect_no");
+                side2secondary_h_aspect_no = mp.get("side1secondary_h_aspect_no");
+                side2secondary_v_aspect_no = mp.get("side1secondary_v_aspect_no");
+
+                side3poletype = mp.get("side3poletypeid");
+                side3primary_h_aspect_no = mp.get("side2primary_h_aspect_no");
+                side3primary_v_aspect_no = mp.get("side2primary_v_aspect_no");
+                side3secondary_h_aspect_no = mp.get("side2secondary_h_aspect_no");
+                side3secondary_v_aspect_no = mp.get("side2secondary_v_aspect_no");
+
+                side4poletype = mp.get("side3poletypeid");
+                side4primary_h_aspect_no = mp.get("side3primary_h_aspect_no");
+                side4primary_v_aspect_no = mp.get("side3primary_v_aspect_no");
+                side4secondary_h_aspect_no = mp.get("side3secondary_h_aspect_no");
+                side4secondary_v_aspect_no = mp.get("side3secondary_v_aspect_no");
+
+                side5poletype = 0;
+                side5primary_h_aspect_no = 0;
+                side5primary_v_aspect_no = 0;
+                side5secondary_h_aspect_no = 0;
+                side5secondary_v_aspect_no = 0;
+
             }
-             if(noofside==4){
-              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
-            Map<String ,Integer> mp=new HashMap<>();
-            for(int a=0; a<4; a++){
-                
-              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
-                mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
-               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
-                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
-                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
-                    mp.put("side"+a+"sideno",jp.get(a).getSide_no());
-             // side1poletype=mp.get("side1poletypeid");
-            }
-          side1poletype=mp.get("side0poletypeid");
-          side1primary_h_aspect_no=mp.get("side0primary_h_aspect_no");
-          side1primary_v_aspect_no=mp.get("side0primary_v_aspect_no");
-          side1secondary_h_aspect_no=mp.get("side0secondary_h_aspect_no");
-          side1secondary_v_aspect_no=mp.get("side0secondary_v_aspect_no");
-           
-           
-           
-            side2poletype=mp.get("side1poletypeid");
-          side2primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
-          side2primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
-          side2secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
-          side2secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
-           
-           
-            side3poletype=mp.get("side3poletypeid");
-          side3primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
-          side3primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
-          side3secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
-          side3secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
-           
-           
-             side4poletype=mp.get("side3poletypeid");
-          side4primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
-          side4primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
-          side4secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
-          side4secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
-          
-           
-            side5poletype=0;
-          side5primary_h_aspect_no=0;
-          side5primary_v_aspect_no=0;
-          side5secondary_h_aspect_no=0;
-          side5secondary_v_aspect_no=0;
-            
-             
-            }
-             
-               if(noofside==5){
-              List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
-            Map<String ,Integer> mp=new HashMap<>();
-            for(int a=1; a<=5; a++){
-                
-              mp.put("side"+a+"poletypeid",jp.get(a).getPole_type_id());
-             mp.put("side"+a+"primary_h_aspect_no",jp.get(a).getPrimary_h_aspect_no());
-               mp.put("side"+a+"primary_v_aspect_no",jp.get(a).getPrimary_v_aspect_no());
-                 mp.put("side"+a+"secondary_h_aspect_no",jp.get(a).getSecondary_h_aspect_no());
-                   mp.put("side"+a+"secondary_v_aspect_no",jp.get(a).getSecondary_v_aspect_no());
-                    mp.put("side"+a+"sideno",jp.get(a).getSide_no());
-            
-            }
-          side1poletype=mp.get("side1poletypeid");
-          side1primary_h_aspect_no=mp.get("side1primary_h_aspect_no");
-          side1primary_v_aspect_no=mp.get("side1primary_v_aspect_no");
-          side1secondary_h_aspect_no=mp.get("side1secondary_h_aspect_no");
-          side1secondary_v_aspect_no=mp.get("side1secondary_v_aspect_no");
-          
-           
-            side2poletype=mp.get("side2poletypeid");
-          side2primary_h_aspect_no=mp.get("side2primary_h_aspect_no");
-          side2primary_v_aspect_no=mp.get("side2primary_v_aspect_no");
-          side2secondary_h_aspect_no=mp.get("side2secondary_h_aspect_no");
-          side2secondary_v_aspect_no=mp.get("side2secondary_v_aspect_no");
-            
-            side3poletype=mp.get("side3poletypeid");
-          side3primary_h_aspect_no=mp.get("side3primary_h_aspect_no");
-          side3primary_v_aspect_no=mp.get("side3primary_v_aspect_no");
-          side3secondary_h_aspect_no=mp.get("side3secondary_h_aspect_no");
-          side3secondary_v_aspect_no=mp.get("side3secondary_v_aspect_no");
-          
-             side4poletype=mp.get("side4poletypeid");
-          side4primary_h_aspect_no=mp.get("side4primary_h_aspect_no");
-          side4primary_v_aspect_no=mp.get("side4primary_v_aspect_no");
-          side4secondary_h_aspect_no=mp.get("side4secondary_h_aspect_no");
-          side4secondary_v_aspect_no=mp.get("side4secondary_v_aspect_no");
-            
-            side5poletype=mp.get("side5poletypeid");
-          side5primary_h_aspect_no=mp.get("side5primary_h_aspect_no");
-          side5primary_v_aspect_no=mp.get("side5primary_v_aspect_no");
-          side5secondary_h_aspect_no=mp.get("side5secondary_h_aspect_no");
-          side5secondary_v_aspect_no=mp.get("side5secondary_v_aspect_no");
-              
+
+            if (noofside == 5) {
+                List<SlaveInfo> jp = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
+                Map<String, Integer> mp = new HashMap<>();
+                for (int a = 1; a <= 5; a++) {
+
+                    mp.put("side" + a + "poletypeid", jp.get(a).getPole_type_id());
+                    mp.put("side" + a + "primary_h_aspect_no", jp.get(a).getPrimary_h_aspect_no());
+                    mp.put("side" + a + "primary_v_aspect_no", jp.get(a).getPrimary_v_aspect_no());
+                    mp.put("side" + a + "secondary_h_aspect_no", jp.get(a).getSecondary_h_aspect_no());
+                    mp.put("side" + a + "secondary_v_aspect_no", jp.get(a).getSecondary_v_aspect_no());
+                    mp.put("side" + a + "sideno", jp.get(a).getSide_no());
+
+                }
+                side1poletype = mp.get("side1poletypeid");
+                side1primary_h_aspect_no = mp.get("side1primary_h_aspect_no");
+                side1primary_v_aspect_no = mp.get("side1primary_v_aspect_no");
+                side1secondary_h_aspect_no = mp.get("side1secondary_h_aspect_no");
+                side1secondary_v_aspect_no = mp.get("side1secondary_v_aspect_no");
+
+                side2poletype = mp.get("side2poletypeid");
+                side2primary_h_aspect_no = mp.get("side2primary_h_aspect_no");
+                side2primary_v_aspect_no = mp.get("side2primary_v_aspect_no");
+                side2secondary_h_aspect_no = mp.get("side2secondary_h_aspect_no");
+                side2secondary_v_aspect_no = mp.get("side2secondary_v_aspect_no");
+
+                side3poletype = mp.get("side3poletypeid");
+                side3primary_h_aspect_no = mp.get("side3primary_h_aspect_no");
+                side3primary_v_aspect_no = mp.get("side3primary_v_aspect_no");
+                side3secondary_h_aspect_no = mp.get("side3secondary_h_aspect_no");
+                side3secondary_v_aspect_no = mp.get("side3secondary_v_aspect_no");
+
+                side4poletype = mp.get("side4poletypeid");
+                side4primary_h_aspect_no = mp.get("side4primary_h_aspect_no");
+                side4primary_v_aspect_no = mp.get("side4primary_v_aspect_no");
+                side4secondary_h_aspect_no = mp.get("side4secondary_h_aspect_no");
+                side4secondary_v_aspect_no = mp.get("side4secondary_v_aspect_no");
+
+                side5poletype = mp.get("side5poletypeid");
+                side5primary_h_aspect_no = mp.get("side5primary_h_aspect_no");
+                side5primary_v_aspect_no = mp.get("side5primary_v_aspect_no");
+                side5secondary_h_aspect_no = mp.get("side5secondary_h_aspect_no");
+                side5secondary_v_aspect_no = mp.get("side5secondary_v_aspect_no");
+
             }
 //            Map<String, Integer> junctionPlanDetail = this.clientResponderModel.getsidedata(junctionID, map_id, phase_no);
 //            
@@ -4189,23 +4461,21 @@ System.out.println("register modem request--- FirstStartDelimliter=" + firstStar
 //                    extraByte = extraByte + " " + dataToProcess[i];
 //                }
 //            }
-  for (int i = (firstStartDataPosition + 4)+1; i <= (firstStartDataPosition + 13); i++) 
-            {
+            for (int i = (firstStartDataPosition + 4) + 1; i <= (firstStartDataPosition + 13); i++) {
                 if (extraByte == "") {
-                   extraByte = extraByte + dataToProcess[i];
+                    extraByte = extraByte + dataToProcess[i];
                 } else {
                     extraByte = extraByte + " " + dataToProcess[i];
                 }
             }
-            
-           responseVal = responseVal + " " + side1poletype + " " +side1primary_h_aspect_no+ " " +side1primary_v_aspect_no+ " " +side1secondary_h_aspect_no+ " " +side1secondary_v_aspect_no+" "+side2poletype + " " +side2primary_h_aspect_no+ " " +side2primary_v_aspect_no+ " " +side2secondary_h_aspect_no+" "+side2secondary_v_aspect_no+" "+ side3poletype + " " +side3primary_h_aspect_no+ " " +side3primary_v_aspect_no+ " " +side3secondary_h_aspect_no+" "+side3secondary_v_aspect_no+" "+side4poletype + " " +side4primary_h_aspect_no+ " " +side4primary_v_aspect_no+ " " +side4secondary_h_aspect_no+" "+side4secondary_v_aspect_no+ " " +side5poletype + " " +side5primary_h_aspect_no+ " " +side5primary_v_aspect_no+ " " +side5secondary_h_aspect_no+" "+side5secondary_v_aspect_no+ " " + extraByte+" "+ crc+ " " + firstLastDelimiter + " " + firstLastDelimiter;
-            
-            
+
+            responseVal = responseVal + " " + side1poletype + " " + side1primary_h_aspect_no + " " + side1primary_v_aspect_no + " " + side1secondary_h_aspect_no + " " + side1secondary_v_aspect_no + " " + side2poletype + " " + side2primary_h_aspect_no + " " + side2primary_v_aspect_no + " " + side2secondary_h_aspect_no + " " + side2secondary_v_aspect_no + " " + side3poletype + " " + side3primary_h_aspect_no + " " + side3primary_v_aspect_no + " " + side3secondary_h_aspect_no + " " + side3secondary_v_aspect_no + " " + side4poletype + " " + side4primary_h_aspect_no + " " + side4primary_v_aspect_no + " " + side4secondary_h_aspect_no + " " + side4secondary_v_aspect_no + " " + side5poletype + " " + side5primary_h_aspect_no + " " + side5primary_v_aspect_no + " " + side5secondary_h_aspect_no + " " + side5secondary_v_aspect_no + " " + extraByte + " " + crc + " " + firstLastDelimiter + " " + firstLastDelimiter;
+
         } catch (Exception e) {
             System.out.println("Error - clientResponder - " + e);
         }
 
         return responseVal;
     }
-    
+
 }

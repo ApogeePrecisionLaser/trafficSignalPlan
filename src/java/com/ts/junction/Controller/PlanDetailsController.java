@@ -4,8 +4,6 @@
  * and open the template in the editor.
  */
 package com.ts.junction.Controller;
-
-import static com.sun.corba.se.impl.util.Utility.printStackTrace;
 import com.ts.junction.Model.PlanDetailModel;
 import com.ts.junction.tableClasses.PlanDetails;
 import com.ts.util.xyz;
@@ -119,7 +117,7 @@ public class PlanDetailsController extends HttpServlet {
             try {
                 planDetailModel.deleteRecord(plan_detail_id);
             } catch (SQLException e) {
-                printStackTrace();
+                //printStackTrace();
             }
   
             

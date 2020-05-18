@@ -2255,7 +2255,7 @@ if(a<=7){
     //-----
     
     public Map<String,Object> matchColor(String sendData, String recievedData) { 
-        String query = "SELECT severity_case, severity_case_id "
+        String query = "SELECT severity_case, severity_case_id,remark "
                 + "FROM severity_case "
                 + " where send_data = ? and recieved_data = ? and severity_case.active = 'Y'";
         PreparedStatement pstmt;
@@ -2272,6 +2272,7 @@ if(a<=7){
             while (rset.next()) {
                 mapObject.put("severity_case",rset.getString("severity_case"));
                 mapObject.put("severity_case_id",rset.getInt("severity_case_id"));
+                  mapObject.put("remark",rset.getString("remark"));
             }
             if(severity_case_id > 0) {                
                 System.out.println("ClientResponderModel matchColor() Record inserted successfully in Log Table");
