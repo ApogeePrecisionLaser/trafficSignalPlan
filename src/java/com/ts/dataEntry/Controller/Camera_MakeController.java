@@ -53,7 +53,8 @@ public class Camera_MakeController extends HttpServlet{
             Camera_Make camera_make = new Camera_Make();
             camera_make.setCamera_make_id(camera_make_id);
             camera_make.setCamera_make(request.getParameter("camera_make"));
-             camera_make.setRemark(request.getParameter("remark"));
+            camera_make.setCamera_model(request.getParameter("Camera_Model"));
+            camera_make.setRemark(request.getParameter("remark"));
             if (camera_make_id == 0) {
                 // if state_id was not provided, that means insert new record.
                 camera_makeModel.insertRecord(camera_make);

@@ -12,9 +12,18 @@ package com.ts.dataEntry.tableClasses;
 public class Camera_Make {
     int camera_make_id;
     String camera_make;
+     String camera_model;
      String remark;
     String active;
     int revision_no;
+
+    public String getCamera_model() {
+        return camera_model;
+    }
+
+    public void setCamera_model(String camera_model) {
+        this.camera_model = camera_model;
+    }
 
     public int getCamera_make_id() {
         return camera_make_id;

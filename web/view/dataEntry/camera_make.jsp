@@ -25,6 +25,7 @@
             function makeEditable(id) {
                 document.getElementById("camera_make_id").disabled = false;
                 document.getElementById("camera_make").disabled = false;
+                document.getElementById("Camera_Model").disabled = false;
                 document.getElementById("remark").disabled = false;
                 if(id == 'new') {
                     document.getElementById("save").disabled = false;
@@ -50,7 +51,7 @@
             }
             function fillColumns(id) {
                 var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
-                var noOfColumns = 4;
+                var noOfColumns = 5;
                 var columnId = id;                              <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
                 columnId = columnId.substring(3, id.length);    <%-- for e.g. suppose id is t1c3 we want characters after t1c i.e beginIndex = 3. --%>
                 var lowerLimit, higherLimit;
@@ -65,10 +66,11 @@
                     // set the background color of clicked/selected row to yellow.
                     document.getElementById(t1id + (lowerLimit + i)).bgColor = "lightgray";
                 }
-                // Now get clicked row data, and set these into the below edit table.
+                // Now get clicked row data, and set these into the below edit table.Camera_Model
                 document.getElementById("camera_make_id").value = document.getElementById(t1id + (lowerLimit + 0)).innerHTML;
                 document.getElementById("camera_make").value = document.getElementById(t1id + (lowerLimit + 2)).innerHTML;
-                document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+                document.getElementById("Camera_Model").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+                 document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
                 // Now enable/disable various buttons.
                 document.getElementById("edit").disabled = false;
                 if(!document.getElementById("save").disabled) {
@@ -100,6 +102,12 @@
                     if(myLeftTrim(camera_make).length == 0) {
                         document.getElementById("message").innerHTML = "<td colspan='5' bgcolor='coral'><b>camera make is required...</b></td>";
                         document.getElementById("camera_make").focus();
+                        return false; // code to stop from submitting the form2.
+                    }
+                      var Camera_Model = document.getElementById("Camera_Model").value;
+                    if(myLeftTrim(Camera_Model).length == 0) {
+                        document.getElementById("message").innerHTML = "<td colspan='5' bgcolor='coral'><b>camera make is required...</b></td>";
+                        document.getElementById("Camera_Model").focus();
                         return false; // code to stop from submitting the form2.
                     }
                       var remark = document.getElementById("remark").value;
@@ -142,11 +150,12 @@
                                 <td align="center">
                                     <form name="form1" method="POST" action="CameraMakeCont">
                                         <DIV STYLE="overflow: auto; width: 400px; max-height: 410px; padding:0px; margin-bottom: 20px; margin-top:20px">
-                                            <table id="rcorners3" align="center" class="reference">
+                                            <table id="rcorners3" align="center" class="reference" border="1px;">
                                                 <tr>
                                                     <th class="heading" style="display: none"> Camera ID</th>
                                                     <th class="heading">S.No.</th>
                                                     <th class="heading" colspan="3">Camera Make</th>
+                                                    <th class="heading" colspan="3">camera_model</th>
                                                     <th class="heading" colspan="3">Remark</th>
                                                 </tr>
                                                 <c:forEach var="camera_make" items="${requestScope['camera_makeList']}" varStatus="loopCounter">
@@ -154,7 +163,8 @@
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" style="display: none">${camera_make.camera_make_id}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" colspan="3">${camera_make.camera_make}</td>
-                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" colspan="3">${camera_make.remark}</td>
+                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" colspan="3">${camera_make.camera_model}</td>
+                                                           <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)" colspan="3">${camera_make.remark}</td>
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>
@@ -215,6 +225,10 @@
                                                 <tr>
                                                     <td style="display: none"></td>
                                                     <th class="heading">Camera_Make</th><td><input class="input" type="text" id="camera_make" name="camera_make" size="38" value="" disabled></td>
+                                                      <th class="heading">Camera_Model</th><td><input class="input" type="text" id="Camera_Model" name="Camera_Model" size="38" value="" disabled></td>
+                                                </tr> 
+                                                <tr>
+                                                    
                                                       <th class="heading">Remark</th><td><input class="input" type="text" id="remark" name="remark" size="38" value="" disabled></td>
                                                 </tr>
 

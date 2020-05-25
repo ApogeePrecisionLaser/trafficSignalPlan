@@ -75,6 +75,7 @@ private Connection connection;
                 camera_make.setCamera_make_id(rset.getInt("camera_make_id"));
                 camera_make.setCamera_make(rset.getString("camera_make"));
                   camera_make.setRemark(rset.getString("remark"));
+                  camera_make.setCamera_model(rset.getString("model_no"));
                 list.add( camera_make);
             }
         } catch (Exception e) {
@@ -84,7 +85,7 @@ private Connection connection;
     }
 
     public int insertRecord(Camera_Make camera_make) {
-        String query = "INSERT INTO camera_make (camera_make,remark) VALUES(?,?) ";
+        String query = "INSERT INTO camera_make (camera_make,remark,model_no) VALUES(?,?,?) ";
 //        int last_id = getLastId();
         int rowsAffected = 0;
         try {
@@ -92,6 +93,7 @@ private Connection connection;
 //            pstmt.setInt(1,last_id+1 );
             pstmt.setString(1, camera_make.getCamera_make());
             pstmt.setString(2, camera_make.getRemark());
+            pstmt.setString(3,camera_make.getCamera_model());
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("Camera_MakeModel insertRecord() Error: " + e);
@@ -107,14 +109,16 @@ private Connection connection;
     }
 
     public int updateRecord(Camera_Make camera_make) {
-        String query = "UPDATE camera_make SET camera_make = ? , remark = ? WHERE camera_make_id = ? ";
+        String query = "UPDATE camera_make SET camera_make = ? , remark = ?, model_no=? WHERE camera_make_id = ? ";
         int rowsAffected = 0;
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, camera_make.getCamera_make());
              pstmt.setString(2, camera_make.getRemark());
-            pstmt.setInt(3, camera_make.getCamera_make_id());
-//            pstmt.setString(2, position.getPosition());
+           
+            pstmt.setString(3, camera_make.getCamera_model()); 
+            pstmt.setInt(4, camera_make.getCamera_make_id());
+            
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("Camera_MakeModel updateRecord() Error: " + e);

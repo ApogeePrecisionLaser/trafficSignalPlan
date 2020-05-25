@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -14,17 +14,24 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import static java.lang.System.out;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -35,7 +42,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 public class CameraController extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 15, noOfRowsInTable;
+        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 5, noOfRowsInTable;
         ServletContext ctx = getServletContext();
 
         CameraModel cameraModel = new CameraModel();
@@ -44,9 +51,10 @@ public class CameraController extends HttpServlet {
         cameraModel.setDb_userName(ctx.getInitParameter("db_userName"));
         cameraModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
         cameraModel.setConnection();
+         response.setHeader("Content-Type", "text/plain; charset=UTF-8");
         Map<String, String> map = new HashMap<String, String>();
        String task = request.getParameter("task");
-
+String s=null;
        if (task == null) {
            task = "";
        }
@@ -57,7 +65,23 @@ public class CameraController extends HttpServlet {
         int junction_id = junctionId != null ? Integer.parseInt(junctionId) : 0;
 //      String junctionName = cameraModel.getJunctionName(junction_id);
         String junctionName ="";
-        
+         if (task.equals("GetCordinates1")) {
+            
+            String longi1 = request.getParameter("longitude");
+            String latti1 = request.getParameter("latitude");
+            if (longi1 == null || longi1.equals("undefined")) {
+                longi1 = "0";
+            }
+            if (latti1 == null || latti1.equals("undefined")) {
+                latti1 = "0";
+            }
+            request.setAttribute("longi", longi1);
+            request.setAttribute("latti", latti1);
+         
+            System.out.println(latti1 + "," + longi1);
+            request.getRequestDispatcher("getCordinate1").forward(request, response);
+            return;
+        }
         try {
              String q = request.getParameter("q"); 
             String JQstring = request.getParameter("action1");
@@ -72,6 +96,9 @@ public class CameraController extends HttpServlet {
                 }
                 if (JQstring.equals("getsearchJunctionName")) {
                     list = cameraModel.getsearchJunctionName(q);
+                } if (JQstring.equals("getCameraModel")) {
+                    String cam=request.getParameter("action2");
+                    list = cameraModel.getCameraModel(cam);
                 }
 
                 Iterator<String> iter = list.iterator();
@@ -86,36 +113,143 @@ public class CameraController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("\n Error --CameraController get JQuery Parameters Part-" + e);
         }
+      /////////////////////
       
-         
+              List image_name_list = new ArrayList();
+
+            String destination_path = "";
+            String imagePath = null;
+            Map<String, String> map_image = new HashMap<String, String>();
+
+            //junction1 = slaveinfoModel.getjunctionName(jId);
+            List<String> imageNameList = new ArrayList<String>();
+
+            boolean isCreated = true;
+            List items = null;
+            Iterator itr = null;
+            Iterator itr1 = null;
+            List<File> list2 = new ArrayList<File>();
+            DiskFileItemFactory fileItemFactory = new DiskFileItemFactory(); //Set the size threshold, above which content will be stored on disk.
+            fileItemFactory.setSizeThreshold(8 * 1024 * 1024); //1 MB Set the temporary directory to store the uploaded files of size above threshold.
+            fileItemFactory.setRepository(new File(""));
+            ServletFileUpload uploadHandler = new ServletFileUpload(fileItemFactory);
+            try {
+                String auto_no = "";
+                items = uploadHandler.parseRequest(request);
+                itr = items.iterator();
+                while (itr.hasNext()) {
+                    FileItem item = (FileItem) itr.next();
+                    if (item.isFormField()) {
+                        System.out.println("File Name = " + item.getFieldName() + ", Value = " + item.getString() + "\n");//(getString())its for form field
+
+                        map.put(item.getFieldName(), item.getString("UTF-8"));
+
+                    }
+                }
+
+                itr1 = items.iterator();
+                int count=0;
+                while (itr1.hasNext()) {
+                   
+                    FileItem item = (FileItem) itr1.next();
+                    if (!item.isFormField()) {
+                         count++;
+                        //System.out.println("File Name = " + item.getFieldName() + ", Value = " + item.getName());//it is (getName()) for file related things
+                        if (item.getName() == null || item.getName().isEmpty()) {
+                            map.put(item.getFieldName(), "");
+                        } else {
+
+                            String image_name = item.getName();
+
+                       
+                            if (!(image_name).equals(null)) {
+                                imageNameList.add(image_name);// add all image name to list
+                                image_name = (image_name).substring(0, (image_name).length());
+                                int index = (image_name).indexOf('.');
+                                System.out.println(index);
+                                String ext = (image_name).substring(index, (image_name).length());
+                                System.out.println(image_name);
+                                map.put(item.getFieldName(), item.getName());
+                               // destination_path = documentModel.getRepositoryPath();
+                                // imagePath = destination_path + "/trafficSignalPlan/images/camera/" + junctionName + "/" + side_name1;
+
+                                imagePath = "C:\\trafficSignalPlan\\images\\camera";
+                                
+                                int lid=cameraModel.getLastId();
+                                lid=lid+1;
+                                  //long l=   System.currentTimeMillis();
+                                  Timestamp stamp = new Timestamp(System.currentTimeMillis());
+                                 s= stamp.toString();
+                                  // s = new SimpleDateFormat("yyyyMMdd_HHmmss").format(Calendar.getInstance().getTime());
+                                      image_name="C_"+lid+"_"+s.replace(" ", "_").replace(":", "_").replace("-", "_")+"_"+count+".jpg";
+                              //  image_name=map.get("junction_name").concat(map.get("camera_ip").concat("_"+count+".jpg"));
+                                File file = new File(imagePath);
+                                if (!image_name.isEmpty()) {
+                                    file = new File(imagePath);
+                                    if (!file.exists()) {
+                                        isCreated = file.mkdirs();
+                                    }
+                                    item.write(new File(imagePath + "\\" + image_name));
+                                    image_name_list.add(image_name);
+                                    list2.add(new File(imagePath + "\\" + image_name));
+                                }
+
+                            }
+
+                        }
+                    }//else end
+                }
+               
+                itr = null;
+                itr = items.iterator();
+            } catch (Exception e) {
+                System.out.println("Error is :" + e);
+            }
+            
+      
+      
+      
+      
+      /////////////////////////////
+         task=map.get("task");
+         if(task==null){
+         task="";
+         }
         int side_no2 = side_no1 != null ? Integer.parseInt(side_no1) : 0;
         if (task.equals("Delete")) {
-            cameraModel.deleteRecord(Integer.parseInt(request.getParameter("camera_id")));  // Pretty sure that camera_id will be available.
+            cameraModel.deleteRecord(Integer.parseInt(map.get("camera_id")));  // Pretty sure that camera_id will be available.
         } else if (task.equals("Save")) {
+         
             //////////////////
 
             //////////////
          int camera_id;
             try {
                 // state_id may or may NOT be available i.e. it can be update or new record.
-                camera_id = Integer.parseInt(request.getParameter("camera_id"));
+                camera_id = Integer.parseInt(map.get("camera_id"));
             } catch (Exception e) {
                 camera_id = 0;
             }
 //           junction_id = Integer.parseInt(request.getParameter("junction_id"));
-            junctionName = request.getParameter("junction_name");
-            side_no2 = Integer.parseInt(request.getParameter("side_no"));
+            junctionName = map.get("junction_name");
+            side_no2 = Integer.parseInt(map.get("side_no"));
             Camera camera = new Camera();
             camera.setCamera_id(camera_id);
-            camera.setCamera_ip(request.getParameter("camera_ip"));
-            camera.setCamera_make(request.getParameter("camera_make"));
-            camera.setCamera_ip(request.getParameter("camera_ip"));
-            camera.setCamera_type(request.getParameter("camera_type"));
-            camera.setJunction_id(junction_id);
-            camera.setJunction_name(junctionName);
+            camera.setCamera_ip(map.get("camera_ip"));
+            camera.setCamera_make(map.get("camera_make"));
+            camera.setCamera_model(map.get("camera_mod"));
+            camera.setCamera_ip(map.get("camera_ip"));
+            camera.setCamera_type(map.get("camera_type"));
+            camera.setJunction_id(Integer.parseInt(map.get("junction_id")));
+            camera.setJunction_name(map.get("junction_name"));
             camera.setSide_no(side_no2);
-            camera.setRemark(request.getParameter("remark"));
-         
+            camera.setRemark(map.get("remark"));
+         camera.setLatitude(map.get("latitude"));
+         camera.setLongitude(map.get("longitude"));
+camera.setCamerafacing(map.get("camera_facing"));
+camera.setLane_no(map.get("lane_no"));
+camera.setCreated_at(s);
+camera.setImage_folder(imagePath);
 
 //            String folder = "ab";
 //            for (int i = 1; i < no_of_col; i++) {

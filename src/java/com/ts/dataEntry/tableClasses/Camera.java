@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -13,8 +13,39 @@ public class Camera {
     int camera_id;
     String camera_ip;
     String camera_make;
+    String camera_model;
     String camera_type;
+    String latitude;
     String junction_name;
+    String longitude;
+    String camerafacing;
+    String imagefolder;
+    String created_at;
+     String lane_no;
+
+    public String getCamera_model() {
+        return camera_model;
+    }
+
+    public void setCamera_model(String camera_model) {
+        this.camera_model = camera_model;
+    }
+
+    public String getLane_no() {
+        return lane_no;
+    }
+
+    public void setLane_no(String lane_no) {
+        this.lane_no = lane_no;
+    }
+
+    public String getCreated_at() {
+        return created_at;
+    }
+
+    public void setCreated_at(String created_at) {
+        this.created_at = created_at;
+    }
     int junction_id;
     int side_no;
      String remark;
@@ -34,6 +65,38 @@ public class Camera {
 
     public String getImage_name() {
         return image_name;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getCamerafacing() {
+        return camerafacing;
+    }
+
+    public void setCamerafacing(String camerafacing) {
+        this.camerafacing = camerafacing;
+    }
+
+    public String getImagefolder() {
+        return imagefolder;
+    }
+
+    public void setImagefolder(String imagefolder) {
+        this.imagefolder = imagefolder;
     }
 
     public void setImage_name(String image_name) {

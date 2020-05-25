@@ -396,7 +396,7 @@ public class SlaveInfoModel extends HttpServlet {
         String insert_query = null, update_query = null;
         insert_query = "INSERT into side_detail(junction_id, side_no, revision_no, side_name, "
                 + "pole_type_id, position_id, primary_h_aspect_no, primary_v_aspect_no, secondary_h_aspect_no, secondary_v_aspect_no, "
-                + "image_path, vehicle_detection, count_down, no_of_lane,rlpd,anpr,pa_system,image_folder,side_detail_id,longitude,lattitude,active)"
+                + "image_path, vehicle_detection, count_down, no_of_lane,rlvd,anpr,pa_system,image_folder,side_detail_id,longitude,lattitude,active)"
                 + " VALUES(?,?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,'Y') ";
 
         PreparedStatement pstmt = null;
@@ -719,7 +719,7 @@ public class SlaveInfoModel extends HttpServlet {
                 + "p.position_id, p.primary_h_aspect_no, p.primary_v_aspect_no, "
                 + "p.secondary_h_aspect_no, p.secondary_v_aspect_no, p.image_path, "
                 + "p.vehicle_detection, p.count_down, p.no_of_lane, p.image_folder, "
-                + "p.rlpd,p.anpr,p.pa_system,p.side_detail_id,p.lattitude,p.longitude"
+                + "p.rlvd,p.anpr,p.pa_system,p.side_detail_id,p.lattitude,p.longitude"
                 + " FROM side_detail AS p, junction AS j "
                 + " WHERE p.junction_id=j.junction_id "
                 + " AND j.junction_id= ? AND j.program_version_no = ? AND p.active='Y' "
@@ -750,7 +750,7 @@ public class SlaveInfoModel extends HttpServlet {
                 slaveinfo.setPrimary_h_aspect_no(rset.getInt("primary_h_aspect_no"));
                 slaveinfo.setPosition(position);
                 slaveinfo.setPole_type(poleType);
-                slaveinfo.setRlpd(rset.getString("rlpd"));
+                slaveinfo.setRlpd(rset.getString("rlvd"));
                 slaveinfo.setAnpr(rset.getInt("anpr"));
                 slaveinfo.setPa_system(rset.getString("pa_system"));
                 slaveinfo.setJunction_name(rset.getString("junction_name"));
