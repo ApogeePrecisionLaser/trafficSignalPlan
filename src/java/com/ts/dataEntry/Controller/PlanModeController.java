@@ -86,7 +86,7 @@ public class PlanModeController extends HttpServlet {
                 response.setContentType("application/pdf");
                 ServletOutputStream servletOutputStream = response.getOutputStream();
                listAll=planModeModel.showDataReport(searchmod1);
-                jrxmlFilePath = ctx.getRealPath("/Report/state.jrxml");
+                jrxmlFilePath = ctx.getRealPath("/Report/planmode.jrxml");
                 byte[] reportInbytes = planModeModel.generateSiteList(jrxmlFilePath,listAll);
                 response.setContentLength(reportInbytes.length);
                 servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
@@ -105,7 +105,7 @@ public class PlanModeController extends HttpServlet {
                 response.setContentType("application/vnd.ms-excel");
                 response.addHeader("Content-Disposition", "attachment; filename=city.xls");
                 ServletOutputStream servletOutputStream = response.getOutputStream();
-                jrxmlFilePath = ctx.getRealPath("Report/state.jrxml");
+                jrxmlFilePath = ctx.getRealPath("Report/planmode.jrxml");
                 listAll=planModeModel.showDataReport(searchstate1);
                 ByteArrayOutputStream reportInbytes = planModeModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
                 response.setContentLength(reportInbytes.size());

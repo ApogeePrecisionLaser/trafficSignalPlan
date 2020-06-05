@@ -114,8 +114,8 @@
                     queryString = "requester=PRINT"+"&searchstate=" + searchstate;
                 else
                     queryString = "requester=PRINTXls"+"&searchstate=" + searchstate;
-                var url = "stateCont?" + queryString;
-                popupwin = openPopUp(url, "stateCont", 600, 900);
+                var url = "planModeCont?" + queryString;
+                popupwin = openPopUp(url, "planModeCont", 600, 900);
             }  
             
              function openPopUp(url, window_name, popup_height, popup_width) {
@@ -165,9 +165,8 @@
                                          <td>
                                               <input type="submit" name="search" id="search" value="Search"/>  
                                              <input type="submit" name="task" value="SearchAllRecords"/>
-<!--                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
-                                          
-                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">-->
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                            <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
                                              </tr>
                                     </table></form> </td></tr>
                             <tr>

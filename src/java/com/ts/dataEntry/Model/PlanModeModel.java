@@ -143,7 +143,7 @@ public class PlanModeModel {
         public List<PlanMode> showDataReport(String searchmode) {
         List<PlanMode> list = new ArrayList<PlanMode>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM plan_mode and active='Y'"
+        String query = "SELECT * FROM plan_mode where active='Y' and"
                   + " IF('" + searchmode + "' = '',plan_mode_name LIKE '%%',  plan_mode_name ='"+searchmode+"') "
                 
               ;
