@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="941959f2-8974-4a1d-a4b8-24f08e5d5827">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[]]>
+	</queryString>
+	<field name="city_name" class="java.lang.String"/>
+	<field name="district_name" class="java.lang.String"/>
+	<field name="state_name" class="java.lang.String"/>
+	<field name="pin_code" class="java.lang.String"/>
+	<field name="std_code" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="193" y="26" width="154" height="34" uuid="cbc8f22c-9589-4793-bc90-cca7cbe92da8"/>
+				<textElement>
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[City Details]]></text>
+			</staticText>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="30" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="124" y="10" width="100" height="20" backcolor="#00CCCC" uuid="d4ec7d7b-cd7f-423f-8f71-10d1d1c8b6cc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[city_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="224" y="10" width="100" height="20" backcolor="#00CCCC" uuid="b2656c49-36ea-4669-8c26-13ccf7a2b98f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[district_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="324" y="9" width="100" height="20" backcolor="#00CCCC" uuid="a1259362-408e-439b-8982-3dc5b9f12a84"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[state_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="424" y="9" width="86" height="20" backcolor="#00CCCC" uuid="b5236b41-67bc-44ec-9391-039c390fa570"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[std_code]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="51" y="9" width="73" height="20" backcolor="#00CCCC" uuid="425c2ede-02f2-42d6-9110-a3a1c0d2eb3a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[S.No]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="124" y="2" width="100" height="20" uuid="d180f39a-34f9-401f-b1f4-98e08fb0197a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{city_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="224" y="0" width="100" height="20" uuid="33c1291c-1687-4cbc-ac00-39462516b63e"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{district_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="51" y="2" width="73" height="20" uuid="0772c357-2508-460b-a2c1-99026c18a7bc"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="424" y="0" width="86" height="20" uuid="50083eb3-aac8-4267-b35e-5364937e54e6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{std_code}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="324" y="2" width="100" height="20" uuid="5f8e1276-b204-4052-9cf2-b3efca80517f"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{state_name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

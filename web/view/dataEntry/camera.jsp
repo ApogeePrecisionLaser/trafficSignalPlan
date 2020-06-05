@@ -220,8 +220,63 @@
                         }
                     }
                 });
+                
+                 $("#searchCamIp").autocomplete("CameraCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchCamIp";
+                        }
+                    }
+                });
+                 $("#searchcammake").autocomplete("CameraCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchCamMake";
+                        }
+                    }
+                });
+                
+                 $("#searchjunction").autocomplete("CameraCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchJun";
+                        }
+                    }
+                });
+                
+                 $("#searchCamtype").autocomplete("CameraCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchCamType";
+                        }
+                    }
+                });
 
             });
+            
+              function displayMapList(id) {
+                var queryString;
+          var scamtype=document.getElementById("scamtype").value=document.getElementById("searchCamtype").value;
+          var scamip=document.getElementById("scamip").value=document.getElementById("searchCamIp").value;
+           var scammake=document.getElementById("scammake").value=document.getElementById("searchcammake").value;
+           var sjun=document.getElementById("sjun").value=document.getElementById("searchjunction").value;
+                if (id === 'viewPdf')
+                   // queryString = "requester=PRINT";
+                  queryString = "requester=PRINT" + "&scamtype=" + scamtype + "&scamip=" + scamip + "&scammake="+scammake+"&sjun="+sjun;
+                  
+                else
+                 
+                 queryString = "requester=PRINTXls" + "&scamtype=" + scamtype + "&scamip=" + scamip + "&scammake="+scammake+"&sjun="+sjun;
+                  
+                var url = "CameraCont?" + queryString;
+                popupwin = openPopUp(url, "Camera", 600, 900);
+            }  
+            function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
+            }
         </script>
     </head>
     <body>
@@ -241,6 +296,41 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
+                            
+                            <tr><td>
+                                    <form action="CameraCont" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                              Camera Type<input type="text" name="searchCamtype" id="searchCamtype" value="${searchCamtype}">
+                                            </td>
+                                            <td>
+                                              Camera Ip<input type="text"  name="searchCamIp" id="searchCamIp" value="${searchCamIp}">
+                                            </td>
+                                            
+                                            <td>
+                                                Camera Make
+                                                 <input type="text" name="searchcammake" id="searchcammake" value="${searchcammake}">
+                                            </td>
+                                             <td>
+                                              Junction Name<input type="text" name="searchjunction" id="searchjunction" value="${searchJun}">
+                                            </td>
+                                            
+                                        </tr>
+                                        <tr><td></td><td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                            </td><td>
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                            </td></tr>
+                                     <input type="hidden" name="scamtype" id="scamtype" value="">
+                                     <input type="hidden" name="scamip" id="scamip" value="">
+                                     <input type="hidden" name="scammake" id="scammake" value="">
+                                     <input type="hidden" name="sjun" id="sjun" value="">
+                                        
+                                    </table></form> </td></tr>
 
                             <tr>
                                 <td align="center">
@@ -317,13 +407,18 @@
                                                     </td></tr>
                                                     <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                 <input type="hidden" name="manname" value="${manname}">
+                           <input type="hidden" name="pname" value="${pname}">
+                           <input type="hidden" name="Jname" value="${Jname}">
+                         
+                           <input type="hidden" name="camType" value="${camType}">
                                                 <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                             </table>
                                         </div>
                                     </form>
                                 </td>
                             </tr>
-
+ 
                             <tr>
                                 <td align="center">
                                     <form name="form3" method="POST" action="CameraCont" onsubmit="return verify()" enctype = "multipart/form-data" >

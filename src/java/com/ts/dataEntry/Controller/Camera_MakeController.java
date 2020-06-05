@@ -10,11 +10,14 @@ import com.ts.dataEntry.Model.PositionModel;
 import com.ts.dataEntry.tableClasses.Camera_Make;
 import com.ts.dataEntry.tableClasses.Position;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,6 +42,39 @@ public class Camera_MakeController extends HttpServlet{
         String task = request.getParameter("task");
         if (task == null) {
             task = "";
+        }
+         String searchCammodel=request.getParameter("searchCammodel");
+       String searchCammake=request.getParameter("searchCammake");
+        if (searchCammodel == null) {
+            searchCammodel = "";
+        }
+         
+       
+        if (searchCammake == null) {
+            searchCammake = "";
+        }
+         String JQstring = request.getParameter("action1");
+         
+          if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+            List<String> list = null;
+        if (JQstring.equals("getCameraMake")) {
+                    list = camera_makeModel.getCameraMake();
+                }
+         if (JQstring.equals("getCameraModel")) {
+                    list = camera_makeModel.getCameraModel();
+                }
+         Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                return;
+          }
+         if (task.equals("SearchAllRecords")) {
+         searchCammake="";
+         searchCammodel="";
         }
         if (task.equals("Delete")) {
             camera_makeModel.deleteRecord(Integer.parseInt(request.getParameter("camera_make_id")));  // Pretty sure that state_id will be available.
@@ -74,9 +110,65 @@ public class Camera_MakeController extends HttpServlet{
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = camera_makeModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        
+        String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+                String searchCammodel1=request.getParameter("searchCammodel");
+                String searchCammake1=request.getParameter("searchCammake");
+                if(searchCammodel1==null){
+                    searchCammodel1="";
+                 }
+                  if(searchCammake1==null){
+                    searchCammake1="";
+                 }
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=camera_makeModel.showData1(searchCammodel1,searchCammake1);
+                jrxmlFilePath = ctx.getRealPath("/Report/cameramake.jrxml");
+                byte[] reportInbytes = camera_makeModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+                String searchCammodel1=request.getParameter("searchCammodel");
+                String searchCammake1=request.getParameter("searchCammake");
+                 if(searchCammodel1==null){
+                    searchCammodel1="";
+                 }
+                  if(searchCammake1==null){
+                    searchCammake1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=camera_make.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/cameramake.jrxml");
+                listAll=camera_makeModel.showData1(searchCammodel1,searchCammake1);
+                ByteArrayOutputStream reportInbytes = camera_makeModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
+        noOfRowsInTable = camera_makeModel.getNoOfRows(searchCammodel,searchCammake);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchCammodel = request.getParameter("manname");
+            searchCammake = request.getParameter("pname");
+              
+            noOfRowsInTable = camera_makeModel.getNoOfRows(searchCammodel,searchCammake);
+        }  // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+             searchCammodel = request.getParameter("manname");
+            searchCammake = request.getParameter("pname");
+              
+            noOfRowsInTable = camera_makeModel.getNoOfRows(searchCammodel,searchCammake);
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -85,8 +177,16 @@ public class Camera_MakeController extends HttpServlet{
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+             searchCammodel = request.getParameter("manname");
+            searchCammake = request.getParameter("pname");
+              
+           // noOfRowsInTable = camera_makeModel.getNoOfRows(searchCammodel,searchCammake);
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+             searchCammodel = request.getParameter("manname");
+            searchCammake = request.getParameter("pname");
+              
+            noOfRowsInTable = camera_makeModel.getNoOfRows(searchCammodel,searchCammake);
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -97,7 +197,7 @@ public class Camera_MakeController extends HttpServlet{
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<Camera_Make> camera_makeList = camera_makeModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Camera_Make> camera_makeList = camera_makeModel.showData(lowerLimit, noOfRowsToDisplay,searchCammodel,searchCammake);
         lowerLimit = lowerLimit + camera_makeList.size();
         noOfRowsTraversed = camera_makeList.size();
 
@@ -114,6 +214,10 @@ public class Camera_MakeController extends HttpServlet{
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+         request.setAttribute("manname", searchCammodel);
+          request.setAttribute("pname", searchCammake);
+        request.setAttribute("searchCammodel", searchCammodel);
+        request.setAttribute("searchCammake", searchCammake);
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("message", camera_makeModel.getMessage());
         request.setAttribute("msgBgColor", camera_makeModel.getMsgBgColor());

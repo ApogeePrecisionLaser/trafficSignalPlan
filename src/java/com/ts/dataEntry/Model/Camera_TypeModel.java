@@ -5,12 +5,21 @@
  */
 package com.ts.dataEntry.Model;
 import com.ts.dataEntry.tableClasses.Camera_Type;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -37,10 +46,12 @@ private Connection connection;
         }
     }
 
-    public int getNoOfRows() {
+    public int getNoOfRows(String searchCamtype) {
         int noOfRows = 0;
+        String query="SELECT COUNT(*) FROM camera_type where active='Y' and "
+                 + " IF('" + searchCamtype + "' = '',  camera_type LIKE '%%', camera_type ='"+searchCamtype+"') ";
         try {
-            ResultSet rset = connection.prepareStatement("SELECT COUNT(*) FROM camera_type ").executeQuery();
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -49,7 +60,21 @@ private Connection connection;
         return noOfRows;
     }
   
-
+public List<String> getCameraType() {
+        String query = "SELECT camera_type from camera_type WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("camera_type"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
     
     public int getLastId() {
         int noOfRows = 0;
@@ -64,12 +89,64 @@ private Connection connection;
         }
         return noOfRows;
     }
+  public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
+        try {
 
-    public List<Camera_Type> showData(int lowerLimit, int noOfRowsToDisplay) {
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
+
+    public List<Camera_Type> showData(int lowerLimit, int noOfRowsToDisplay,String searchCamtype) {
         List<Camera_Type> list = new ArrayList<Camera_Type>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM camera_type as c where c.active='Y' ORDER BY camera_type_id  "
+        String query = "SELECT * FROM camera_type as ct where ct.active='Y'  and "
+                 + " IF('" + searchCamtype + "' = '', ct.camera_type LIKE '%%',ct.camera_type ='"+searchCamtype+"') "
                 + " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Camera_Type camera_type = new Camera_Type();
+                camera_type.setCamera_type_id(rset.getInt("camera_type_id"));
+                camera_type.setCamera_type(rset.getString("camera_type"));
+                  camera_type.setRemark(rset.getString("remark"));
+                list.add( camera_type);
+            }
+        } catch (Exception e) {
+            System.out.println("Camera_TypeModel showData() Error: " + e);
+        }
+        return list;
+    }
+    
+    
+    
+     public List<Camera_Type> showData11(String searchCamtype) {
+        List<Camera_Type> list = new ArrayList<Camera_Type>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+        String query = "SELECT * FROM camera_type as ct where ct.active='Y'  and "
+                 + " IF('" + searchCamtype + "' = '', ct.camera_type LIKE '%%',ct.camera_type ='"+searchCamtype+"') ";
+              
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {

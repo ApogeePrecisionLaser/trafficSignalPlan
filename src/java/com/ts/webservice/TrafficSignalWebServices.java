@@ -58,7 +58,7 @@ public class TrafficSignalWebServices {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public byte[] insertTrafficSignalData(@Context HttpServletRequest requestContext, byte[] receivedBytes) {
         byte[] response = null;
-          byte[] responseBytes = {120};
+        byte[] responseBytes = {120};
         LoginController lc = new  LoginController(); 
         String start_stop_web = lc.start_stop1;
         if(start_stop_web.equalsIgnoreCase("start")){                 
@@ -143,7 +143,7 @@ public class TrafficSignalWebServices {
         String RequestMode = inputJsonObj.get("mode") == null ? "" : inputJsonObj.get("mode").toString();
         String deviceid = inputJsonObj.get("deviceid") == null ? "" : inputJsonObj.get("deviceid").toString();
         String active = inputJsonObj.get("active") == null ? "" : inputJsonObj.get("active").toString();
-        String login_time = inputJsonObj.get("login_time") == null ? "" : inputJsonObj.get("login_time").toString();
+            String login_time = inputJsonObj.get("login_time") == null ? "" : inputJsonObj.get("login_time").toString();
         String logout_time = inputJsonObj.get("logout_time") == null ? "" : inputJsonObj.get("logout_time").toString();
         JSONObject obj = new JSONObject();
         TrafficSignalWebServiceModel tsModel = new TrafficSignalWebServiceModel();

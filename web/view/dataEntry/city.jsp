@@ -14,13 +14,10 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Data Entry: City Table</title>
-        <link href="style/style.css" type="text/css" rel="stylesheet" media="Screen"/>
+       <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
         <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
-        <%-- <link rel="stylesheet" type="text/css" href="css/jquery-ui.css"/> --%>
-
         <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
-        <%-- <script type="text/javascript" src="JS/jquery-ui.min.js"></script> --%>
         <script type="text/javascript" language="javascript">
             jQuery(function(){
                 $("#city_name").autocomplete("cityNameCont", {
@@ -192,6 +189,46 @@
                 }
                 return result;
             }
+            
+              function displayMapList(id) {
+                var queryString;
+            var searchstate=document.getElementById("searchstate").value;
+            var searchdistrict=document.getElementById("searchdistrict").value;
+                if (id === 'viewPdf')
+                    queryString = "requester=PRINT"+"&searchstate=" + searchstate +"&searchdistrict="+searchdistrict;
+                else
+                    queryString = "requester=PRINTXls"+"&searchstate=" + searchstate +"&searchdistrict="+searchdistrict;
+                var url = "CityCont?" + queryString;
+                popupwin = openPopUp(url, "Camera", 600, 900);
+            }  
+            
+             function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
+            }
+               jQuery(function () {
+            $("#searchstate").autocomplete("CityCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getState";
+                        }
+                    }
+                });
+                });
+              jQuery(function () {
+            $("#searchdistrict").autocomplete("CityCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getDistrict";
+                        } , action2: function () {
+                            return $("#searchstate").val();
+                        }
+                        
+                    }
+                });
+                });
         </script>
     </head>
     <body>
@@ -210,7 +247,27 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
-
+<tr><td>
+                                    <form action="CityCont" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                              State<input type="text" name="searchstate" id="searchstate" value="${searchstate}">
+                                            </td>
+                                            <td>
+                                              District<input type="text" name="searchdistrict" id="searchdistrict" value="${searchdistrict}">
+                                            </td>
+                                             
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td>
                                     <table id="table0"  align="center" width="500">
@@ -220,7 +277,7 @@
                                                     <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
                                                         <table border="1" id="table1" align="center" class="reference">
                                                             <tr>
-                                                                <th class="heading" style="display: none"><!-- City ID --></th>
+                                                                <th></th>
                                                                 <th class="heading" >S.No.</th>
                                                                 <th class="heading" >City Name</th>
                                                                 <th class="heading" >District</th>
@@ -276,6 +333,8 @@
                                                                 </td>
                                                             </tr>
                                                             <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                                         <input type="hidden" name="manname" value="${manname}">
+                           <input type="hidden" name="pname" value="${pname}">
                                                             <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                             <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                                         </table>

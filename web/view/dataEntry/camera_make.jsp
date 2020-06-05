@@ -126,6 +126,45 @@
                 }
                 return result;
             }
+            
+            
+            
+             function displayMapList(id) {
+                var queryString;
+            var searchCammake=document.getElementById("searchCammake").value;
+            var searchCammodel=document.getElementById("searchCammodel").value;
+                if (id === 'viewPdf')
+                    queryString = "requester=PRINT"+"&ssearchCammake=" + searchCammake +"&searchCammodel="+searchCammodel;
+                else
+                    queryString = "requester=PRINTXls"+"&ssearchCammake=" + searchCammake +"&searchCammodel="+searchCammodel;
+                var url = "CameraMakeCont?" + queryString;
+                popupwin = openPopUp(url, "Camera", 600, 900);
+            }  
+            
+             function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
+            }
+              jQuery(function () {
+            $("#searchCammake").autocomplete("CameraMakeCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getCameraMake";
+                        }
+                    }
+                });
+                });
+              jQuery(function () {
+            $("#searchCammodel").autocomplete("CameraMakeCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getCameraModel";
+                        }
+                    }
+                });
+                });
         </script>
     </head>
     <body>
@@ -145,7 +184,27 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
-
+ <tr><td>
+                                    <form action="CameraMakeCont" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                              Camera Model<input type="text" name="searchCammodel" id="searchCammodel" value="${searchCammodel}">
+                                            </td>
+                                            <td>
+                                              Camera Make<input type="text" name="searchCammake" id="searchCammake" value="${searchCammake}">
+                                            </td>
+                                             
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td align="center">
                                     <form name="form1" method="POST" action="CameraMakeCont">
@@ -203,7 +262,9 @@
                                                         </c:choose>
                                                     </td></tr>
                                                     <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
-                                                <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                 <input type="hidden" name="manname" value="${manname}">
+                           <input type="hidden" name="pname" value="${pname}">
+                           <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                 <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                             </table>
                                         </DIV>

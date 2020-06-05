@@ -6,32 +6,25 @@
 package com.ts.dataEntry.Controller;
 
 import com.ts.dataEntry.Model.CameraModel;
-import com.ts.dataEntry.Model.PositionModel;
 import com.ts.dataEntry.tableClasses.Camera;
-import com.ts.dataEntry.tableClasses.Position;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import static java.lang.System.out;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
@@ -58,6 +51,30 @@ String s=null;
        if (task == null) {
            task = "";
        }
+       
+       String searchCamIp = request.getParameter("searchCamIp");
+          String searchcammake = request.getParameter("searchcammake");
+           String searchjunction = request.getParameter("searchjunction");
+          String searchcamType = request.getParameter("searchCamtype");
+        if(searchCamIp==null){
+        searchCamIp="";
+        }
+         if(searchcammake==null){
+        searchcammake="";
+        } 
+          if(searchjunction==null){
+        searchjunction="";
+        }
+         if(searchcamType==null){
+        searchcamType="";
+        } 
+         
+         if (task.equals("SearchAllRecords")) {
+            searchCamIp = "";
+            searchcammake="";
+            searchjunction="";
+            searchcamType="";
+        }
         String junctionId = request.getParameter("junction_id1");
         String side_no1 = request.getParameter("side_no_details");
 //        int camera_id;
@@ -82,6 +99,10 @@ String s=null;
             request.getRequestDispatcher("getCordinate1").forward(request, response);
             return;
         }
+        
+         
+         
+         
         try {
              String q = request.getParameter("q"); 
             String JQstring = request.getParameter("action1");
@@ -99,6 +120,18 @@ String s=null;
                 } if (JQstring.equals("getCameraModel")) {
                     String cam=request.getParameter("action2");
                     list = cameraModel.getCameraModel(cam);
+                }
+                  if (JQstring.equals("getsearchCamIp")) {
+                    list = cameraModel.getsearchCamIp(q);
+                }
+                  if (JQstring.equals("getsearchCamMake")) {
+                    list = cameraModel.getsearchCamMake(q);
+                }
+                   if (JQstring.equals("getsearchJun")) {
+                    list = cameraModel.getsearchJun(q);
+                }
+                    if (JQstring.equals("getsearchCamType")) {
+                    list = cameraModel.getsearchCamType(q);
                 }
 
                 Iterator<String> iter = list.iterator();
@@ -275,10 +308,85 @@ camera.setImage_folder(imagePath);
         String buttonAction = request.getParameter("buttonAction"); // Holds the name of any of the four buttons: First, Previous, Next, Delete.
         if (buttonAction == null) {
             buttonAction = "none";
-        }
-        noOfRowsInTable = cameraModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        }  
+         String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+               
+              String searchcamType1 = request.getParameter("scamtype");  
+             String searchCamIp1 = request.getParameter("scamip");  
+             String searchcammake1 = request.getParameter("scammake");  
+              String searchjunction1 = request.getParameter("sjun");  
+               if(searchcamType1==null){
+                    searchcamType1="";
+                 }
+                if(searchCamIp1==null){
+                    searchCamIp1="";
+                 }
+                 if(searchcammake1==null){
+                    searchcammake1="";
+                 }
+                  if(searchjunction1==null){
+                    searchjunction1="";
+                 }
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               List  listAll=cameraModel.showDataReport(searchCamIp1,searchcammake1,searchcamType1,searchjunction1);
+                jrxmlFilePath = ctx.getRealPath("/Report/camerapdf.jrxml");
+                byte[] reportInbytes = cameraModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                cameraModel.closeConnection();
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                 String searchcamType1 = request.getParameter("scamtype");  
+             String searchCamIp1 = request.getParameter("scamip");  
+             String searchcammake1 = request.getParameter("scammake");  
+              String searchjunction1 = request.getParameter("sjun"); 
+              if(searchcamType1==null){
+                    searchcamType1="";
+                 }
+                if(searchCamIp1==null){
+                    searchCamIp1="";
+                 }
+                 if(searchcammake1==null){
+                    searchcammake1="";
+                 }
+                  if(searchjunction1==null){
+                    searchjunction1="";
+                 }
+              
+                String jrxmlFilePath;
+                List listAll = null;
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=Orginisation_Report.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/camerapdf.jrxml");
+                   listAll=cameraModel.showDataReport(searchCamIp1,searchcammake1,searchcamType1,searchjunction1);
+                ByteArrayOutputStream reportInbytes = cameraModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
+        noOfRowsInTable = cameraModel.getNoOfRows(searchCamIp,searchcammake,searchcamType,searchjunction);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchCamIp = request.getParameter("manname");
+              searchcammake = request.getParameter("pname");
+                 searchjunction = request.getParameter("Jname");
+              searchcamType = request.getParameter("camType");
+             noOfRowsInTable = cameraModel.getNoOfRows(searchCamIp,searchcammake,searchcamType,searchjunction); 
+
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+            searchCamIp = request.getParameter("manname");
+              searchcammake = request.getParameter("pname");
+                 searchjunction = request.getParameter("Jname");
+              searchcamType = request.getParameter("camType");
+            noOfRowsInTable = cameraModel.getNoOfRows(searchCamIp,searchcammake,searchcamType,searchjunction); 
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -287,8 +395,17 @@ camera.setImage_folder(imagePath);
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+            searchCamIp = request.getParameter("manname");
+              searchcammake = request.getParameter("pname");
+            searchjunction = request.getParameter("Jname");
+              searchcamType = request.getParameter("camType");
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+            searchCamIp = request.getParameter("manname");
+              searchcammake = request.getParameter("pname");
+               searchjunction = request.getParameter("Jname");
+              searchcamType = request.getParameter("camType");
+          noOfRowsInTable = cameraModel.getNoOfRows(searchCamIp,searchcammake,searchcamType,searchjunction); 
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -299,7 +416,7 @@ camera.setImage_folder(imagePath);
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay,searchCamIp,searchcammake,searchcamType,searchjunction);
 //                List<Camera> cameraList = cameraModel.showData(lowerLimit, noOfRowsToDisplay, junction_id, side_no2);
 //     System.out.println(camera_id);
         lowerLimit = lowerLimit + cameraList.size();
@@ -321,6 +438,15 @@ camera.setImage_folder(imagePath);
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+          request.setAttribute("manname", searchCamIp);
+          request.setAttribute("pname", searchcammake);
+           request.setAttribute("Jname", searchjunction);
+          request.setAttribute("camType", searchcamType);
+        request.setAttribute("searchCamIp", searchCamIp);
+            request.setAttribute("searchJun", searchjunction);
+        
+        request.setAttribute("searchCamtype", searchcamType);
+        request.setAttribute("searchcammake", searchcammake);
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("message", cameraModel.getMessage());
         request.setAttribute("msgBgColor", cameraModel.getMsgBgColor());

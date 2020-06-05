@@ -5,12 +5,21 @@
  */
 package com.ts.dataEntry.Model;
 import com.ts.dataEntry.tableClasses.Camera_Make;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -36,11 +45,44 @@ private Connection connection;
             System.out.println("Camera_MakeModel setConnection() Error: " + e);
         }
     }
-
-    public int getNoOfRows() {
-        int noOfRows = 0;
+    
+    
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
         try {
-            ResultSet rset = connection.prepareStatement("SELECT COUNT(*) FROM camera_make ").executeQuery();
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
+     public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+
+    public int getNoOfRows(String searchCammodel,String searchCammake) {
+        int noOfRows = 0;
+         String query="SELECT COUNT(*) FROM camera_make where active='Y' and "
+                 + " IF('" + searchCammodel + "' = '',  model_no LIKE '%%', model_no ='"+searchCammodel+"') and "
+                 + " IF('" + searchCammake + "' = '',  camera_make LIKE '%%', camera_make ='"+searchCammake+"')  ";
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -62,12 +104,67 @@ private Connection connection;
         }
         return noOfRows;
     }
+public List<String> getCameraMake() {
+        String query = "SELECT camera_make from camera_make WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("camera_make"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+public List<String> getCameraModel() {
+        String query = "SELECT model_no from camera_make WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("model_no"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
 
-    public List<Camera_Make> showData(int lowerLimit, int noOfRowsToDisplay) {
+
+    public List<Camera_Make> showData(int lowerLimit, int noOfRowsToDisplay,String searchCammodel,String searchCammake) {
         List<Camera_Make> list = new ArrayList<Camera_Make>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT * FROM camera_make as c where c.active='Y' ORDER BY camera_make_id "
+        String query = "SELECT * FROM camera_make as c where c.active='Y' and "
+                 + " IF('" + searchCammodel + "' = '',  model_no LIKE '%%', model_no ='"+searchCammodel+"') and "
+                 + " IF('" + searchCammake + "' = '',  camera_make LIKE '%%', camera_make ='"+searchCammake+"')  "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Camera_Make camera_make = new Camera_Make();
+                camera_make.setCamera_make_id(rset.getInt("camera_make_id"));
+                camera_make.setCamera_make(rset.getString("camera_make"));
+                  camera_make.setRemark(rset.getString("remark"));
+                  camera_make.setCamera_model(rset.getString("model_no"));
+                list.add( camera_make);
+            }
+        } catch (Exception e) {
+            System.out.println("Camera_MakeModel showData() Error: " + e);
+        }
+        return list;
+    }
+    public List<Camera_Make> showData1(String searchCammodel,String searchCammake) {
+        List<Camera_Make> list = new ArrayList<Camera_Make>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+        String query = "SELECT * FROM camera_make as c where c.active='Y' and "
+                 + " IF('" + searchCammodel + "' = '',  model_no LIKE '%%', model_no ='"+searchCammodel+"') and "
+                 + " IF('" + searchCammake + "' = '',  camera_make LIKE '%%', camera_make ='"+searchCammake+"')  ";
+              
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {

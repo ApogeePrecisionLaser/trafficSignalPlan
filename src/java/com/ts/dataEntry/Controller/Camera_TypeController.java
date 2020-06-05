@@ -11,11 +11,14 @@ import com.ts.dataEntry.tableClasses.Camera_Type;
 
 import com.ts.dataEntry.tableClasses.Position;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -39,9 +42,70 @@ public class Camera_TypeController extends HttpServlet {
        camera_typeModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
       camera_typeModel.setConnection();
         String task = request.getParameter("task");
+        String searchCamtype=request.getParameter("searchCamtype");
         if (task == null) {
             task = "";
         }
+        if (searchCamtype == null) {
+            searchCamtype = "";
+        }
+         String JQstring = request.getParameter("action1");
+         
+          if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+            List<String> list = null;
+        if (JQstring.equals("getCameraType")) {
+                    list = camera_typeModel.getCameraType();
+                }
+         Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                return;
+          }
+          if (task.equals("SearchAllRecords")) {
+         searchCamtype="";
+        }
+          String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+               String searchCamtype1=request.getParameter("scamtype");
+               if(searchCamtype1==null){
+                    searchCamtype1="";
+                 }
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=camera_typeModel.showData11(searchCamtype1);
+                jrxmlFilePath = ctx.getRealPath("/Report/camera_type.jrxml");
+                byte[] reportInbytes = camera_typeModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+                String searchCamtype1=request.getParameter("scamtype");
+                 if(searchCamtype1==null){
+                    searchCamtype1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=camera_type.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/camera_type.jrxml");
+                listAll=camera_typeModel.showData11(searchCamtype1);
+                ByteArrayOutputStream reportInbytes = camera_typeModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
         if (task.equals("Delete")) {
             camera_typeModel.deleteRecord(Integer.parseInt(request.getParameter("camera_type_id")));  // Pretty sure that state_id will be available.
         } else if (task.equals("Save")) {
@@ -75,9 +139,16 @@ public class Camera_TypeController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = camera_typeModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        noOfRowsInTable = camera_typeModel.getNoOfRows(searchCamtype);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchCamtype = request.getParameter("manname");
+              
+            noOfRowsInTable = camera_typeModel.getNoOfRows(searchCamtype);   
+        }  // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+            searchCamtype = request.getParameter("manname");
+              
+            noOfRowsInTable = camera_typeModel.getNoOfRows(searchCamtype);   
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -86,8 +157,14 @@ public class Camera_TypeController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+            searchCamtype = request.getParameter("manname");
+              
+           // noOfRowsInTable = camera_typeModel.getNoOfRows(searchCamtype);   
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+            searchCamtype = request.getParameter("manname");
+              
+            noOfRowsInTable = camera_typeModel.getNoOfRows(searchCamtype);   
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -98,7 +175,7 @@ public class Camera_TypeController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<Camera_Type> camera_typeList = camera_typeModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Camera_Type> camera_typeList = camera_typeModel.showData(lowerLimit, noOfRowsToDisplay,searchCamtype);
         lowerLimit = lowerLimit + camera_typeList.size();
         noOfRowsTraversed = camera_typeList.size();
 
@@ -116,6 +193,8 @@ public class Camera_TypeController extends HttpServlet {
             request.setAttribute("showLast", "false");
         }
         request.setAttribute("IDGenerator", new xyz());
+           request.setAttribute("manname", searchCamtype);
+        request.setAttribute("searchCamtype", searchCamtype);
         request.setAttribute("message", camera_typeModel.getMessage());
         request.setAttribute("msgBgColor", camera_typeModel.getMsgBgColor());
         request.getRequestDispatcher("camera_type_view").forward(request, response);

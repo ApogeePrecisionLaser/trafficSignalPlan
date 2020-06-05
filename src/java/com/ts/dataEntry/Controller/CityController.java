@@ -8,10 +8,14 @@ package com.ts.dataEntry.Controller;
 import com.ts.dataEntry.Model.CityModel;
 import com.ts.dataEntry.tableClasses.City;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,7 +28,7 @@ public class CityController extends HttpServlet {
 
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 15, noOfRowsInTable;
+        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 5, noOfRowsInTable;
         ServletContext ctx = getServletContext();
 
         CityModel cityModel = new CityModel();
@@ -37,6 +41,86 @@ public class CityController extends HttpServlet {
         if (task == null) {
             task = "";
         }
+         String searchstate=request.getParameter("searchstate");
+       String searchdistrict=request.getParameter("searchdistrict");
+        if (searchstate == null) {
+            searchstate = "";
+        }
+         
+       
+        if (searchdistrict == null) {
+            searchdistrict = "";
+        }
+         String JQstring = request.getParameter("action1");
+         
+          if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+            List<String> list = null;
+        if (JQstring.equals("getState")) {
+                    list = cityModel.getState();
+                }
+         if (JQstring.equals("getDistrict")) {
+              String st=request.getParameter("action2");
+                    list = cityModel.getDistrict(st);
+                }
+         Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                return;
+          }
+         if (task.equals("SearchAllRecords")) {
+         searchstate="";
+         searchdistrict="";
+        }
+                String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+                String searchstate1=request.getParameter("searchstate");
+                String searchdistrict1=request.getParameter("searchdistrict");
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                  if(searchdistrict1==null){
+                    searchdistrict1="";
+                 }
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=cityModel.showDataReport(searchstate,searchdistrict);
+                jrxmlFilePath = ctx.getRealPath("/Report/city.jrxml");
+                byte[] reportInbytes = cityModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+                String searchCammodel1=request.getParameter("searchCammodel");
+                String searchCammake1=request.getParameter("searchCammake");
+                 if(searchCammodel1==null){
+                    searchCammodel1="";
+                 }
+                  if(searchCammake1==null){
+                    searchCammake1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=city.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/city.jrxml");
+                listAll=cityModel.showDataReport(searchstate,searchdistrict);
+                ByteArrayOutputStream reportInbytes = cityModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
         if (task.equals("Delete")) {
             // Pretty sure that city_id will be available.
             cityModel.deleteRecord(Integer.parseInt(request.getParameter("city_id")));
@@ -77,9 +161,18 @@ public class CityController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = cityModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        noOfRowsInTable = cityModel.getNoOfRows(searchstate,searchdistrict);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchstate = request.getParameter("manname");
+            searchdistrict = request.getParameter("pname");
+              
+           noOfRowsInTable = cityModel.getNoOfRows(searchstate,searchdistrict);
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+             searchstate = request.getParameter("manname");
+            searchdistrict = request.getParameter("pname");
+              
+           noOfRowsInTable = cityModel.getNoOfRows(searchstate,searchdistrict);
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -88,8 +181,16 @@ public class CityController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+             searchstate = request.getParameter("manname");
+            searchdistrict = request.getParameter("pname");
+               
+           
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+             searchstate = request.getParameter("manname");
+            searchdistrict = request.getParameter("pname");
+              
+           noOfRowsInTable = cityModel.getNoOfRows(searchstate,searchdistrict);
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -100,7 +201,7 @@ public class CityController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<City> cityList = cityModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<City> cityList = cityModel.showData(lowerLimit, noOfRowsToDisplay,searchstate,searchdistrict);
         lowerLimit = lowerLimit + cityList.size();
         noOfRowsTraversed = cityList.size();
 
@@ -117,6 +218,10 @@ public class CityController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+         request.setAttribute("manname", searchstate);
+          request.setAttribute("pname", searchdistrict);
+        request.setAttribute("searchstate", searchstate);
+        request.setAttribute("searchdistrict", searchdistrict);
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("message", cityModel.getMessage());
         request.setAttribute("msgBgColor", cityModel.getMsgBgColor());

@@ -5,6 +5,7 @@
  */
 package com.ts.dataEntry.Model;
 import com.ts.dataEntry.tableClasses.Camera;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,6 +16,14 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -75,12 +84,48 @@ private Connection connection;
         }
         return result;
     }
-    
-
-    public int getNoOfRows() {
-        int noOfRows = 0;
+     public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
         try {
-            ResultSet rset = connection.prepareStatement("SELECT COUNT(*) FROM camera where active='y' ").executeQuery();
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
+
+    public int getNoOfRows(String searchCamIP,String searchCamMake,String searchcamType,String searchJun) {
+        int noOfRows = 0;
+      String query ="select count(*) from junction as j inner join side_detail as  sd on j.junction_id=sd.junction_id " +
+                        " right join camera as c on  c.side_detail_id=sd.side_detail_id " +
+                        " right join camera_type as ct on ct.camera_type_id=c.camera_type_id right join camera_make as cm on cm.camera_make_id=c.camera_make_id "+
+                     " where j.final_revision = 'VALID' and c.active='Y' and sd.active='Y' and "
+                  + " IF('" + searchCamIP + "' = '', c.camera_ip LIKE '%%',c.camera_ip ='"+searchCamIP+"') and "
+                 + " IF('" + searchCamMake + "' = '', cm.camera_make LIKE '%%',cm.camera_make ='" + searchCamMake + "') and "
+               + " IF('" + searchcamType + "' = '', ct.camera_type LIKE '%%',ct.camera_type ='"+searchcamType+"') and "
+                 + " IF('" + searchJun + "' = '', j.junction_name LIKE '%%',j.junction_name ='" + searchJun + "') " ; 
+               
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -104,7 +149,7 @@ private Connection connection;
     }
 
 //    public List<Camera> showData(int lowerLimit, int noOfRowsToDisplay, int junction_id, int side_no) {
-           public List<Camera> showData(int lowerLimit, int noOfRowsToDisplay) {
+           public List<Camera> showData(int lowerLimit, int noOfRowsToDisplay,String searchCamIP,String searchCamMake,String searchcamType,String searchJun) {
         List<Camera> list = new ArrayList<Camera>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
 //        String query = "SELECT * FROM camera c,camera_type ct,side_detail sd ORDER BY c.camera_id LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
@@ -115,7 +160,11 @@ private Connection connection;
         String query ="select c.camera_id,c.camera_ip,ct.camera_type,cm.camera_make,j.junction_name,sd.side_no,c.remark,c.latitude,c.longitude,c.camera_facing,c.lane_no,cm.model_no from junction as j inner join side_detail as  sd on j.junction_id=sd.junction_id " +
                         " right join camera as c on  c.side_detail_id=sd.side_detail_id " +
                         " right join camera_type as ct on ct.camera_type_id=c.camera_type_id right join camera_make as cm on cm.camera_make_id=c.camera_make_id "+
-                     " where j.final_revision = 'VALID' and c.active='Y' and sd.active='Y' "
+                     " where j.final_revision = 'VALID' and c.active='Y' and sd.active='Y' and "
+                  + " IF('" + searchCamIP + "' = '', c.camera_ip LIKE '%%',c.camera_ip ='"+searchCamIP+"') and "
+                 + " IF('" + searchCamMake + "' = '', cm.camera_make LIKE '%%',cm.camera_make ='" + searchCamMake + "') and " 
+                  + " IF('" + searchcamType + "' = '', ct.camera_type LIKE '%%',ct.camera_type ='"+searchcamType+"') and "
+                 + " IF('" + searchJun + "' = '', j.junction_name LIKE '%%',j.junction_name ='" + searchJun + "') " 
                 + " LIMIT "+lowerLimit+", "+noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
@@ -142,7 +191,48 @@ private Connection connection;
         }
         return list;
     }
-
+        public List<Camera> showDataReport(String searchCamIP,String searchCamMake,String searchcamType,String searchJun) {
+        List<Camera> list = new ArrayList<Camera>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+//        String query = "SELECT * FROM camera c,camera_type ct,side_detail sd ORDER BY c.camera_id LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+//        String query = "SELECT c.*, j.junction_name, sd.side_no, sd.side_name, sd.junction_id, cm.camera_make, ct.camera_type FROM camera c,camera_type ct,side_detail sd, camera_make cm, junction j " +
+//                       "where c.camera_type_id = ct.camera_type_id and c.camera_make_id = cm.camera_make_id and " +
+//                       "c.side_detail_id = sd.side_detail_id and sd.junction_id = j.junction_id and j.final_revision = 'VALID' and sd.junction_id = "+junction_id+" and sd.side_no = "+side_no +
+//                       " ORDER BY c.camera_id LIMIT "+lowerLimit+", "+noOfRowsToDisplay;
+        String query ="select c.camera_id,c.camera_ip,ct.camera_type,cm.camera_make,j.junction_name,sd.side_no,c.remark,c.latitude,c.longitude,c.camera_facing,c.lane_no,cm.model_no from junction as j inner join side_detail as  sd on j.junction_id=sd.junction_id " +
+                        " right join camera as c on  c.side_detail_id=sd.side_detail_id " +
+                        " right join camera_type as ct on ct.camera_type_id=c.camera_type_id right join camera_make as cm on cm.camera_make_id=c.camera_make_id "+
+                     " where j.final_revision = 'VALID' and c.active='Y' and sd.active='Y' and "
+                  + " IF('" + searchCamIP + "' = '', c.camera_ip LIKE '%%',c.camera_ip ='"+searchCamIP+"') and "
+                 + " IF('" + searchCamMake + "' = '', cm.camera_make LIKE '%%',cm.camera_make ='" + searchCamMake + "') and " 
+                  + " IF('" + searchcamType + "' = '', ct.camera_type LIKE '%%',ct.camera_type ='"+searchcamType+"') and "
+                 + " IF('" + searchJun + "' = '', j.junction_name LIKE '%%',j.junction_name ='" + searchJun + "') "; 
+                 
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Camera camera = new Camera();
+               camera.setCamera_id(rset.getInt("camera_id"));
+//               camera.setCamera_id(camera_id);
+                camera.setCamera_ip(rset.getString("camera_ip"));
+                camera.setCamera_make(rset.getString("camera_make"));
+                camera.setCamera_type(rset.getString("camera_type"));
+//                camera.setJunction_id(junction_id);
+                camera.setJunction_name(rset.getString("junction_name"));
+                camera.setSide_no(rset.getInt("side_no"));
+                  camera.setRemark(rset.getString("remark"));
+                  camera.setLatitude(rset.getString("latitude"));
+                  camera.setLongitude(rset.getString("longitude"));
+                  camera.setCamerafacing(rset.getString("camera_facing"));
+                  camera.setLane_no(rset.getString("lane_no"));
+                  camera.setCamera_model(rset.getString("model_no"));
+                list.add( camera);
+            }
+        } catch (Exception e) {
+            System.out.println("CameraModel showData() Error: " + e);
+        }
+        return list;
+    }
     public int insertRecord(Camera camera) {
         int j_id=getjunctionId(camera.getJunction_name());
        int sideDetailId = getSideDetailId(camera.getSide_no(),j_id);
@@ -366,6 +456,110 @@ public List<String> getsearchJunctionName(String q) {
         PreparedStatement pstmt;
         String query = "SELECT DISTINCT junction_name "
                 + " FROM junction";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String junction_name = rset.getString("junction_name");
+                if (junction_name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(junction_name);
+                    count++;
+                }
+
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+public List<String> getsearchCamIp(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT DISTINCT camera_ip "
+                + " FROM camera where active='y'";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String junction_name = rset.getString("camera_ip");
+                if (junction_name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(junction_name);
+                    count++;
+                }
+
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+public List<String> getsearchCamMake(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT DISTINCT c.camera_make "
+                + " FROM camera_make c where c.active='y'";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String junction_name = rset.getString("camera_make");
+                if (junction_name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(junction_name);
+                    count++;
+                }
+
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+public List<String> getsearchCamType(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT DISTINCT c.camera_type "
+                + " FROM camera_type c where c.active='y'";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String junction_name = rset.getString("camera_type");
+                if (junction_name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(junction_name);
+                    count++;
+                }
+
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+public List<String> getsearchJun(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT DISTINCT c.junction_name "
+                + " FROM junction c where c.final_revision='VALID'";
         try {
             pstmt = connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();

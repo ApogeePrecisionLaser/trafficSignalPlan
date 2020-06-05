@@ -6,12 +6,21 @@
 package com.ts.dataEntry.Model;
 
 import com.ts.dataEntry.tableClasses.District;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -37,11 +46,44 @@ public class DistrictModel {
             System.out.println("DistrictModel setConnection() Error: " + e);
         }
     }
-
-    public int getNoOfRows() {
-        int noOfRows = 0;
+ public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
         try {
-            ResultSet rset = connection.prepareStatement("SELECT COUNT(*) FROM district ").executeQuery();
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
+
+    public int getNoOfRows(String State,String District) {
+        int noOfRows = 0;
+           String query = "SELECT count(*) "
+                + "FROM district d, state s "
+                + "WHERE d.state_id = s.state_id and s.active='Y' and d.active='Y' and "
+                 + " IF('" + State + "' = '',   s.state_name LIKE '%%',  s.state_name ='"+State+"') and "
+                 + " IF('" + District + "' = '',  d.district_name LIKE '%%', d.district_name ='"+District+"') ";
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -50,14 +92,38 @@ public class DistrictModel {
         return noOfRows;
     }
 
-    public List<District> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<District> showData(int lowerLimit, int noOfRowsToDisplay,String State,String District) {
         List<District> list = new ArrayList<District>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
         String query = "SELECT d.district_id, d.district_name, s.state_name "
                 + "FROM district d, state s "
-                + "WHERE d.state_id = s.state_id "
-                + "ORDER BY s.state_name, d.district_name "
+                + "WHERE d.state_id = s.state_id and s.active='Y' and d.active='Y' and "
+                 + " IF('" + State + "' = '',   s.state_name LIKE '%%',  s.state_name ='"+State+"') and "
+                 + " IF('" + District + "' = '',  d.district_name LIKE '%%', d.district_name ='"+District+"') "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                District state = new District();
+                state.setDistrict_id(rset.getInt("district_id"));
+                state.setDistrict_name(rset.getString("district_name"));
+                state.setState_name(rset.getString("state_name"));
+                list.add(state);
+            }
+        } catch (Exception e) {
+            System.out.println("DistrictModel showData() Error: " + e);
+        }
+        return list;
+    }
+    public List<District> showDataReport(String State,String District) {
+        List<District> list = new ArrayList<District>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+        String query = "SELECT d.district_id, d.district_name, s.state_name "
+                + "FROM district d, state s "
+                + "WHERE d.state_id = s.state_id and s.active='Y' and d.active='Y' and "
+                 + " IF('" + State + "' = '',   s.state_name LIKE '%%',  s.state_name ='"+State+"') and "
+                 + " IF('" + District + "' = '',  d.district_name LIKE '%%', d.district_name ='"+District+"') "
+             ;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
@@ -93,7 +159,38 @@ public class DistrictModel {
         }
         return rowsAffected;
     }
-
+public List<String> getState() {
+        String query = "SELECT state_name from state WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("state_name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+public List<String> getDistrict(String state) {
+    
+    int st_id=getStateId(state);
+        String query = "SELECT district_name from district WHERE active = 'Y' and state_id='"+st_id+"'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("district_name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
     public int updateRecord(District district) {
         String query = "UPDATE district SET district_name = ? WHERE district_id = ? ";
         int rowsAffected = 0;
