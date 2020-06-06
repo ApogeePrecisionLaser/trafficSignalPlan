@@ -5,7 +5,9 @@
  */
 package com.ts.junction.Model;
 
+import com.ts.dataEntry.tableClasses.Pole_Type;
 import com.ts.junction.tableClasses.DateDetail;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,6 +15,14 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -31,10 +41,13 @@ public class DateDetailModel {
     private final String COLOR_ERROR = "red";
     String image_uploaded_for_column = null, uploaded_table = null, destination_path;
     
-    public int getNoOfRows() {
+    public int getNoOfRows(String searchitem) {
         int noOfRows = 0;
+          String query = "SELECT Count(*) "
+                + "FROM date_detail WHERE active='Y' and "
+                   + " IF('" + searchitem + "' = '',name LIKE '%%',  name ='"+searchitem+"') ";
         try {
-            ResultSet rset = connection.prepareStatement("select count(*) from date_detail ").executeQuery();
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -43,11 +56,12 @@ public class DateDetailModel {
         return noOfRows;
     }
 
-    public List<DateDetail> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<DateDetail> showData(int lowerLimit, int noOfRowsToDisplay,String searchitem) {
         List<DateDetail> list = new ArrayList<DateDetail>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
         String query = "SELECT date_detail_id,name,from_date,to_date,remark "
-                + "FROM date_detail WHERE active='Y' "
+                + "FROM date_detail WHERE active='Y' and "
+                   + " IF('" + searchitem + "' = '',name LIKE '%%',  name ='"+searchitem+"') "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
@@ -65,7 +79,74 @@ public class DateDetailModel {
         }
         return list;
     }
+    public List<DateDetail> showDataReport(String searchitem) {
+        List<DateDetail> list = new ArrayList<DateDetail>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+        String query = "SELECT date_detail_id,name,from_date,to_date,remark "
+                + "FROM date_detail WHERE active='Y' and "
+                   + " IF('" + searchitem + "' = '',name LIKE '%%',  name ='"+searchitem+"') "
+                ;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                DateDetail dateDetail = new DateDetail();
+                dateDetail.setDate_detail_id(rset.getInt("date_detail_id"));
+                dateDetail.setName(rset.getString("name"));
+                dateDetail.setFrom_date(rset.getString("from_date"));
+               dateDetail.setTo_date(rset.getString("to_date"));
+               dateDetail.setRemark(rset.getString("remark"));
+                list.add(dateDetail);
+            }
+        } catch (Exception e) {
+            System.out.println("DateDetailModel showData() Error: " + e);
+        }
+        return list;
+    }
+public List<String> getState() {
+        String query = "SELECT name from date_detail WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+       
+      
+        public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
+        try {
 
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
     public int insertRecord(DateDetail dateDetail) {
         String query = "INSERT INTO date_detail(name, from_date, to_date, remark) "
                 + "VALUES(?, ?, ?, ?) ";

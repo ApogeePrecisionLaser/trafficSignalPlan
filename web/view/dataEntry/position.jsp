@@ -10,7 +10,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Data Entry: Position Table</title>
-        <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
+         <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
         <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
         <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
@@ -104,6 +104,34 @@
                 }
                 return result;
             }
+            
+             function displayMapList(id) {
+                var queryString;
+            var searchstate=document.getElementById("searchstate").value;
+          
+                if (id === 'viewPdf')
+                    queryString = "requester=PRINT"+"&searchstate=" + searchstate;
+                else
+                    queryString = "requester=PRINTXls"+"&searchstate=" + searchstate;
+                var url = "positionCont?" + queryString;
+                popupwin = openPopUp(url, "positionCont", 600, 900);
+            }  
+            
+             function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
+            }
+               jQuery(function () {
+            $("#searchstate").autocomplete("positionCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getState";
+                        }
+                    }
+                });
+                });
         </script>
     </head>
     <body>
@@ -123,12 +151,29 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
-
+<tr><td>
+                                    <form action="positionCont" method="post" class="form-group container-fluid">
+                   
+                                        <table align="center" border="1px">
+                                        <tr >
+                                             <td>
+                                              Position<input type="text" name="searchstate" id="searchstate" value="${searchstate}">
+                                            </td>
+                                            
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td align="center">
                                     <form name="form1" method="POST" action="positionCont">
                                         <DIV STYLE="overflow: auto; width: 400px; max-height: 410px; padding:0px; margin-bottom: 20px; margin-top: 20px" >
-                                            <table id="rcorners3" align="center" class="reference">
+                                            <table id="rcorners3" align="center" class="reference" border="1px">
                                                 <tr>
                                                     <th class="heading" style="display: none"><!-- State ID--></th>
                                                     <th class="heading">S.No.</th>
@@ -177,6 +222,7 @@
                                                         </c:choose>
                                                     </td>  </tr>
                                                     <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                              <input type="hidden" name="manname" value="${manname}">
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                 <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                             </table>

@@ -10,12 +10,14 @@ import com.ts.log.Model.SeverityCaseModel;
 import com.ts.log.tableClasses.SeverityCase;
 import com.ts.log.tableClasses.SeverityLevel;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -50,6 +52,18 @@ public class SeverityCaseController extends HttpServlet {
         if (task == null) {
             task = "";
         }
+        
+               String searchstate=request.getParameter("searchstate");
+               String searchcase=request.getParameter("searchcase");
+         
+         
+        if (searchstate == null) {
+            searchstate = "";
+        }
+        if (searchcase == null) {
+            searchcase = "";
+        }
+         
         try {
             //----- This is only for Vendor key Person JQuery
             String jqstring = request.getParameter("action1");
@@ -61,6 +75,12 @@ public class SeverityCaseController extends HttpServlet {
                 if (jqstring.equals("getLevel")) {
                     list = severityCaseModel.getLevel(q);
                 } 
+                 if (jqstring.equals("getState")) {
+                   list = severityCaseModel.getState();
+                }
+                 if (jqstring.equals("getCase")) {
+                   list = severityCaseModel.getCase();
+                }
                 Iterator<String> iter = list.iterator();
                 while (iter.hasNext()) {
                     String data = iter.next();
@@ -71,7 +91,62 @@ public class SeverityCaseController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("\n Error --SiteListController get JQuery Parameters Part-" + e);
         }
-        
+         if (task.equals("SearchAllRecords")) {
+         searchstate="";
+        searchcase="";
+        }
+         
+           String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+                String searchstate1=request.getParameter("searchstate");
+               
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                String searchcase1=request.getParameter("searchcase");
+               
+                if(searchcase1==null){
+                    searchcase1="";
+                 }
+                 
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=severityCaseModel.showDataReport(searchstate1,searchcase1);
+                jrxmlFilePath = ctx.getRealPath("/Report/seviritycase.jrxml");
+                byte[] reportInbytes = severityCaseModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+               String searchstate1=request.getParameter("searchstate");
+               String searchcase1=request.getParameter("searchcase");
+               
+                if(searchcase1==null){
+                    searchcase1="";
+                 }
+                 
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=city.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/seviritycase.jrxml");
+                listAll=severityCaseModel.showDataReport(searchstate1,searchcase1);
+                ByteArrayOutputStream reportInbytes = severityCaseModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
         if (task.equals("Save") || task.equals("Save AS New")) {
             SeverityCase severityCase = new SeverityCase();
             String severity_level = request.getParameter("severity_number");
@@ -109,7 +184,7 @@ public class SeverityCaseController extends HttpServlet {
         }
         
         
-        noOfRowsInTable = severityCaseModel.getNoOfRows(); // get the number of records (rows) in the table.
+        noOfRowsInTable = severityCaseModel.getNoOfRows(searchstate,searchcase); // get the number of records (rows) in the table.
 
         try {
             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
@@ -121,8 +196,16 @@ public class SeverityCaseController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        if (buttonAction.equals("Next")){
+            
+            searchstate= request.getParameter("manname");
+     noOfRowsInTable = severityCaseModel.getNoOfRows(searchstate,searchcase); // get the number of records (rows) in the table.
+
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+             searchstate= request.getParameter("manname");
+    noOfRowsInTable = severityCaseModel.getNoOfRows(searchstate,searchcase); // get the number of records (rows) in the table.
+
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -131,8 +214,13 @@ public class SeverityCaseController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+             searchstate= request.getParameter("manname");
+    // noOfRowsInTable = severityLevelModel.getNoOfRows(searchstate);
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+             searchstate= request.getParameter("manname");
+     noOfRowsInTable = severityCaseModel.getNoOfRows(searchstate,searchcase); // get the number of records (rows) in the table.
+
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -142,7 +230,7 @@ public class SeverityCaseController extends HttpServlet {
         if (task.equals("Save") || task.equals("Delete") || task.equals("Save AS New")) {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
-        List<SeverityCase> list1 = severityCaseModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<SeverityCase> list1 = severityCaseModel.showData(lowerLimit, noOfRowsToDisplay,searchstate,searchcase);
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
 
@@ -154,6 +242,10 @@ public class SeverityCaseController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+         request.setAttribute("manname", searchstate);
+         request.setAttribute("pname", searchcase);
+        request.setAttribute("searchstate", searchstate);
+        request.setAttribute("searchcase", searchcase);
         request.setAttribute("severity_case", list1);
         request.setAttribute("message", severityCaseModel.getMessage());
         request.setAttribute("msgBgColor", severityCaseModel.getMsgBgColor());

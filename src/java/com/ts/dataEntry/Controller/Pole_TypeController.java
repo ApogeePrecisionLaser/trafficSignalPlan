@@ -149,8 +149,13 @@ public class Pole_TypeController extends HttpServlet {
             buttonAction = "none";
         }
         noOfRowsInTable = pole_typeModel.getNoOfRows(searchstate);                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        if (buttonAction.equals("Next")){
+            searchstate= request.getParameter("manname");
+    noOfRowsInTable = pole_typeModel.getNoOfRows(searchstate);   
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+             searchstate= request.getParameter("manname");
+    noOfRowsInTable = pole_typeModel.getNoOfRows(searchstate);  
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -159,8 +164,12 @@ public class Pole_TypeController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+             searchstate= request.getParameter("manname");
+    //noOfRowsInTable = pole_typeModel.getNoOfRows(searchstate);  
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+             searchstate= request.getParameter("manname");
+    noOfRowsInTable = pole_typeModel.getNoOfRows(searchstate);  
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;

@@ -5,9 +5,11 @@
  */
 package com.ts.log.Model;
 
+import com.ts.dataEntry.tableClasses.Pole_Type;
 import com.ts.junction.Model.JunctionModel;
 import com.ts.log.tableClasses.SeverityCase;
 import com.ts.log.tableClasses.SeverityLevel;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -17,6 +19,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -35,12 +45,14 @@ public class SeverityCaseModel {
     private final String COLOR_ERROR = "red";
     String image_uploaded_for_column = null, uploaded_table = null, destination_path;
     
-    public List<SeverityCase> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<SeverityCase> showData(int lowerLimit, int noOfRowsToDisplay,String searchitem,String searchcase) {
         List<SeverityCase> list = new ArrayList<SeverityCase>();
         try {
             String query = "SELECT s.severity_case_id, s.severity_level_id, s.severity_case, l.severity_number,s.remark,s.revision_no,s.send_data,s.recieved_data"
                     + " from severity_level AS l join severity_case As s on s.severity_level_id = l.severity_level_id"
-                    + " WHERE s.active='Y' "
+                    + " WHERE s.active='Y' and "
+                    + " IF('" + searchitem + "' = '',l.severity_number LIKE '%%',  l.severity_number ='"+searchitem+"') and "
+                      + " IF('" + searchcase + "' = '',s.severity_case LIKE '%%',  s.severity_case ='"+searchcase+"') "
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
             
             System.out.println(lowerLimit + "," + noOfRowsToDisplay);
@@ -64,10 +76,15 @@ public class SeverityCaseModel {
         return list;
     }
     
-    public int getNoOfRows() {
+    public int getNoOfRows(String searchitem,String searchcase ) {
         int noOfRows = 0;
+         String query = "SELECT count(*) "
+                    + " from severity_level AS l join severity_case As s on s.severity_level_id = l.severity_level_id"
+                    + " WHERE s.active='Y' and "
+                    + " IF('" + searchitem + "' = '',l.severity_number LIKE '%%',  l.severity_number ='"+searchitem+"') and "
+                  + " IF('" + searchcase + "' = '',s.severity_case LIKE '%%',  s.severity_case ='"+searchcase+"') ";
         try {
-            ResultSet rset = connection.prepareStatement("select count(*) from severity_case WHERE active= 'Y'").executeQuery();
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
             System.out.println(noOfRows);
@@ -76,7 +93,93 @@ public class SeverityCaseModel {
         }
         return noOfRows;
     }
-    
+     public List<String> getState() {
+        String query = "SELECT severity_number from severity_level WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("severity_number"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+       
+     public List<String> getCase() {
+        String query = "SELECT severity_case from severity_case WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("severity_case"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+       
+     public List<SeverityCase> showDataReport(String searchitem,String searchcase) {
+        List<SeverityCase> list = new ArrayList<SeverityCase>();
+        try {
+            String query = "SELECT s.severity_case_id, s.severity_level_id, s.severity_case, l.severity_number,s.remark,s.revision_no,s.send_data,s.recieved_data"
+                    + " from severity_level AS l join severity_case As s on s.severity_level_id = l.severity_level_id"
+                    + " WHERE s.active='Y' and "
+                    + " IF('" + searchitem + "' = '',l.severity_number LIKE '%%',  l.severity_number ='"+searchitem+"') and "
+                   + " IF('" + searchcase + "' = '',s.severity_case LIKE '%%',  s.severity_case ='"+searchcase+"') "; 
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                SeverityCase severity = new SeverityCase();
+                severity.setSeverity_level_id(rset.getInt("severity_level_id"));
+                severity.setSeverity_case_id(rset.getInt("severity_case_id"));
+                severity.setSeverity_level(rset.getInt("severity_number"));
+                severity.setSeverity_case(rset.getString("severity_case"));
+                severity.setRevision_no(rset.getInt("revision_no"));
+                severity.setRemark(rset.getString("remark"));
+                severity.setSent_data(rset.getString("send_data"));
+                severity.setReceived_data(rset.getString("recieved_data"));
+                list.add(severity);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:SeverityLevelModel-showData--- " + e);
+        }
+        return list;
+    }
+        public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
+        try {
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
     public List<String> getLevel(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;

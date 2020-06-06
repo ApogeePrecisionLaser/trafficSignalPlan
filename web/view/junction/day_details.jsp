@@ -14,14 +14,12 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>Data Entry: District Table</title>
-        <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
-        <link href="style/style.css" type="text/css" rel="stylesheet" media="Screen"/>
+          <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
         <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
-
-        <link type="text/css" href="style/menu.css" rel="stylesheet"/>
         <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
         <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
         <script type="text/javascript" language="javascript">
+
             jQuery(function () {
                 $("#junction_name").autocomplete("dayDetailsCont", {
                     extraParams: {
@@ -143,6 +141,44 @@
                 }
                 return result;
             }
+            
+             function displayMapList(id) {
+                var queryString;
+            var searchstate=document.getElementById("searchstate").value;
+            var searchday=document.getElementById("searchday").value;
+          
+                if (id === 'viewPdf')
+                    queryString = "requester=PRINT"+"&searchstate=" + searchstate + "&searchday="+searchday;
+                else
+                  queryString = "requester=PRINT"+"&searchstate=" + searchstate + "&searchday="+searchday;
+                var url = "dayDetailsCont?" + queryString;
+                popupwin = openPopUp(url, "PoleTypeCont", 600, 900);
+            }  
+            
+             function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
+            }
+               jQuery(function () {
+            $("#searchstate").autocomplete("dayDetailsCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getState";
+                        }
+                    }
+                });
+                });
+                  jQuery(function () {
+            $("#searchday").autocomplete("dayDetailsCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getDay";
+                        }
+                    }
+                });
+                });
         </script>
     </head>
     <body>
@@ -162,7 +198,27 @@
                                         </tr>
                                     </table>
                                 </td> </tr>
-
+<tr><td>
+                                    <form action="dayDetailsCont" method="post" class="form-group container-fluid">
+                   
+                                        <table align="center" border="1px">
+                                        <tr >
+                                             <td>
+                                            Junction<input type="text" name="searchstate" id="searchstate" value="${searchstate}">
+                                            </td>
+                                             <td>
+                                              Day<input type="text" name="searchday" id="searchday" value="${searchday}">
+                                            </td>
+                                            
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td align="center">
                                     <form name="form1" method="POST" action="dayDetailsCont">
@@ -228,7 +284,8 @@
                                                         </c:choose>
                                                     </td> </tr>
                                                     <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
-
+                                                    <input type="hidden" name="manname" value="${manname}">
+                                                    <input type="hidden" name="pname" value="${manname}">
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                 <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                             </table>

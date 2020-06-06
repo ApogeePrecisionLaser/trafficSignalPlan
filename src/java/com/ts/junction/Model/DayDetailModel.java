@@ -5,8 +5,10 @@
  */
 package com.ts.junction.Model;
 
+import com.ts.dataEntry.tableClasses.Pole_Type;
 import com.ts.junction.tableClasses.DayDetail;
 import com.ts.junction.tableClasses.JunctionPlanMap;
+import java.io.ByteArrayOutputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -14,6 +16,14 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.JasperRunManager;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
+import net.sf.jasperreports.engine.export.JRXlsExporter;
 
 /**
  *
@@ -32,10 +42,14 @@ public class DayDetailModel {
     private final String COLOR_ERROR = "red";
     String image_uploaded_for_column = null, uploaded_table = null, destination_path;
 
-    public int getNoOfRows() {
+    public int getNoOfRows(String searchitem,String searchday) {
         int noOfRows = 0;
+         String query = "SELECT count(*) "
+                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y'and "
+             + " IF('" + searchitem + "' = '',j.junction_name LIKE '%%',  j.junction_name ='"+searchitem+"') and "
+                   + " IF('" + searchday + "' = '',d.day LIKE '%%',  d.day ='"+searchday+"') ";
         try {
-            ResultSet rset = connection.prepareStatement("select count(*) from day_detail ").executeQuery();
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
         } catch (Exception e) {
@@ -43,7 +57,89 @@ public class DayDetailModel {
         }
         return noOfRows;
     }
+ public List<String> getState() {
+        String query = "SELECT junction_name from junction WHERE final_revision = 'VALID' ";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("junction_name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+ public List<String> getDay() {
+        String query = "SELECT day from day_detail WHERE active = 'Y' ";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("day"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+       public List<DayDetail> showDataReport(String searchitem,String searchday) {
+        List<DayDetail> list = new ArrayList<DayDetail>();
+        // Use DESC or ASC for descending or ascending order respectively of fetched data.
+        String query = "SELECT d.day_detail_id,d.day_name,d.day,j.remark,j.junction_name "
+                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y'and "
+             + " IF('" + searchitem + "' = '',j.junction_name LIKE '%%',  j.junction_name ='"+searchitem+"') and "
+                  + " IF('" + searchday + "' = '',d.day LIKE '%%',  d.day ='"+searchday+"') "
+           ;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                DayDetail dateDetail = new DayDetail();
+                dateDetail.setDay_detail_id(rset.getInt("day_detail_id"));
 
+                dateDetail.setDay_name(rset.getString("day_name"));
+                dateDetail.setDay(rset.getString("day"));
+                dateDetail.setJunction_name(rset.getString("junction_name"));
+                dateDetail.setRemark(rset.getString("remark"));
+                list.add(dateDetail);
+            }
+        } catch (Exception e) {
+            System.out.println("DayDetailModel showData() Error: " + e);
+        }
+        return list;
+    }
+        public  ByteArrayOutputStream generateOrginisationXlsRecordList(String jrxmlFilePath,List list) {
+                ByteArrayOutputStream bytArray = new ByteArrayOutputStream();
+              //  HashMap mymap = new HashMap();
+                try {
+                    JRBeanCollectionDataSource jrBean=new JRBeanCollectionDataSource(list);
+                    JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+                    JasperPrint jasperPrint = JasperFillManager.fillReport(compiledReport, null, jrBean);
+                    JRXlsExporter exporter = new JRXlsExporter();
+                    exporter.setParameter(JRExporterParameter.JASPER_PRINT, jasperPrint);
+                    exporter.setParameter(JRExporterParameter.OUTPUT_STREAM, bytArray);
+                    exporter.exportReport();
+                } catch (Exception e) {
+                    System.out.println("OrginisationTypeStatusModel generateOrgnisitionXlsRecordList() JRException: " + e);
+                }
+                return bytArray;
+            }
+     public byte[] generateSiteList(String jrxmlFilePath,List listAll) {
+        byte[] reportInbytes = null;        
+        try {
+
+            JRBeanCollectionDataSource beanColDataSource = new JRBeanCollectionDataSource(listAll);
+            JasperReport compiledReport = JasperCompileManager.compileReport(jrxmlFilePath);
+            reportInbytes = JasperRunManager.runReportToPdf(compiledReport, null , beanColDataSource );
+        } catch (Exception e) {
+            System.out.println("Error: in  generateMapReport() JRException: " + e);
+        }
+        return reportInbytes;
+    }
     public int getJunctionID(String junction_name) {
         int junction_id = 0;
         String query = "SELECT junction_id "
@@ -62,11 +158,13 @@ public class DayDetailModel {
         return junction_id;
     }
 
-    public List<DayDetail> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<DayDetail> showData(int lowerLimit, int noOfRowsToDisplay,String searchitem,String searchday) {
         List<DayDetail> list = new ArrayList<DayDetail>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT d.day_detail_id,d.day_name,d.day,d.remark,j.junction_name "
-                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y' "
+        String query = "SELECT d.day_detail_id,d.day_name,d.day,j.remark,j.junction_name "
+                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y'and "
+             + " IF('" + searchitem + "' = '',j.junction_name LIKE '%%',  j.junction_name ='"+searchitem+"') and "
+                + " IF('" + searchday + "' = '',d.day LIKE '%%',  d.day ='"+searchday+"') "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
@@ -113,15 +211,15 @@ public class DayDetailModel {
     }
 
     public int insertRecord(DayDetail dayDetail) {
-        String query = "INSERT INTO day_detail(day_name, day, junction_id, remark) "
-                + "VALUES(?, ?, ?, ?) ";
+        String query = "INSERT INTO day_detail(day_name, day, junction_id) "
+                + "VALUES(?, ?, ?) ";
         int rowsAffected = 0;
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, dayDetail.getDay_name());
             pstmt.setString(2, dayDetail.getDay());
             pstmt.setInt(3, dayDetail.getJunction_id());
-            pstmt.setString(4, dayDetail.getRemark());
+           
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
             System.out.println("DayDEtailModel insertRecord() Error: " + e);
@@ -175,8 +273,8 @@ public class DayDetailModel {
 
                 int revision_no = getRevisionNo(dayDetail.getDay_detail_id()) + 1;
 
-                insert_query = "INSERT into day_detail(day_detail_id,day_name, day, junction_id, remark,revision_no ) "
-                        + " VALUES(?, ?, ?, ?, ?, ?) ";
+                insert_query = "INSERT into day_detail(day_detail_id,day_name, day, junction_id,revision_no ) "
+                        + " VALUES(?, ?, ?, ?, ?) ";
                 try {
                     connection.setAutoCommit(false);
 
@@ -185,8 +283,8 @@ public class DayDetailModel {
                    pstmt.setString(2, dayDetail.getDay_name());
                     pstmt.setString(3, dayDetail.getDay());
                     pstmt.setInt(4, dayDetail.getJunction_id());
-                    pstmt.setString(5, dayDetail.getRemark());
-                    pstmt.setInt(6, revision_no);
+                     
+                    pstmt.setInt(5, revision_no);
                     rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
                         // Finally commit the connection.

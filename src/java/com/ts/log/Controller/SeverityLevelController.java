@@ -11,6 +11,7 @@ import com.ts.log.tableClasses.SeverityLevel;
 import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -48,7 +49,36 @@ public class SeverityLevelController extends HttpServlet {
         if (task == null) {
             task = "";
         }
+               String searchstate=request.getParameter("searchstate");
+         
+        if (searchstate == null) {
+            searchstate = "";
+        }
+         
+       
         
+         String JQstring = request.getParameter("action1");
+         
+          if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+            List<String> list = null;
+        if (JQstring.equals("getState")) {
+                   list = severityLevelModel.getState();
+                }
+         
+         Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                return;
+          }
+         if (task.equals("SearchAllRecords")) {
+         searchstate="";
+        
+        }
+         
         if (task.equals("Save") || task.equals("Save AS New")) {
             SeverityLevel severityLevel = new SeverityLevel();
             String severity_level = request.getParameter("severity_number");
@@ -79,7 +109,7 @@ public class SeverityLevelController extends HttpServlet {
         }
         
         
-        noOfRowsInTable = severityLevelModel.getNoOfRows(); // get the number of records (rows) in the table.
+        noOfRowsInTable = severityLevelModel.getNoOfRows(searchstate); // get the number of records (rows) in the table.
 
         try {
             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
@@ -91,8 +121,13 @@ public class SeverityLevelController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        if (buttonAction.equals("Next")){
+            searchstate= request.getParameter("manname");
+     noOfRowsInTable = severityLevelModel.getNoOfRows(searchstate);
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+            searchstate= request.getParameter("manname");
+     noOfRowsInTable = severityLevelModel.getNoOfRows(searchstate);
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -101,8 +136,12 @@ public class SeverityLevelController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+            searchstate= request.getParameter("manname");
+      
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+            searchstate= request.getParameter("manname");
+     noOfRowsInTable = severityLevelModel.getNoOfRows(searchstate);
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -112,7 +151,7 @@ public class SeverityLevelController extends HttpServlet {
         if (task.equals("Save") || task.equals("Delete") || task.equals("Save AS New")) {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
-        List<SeverityLevel> list1 = severityLevelModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<SeverityLevel> list1 = severityLevelModel.showData(lowerLimit, noOfRowsToDisplay,searchstate);
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
 
@@ -124,6 +163,9 @@ public class SeverityLevelController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+         request.setAttribute("manname", searchstate);
+         
+        request.setAttribute("searchstate", searchstate);
         request.setAttribute("severity_level", list1);
         request.setAttribute("message", severityLevelModel.getMessage());
         request.setAttribute("msgBgColor", severityLevelModel.getMsgBgColor());

@@ -10,11 +10,14 @@ import com.ts.dataEntry.Model.StateModel;
 import com.ts.dataEntry.tableClasses.Position;
 import com.ts.dataEntry.tableClasses.State;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -40,6 +43,78 @@ public class PositionController extends HttpServlet {
         if (task == null) {
             task = "";
         }
+             String searchstate=request.getParameter("searchstate");
+         
+        if (searchstate == null) {
+            searchstate = "";
+        }
+         
+       
+        
+         String JQstring = request.getParameter("action1");
+         
+          if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+            List<String> list = null;
+        if (JQstring.equals("getState")) {
+                   list = positionModel.getState();
+                }
+         
+         Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                return;
+          }
+         if (task.equals("SearchAllRecords")) {
+         searchstate="";
+        
+        }
+         
+         
+            String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+                String searchstate1=request.getParameter("searchstate");
+               
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                 
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=positionModel.showDataReport(searchstate1);
+                jrxmlFilePath = ctx.getRealPath("/Report/position.jrxml");
+                byte[] reportInbytes = positionModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+               String searchstate1=request.getParameter("searchstate");
+               
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=city.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/position.jrxml");
+                listAll=positionModel.showDataReport(searchstate1);
+                ByteArrayOutputStream reportInbytes = positionModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
         if (task.equals("Delete")) {
             positionModel.deleteRecord(Integer.parseInt(request.getParameter("position_id")));  // Pretty sure that state_id will be available.
         } else if (task.equals("Save")) {
@@ -72,9 +147,14 @@ public class PositionController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = positionModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        noOfRowsInTable = positionModel.getNoOfRows(searchstate);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchstate= request.getParameter("manname");
+      noOfRowsInTable = positionModel.getNoOfRows(searchstate);  
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+               searchstate= request.getParameter("manname");
+      noOfRowsInTable = positionModel.getNoOfRows(searchstate);  
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -83,8 +163,12 @@ public class PositionController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+               searchstate= request.getParameter("manname");
+    //  noOfRowsInTable = positionModel.getNoOfRows(searchstate);  
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+               searchstate= request.getParameter("manname");
+      noOfRowsInTable = positionModel.getNoOfRows(searchstate);  
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -95,7 +179,7 @@ public class PositionController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<Position> positionList = positionModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Position> positionList = positionModel.showData(lowerLimit, noOfRowsToDisplay,searchstate);
         lowerLimit = lowerLimit + positionList.size();
         noOfRowsTraversed = positionList.size();
 
@@ -112,6 +196,8 @@ public class PositionController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+        request.setAttribute("manname", searchstate);
+        request.setAttribute("searchstate", searchstate);
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("message", positionModel.getMessage());
         request.setAttribute("msgBgColor", positionModel.getMsgBgColor());

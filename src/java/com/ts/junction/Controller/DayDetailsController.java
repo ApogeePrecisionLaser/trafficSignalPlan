@@ -8,12 +8,14 @@ package com.ts.junction.Controller;
 import com.ts.junction.Model.DayDetailModel;
 import com.ts.junction.tableClasses.DayDetail;
 import com.ts.util.xyz;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +45,17 @@ public class DayDetailsController extends HttpServlet {
         if (task == null) {
             task = "";
         }
+        
+          String searchstate=request.getParameter("searchstate");
+          String searchday=request.getParameter("searchday");
+         
+        if (searchstate == null) {
+            searchstate = "";
+        }
+        if (searchday == null) {
+            searchday = "";
+        }
+         
   try {
             String JQstring = request.getParameter("action1");
             String q = request.getParameter("q");
@@ -53,7 +66,12 @@ public class DayDetailsController extends HttpServlet {
                 if(JQstring.equals("getJunctionName")) {
                     list = dayDetailModel.getSearchJunctionName(q);
                 }
-              
+               if (JQstring.equals("getState")) {
+                   list = dayDetailModel.getState();
+                }
+               if (JQstring.equals("getDay")) {
+                   list = dayDetailModel.getDay();
+                }
 
 
                 Iterator<String> iter = list.iterator();
@@ -67,6 +85,62 @@ public class DayDetailsController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("\n Error --ClientPersonMapController get JQuery Parameters Part-" + e);
         }
+  
+   if (task.equals("SearchAllRecords")) {
+         searchstate="";
+           searchday = "";
+        }
+         
+         
+            String requester = request.getParameter("requester");
+           if (requester != null && requester.equals("PRINT")) {
+                 List listAll = null;
+                String searchstate1=request.getParameter("searchstate");
+                String searchday1=request.getParameter("searchday");
+               
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                if(searchday1==null){
+                    searchday1="";
+                 }
+                 
+                String jrxmlFilePath;
+                response.setContentType("application/pdf");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+               listAll=dayDetailModel.showDataReport(searchstate1,searchday1);
+                jrxmlFilePath = ctx.getRealPath("/Report/day.jrxml");
+                byte[] reportInbytes = dayDetailModel.generateSiteList(jrxmlFilePath,listAll);
+                response.setContentLength(reportInbytes.length);
+                servletOutputStream.write(reportInbytes, 0, reportInbytes.length);
+                servletOutputStream.flush();
+                servletOutputStream.close();
+               
+                return;
+            } else if (requester != null && requester.equals("PRINTXls")) {
+                String jrxmlFilePath;
+                List listAll = null;
+                String searchstate1=request.getParameter("searchstate");
+                String searchday1=request.getParameter("searchday");
+               
+                if(searchstate1==null){
+                    searchstate1="";
+                 }
+                if(searchday1==null){
+                    searchday1="";
+                 }
+                response.setContentType("application/vnd.ms-excel");
+                response.addHeader("Content-Disposition", "attachment; filename=city.xls");
+                ServletOutputStream servletOutputStream = response.getOutputStream();
+                jrxmlFilePath = ctx.getRealPath("Report/day.jrxml");
+                listAll=dayDetailModel.showDataReport(searchstate1,searchday1);
+                ByteArrayOutputStream reportInbytes = dayDetailModel.generateOrginisationXlsRecordList(jrxmlFilePath, listAll);
+                response.setContentLength(reportInbytes.size());
+                servletOutputStream.write(reportInbytes.toByteArray());
+                servletOutputStream.flush();
+                servletOutputStream.close();
+                return;
+            }
         if (task.equals("Delete")) {
             // Pretty sure that id will be available.
             try{
@@ -117,9 +191,16 @@ public class DayDetailsController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = dayDetailModel.getNoOfRows();                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        noOfRowsInTable = dayDetailModel.getNoOfRows(searchstate,searchday);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchstate= request.getParameter("manname");
+               searchday= request.getParameter("pname");
+     noOfRowsInTable = dayDetailModel.getNoOfRows(searchstate,searchday);           
+        }  // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+             searchstate= request.getParameter("manname");
+                searchday= request.getParameter("pname");
+     noOfRowsInTable = dayDetailModel.getNoOfRows(searchstate,searchday);       
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -128,8 +209,14 @@ public class DayDetailsController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+             searchstate= request.getParameter("manname");
+             searchday= request.getParameter("pname");
+    //noOfRowsInTable = dayDetailModel.getNoOfRows(searchstate); 
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+             searchstate= request.getParameter("manname");
+                searchday= request.getParameter("pname");
+     noOfRowsInTable = dayDetailModel.getNoOfRows(searchstate,searchday);       
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -140,7 +227,7 @@ public class DayDetailsController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
         // Logic to show data in the table.
-        List<DayDetail> dayDetailList = dayDetailModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<DayDetail> dayDetailList = dayDetailModel.showData(lowerLimit, noOfRowsToDisplay,searchstate,searchday);
         lowerLimit = lowerLimit + dayDetailList.size();
         noOfRowsTraversed = dayDetailList.size();
 
@@ -157,6 +244,11 @@ public class DayDetailsController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+                request.setAttribute("searchstate", searchstate);
+                request.setAttribute("searchday", searchday);
+                request.setAttribute("manname", searchstate);
+                request.setAttribute("pname", searchday);
+              
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("message", dayDetailModel.getMessage());
         request.setAttribute("msgBgColor", dayDetailModel.getMsgBgColor());

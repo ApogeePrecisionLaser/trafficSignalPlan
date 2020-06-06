@@ -33,14 +33,15 @@ public class SeverityLevelModel {
     private final String COLOR_ERROR = "red";
     String image_uploaded_for_column = null, uploaded_table = null, destination_path;
     
-    public List<SeverityLevel> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<SeverityLevel> showData(int lowerLimit, int noOfRowsToDisplay,String searchitem) {
         List<SeverityLevel> list = new ArrayList<SeverityLevel>();
         try {
             String query = "SELECT severity_level_id, severity_number,remark,revision_no"
                     + " from severity_level AS s"
-                    + " WHERE s.active='Y' "
+                    + " WHERE s.active='Y' and "
+                       + " IF('" + searchitem + "' = '',severity_number LIKE '%%',  severity_number ='"+searchitem+"') "
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-            System.out.println(lowerLimit + "," + noOfRowsToDisplay);
+            
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 SeverityLevel severity = new SeverityLevel();
@@ -56,11 +57,29 @@ public class SeverityLevelModel {
         }
         return list;
     }
-    
-    public int getNoOfRows() {
-        int noOfRows = 0;
+     public List<String> getState() {
+        String query = "SELECT severity_number from severity_level WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
         try {
-            ResultSet rset = connection.prepareStatement("select count(*) from severity_level WHERE active= 'Y'").executeQuery();
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("severity_number"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+    public int getNoOfRows(String searchitem ) {
+        int noOfRows = 0;
+          String query = "SELECT count(*) "
+                    + " from severity_level AS s"
+                    + " WHERE s.active='Y' and "
+                       + " IF('" + searchitem + "' = '',severity_number LIKE '%%',  severity_number ='"+searchitem+"') ";
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
             rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
             System.out.println(noOfRows);
