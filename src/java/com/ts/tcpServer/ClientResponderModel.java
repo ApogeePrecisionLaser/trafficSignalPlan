@@ -1455,6 +1455,24 @@ SeverityCase si=new SeverityCase();
         }
         return result;
     }
+    
+     public boolean isValidJunction11(int junctionID) {
+        boolean result = false;
+        String queryJunctionID = " SELECT count(*) AS c FROM junction WHERE junction_id = ? AND final_revision='VALID'";
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(queryJunctionID);
+            pstmt.setInt(1, junctionID);
+           // pstmt.setInt(2, program_version_no);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                result = rset.getInt("c") > 0 ? true : false;
+            }
+//            connection.close();
+        } catch (Exception e) {
+            System.out.println("ClientResponderModel: isValidJunction() Error" + e);
+        }
+        return result;
+    }
 
     public String getPlanOnTime(int junction_id, int program_version_no, int plan_id) {
         String onTime = "";

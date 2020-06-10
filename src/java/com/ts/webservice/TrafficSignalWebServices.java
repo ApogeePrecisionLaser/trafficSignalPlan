@@ -46,6 +46,7 @@ public class TrafficSignalWebServices {
     public static String arr2;
     //public static String start_stop="start";
     public static String mapData = null;
+    public static String mapDatanew = null;
     public static int flag = 0;
     Map<Integer, Junction> junctionList;
     @Context
@@ -58,7 +59,7 @@ public class TrafficSignalWebServices {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public byte[] insertTrafficSignalData(@Context HttpServletRequest requestContext, byte[] receivedBytes) {
         byte[] response = null;
-        byte[] responseBytes = {120};
+          byte[] responseBytes = {120};
         LoginController lc = new  LoginController(); 
         String start_stop_web = lc.start_stop1;
         if(start_stop_web.equalsIgnoreCase("start")){                 
@@ -143,7 +144,7 @@ public class TrafficSignalWebServices {
         String RequestMode = inputJsonObj.get("mode") == null ? "" : inputJsonObj.get("mode").toString();
         String deviceid = inputJsonObj.get("deviceid") == null ? "" : inputJsonObj.get("deviceid").toString();
         String active = inputJsonObj.get("active") == null ? "" : inputJsonObj.get("active").toString();
-            String login_time = inputJsonObj.get("login_time") == null ? "" : inputJsonObj.get("login_time").toString();
+        String login_time = inputJsonObj.get("login_time") == null ? "" : inputJsonObj.get("login_time").toString();
         String logout_time = inputJsonObj.get("logout_time") == null ? "" : inputJsonObj.get("logout_time").toString();
         JSONObject obj = new JSONObject();
         TrafficSignalWebServiceModel tsModel = new TrafficSignalWebServiceModel();
@@ -505,6 +506,17 @@ public class TrafficSignalWebServices {
     System.out.println("hello Robin Singh"+receivedBytes);
             TrafficSignalWebServices.flag = 1;
             TrafficSignalWebServices.mapData = receivedBytes;
+       
+    }
+    
+      @POST
+    @Path("/mapdataview")
+    @Produces(MediaType.APPLICATION_JSON)//http://192.168.1.15:8084/trafficSignals_new/api/service/hello
+    @Consumes(MediaType.APPLICATION_JSON)
+    public void mapdataView(String receivedBytes){
+    System.out.println("hello aaa Singh"+receivedBytes);
+            TrafficSignalWebServices.flag = 1;
+            TrafficSignalWebServices.mapDatanew = receivedBytes;
        
     }
 @POST

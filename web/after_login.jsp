@@ -79,6 +79,13 @@ document.getElementById("startWebService").style.display = "block";
 document.getElementById("startWebService").style.display = "none";
 document.getElementById("stopWebService").style.display = "block";
     }
+  
+     function viewJunctionCurrentStatus() {
+               
+                document.forms['form1'].action = "modemResReadSaveCont?task=viewFireCurrentStatus";
+                document.forms['form1'].submit();
+               
+            }
   function showButton(show_button){
       debugger;
       if(show_button==="start"){
@@ -98,14 +105,14 @@ document.getElementById("stopWebService").style.display = "block";
             <tr>
                 <td>
                     <DIV id="body" class="maindiv">
-                        <form  method="post" action="loginCont">
+                        <form  name="form1" method="post" action="loginCont">
                             <!--                        <input type="button" id="stopWebService" name="stopWebService" value="Stop WebService Response" onclick="web(id)">
                                                      <input type="button" id="startWebService" name="startWebService" value="Start WebService Response" onclick="web(id)">-->
 
                             <input type="submit" name="task" value="stopWebService" id="stopWebService" onclick="Openform(id)">
                             <input type="submit" style="display: none" name="task" value="startWebService" id="startWebService" onclick="Openform1(id)">
                             <input type="hidden" name="show_button" value="${show_button}">
-
+                            <input type="button" class="danger"  onclick="viewJunctionCurrentStatus();" value="ViewFireVehicleCurrentStatus"> 
                         </form>
                     </DIV>
                 </td>

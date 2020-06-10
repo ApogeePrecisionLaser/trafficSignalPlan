@@ -2194,18 +2194,18 @@ public class ClientResponderWS extends HttpServlet
                 if (dbside2primary_h_no > 0) {
                     side2Arr[0] = Integer.toBinaryString(primary_horizontal_for_side2);
                 } else {
-                    side2Arr[3] = "0";
+                    side2Arr[0] = "0";
                 }
                 if (dbside2Primary_v_aspect_no > 0) {
                     side2Arr[1] = Integer.toBinaryString(primary_Vertical_for_side2);
                 } else {
-                    side2Arr[3] = "0";
+                    side2Arr[1] = "0";
                 }
 
                 if (dbside4Secondary_h_aspect_no > 0) {
                     side2Arr[2] = Integer.toBinaryString(secondry_horizontal_for_side4);
                 } else {
-                    side2Arr[3] = "0";
+                    side2Arr[2] = "0";
                 }
                 if (dbside4Secondary_v_aspect_no > 0) {
                     side2Arr[3] = Integer.toBinaryString(secondry_verticalfor_side4);
