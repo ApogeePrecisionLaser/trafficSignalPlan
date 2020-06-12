@@ -1,5 +1,6 @@
- /*
- * To change this template, choose Tools | Templates
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package com.ts.junction.Model;
@@ -23,9 +24,9 @@ import javax.servlet.http.HttpServlet;
 
 /**
  *
- * @author Shruti
+ * @author DELL
  */
-public class JunctionModel extends HttpServlet {
+public class junctionupdatemodel extends HttpServlet {
 
     private Connection connection;
     private String driverClass;
@@ -247,7 +248,7 @@ public class JunctionModel extends HttpServlet {
         return state_name;
     }
 
-    public boolean insertRecord(Junction junction) {
+     public boolean insertjunctionRecord(Junction junction) {
         String junctionQuery = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                 + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
@@ -313,9 +314,9 @@ public class JunctionModel extends HttpServlet {
                 pstmt.setInt(4, 1);
                 pstmt.setString(5, i == 0 ? junction.getSide1_name()
                         : i == 1 ? junction.getSide2_name()
-                                : i == 2 ? junction.getSide3_name()
-                                        : i == 3 ? junction.getSide4_name()
-                                                : i == 4 ? junction.getSide5_name() : "");
+                        : i == 2 ? junction.getSide3_name()
+                        : i == 3 ? junction.getSide4_name()
+                        : i == 4 ? junction.getSide5_name() : "");
                 rowsAffected = pstmt.executeUpdate();
             }
             if (rowsAffected > 0) {
@@ -445,9 +446,9 @@ public class JunctionModel extends HttpServlet {
                                         pstmt.setInt(4, sideRevisionNo + 1);
                                         pstmt.setString(5, i == 0 ? junction.getSide1_name()
                                                 : i == 1 ? junction.getSide2_name()
-                                                        : i == 2 ? junction.getSide3_name()
-                                                                : i == 3 ? junction.getSide4_name()
-                                                                        : i == 4 ? junction.getSide5_name() : "");
+                                                : i == 2 ? junction.getSide3_name()
+                                                : i == 3 ? junction.getSide4_name()
+                                                : i == 4 ? junction.getSide5_name() : "");
                                         rowsAffected = pstmt.executeUpdate();
                                     }
                                 } else {
@@ -540,8 +541,7 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-
-    public List<JunctionPlanMap> showDataPlanMap(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected) {
+     public List<JunctionPlanMap> showDataPlanMap(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected) {
         List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
@@ -580,173 +580,54 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-
-    public int getTotalPlans(int jid, String filter,String Fromdate,String todate,String day,int junction_id_selected) {
-        int noOfRows = 0;
-         
-        String query = "";
-        if (filter.equalsIgnoreCase("date")) {
-            query = "SELECT  count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and dd.from_date='"+Fromdate+"' and dd.to_date='"+todate+"' group by dd.from_date;";
-        } else if (filter.equalsIgnoreCase("day")) {
-            query = "SELECT count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected+"'";
-
-        } else {
-            query = "SELECT count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '"+day+"' group by p.on_time_hour";
-
-        }
-        try {
-           
-          PreparedStatement pstmt1 = (PreparedStatement)connection.prepareStatement(query);
-           ResultSet rset1 = pstmt1.executeQuery();
-            while (rset1.next()) {
-                noOfRows = Integer.parseInt(rset1.getString(1));
-            }
-            System.out.println(noOfRows);
-        } catch (Exception e) {
-            System.out.println("JunctionModel getNoOfRows() Error: " + e);
-        }
-        return noOfRows;
-    }
-
-    public List<JunctionPlanMap> showDataPlanMapbyfilter(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected, String filter) {
-        List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
-        JunctionModel jm = new JunctionModel();
-        int totalplans = 0;
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
-            addQuery = "";
-        }
-        String query2 = "";
-        if (filter.equalsIgnoreCase("date")) {
-
-            query2 = "SELECT  distinct jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
-                    + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id "
-                    + "inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id "
-                    + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and j.junction_id = '" + junction_id_selected + "' group by dd.from_date "
-                    + addQuery;
-        } else if (filter.equalsIgnoreCase("day")) {
-            // totalplans=jm.getTotalPlans(junction_id_selected,filter);
-            query2 = "SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
-                    + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id "
-                    + "inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id "
-                    + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and day_id!='' and j.junction_id =" + junction_id_selected
-                    + addQuery;
-
-        } else {
-
-            // totalplans=jm.getTotalPlans(junction_id_selected,filter);
-            query2 = "SELECT distinct  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
-                    + " d.day, j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' "
-                    + "and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '" + junction_id_selected + "' group by p.on_time_hour"
-                    + addQuery;
-        }
-
-        try {
-            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
-            ResultSet rset = pstmt.executeQuery();
-            while (rset.next()) {
-                JunctionPlanMap bean = new JunctionPlanMap();
-                bean.setJunction_plan_map_id(rset.getInt("junction_plan_map_id"));
-                bean.setOrder_no(rset.getInt(2));
-                bean.setFrom_date(rset.getString("from_date"));
-                bean.setTo_date(rset.getString(4));
-                bean.setDay(rset.getString(5));
-                bean.setJunction_name(rset.getString(6));
-                bean.setOn_time_hr(rset.getInt(7));
-                bean.setOn_time_min(rset.getInt(8));
-                bean.setOff_time_hr(rset.getInt(9));
-                bean.setOff_time_min(rset.getInt(10));
-            
-                String fromdate="";
-                String todate="";
-                String day="";
-                
-                
-                
-               //fromdate= bean.getFrom_date().toString();
-                
-                
-             //  todate= bean.getTo_date().toString();
-               
-                
-                
-                
-                if (filter.equalsIgnoreCase("date")) {
-                     fromdate= bean.getFrom_date().toString();
-                      todate= bean.getTo_date().toString();
-                    totalplans = getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
-                } else if (filter.equalsIgnoreCase("day")) {
-                    day=bean.getDay().toString();
-                    totalplans = getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
-                }else{
-                 totalplans =getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
-                }
-                 bean.setPlan_no(totalplans);
-                 bean.setPlan_id(rset.getInt(11));
-                bean.setJunction_id(rset.getInt(12));
-                
-                list.add(bean);
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-        return list;
-    }
-
-    public String getPlans(int junction_id_selected1) {
+       public String getPlans(int junction_id_selected1) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
         String query = "SELECT plan_id "
-                + " FROM junction_plan_map where active='Y' and junction_id=" + junction_id_selected1
+                + " FROM junction_plan_map where active='Y' and junction_id="+junction_id_selected1
                 + " ORDER BY order_no ";
         try {
             pstmt = connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-
+           
             while (rset.next()) {    // move cursor from BOR to valid record.
                 String plan_id = rset.getString("plan_id");
-
-                list.add(plan_id);
-
+              
+                    list.add(plan_id);
+                   
+                }
             }
-        } catch (Exception e) {
+           
+         catch (Exception e) {
             System.out.println("Error: " + e);
         }
-        String plansString = "";
-        String plansString1 = "";
-        for (int i = 0; i < list.size(); i++) {
-            plansString = list.get(i);
-            plansString1 = plansString1 + "," + plansString;
+        String plansString="";
+        String plansString1= "";
+        for(int i=0;i<list.size();i++)
+        {
+            plansString=list.get(i);
+            plansString1=plansString1+","+plansString;
         }
-        String plansString2 = plansString1.substring(1);
+        String plansString2=plansString1.substring(1);
         return plansString2;
-    }
-
-    public List<PlanDetails> showDataPlans(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, int plan_no) {
-
+       }
+     
+     
+ public List<PlanDetails> showDataPlans(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_no) {
+         
         List<PlanDetails> list = new ArrayList<PlanDetails>();
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
+         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+          if(lowerLimit == -1)
             addQuery = "";
-        }
+       
 
-        String query2 = "select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, "
-                + "off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, "
-                + "side4_green_time, side5_green_time, side1_amber_time, side2_amber_time, side3_amber_time, "
-                + "side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s,junction_plan_map pm"
-                + " where s.active='Y'"
-                + " and pm.junction_plan_map_id='" + junction_id_selected1 + "' ORDER BY plan_no"
-                + addQuery;
+       String query2="select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, "
+               + "off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, "
+               + "side4_green_time, side5_green_time, side1_amber_time, side2_amber_time, side3_amber_time, "
+               + "side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s,junction_plan_map pm"
+               + " where s.active='Y' and s.plan_no='"+plan_no+"' and pm.junction_plan_map_id='"+junction_id_selected1+"' ORDER BY plan_no"
+                     + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
@@ -778,314 +659,45 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-    
-    
-     public List<PlanDetails> showDataPlansdetails(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String fromdate,String todate) {
-List<String> list1 = new ArrayList<String>();
-        List<PlanDetails> list = new ArrayList<PlanDetails>();
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
-            addQuery = "";
-        }
-
-        String query2 = "SELECT p.plan_id "
-                + "FROM junction_plan_map jp "
-                + "left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
-                + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and "
-                + "jp.date_id!='' and dd.from_date='"+fromdate+"' and dd.to_date='"+todate+"' and jp.junction_id='"+junction_id_selected1+"'"
-                + addQuery;
-        try {
-            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
-            ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
-            while (rset.next()) {
-                String plan_id = rset.getString("plan_id");
-             
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_id);
-                    count++;
-                
-            }
-            
-            
-             joined = String.join(",", list1);
-            PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
-            while (rset1.next()) {
-                 PlanDetails bean = new PlanDetails();
-                bean.setPlan_id(rset1.getInt(1));
-                bean.setPlan_no(rset1.getInt(2));
-                bean.setOn_time_hour(rset1.getInt(3));
-                bean.setOn_time_min(rset1.getInt(4));
-                bean.setOff_time_hour(rset1.getInt(5));
-                bean.setOff_time_min(rset1.getInt(6));
-                bean.setMode(rset1.getString(7));
-                bean.setSide1_green_time(rset1.getInt(8));
-                bean.setSide2_green_time(rset1.getInt(9));
-                bean.setSide3_green_time(rset1.getInt(10));
-                bean.setSide4_green_time(rset1.getInt(11));
-                bean.setSide5_green_time(rset1.getInt(12));
-                bean.setSide1_amber_time(rset1.getInt(13));
-                bean.setSide2_amber_time(rset1.getInt(14));
-                bean.setSide3_amber_time(rset1.getInt(15));
-                bean.setSide4_amber_time(rset1.getInt(16));
-                bean.setSide5_amber_time(rset1.getInt(17));
-                bean.setTransferred_status(rset1.getString(18));
-                bean.setRemark(rset1.getString(19));
-                list.add(bean);
-             
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-        return list;
-    }
-    
-     
-        public List<PlanDetails> showDataPlansdetailsday(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String day) {
-        List<String> list1 = new ArrayList<String>();
-        List<PlanDetails> list = new ArrayList<PlanDetails>();
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
-            addQuery = "";
-        }
-
-        String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
-                + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
-                + "where j.final_revision = 'VALID' and jp.active='Y' "
-                + "and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected1+"'"
-                + addQuery;
-        try {
-            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
-            ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
-            while (rset.next()) {
-                String plan_id = rset.getString("plan_id");
-             
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_id);
-                    count++;
-                
-            }
-            
-            
-             joined = String.join(",", list1);
-            PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
-            while (rset1.next()) {
-                 PlanDetails bean = new PlanDetails();
-                bean.setPlan_id(rset1.getInt(1));
-                bean.setPlan_no(rset1.getInt(2));
-                bean.setOn_time_hour(rset1.getInt(3));
-                bean.setOn_time_min(rset1.getInt(4));
-                bean.setOff_time_hour(rset1.getInt(5));
-                bean.setOff_time_min(rset1.getInt(6));
-                bean.setMode(rset1.getString(7));
-                bean.setSide1_green_time(rset1.getInt(8));
-                bean.setSide2_green_time(rset1.getInt(9));
-                bean.setSide3_green_time(rset1.getInt(10));
-                bean.setSide4_green_time(rset1.getInt(11));
-                bean.setSide5_green_time(rset1.getInt(12));
-                bean.setSide1_amber_time(rset1.getInt(13));
-                bean.setSide2_amber_time(rset1.getInt(14));
-                bean.setSide3_amber_time(rset1.getInt(15));
-                bean.setSide4_amber_time(rset1.getInt(16));
-                bean.setSide5_amber_time(rset1.getInt(17));
-                bean.setTransferred_status(rset1.getString(18));
-                bean.setRemark(rset1.getString(19));
-                list.add(bean);
-             
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-        return list;
-    }
-    
-      public List<PlanDetails> showDataPlansdetailsnormal(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_id) {
-        List<String> list1 = new ArrayList<String>();
-        List<PlanDetails> list = new ArrayList<PlanDetails>();
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
-            addQuery = "";
-        }
-
-        String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
-                + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
-                + "where j.final_revision = 'VALID' and jp.active='Y' "
-                + "and p.active = 'Y' and jp.day_id is null and jp.date_id is null and jp.junction_id='"+junction_id_selected1+"' and p.plan_id='"+plan_id+"'"
-                + addQuery;
-        try {
-            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
-            ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
-            while (rset.next()) {
-                String plan_ids = rset.getString("plan_id");
-             
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_ids);
-                    count++;
-                
-            }
-            
-            
-             joined = String.join(",", list1);
-            PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
-            while (rset1.next()) {
-                 PlanDetails bean = new PlanDetails();
-                bean.setPlan_id(rset1.getInt(1));
-                bean.setPlan_no(rset1.getInt(2));
-                bean.setOn_time_hour(rset1.getInt(3));
-                bean.setOn_time_min(rset1.getInt(4));
-                bean.setOff_time_hour(rset1.getInt(5));
-                bean.setOff_time_min(rset1.getInt(6));
-                bean.setMode(rset1.getString(7));
-                bean.setSide1_green_time(rset1.getInt(8));
-                bean.setSide2_green_time(rset1.getInt(9));
-                bean.setSide3_green_time(rset1.getInt(10));
-                bean.setSide4_green_time(rset1.getInt(11));
-                bean.setSide5_green_time(rset1.getInt(12));
-                bean.setSide1_amber_time(rset1.getInt(13));
-                bean.setSide2_amber_time(rset1.getInt(14));
-                bean.setSide3_amber_time(rset1.getInt(15));
-                bean.setSide4_amber_time(rset1.getInt(16));
-                bean.setSide5_amber_time(rset1.getInt(17));
-                bean.setTransferred_status(rset1.getString(18));
-                bean.setRemark(rset1.getString(19));
-                list.add(bean);
-             
-            }
-        } catch (Exception e) {
-            System.out.println("Error: " + e);
-        }
-        return list;
-    }
-    
-    
-
-// public List<PlanDetails> showDataPlansbyfilter(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_no,String filter) {
-//         
-//        List<PlanDetails> list = new ArrayList<PlanDetails>();
-//         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-//          if(lowerLimit == -1)
-//            addQuery = "";
-//      String query2=""; 
-//if(filter.equalsIgnoreCase("date")){ 
-//     query2="select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, "
-//               + "off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, "
-//               + "side4_green_time, side5_green_time, side1_amber_time, side2_amber_time, side3_amber_time, "
-//               + "side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s,junction_plan_map pm"
-//               + " where s.active='Y'"
-//               + " and pm.junction_plan_map_id='"+junction_id_selected1+"' ORDER BY plan_no and "
-//                     + addQuery;
-//
-//}else if(filter.equalsIgnoreCase("day")){
-//    
-// query2="select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, "
-//               + "off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, "
-//               + "side4_green_time, side5_green_time, side1_amber_time, side2_amber_time, side3_amber_time, "
-//               + "side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s,junction_plan_map pm"
-//               + " where s.active='Y'"
-//               + " and pm.junction_plan_map_id='"+junction_id_selected1+"' ORDER BY plan_no and "
-//                     + addQuery;
-//
-//} else{
-// query2="select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, "
-//               + "off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, "
-//               + "side4_green_time, side5_green_time, side1_amber_time, side2_amber_time, side3_amber_time, "
-//               + "side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s,junction_plan_map pm"
-//               + " where s.active='Y'"
-//               + " and pm.junction_plan_map_id='"+junction_id_selected1+"' ORDER BY plan_no and "
-//                     + addQuery;
-//}
-//       
-//        try {
-//            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
-//            ResultSet rset = pstmt.executeQuery();
-//            while (rset.next()) {
-//                PlanDetails bean = new PlanDetails();
-//                bean.setPlan_id(rset.getInt(1));
-//                bean.setPlan_no(rset.getInt(2));
-//                bean.setOn_time_hour(rset.getInt(3));
-//                bean.setOn_time_min(rset.getInt(4));
-//                bean.setOff_time_hour(rset.getInt(5));
-//                bean.setOff_time_min(rset.getInt(6));
-//                bean.setMode(rset.getString(7));
-//                bean.setSide1_green_time(rset.getInt(8));
-//                bean.setSide2_green_time(rset.getInt(9));
-//                bean.setSide3_green_time(rset.getInt(10));
-//                bean.setSide4_green_time(rset.getInt(11));
-//                bean.setSide5_green_time(rset.getInt(12));
-//                bean.setSide1_amber_time(rset.getInt(13));
-//                bean.setSide2_amber_time(rset.getInt(14));
-//                bean.setSide3_amber_time(rset.getInt(15));
-//                bean.setSide4_amber_time(rset.getInt(16));
-//                bean.setSide5_amber_time(rset.getInt(17));
-//                bean.setTransferred_status(rset.getString(18));
-//                bean.setRemark(rset.getString(19));
-//                list.add(bean);
-//            }
-//        } catch (Exception e) {
-//            System.out.println("Error: " + e);
-//        }
-//        return list;
-//    }
-    public String getPhase(int junction_plan_map_id_selected1) {
+   public String getPhase(int junction_plan_map_id_selected1) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
         String query = " SELECT phase_id  FROM phase_map "
-                + " where active='Y' and junction_plan_map_id=" + junction_plan_map_id_selected1
+                + " where active='Y' and junction_plan_map_id="+junction_plan_map_id_selected1
                 + " ORDER BY order_no ";
         try {
             pstmt = connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-
+           
             while (rset.next()) {    // move cursor from BOR to valid record.
                 String phase_id = rset.getString("phase_id");
-
-                list.add(phase_id);
-
+              
+                    list.add(phase_id);
+                   
+                }
             }
-        } catch (Exception e) {
+           
+         catch (Exception e) {
             System.out.println("Error: " + e);
         }
-        String phaseString = "";
-        String phaseString1 = "";
-        for (int i = 0; i < list.size(); i++) {
-            phaseString = list.get(i);
-            phaseString1 = phaseString1 + "," + phaseString;
+        String phaseString="";
+        String phaseString1= "";
+        for(int i=0;i<list.size();i++)
+        {
+            phaseString=list.get(i);
+            phaseString1=phaseString1+","+phaseString;
         }
-        String phaseString2 = phaseString1.substring(1);
+        String phaseString2=phaseString1.substring(1);
         return phaseString2;
-    }
-
-    public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
+       }
+     public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected,int plan_no) {
         List<PhaseData> list = new ArrayList<PhaseData>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
         }
-        //  String phaseString2=getPhase(junction_plan_map_id_selected);
+      //  String phaseString2=getPhase(junction_plan_map_id_selected);
 
 //       String query2="SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
 //                    + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no " 
@@ -1095,16 +707,16 @@ List<String> list1 = new ArrayList<String>();
 //                    +"inner join plan_details p on jp.plan_id = p.plan_id "
 //                    +"where j.final_revision = 'VALID' and p.active = 'Y'  "
 //                    +addQuery;
-        String query2 = " SELECT pds.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dy.day,"
-                + "j.junction_name,pd.on_time_hour,pd.on_time_min,pd.off_time_hour,pd.off_time_min,pd.plan_no,"
-                + "pds.side13,pds.side24,pds.phase_no,pds.padestrian_info,pds.remark,dy.day_name"
-                + " from junction j inner join junction_plan_map jpm on j.junction_id=jpm.junction_id "
-                + " left join date_detail dd on jpm.date_id=dd.date_detail_id left join day_detail dy on jpm.day_id=dy.day_detail_id"
-                + " left join plan_details pd on jpm.plan_id=pd.plan_id left join phase_map pm on jpm.junction_plan_map_id=pm.junction_plan_map_id"
-                + " left join phase_detail pds on pm.phase_id=pds.phase_info_id where j.final_revision = 'VALID' and pd.active = 'Y' and "
-                + " jpm.junction_plan_map_id='" + junction_plan_map_id_selected + "' and pd.plan_no='" + plan_no + "'"
+         String query2 = " SELECT pds.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dy.day,"
+                 + "j.junction_name,pd.on_time_hour,pd.on_time_min,pd.off_time_hour,pd.off_time_min,pd.plan_no,"
+                 + "pds.side13,pds.side24,pds.phase_no,pds.padestrian_info,pds.remark,dy.day_name"
+                 + " from junction j inner join junction_plan_map jpm on j.junction_id=jpm.junction_id "
+                 + " left join date_detail dd on jpm.date_id=dd.date_detail_id left join day_detail dy on jpm.day_id=dy.day_detail_id"
+                 + " left join plan_details pd on jpm.plan_id=pd.plan_id left join phase_map pm on jpm.junction_plan_map_id=pm.junction_plan_map_id"
+                 + " left join phase_detail pds on pm.phase_id=pds.phase_info_id where j.final_revision = 'VALID' and pd.active = 'Y' and "
+                 + " jpm.junction_plan_map_id='"+junction_plan_map_id_selected+"' and pd.plan_no='"+plan_no+"'" 
                 + addQuery;
-
+         
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
@@ -1130,6 +742,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setPhase_no(rset.getInt(14));
                 bean.setPadestrian_info(rset.getString(15));
                 bean.setRemark(rset.getString(16));
+                    
 
                 list.add(bean);
             }
@@ -1138,7 +751,6 @@ List<String> list1 = new ArrayList<String>();
         }
         return list;
     }
-
     public boolean checkImei(String imei_no) {
         boolean result = false;
         String query1 = " SELECT count(*) AS c FROM junction WHERE imei_no = '" + imei_no + "' AND final_revision='VALID'";

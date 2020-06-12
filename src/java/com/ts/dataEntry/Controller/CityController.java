@@ -87,7 +87,7 @@ public class CityController extends HttpServlet {
                     searchdistrict1="";
                  }
                 String jrxmlFilePath;
-                response.setContentType("application/pdf");
+                    response.setContentType("application/pdf");
                 ServletOutputStream servletOutputStream = response.getOutputStream();
                listAll=cityModel.showDataReport(searchstate,searchdistrict);
                 jrxmlFilePath = ctx.getRealPath("/Report/city.jrxml");
