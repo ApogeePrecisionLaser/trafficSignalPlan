@@ -635,6 +635,14 @@ int plan_id=selected_plan_id;
 //                    +"inner join plan_details p on jp.plan_id = p.plan_id "
 //                    +"where j.final_revision = 'VALID' and p.active = 'Y'  "
 //                    +addQuery;
+//        String query2 = "SELECT pd.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dayd.day,j.junction_name,pld.on_time_hour,pld.on_time_min,pld.off_time_hour,pld.off_time_min, "
+//                + " pld.plan_no,pd.side13,pd.side24,pd.phase_no,pd.padestrian_info,pd.remark,dayd.day_name "
+//                + " from junction j,junction_plan_map jpm,phase_map pm,phase_detail pd ,day_detail dayd,date_detail dd,plan_details pld "
+//                + " where pd.phase_info_id=pm.phase_id and pm.junction_plan_map_id=jpm.junction_plan_map_id and jpm.junction_id=j.junction_id "
+//                + " and  jpm.plan_id=pld.plan_id and (jpm.day_id=dayd.day_detail_id or jpm.date_id=dd.date_detail_id) "
+//                + " and pd.active='Y' and jpm.active='Y' "
+//                + " and pld.active='Y' and dayd.active='Y' and dd.active='Y'  and pm.active='Y' and j.final_revision='VALID' "
+//                + addQuery;
         String query2 = "SELECT pd.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dayd.day,j.junction_name,pld.on_time_hour,pld.on_time_min,pld.off_time_hour,pld.off_time_min, "
                 + " pld.plan_no,pd.side13,pd.side24,pd.phase_no,pd.padestrian_info,pd.remark,dayd.day_name "
                 + " from junction j,junction_plan_map jpm,phase_map pm,phase_detail pd ,day_detail dayd,date_detail dd,plan_details pld "

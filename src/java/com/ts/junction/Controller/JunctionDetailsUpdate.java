@@ -295,11 +295,101 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+                             jsonarr1.add(list3.get(i).getTotalphase());
 
                  jobj1.put("p_id", list3.get(i).getPlan_id());
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
+
+                jobj1.put("data", jsonarr1);
+
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                return;
+                 
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+                
+        if (task.equalsIgnoreCase("phasedataviewdetails")) {
+            JSONArray jsonarr1 = new JSONArray();
+              
+                JSONObject jobj1 = new JSONObject();
+            try {
+              //  String day = request.getParameter("day");
+             //   String todate      String day = request.getParameter("day");
+             //   St= request.getParameter("to_date");
+                int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+                 int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
+                
+
+                list4 = junctionModel.showDataPhaseNew(j_id11,p_id11);
+
+               // jobj.put("size_1", list3.size());
+                for (int i = 0; i < list4.size(); i++) {
+                     jobj1.put("no_of_sides", list4.get(i).getNo_of_sides());
+                  //  jobj1.put("no_of_sides", "3");
+                    jsonarr1.add(list4.get(i).getPhase_info_id());
+                    jsonarr1.add(list4.get(i).getJunction_name());
+                       jsonarr1.add(list4.get(i).getPhase_no());
+                  //  jsonarr1.add(list4.get(i).getSide13());
+                String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
+           
+                   // jsonarr1.add(list4.get(i).getSide24());
+                     String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
+                        String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
+                    String side2 = junctionModel.decToBinaryAndSplitFirst(side24Status);
+                 String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
+                String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
+                String side5 = "00000000";
+                side1 = side1.concat("0000");
+                   side2 = side2.concat("0000");
+                     side3 = side3.concat("0000");
+              side4 = side4.concat("0000");
+                String s1[] =  side1.split("");
+                String []s2= side2.split("");
+                String []s3=side3.split("");
+                String []s4= side4.split("");
+                
+                
+          
+          
+             
+                  
+                    // jsonarr1.add(list4.get(i).getRemark());
+                             for(int k=0;k<8;k++){
+                         // jobj1.put("s1"+i+k,s1[k]);
+                         // jobj1.put("s2"+i+k,s2[k]);
+                         // jobj1.put("s3"+i+k,s3[k]);
+                         // jobj1.put("s4"+i+k,s4[k]);
+
+                                //
+                                //   jsonarr1.add(s2[k]);
+                                  //    jsonarr1.add(s3[k]);
+                                   //      jsonarr1.add(s4[k]);
+                                       
+                             }
+                               for(int a=0;a<8;a++){
+                                   jsonarr1.add(s1[a]);
+                               }
+                               for(int b=0;b<8;b++){
+                                   jsonarr1.add(s2[b]);
+                               }
+                               for(int c=0;c<8;c++){
+                                   jsonarr1.add(s3[c]);
+                               }
+                               for(int d=0;d<8;d++){
+                                   jsonarr1.add(s4[d]);
+                               }
+                              jobj1.put("listsize",list4.size());
+                // jobj1.put("p_id", list3.get(i).getPlan_id());
+                    // jobj1.put("j_id", list2.get(i).getJunction_id());
+                }
+                System.out.println("json array --" + jsonarr1);
+                System.out.println("json object --" + jobj1);
 
                 jobj1.put("data", jsonarr1);
 
@@ -348,6 +438,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+                    jsonarr1.add(list3.get(i).getTotalphase());
 
                  jobj1.put("jpm", list3.get(i).getMode());
                     jobj1.put("p_id", list3.get(i).getPlan_id());
@@ -400,9 +491,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+jsonarr1.add(list3.get(i).getTotalphase());
 
                  jobj1.put("jpm", list3.get(i).getMode());
-                    // jobj1.put("j_id", list2.get(i).getJunction_id());
+                     jobj1.put("p_id", list3.get(i).getPlan_id());
                 }
                 System.out.println("json array --" + jsonarr1);
 
@@ -458,6 +550,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                             jsonarr1.add(list2.get(i).getDay());
                             // jsonarr1.add(list2.get(i).getTo_date());
                             jsonarr1.add(list2.get(i).getPlan_no());
+                           // jsonarr1.add(list2.get(i).getPlan_id());
 
                         }
                         System.out.println("json array --" + jsonarr1);

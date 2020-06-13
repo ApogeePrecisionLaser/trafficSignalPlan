@@ -12,7 +12,15 @@ package com.ts.junction.tableClasses;
 public class PhaseData {
      private int junction_plan_map_id,phase_data_id, plan_id,plan_no, junction_id,date_id, day_id, order_no,on_time_hr,on_time_min,off_time_hr,off_time_min;
       private int phase_no,phase_time,green1,green2,green3,green4,green5,side13,side24,side5,left_green,GPIO,junction_plan_id,phase_info_id;
-    private String remark,from_date,to_date,day,junction_name,padestrian_info,day_name;
+    private String remark,from_date,to_date,day,junction_name,padestrian_info,day_name,no_of_sides;
+
+    public String getNo_of_sides() {
+        return no_of_sides;
+    }
+
+    public void setNo_of_sides(String no_of_sides) {
+        this.no_of_sides = no_of_sides;
+    }
 
     public int getJunction_plan_map_id() {
         return junction_plan_map_id;

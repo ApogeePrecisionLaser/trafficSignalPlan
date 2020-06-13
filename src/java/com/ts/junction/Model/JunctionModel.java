@@ -779,7 +779,28 @@ public class JunctionModel extends HttpServlet {
         return list;
     }
     
-    
+     public String getTotalPhase(String city_name) {
+        String city_id = "";
+        String query = " Select count(*) from phase_detail pd,phase_map pm ,junction_plan_map jpm "
+                + "where pm.phase_id=pd.phase_info_id and \n" +
+"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' "
+                + "and jpm.active='Y' and pd.active='Y' and jpm.plan_id='"+city_name+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(query);
+          //  pstmt.setString(1, city_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count=0;
+            while (rset.next()) {
+                
+              city_id =rset.getString(1);
+            }
+             
+        } catch (Exception ex) {
+            System.out.println("JunctionModel getCityID() Error: " + ex);
+        }
+        return city_id;
+    }
      public List<PlanDetails> showDataPlansdetails(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String fromdate,String todate) {
 List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
@@ -787,7 +808,7 @@ List<String> list1 = new ArrayList<String>();
         if (lowerLimit == -1) {
             addQuery = "";
         }
-
+ String totalphase=null;
         String query2 = "SELECT p.plan_id "
                 + "FROM junction_plan_map jp "
                 + "left join date_detail dd on jp.date_id = dd.date_detail_id "
@@ -817,8 +838,13 @@ List<String> list1 = new ArrayList<String>();
                     + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
                     + "where s.plan_id IN ("+joined+")");
             ResultSet rset1 = pstmt1.executeQuery(); 
-            while (rset1.next()) {
+           int count1=0;
+           while (rset1.next()) {
+                
                  PlanDetails bean = new PlanDetails();
+                 
+                 totalphase=getTotalPhase(list1.get(count1));
+                 count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -838,6 +864,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -855,7 +882,7 @@ List<String> list1 = new ArrayList<String>();
         if (lowerLimit == -1) {
             addQuery = "";
         }
-
+String totalphase=""; 
         String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
                 + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
                 + "left join day_detail d on jp.day_id = d.day_detail_id "
@@ -871,7 +898,7 @@ List<String> list1 = new ArrayList<String>();
             int count=0;
             while (rset.next()) {
                 String plan_id = rset.getString("plan_id");
-             
+            // totalphase=getTotalPhase(plan_id);
                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
                     list1.add(plan_id);
                     count++;
@@ -884,8 +911,11 @@ List<String> list1 = new ArrayList<String>();
                     + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
                     + "where s.plan_id IN ("+joined+")");
             ResultSet rset1 = pstmt1.executeQuery(); 
+             int count1=0; 
             while (rset1.next()) {
                  PlanDetails bean = new PlanDetails();
+                 totalphase=getTotalPhase(list1.get(count1));
+                 count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -905,6 +935,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                 bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -917,6 +948,7 @@ List<String> list1 = new ArrayList<String>();
       public List<PlanDetails> showDataPlansdetailsnormal(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_id) {
         List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
+        String totalphase="";
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
@@ -937,7 +969,7 @@ List<String> list1 = new ArrayList<String>();
             int count=0;
             while (rset.next()) {
                 String plan_ids = rset.getString("plan_id");
-             
+                totalphase=getTotalPhase(plan_ids);
                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
                     list1.add(plan_ids);
                     count++;
@@ -971,6 +1003,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -1078,8 +1111,7 @@ List<String> list1 = new ArrayList<String>();
         String phaseString2 = phaseString1.substring(1);
         return phaseString2;
     }
-
-    public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
+public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
         List<PhaseData> list = new ArrayList<PhaseData>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
@@ -1131,6 +1163,92 @@ List<String> list1 = new ArrayList<String>();
                 bean.setPadestrian_info(rset.getString(15));
                 bean.setRemark(rset.getString(16));
 
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+ public String decToBinaryAndSplitFirst(String n) 
+    { 
+        //perform decToBinary
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+         //String binary = n;
+      int a=n.length();
+      String remain="";
+      String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      n=str.concat(n);
+}
+
+        String sideFirst = n.substring(0, 4);
+        return sideFirst;
+    }
+    
+    public String decToBinaryAndSplitLater(String n) 
+    { 
+        //perform decToBinary
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+        // String binary = Integer.toBinaryString(n);
+      int a=n.length();
+       String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      n=str.concat(n);
+}
+        String sideFirst = n.substring(4, 8);
+        return sideFirst;
+    }
+    
+    public List<PhaseData> showDataPhaseNew(int junction_plan_map_id_selected, int plan_no) {
+        List<PhaseData> list = new ArrayList<PhaseData>();
+         
+        
+         
+        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides  from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j\n" +
+"                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n" +
+"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"'"
+                ;
+
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                PhaseData bean = new PhaseData();
+//                bean.setJunction_plan_map_id(rset.getInt(1));
+                bean.setPhase_info_id(rset.getInt(1));
+               
+                bean.setJunction_name(rset.getString(2));
+               bean.setSide13(rset.getInt(3));
+                bean.setSide24(rset.getInt(4));
+                bean.setPhase_no(rset.getInt(5));
+                 bean.setRemark(rset.getString(6));
+                 
+                 bean.setNo_of_sides(rset.getString(7));
                 list.add(bean);
             }
         } catch (Exception e) {

@@ -82,7 +82,7 @@
                                                                 <th class="heading" >Padestrian Info</th>
                                                                 <th class="heading" >Day Name</th>
                                                                 <th class="heading" >Remark</th>
-
+                                                                <th></th>
                                                             </tr>
                                                             <c:forEach var="planMap" items="${requestScope['junctionPlanMapPhaseList']}" varStatus="loopCounter">
                                                                 <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>

@@ -645,25 +645,24 @@
             success: function (response_data)
             {
                 debugger;
-
-                var data = response_data.data;
+      var data = response_data.data;
                 // alert("data js -" + data);
                 // alert("data js -" + data[7]);
                 // var jpm=response_data.jpm;
                 // var j_id=response_data.j_id;
                 // alert(jpm);
                 // alert(j_id);
-                var data_len = data.length / 18;
+                var data_len = data.length / 19;
                 var i = 0;
                 // alert("data lemn --"+data_len);
 
                 moduleHtml += '<tr class="row2"  >';
                 moduleHtml += '<th class="heading">Edit</th>';
                 moduleHtml += '<th class="heading">Plan No</th>';
-                moduleHtml += '<th class="heading">On Time Hour</th>';
-                moduleHtml += '<th class="heading">On Time Min</th>';
-                moduleHtml += '<th class="heading">Off Time Hour</th>';
-                moduleHtml += '<th class="heading">Off Time Min</th>';
+                moduleHtml += '<th class="heading">On Time </th>';
+                // moduleHtml += '<th class="heading">On Time Min</th>';
+                moduleHtml += '<th class="heading">Off Time </th>';
+                //    moduleHtml += '<th class="heading">Off Time Min</th>';
                 moduleHtml += '<th class="heading">Mode</th>';
                 moduleHtml += '<th class="heading">Green Time Side 1</th>';
                 moduleHtml += '<th class="heading">Green Time Side 2</th>';
@@ -677,6 +676,7 @@
                 moduleHtml += '<th class="heading">Amber Time Side 5</th>';
                 moduleHtml += ' <th class="heading">Transferred Status</th>';
                 moduleHtml += ' <th class="heading">Remark</th>';
+                moduleHtml += ' <th class="heading">TotalPhase</th>';
 
 
                 moduleHtml += '</tr>'
@@ -689,13 +689,15 @@
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
@@ -711,7 +713,9 @@
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
 
-                    //  moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ')"></td>';
+                    moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
+
+  //  moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ')"></td>';
 
 
                     moduleHtml += '</tr>'
@@ -748,25 +752,24 @@
             success: function (response_data)
             {
                 debugger;
-
-                var data = response_data.data;
+      var data = response_data.data;
                 // alert("data js -" + data);
                 // alert("data js -" + data[7]);
                 // var jpm=response_data.jpm;
                 // var j_id=response_data.j_id;
                 // alert(jpm);
                 // alert(j_id);
-                var data_len = data.length / 18;
+                var data_len = data.length / 19;
                 var i = 0;
                 // alert("data lemn --"+data_len);
 
                 moduleHtml += '<tr class="row2"  >';
                 moduleHtml += '<th class="heading">Edit</th>';
                 moduleHtml += '<th class="heading">Plan No</th>';
-                moduleHtml += '<th class="heading">On Time Hour</th>';
-                moduleHtml += '<th class="heading">On Time Min</th>';
-                moduleHtml += '<th class="heading">Off Time Hour</th>';
-                moduleHtml += '<th class="heading">Off Time Min</th>';
+                moduleHtml += '<th class="heading">On Time </th>';
+                // moduleHtml += '<th class="heading">On Time Min</th>';
+                moduleHtml += '<th class="heading">Off Time </th>';
+                //    moduleHtml += '<th class="heading">Off Time Min</th>';
                 moduleHtml += '<th class="heading">Mode</th>';
                 moduleHtml += '<th class="heading">Green Time Side 1</th>';
                 moduleHtml += '<th class="heading">Green Time Side 2</th>';
@@ -780,6 +783,7 @@
                 moduleHtml += '<th class="heading">Amber Time Side 5</th>';
                 moduleHtml += ' <th class="heading">Transferred Status</th>';
                 moduleHtml += ' <th class="heading">Remark</th>';
+                moduleHtml += ' <th class="heading">TotalPhase</th>';
 
 
                 moduleHtml += '</tr>'
@@ -792,11 +796,15 @@
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
@@ -811,8 +819,9 @@
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+
+                    moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
+
 
                     //  moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ')"></td>';
 
@@ -834,7 +843,7 @@
     }
 
 
-    function Openformphase13(j_id,p_id) {
+    function Openformphase13(j_id, p_id) {
         $(".row2").remove();
         $(".row3").remove();
         debugger;
@@ -846,7 +855,7 @@
             //contentType: 'application/json',
             //context: document.body,
 
-            data: {junction_id: j_id,plan_id: p_id},
+            data: {junction_id: j_id, plan_id: p_id},
 
             success: function (response_data)
             {
@@ -859,17 +868,17 @@
                 // var j_id=response_data.j_id;
                 // alert(jpm);
                 // alert(j_id);
-                var data_len = data.length / 18;
+                var data_len = data.length / 19;
                 var i = 0;
                 // alert("data lemn --"+data_len);
 
                 moduleHtml += '<tr class="row2"  >';
                 moduleHtml += '<th class="heading">Edit</th>';
                 moduleHtml += '<th class="heading">Plan No</th>';
-                moduleHtml += '<th class="heading">On Time Hour</th>';
-                moduleHtml += '<th class="heading">On Time Min</th>';
-                moduleHtml += '<th class="heading">Off Time Hour</th>';
-                moduleHtml += '<th class="heading">Off Time Min</th>';
+                moduleHtml += '<th class="heading">On Time </th>';
+                // moduleHtml += '<th class="heading">On Time Min</th>';
+                moduleHtml += '<th class="heading">Off Time </th>';
+                //    moduleHtml += '<th class="heading">Off Time Min</th>';
                 moduleHtml += '<th class="heading">Mode</th>';
                 moduleHtml += '<th class="heading">Green Time Side 1</th>';
                 moduleHtml += '<th class="heading">Green Time Side 2</th>';
@@ -883,6 +892,7 @@
                 moduleHtml += '<th class="heading">Amber Time Side 5</th>';
                 moduleHtml += ' <th class="heading">Transferred Status</th>';
                 moduleHtml += ' <th class="heading">Remark</th>';
+                moduleHtml += ' <th class="heading">TotalPhase</th>';
 
 
                 moduleHtml += '</tr>'
@@ -895,13 +905,15 @@
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
+                    // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
@@ -917,7 +929,7 @@
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
 
-                    //  moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ')"></td>';
+                    moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
 
 
                     moduleHtml += '</tr>'
@@ -937,6 +949,226 @@
     }
 
 
+
+    function OpenformphasedataView(p_id, j_id) {
+       
+        $(".row5").remove();
+        $(".row6").remove();
+        debugger;
+        var moduleHtml;
+        // var queryString = "task=SelectedJunctionPhase&from_date=" + from_date + "&to_date=" + to_date + "&junction_id=" + j_id;
+        $.ajax({url: "JunctionDetailsUpdate?task=phasedataviewdetails",
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {junction_id: j_id, plan_id: p_id},
+
+            success: function (response_data)
+            {
+                debugger;
+                var no = response_data.no_of_sides;
+               // alert(no);
+                if (no === "4") {
+                    // alert("hi");
+                    var data = response_data.data;
+                    // alert("data js -" + data);
+                    // alert("data js -" + data[7]);
+                    // var jpm=response_data.jpm;
+                    // var j_id=response_data.j_id;
+                    // alert(jpm);
+                    // alert(j_id);
+                    //  alert(response_data.no_of_sides);
+                    var data_len = data.length / 36;
+                    var i = 0;
+                    // alert("data lemn --"+data_len);
+
+                    moduleHtml += '<tr class="row5"  >';
+                  //  moduleHtml += '<th class="heading">Edit</th>';
+                  //  moduleHtml += '<th class="heading">phase_info_id</th>';
+                    moduleHtml += '<th class="heading">JunctionName </th>';
+
+
+                    moduleHtml += '<th class="heading">phase_no</th>';
+
+                    moduleHtml += ' <th class="heading">Side1</th>';
+                    moduleHtml += ' <th class="heading">Side2</th>';
+                    moduleHtml += ' <th class="heading">Side3</th>';
+                    moduleHtml += ' <th class="heading">Side4</th>';
+
+
+                    moduleHtml += '</tr>'
+
+                    for (var j = 0; j < data_len; j++) {
+                     //   alert(j + "    jj");
+                    //    alert(i + "    1");
+                        debugger;
+                        moduleHtml += '<tr class="row6"  >';
+                     //   moduleHtml += '   <td width="15%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
+                      //  moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                        //  alert(i);   
+                        var fdata = "'" + data[i] + "'";
+                        var tdata = "'" + data[i] + "'";
+
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+
+
+                        //moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"></td>';  
+                      //  alert("data ii  -" + data[i]);
+
+
+
+
+                        //var d=data[++i];
+
+//                if(data[++i]==='0'){
+//                    moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value=""></td>';
+//                }else{
+//                    moduleHtml += '<td width="25%"><input type="checkbox"  checked class="preference" id="t1cs" name="rb1" value=""></td>';  
+//                }
+
+ 
+                       
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                       //var d= document.getElementById("tlcs").value;
+
+                        moduleHtml += '</tr>'
+                        //  var r=document.getElementById("tlcs1").value;
+                        //   alert(r);
+                        i++;
+                        
+
+                        //$(".DateDayClass").html(moduleHtml + '</tr>');
+                        //$("#table3").html(moduleHtml + '</tr>');
+                    }
+
+                    $("#tab5").append(moduleHtml);
+                    //$(".DateDayClass").append(moduleHtml);
+                    var a = document.getElementById("foot1");
+                    $("#tab5").append(a);
+                    
+                    
+                    
+                        $('input[type=checkbox]').each(function () {
+                            var val = $(this).val();
+                           // alert("check box val -" + val);
+                            if (val == 0) {
+
+                            } else {
+                                $(this).attr('checked', true);
+                            }
+                        });
+                    
+                } else if (no === "3") {
+                     var data = response_data.data;
+                    // alert("data js -" + data);
+                    // alert("data js -" + data[7]);
+                    // var jpm=response_data.jpm;
+                    // var j_id=response_data.j_id;
+                    // alert(jpm);
+                    // alert(j_id);
+                    //  alert(response_data.no_of_sides);
+                    var data_len = data.length / 36;
+                    var i = 0;
+                    // alert("data lemn --"+data_len);
+
+                    moduleHtml += '<tr class="row5"  >';
+                  //  moduleHtml += '<th class="heading">Edit</th>';
+                   // moduleHtml += '<th class="heading">phase_info_id</th>';
+                    moduleHtml += '<th class="heading">JunctionName </th>';
+
+
+                    moduleHtml += '<th class="heading">phase_no</th>';
+
+                    moduleHtml += ' <th class="heading">Side1    </th>';
+                    moduleHtml += ' <th class="heading">Side2    </th>';
+                    moduleHtml += ' <th class="heading">Side3    </th>';
+                    
+
+                    moduleHtml += '</tr>'
+
+                    for (var j = 0; j < data_len; j++) {
+                     //   alert(j + "    jj");
+                    //    alert(i + "    1");
+                        debugger;
+                        moduleHtml += '<tr class="row6"  >';
+                       // moduleHtml += '   <td width="5%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
+                      //  moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                        //  alert(i);   
+                        var fdata = "'" + data[i] + "'";
+                        var tdata = "'" + data[i] + "'";
+
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+
+
+                        //moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"></td>';  
+                      //  alert("data ii  -" + data[i]);
+
+
+
+
+                        //var d=data[++i];
+
+//                if(data[++i]==='0'){
+//                    moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value=""></td>';
+//                }else{
+//                    moduleHtml += '<td width="25%"><input type="checkbox"  checked class="preference" id="t1cs" name="rb1" value=""></td>';  
+//                }
+
+ 
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
+                        //var d= document.getElementById("tlcs").value;
+
+                        moduleHtml += '</tr>'
+                        //  var r=document.getElementById("tlcs1").value;
+                        //   alert(r);
+                        i++;
+                        
+
+                        //$(".DateDayClass").html(moduleHtml + '</tr>');
+                        //$("#table3").html(moduleHtml + '</tr>');
+                    }
+
+                    $("#tab5").append(moduleHtml);
+                    //$(".DateDayClass").append(moduleHtml);
+                    var a = document.getElementById("foot1");
+                    $("#tab5").append(a);
+                    
+                    
+                    
+                        $('input[type=checkbox]').each(function () {
+                            var val = $(this).val();
+                           // alert("check box val -" + val);
+                            if (val == 0) {
+
+                            } else {
+                                $(this).attr('checked', true);
+                            }
+                        });
+                    
+                }
+                //else{
+//    
+//}
+            }
+        });
+    }
+
+    function checkboxvalid(val) {
+        alert("wwwwwwwwww");
+        if (val === "1") {
+            //var sa= document.getElementsByClassName("dateviewdata");
+
+        }
+    }
     function fillColumns1(id) {
         openjunctionplandetails();
         debugger;
@@ -1293,7 +1525,7 @@
                     var fdata = "'" + data[i] + "'";
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                   moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase12(' + fdata + ',' + jid + ')"></td>';
+                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase12(' + fdata + ',' + jid + ')"></td>';
 
                     moduleHtml += '</tr>'
                     i++;
@@ -1366,7 +1598,7 @@
 
         var bydate = "normal";
         var jid = document.getElementById("j_idd").value;
-      
+
         //var pid = document.getElementById("j_idd").value;
 
         // alert("aaaaa");
@@ -1382,7 +1614,7 @@
             {
                 debugger;
                 var data = response_data.data;
-               
+
                 var data_len = data.length / 3;
 
 
@@ -1399,7 +1631,7 @@
                 moduleHtml += '</tr>'
 
                 for (var j = 0; j < data_len; j++) {
-                   
+
                     moduleHtml += '<tr class="row" id="r2" >';
                     moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + i + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
 
@@ -1407,8 +1639,8 @@
 
 
                     moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
- var pid = "'" + data[i] + "'";
-                     moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase13('  + jid + ','  + pid + ')"></td>';
+                    var pid = "'" + data[i] + "'";
+                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase13(' + jid + ',' + pid + ')"></td>';
                     moduleHtml += '</tr>'
                     i++;
                     //$(".DateDayClass").html(moduleHtml + '</tr>');
@@ -1498,7 +1730,7 @@
     </head>
     <body>
 
-        <table align="center" cellpadding="0" cellspacing="0" class="main" border="1" >
+        <table align="center" cellpadding="0" cellspacing="0" class="main" border="1" width="1500px">
 
             <!--DWLayoutDefaultTable-->
             <tr><td><%@include file="/layout/header.jsp" %></td></tr>
@@ -2251,55 +2483,102 @@
                                             <td>
                                                 <form name="form11" method="POST" action="JunctionDetailsUpdate">
                                                     <DIV STYLE="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
-                                                        <table border="1" id="table12" align="center" class="reference">
-                                                            <tr>
-                                                                <th class="heading" >Edit</th>
-                                                                <th class="heading" >Junction Name</th>
-                                                                <th class="heading" >To&From Date</th>
-                                                                <th class="heading" >Day</th>
-                                                                <th class="heading" >Time</th>
-                                                                <th class="heading" >Order No</th>
-                                                                <th class="heading" >Plan No</th>
-                                                                <th class="heading" >Phase No</th>
-                                                                <th class="heading" >Side13</th>
-                                                                <th class="heading" >Side24</th>
-                                                                <th class="heading" >Padestrian Info</th>
-                                                                <th class="heading" >Day Name</th>
-                                                                <th class="heading" >Remark</th>
+                                                        <!--                                                        <table border="1" id="table12" align="center" class="reference">
+                                                                                                                    <tr>
+                                                                                                                        <th class="heading" >Edit</th>
+                                                                                                                        <th class="heading" >Junction Name</th>
+                                                                                                                        <th class="heading" >To&From Date</th>
+                                                                                                                        <th class="heading" >Day</th>
+                                                                                                                        <th class="heading" >Time</th>
+                                                                                                                        <th class="heading" >Order No</th>
+                                                                                                                        <th class="heading" >Plan No</th>
+                                                                                                                        <th class="heading" >Phase No</th>
+                                                                                                                        <th class="heading" >Side13</th>
+                                                                                                                        <th class="heading" >Side24</th>
+                                                                                                                        <th class="heading" >Padestrian Info</th>
+                                                                                                                        <th class="heading" >Day Name</th>
+                                                                                                                        <th class="heading" >Remark</th>
+                                                                                                                    </tr>
+                                                        <c:forEach var="list" items="${requestScope['phasedetailsSelected']}" varStatus="loopCounter">
+                                                            <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" style="display: none" onclick="fillColumns3(id)">${list.junction_plan_map_id}</td>
+                                                                <td width="25%"><input type="radio" id="t1c${IDGenerator.uniqueID3}" name="" value="${list.junction_plan_map_id}" onclick="openlastdiv()"></td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)" style="display: none"  align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.junction_name}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.from_date}//${planMap.to_date}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.day}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.on_time_hr}:${list.on_time_min}-${list.off_time_hr}:${list.off_time_min}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.order_no}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.plan_no}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.phase_no}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.side13}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.side24}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.padestrian_info}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.day_name}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.remark}</td>
+                                                                <td id="t1c${IDGenerator.uniqueID3}" style="display: none" onclick="fillColumns3(id)">${list.junction_id}</td>
                                                             </tr>
-                                                            <c:forEach var="list" items="${requestScope['phasedetailsSelected']}" varStatus="loopCounter">
-                                                                <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" style="display: none" onclick="fillColumns3(id)">${list.junction_plan_map_id}</td>
-                                                                    <td width="25%"><input type="radio" id="t1c${IDGenerator.uniqueID3}" name="" value="${list.junction_plan_map_id}" onclick="openlastdiv()"></td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)" style="display: none"  align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.junction_name}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.from_date}//${planMap.to_date}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.day}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.on_time_hr}:${list.on_time_min}-${list.off_time_hr}:${list.off_time_min}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.order_no}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.plan_no}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.phase_no}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.side13}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.side24}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.padestrian_info}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.day_name}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" onclick="fillColumns3(id)">${list.remark}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID3}" style="display: none" onclick="fillColumns3(id)">${list.junction_id}</td>
-                                                                </tr>
-                                                            </c:forEach>
-                                                            <tr>
-                                                                <td align='center' colspan="15">
+                                                        </c:forEach>
+                                                        <tr>
+                                                            <td align='center' colspan="15">
+                                                        <c:choose>
+                                                            <c:when test="${showFirst eq 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='First' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='First'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showPrevious == 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='Previous' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Previous'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showNext eq 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='Next' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Next'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                        <c:choose>
+                                                            <c:when test="${showLast == 'false'}">
+                                                                <input class="button" type='submit' name='buttonAction' value='Last' disabled>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <input class="button" type='submit' name='buttonAction' value='Last'>
+                                                            </c:otherwise>
+                                                        </c:choose>
+                                                    </td>
+                                                </tr>
+                                                        <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                                        <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                        <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
+                                                        <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                    </table>-->
+                                                        <table class="reference" border="1" width="100%" align="center" id="tab5">
+                                                            <tr id="head1">
+
+
+                                                            </tr>
+
+                                                            <tr id="foot1">
+                                                                <td align='center' colspan="22">
                                                                     <c:choose>
                                                                         <c:when test="${showFirst eq 'false'}">
                                                                             <input class="button" type='submit' name='buttonAction' value='First' disabled>
                                                                         </c:when>
                                                                         <c:otherwise>
-                                                                            <input class="button" type='submit' name='buttonAction' value='First'>
+                                                                            <input  class="button" type='submit' name='buttonAction' value='First'>
                                                                         </c:otherwise>
                                                                     </c:choose>
                                                                     <c:choose>
                                                                         <c:when test="${showPrevious == 'false'}">
-                                                                            <input class="button" type='submit' name='buttonAction' value='Previous' disabled>
+                                                                            <input  class="button" type='submit' name='buttonAction' value='Previous' disabled>
                                                                         </c:when>
                                                                         <c:otherwise>
                                                                             <input class="button" type='submit' name='buttonAction' value='Previous'>
@@ -2321,12 +2600,7 @@
                                                                             <input class="button" type='submit' name='buttonAction' value='Last'>
                                                                         </c:otherwise>
                                                                     </c:choose>
-                                                                </td>
-                                                            </tr>
-                                                            <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
-                                                            <input type="hidden" name="lowerLimit" value="${lowerLimit}">
-                                                            <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
-                                                            <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
+                                                                </td>  </tr>
                                                         </table>
                                                     </DIV>
                                                 </form>
