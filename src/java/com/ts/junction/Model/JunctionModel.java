@@ -687,7 +687,7 @@ public class JunctionModel extends HttpServlet {
         } else {
 
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
-            query2 = "SELECT distinct  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
+            query2 = "SELECT    jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
                     + " d.day, j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
                     + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
                     + "left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id "
