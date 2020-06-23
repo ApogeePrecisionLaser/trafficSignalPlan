@@ -104,6 +104,25 @@ public class JunctionModel extends HttpServlet {
         }
         return junction_id;
     }
+      public int getJunctionIDDemo(String IMEINo) {
+//        System.out.println(IMEINo);
+        int junction_id = 0;
+        String queryJunctionID = " SELECT * FROM junction WHERE imei_number = 'ABC' AND final_revision='VALID' ";
+
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(queryJunctionID);
+            //pstmt.setString(1, IMEINo);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                junction_id = rset.getInt("junction_id");
+                System.out.println("junction_id---" + junction_id);
+            }
+//            connection.close();
+        } catch (Exception e) {
+            System.out.println("ClientResponder: registerModem() Error" + e);
+        }
+        return junction_id;
+    }
 
     public List<String> getCityName(String q, String state_name) {
         List<String> list = new ArrayList<String>();
