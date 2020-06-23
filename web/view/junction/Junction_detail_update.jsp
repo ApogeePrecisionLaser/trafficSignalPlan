@@ -1524,7 +1524,7 @@
                 var data = response_data.data;
                 //alert("data js -" + data[7]);
 
-                var data_len = data.length / 2;
+                var data_len = data.length / 3;
 
 
                 var i = 0;
@@ -1637,7 +1637,7 @@
                 debugger;
                 var data = response_data.data;
 
-                var data_len = data.length / 2;
+                var data_len = data.length / 3;
 
 
                 var i = 0;

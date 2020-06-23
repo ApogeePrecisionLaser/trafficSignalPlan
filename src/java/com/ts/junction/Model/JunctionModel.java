@@ -104,25 +104,6 @@ public class JunctionModel extends HttpServlet {
         }
         return junction_id;
     }
-      public int getJunctionIDDemo(String IMEINo) {
-//        System.out.println(IMEINo);
-        int junction_id = 0;
-        String queryJunctionID = " SELECT * FROM junction WHERE imei_number = 'ABC' AND final_revision='VALID' ";
-
-        try {
-            PreparedStatement pstmt = connection.prepareStatement(queryJunctionID);
-            //pstmt.setString(1, IMEINo);
-            ResultSet rset = pstmt.executeQuery();
-            while (rset.next()) {
-                junction_id = rset.getInt("junction_id");
-                System.out.println("junction_id---" + junction_id);
-            }
-//            connection.close();
-        } catch (Exception e) {
-            System.out.println("ClientResponder: registerModem() Error" + e);
-        }
-        return junction_id;
-    }
 
     public List<String> getCityName(String q, String state_name) {
         List<String> list = new ArrayList<String>();
@@ -706,7 +687,7 @@ public class JunctionModel extends HttpServlet {
         } else {
 
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
-            query2 = "SELECT    jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
+            query2 = "SELECT distinct  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
                     + " d.day, j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
                     + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
                     + "left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id "
