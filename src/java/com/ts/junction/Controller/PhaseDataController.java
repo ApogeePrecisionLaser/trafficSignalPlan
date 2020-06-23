@@ -100,7 +100,7 @@ public class PhaseDataController extends HttpServlet {
               
                     selected_plan_id=Integer.parseInt(request.getParameter("selected_plan_id"));
             side_no = phaseDataModel.getSidesOfJunction(junction_name_select);
-            mode_name = phaseDataModel.getModeName(on_off_time_select);
+            mode_name = phaseDataModel.getModeName(on_off_time_select,selected_plan_id);
             if (mode_name.equals("Blinker")) {
                 no_of_phase = 2;
             } else if (mode_name.equals("Signal")) {

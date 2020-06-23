@@ -6,6 +6,7 @@ import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -33,6 +34,91 @@ public class PlanDetailIdController extends HttpServlet {
         planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
         planDetailModel.setConnection();
          String task = request.getParameter("task");
+         
+         
+          try {
+            String JQstring = request.getParameter("action1");
+            String q = request.getParameter("q");
+            if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+                List<String> list = null;
+
+                if(JQstring.equals("getOnHr")) {
+                    list = planDetailModel.getOnHr(q);
+                }
+               if (JQstring.equals("getOnMin")) {
+                   list = planDetailModel.getOnMin(q, request.getParameter("action2"));
+                }
+               if (JQstring.equals("getOffHr")) {
+                   list = planDetailModel.getOffHr(q);
+                }
+              if (JQstring.equals("getOffMin")) {
+                   list = planDetailModel.getOffMin(q, request.getParameter("action2"));
+              }
+
+                Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                        out.println(data);
+                }
+               planDetailModel.closeConnection();
+                return;
+            }
+         
+          }catch (Exception e) {
+            System.out.println("\n Error --PlanDetsilIdController get JQuery Parameters Part-" + e);
+        }
+         
+         
+//            int ontime_hr = 0;
+//        int ontime_min = 0;
+//          int offtime_hr = 0;
+//          int offtime_min =0;
+//            // List<PlanDetails> list1 = new ArrayList<>();
+//            
+//            
+//              try {
+//            ontime_hr = Integer.parseInt(request.getParameter("ontime_hr").trim());
+//            if(ontime_hr==0){
+//            ontime_hr=0;
+//            }
+//              ontime_min = Integer.parseInt(request.getParameter("ontime_min").trim());
+//            
+//               offtime_hr = Integer.parseInt(request.getParameter("offtime_hr").trim());
+//            
+//                offtime_min = Integer.parseInt(request.getParameter("offtime_min").trim());
+//            
+//        } catch (Exception e) {
+//            System.out.println("Exception while searching in controller" + e);
+//        }
+        
+            // List<PlanDetails> list1 = new ArrayList<>();
+            String ontime_hr="";
+            String  ontime_min="";
+            String  offtime_hr="";
+            String offtime_min="";
+              try {
+            ontime_hr = request.getParameter("ontime_hr").trim();
+            if(ontime_hr==""){
+            ontime_hr="";
+            }
+              ontime_min = request.getParameter("ontime_min").trim();
+             if(ontime_min==""){
+            ontime_min="";
+            }
+             offtime_hr = request.getParameter("offtime_hr").trim();
+             if(offtime_hr==""){
+            offtime_hr="";
+            }
+               offtime_min = request.getParameter("offtime_min").trim();
+             if(offtime_min==""){
+            offtime_min="";
+            }
+        } catch (Exception e) {
+            System.out.println("Exception while searching in controller" + e);
+        }
+         
+         
         String searchCommandName = "";
              List<PlanDetails> list1 = new ArrayList<>();
              searchCommandName = request.getParameter("searchParameterName");
@@ -77,7 +163,8 @@ public class PlanDetailIdController extends HttpServlet {
         }
    
          
-        list1 = planDetailModel.showData(lowerLimit, noOfRowsToDisplay,searchCommandName);
+        list1 = planDetailModel.showDataPhase(lowerLimit, noOfRowsToDisplay,searchCommandName, ontime_hr,ontime_min,offtime_hr,offtime_min);
+
                lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
         if ((lowerLimit - noOfRowsTraversed) == 0) {     // if this is the only data in the table or when viewing the data 1st time.
@@ -92,6 +179,11 @@ public class PlanDetailIdController extends HttpServlet {
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
         request.setAttribute("no_of_plans", list1.size());
         request.setAttribute("plandetails", list1);
+        
+//        request.setAttribute("ontime_hr", ontime_hr);
+//        request.setAttribute("ontime_min", ontime_min);
+//        request.setAttribute("offtime_hr", offtime_hr);
+//        request.setAttribute("offtime_min", offtime_min);
         request.setAttribute("IDGenerator", new xyz());
        request.getRequestDispatcher("/plan_detail_id").forward(request, response);
     }

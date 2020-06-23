@@ -199,6 +199,118 @@ public class PlanDetailModel {
         return plan_id;
     }
     
+    
+    
+    
+    
+       public List<String> getOffMin(String q, String OffHr) {
+        List<String> list = new ArrayList<String>();
+    String query = "select distinct off_time_min from plan_details where active='y' and off_time_hour=? order by off_time_min desc";
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
+            pstmt.setString(1, OffHr);
+            ResultSet rset = pstmt.executeQuery();
+
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {
+                String type = rset.getString("off_time_min");
+                if (type.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(type);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such off_time_min Name exists.......");
+            }
+        } catch (Exception e) {
+            System.out.println(" ERROR inside Phase Data Model - " + e);
+            message = "Something going wrong";
+            //messageBGColor = "red";
+        }
+        return list;
+    }
+
+    public List<String> getOffHr(String q) {
+        List<String> list = new ArrayList<String>();
+        String query = "select distinct off_time_hour from plan_details where active='y' order by off_time_hour desc";
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {
+                String name = rset.getString("off_time_hour");
+                if (name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(name);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such OffTime Hr exists.......");
+            }
+        } catch (Exception e) {
+            System.out.println(" ERROR inside phaseDataModel - " + e);
+            message = "Something going wrong";
+            //messageBGColor = "red";
+        }
+        return list;
+    }
+    
+    
+    
+     public List<String> getOnMin(String q, String OnHr) {
+        List<String> list = new ArrayList<String>();
+    String query = "select distinct on_time_min from plan_details where active='y' and on_time_hour=? order by on_time_min desc";
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
+            pstmt.setString(1, OnHr);
+            ResultSet rset = pstmt.executeQuery();
+
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {
+                String type = rset.getString("on_time_min");
+                if (type.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(type);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such on_time_min Name exists.......");
+            }
+        } catch (Exception e) {
+            System.out.println(" ERROR inside Phase Data Model - " + e);
+            message = "Something going wrong";
+            //messageBGColor = "red";
+        }
+        return list;
+    }
+
+    public List<String> getOnHr(String q) {
+        List<String> list = new ArrayList<String>();
+        String query = "select distinct on_time_hour from plan_details where active='y' order by on_time_hour desc";
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {
+                String name = rset.getString("on_time_hour");
+                if (name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(name);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such OnTime Hr exists.......");
+            }
+        } catch (Exception e) {
+            System.out.println(" ERROR inside phaseDataModel - " + e);
+            message = "Something going wrong";
+            //messageBGColor = "red";
+        }
+        return list;
+    }
+    
     public int getNoOfRows() {
 
       String query1="select count(*) "
@@ -231,7 +343,9 @@ public class PlanDetailModel {
                + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,"
                + " transferred_status, remark"
                      +" from plan_details s"
-                     +" where s.active='Y' ORDER BY plan_no "
+                     +" where s.active='Y' and"
+              
+               + "  ORDER BY plan_no "
                      + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
@@ -265,6 +379,10 @@ public class PlanDetailModel {
         return list;
     }
      
+     
+     
+    
+    
     public int getRevisionNo(int plan_id) {
         int revision_no = 0;
         PreparedStatement pstmt;
@@ -280,6 +398,9 @@ public class PlanDetailModel {
         return revision_no;
     }
      
+    
+    
+    
      public boolean updateRecord(PlanDetails planDetails) {
         String insert_query = null;
          PreparedStatement pstmt = null;
@@ -368,6 +489,61 @@ public class PlanDetailModel {
         return plan_no;
      }
      
+     
+      public List<PlanDetails> showDataPhase(int lowerLimit, int noOfRowsToDisplay,String searchManufacturerName,String ontime_hr,String ontime_min,String offtime_hr,String offtime_min) {
+        List<PlanDetails> list = new ArrayList<PlanDetails>();
+         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+          if(lowerLimit == -1)
+            addQuery = "";
+
+            
+       String query2="select plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min,"
+               + " mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time,"
+               + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,"
+               + " transferred_status, remark"
+                     +" from plan_details s"
+                     +" where s.active='Y' "
+              + " and IF('" + ontime_hr + "' = '', on_time_hour LIKE '%%',on_time_hour =?) "
+                + " and IF('" + ontime_min + "' = '', on_time_min LIKE '%%',on_time_min =?) "
+                + " and IF('" + offtime_hr + "'='',off_time_hour LIKE '%%',off_time_hour=?)"
+                + " and IF('" + offtime_min + "'='',off_time_min LIKE '%%',off_time_min=?)"
+               + "  ORDER BY plan_no "
+                     + addQuery;
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+              pstmt.setString(1, ontime_hr);
+            pstmt.setString(2, ontime_min);
+            pstmt.setString(3, offtime_hr);
+            pstmt.setString(4, offtime_min);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                PlanDetails bean = new PlanDetails();
+                bean.setPlan_id(rset.getInt(1));
+                bean.setPlan_no(rset.getInt(2));
+                bean.setOn_time_hour(rset.getInt(3));
+                bean.setOn_time_min(rset.getInt(4));
+                bean.setOff_time_hour(rset.getInt(5));
+                bean.setOff_time_min(rset.getInt(6));
+                bean.setMode(rset.getString(7));
+                bean.setSide1_green_time(rset.getInt(8));
+                bean.setSide2_green_time(rset.getInt(9));
+                bean.setSide3_green_time(rset.getInt(10));
+                bean.setSide4_green_time(rset.getInt(11));
+                bean.setSide5_green_time(rset.getInt(12));
+                bean.setSide1_amber_time(rset.getInt(13));
+                bean.setSide2_amber_time(rset.getInt(14));
+                bean.setSide3_amber_time(rset.getInt(15));
+                bean.setSide4_amber_time(rset.getInt(16));
+                bean.setSide5_amber_time(rset.getInt(17));
+                bean.setTransferred_status(rset.getString(18));
+                bean.setRemark(rset.getString(19));
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+      }
      public void deleteRecord(int plan_id) throws SQLException {
         PreparedStatement pstmt;
         int rowAffected = 0;

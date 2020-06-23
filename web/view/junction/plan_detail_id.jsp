@@ -13,6 +13,47 @@
 <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
 <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
 <script>
+    
+    
+    
+            jQuery(function () {
+                $("#ontime_hr").autocomplete("PlanDetailIdController", {
+                    extraParams: {
+                        action1: function () {
+                            return "getOnHr"
+                        }
+                    }
+                });
+                  $("#ontime_min").autocomplete("PlanDetailIdController", {
+                    extraParams: {
+                        action1: function () {
+                            return "getOnMin"
+                        },
+                 action2: function() { return  $("#ontime_hr").val();}
+                    }
+                });
+                
+                  $("#offtime_hr").autocomplete("PlanDetailIdController", {
+                    extraParams: {
+                        action1: function () {
+                            return "getOffHr"
+                        }
+                    }
+                });
+                  $("#offtime_min").autocomplete("PlanDetailIdController", {
+                    extraParams: {
+                        action1: function () {
+                            return "getOffMin"
+                        },
+                 action2: function() { return  $("#offtime_hr").val();}
+                    }
+                });
+
+            });
+    
+    
+    
+    
     function myFunction(t1,t2,t3,t4,t5){
         var time =t1+":"+t2+"-"+t3+":"+t4;    
         document.getElementById("test1").value = time;
@@ -120,6 +161,32 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
+                            
+                            <tr><td>
+                                    <form action="PlanDetailIdController" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                             On Time Hr<input type="text" name="ontime_hr" id="ontime_hr" value="${ontime_hr}">
+                                            </td>
+                                            <td>
+                                             On Time Min<input type="text" name="ontime_min" id="ontime_min" value="${ontime_min}">
+                                            </td>
+                                              <td>
+                                             Off Time Hr<input type="text" name="offtime_hr" id="offtime_hr" value="${offtime_hr}">
+                                            </td>
+                                                  <td>
+                                             Off Time Min<input type="text" name="offtime_min" id="offtime_min" value="${offtime_min}">
+                                            </td>
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+<!--                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">-->
+                                             </tr>
+                                             </table></form> </td></tr>
 
                             <tr>
                                 <td>

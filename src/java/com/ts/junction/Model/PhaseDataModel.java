@@ -443,7 +443,7 @@ int plan_id=selected_plan_id;
         return no_of_sides;
     }
 
-    public String getModeName(String on_off_time_select) {
+    public String getModeName(String on_off_time_select,int selected_plan_id) {
         String mode_name = "";
         PreparedStatement pstmt;
         String time[] = on_off_time_select.split("-");
@@ -456,8 +456,7 @@ int plan_id=selected_plan_id;
 
         try {
             pstmt = connection.prepareStatement(" SELECT mode FROM plan_details where on_time_hour = '" + on_time_hour + "' and on_time_min='" + on_time_min + "' "
-                    + "and off_time_hour='" + off_time_hour + "' and off_time_min='" + off_time_min + "'"
-                    + " and active='Y'  Order by plan_no");
+                    + "and off_time_hour='" + off_time_hour + "' and off_time_min='" + off_time_min + "' and plan_id='"+selected_plan_id+ "' and active='Y'  Order by plan_no ");
 //            pstmt.setInt(1, no_of_sides);
 
             ResultSet rset = pstmt.executeQuery();
@@ -981,3 +980,6 @@ int plan_id=selected_plan_id;
     }
 
 }
+
+
+
