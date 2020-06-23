@@ -210,7 +210,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
 
-        List<Junction> list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Junction> list1 = junctionModel.showData(0, 15);
+        request.setAttribute("junction", list1);
         int junction_id_selected = 0;
         if (task.equals("SelectedJunctionPlans")) {
 
@@ -246,9 +247,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
             if (junction_id_selected1 != 0) {
                 try {
-                    list2 = junctionModel.showDataPlanMap(lowerLimit, noOfRowsToDisplay, junction_id_selected1);
-                    list3 = junctionModel.showDataPlans(lowerLimit, noOfRowsToDisplay, junction_id_selected1, plan_no);
-                    list4 = junctionModel.showDataPhaseDetails(lowerLimit, noOfRowsToDisplay, junction_plan_map_id_selected, plan_no);
+                    list2 = junctionModel.showDataPlanMap(0, 15, junction_id_selected1);
+                    list3 = junctionModel.showDataPlans(0, 15, junction_id_selected1, plan_no);
+                    list4 = junctionModel.showDataPhaseDetails(0, 15, junction_plan_map_id_selected, plan_no);
 
 //                            JSONObject gson = new JSONObject();
 //                     gson.put("list3",list2);
@@ -272,7 +273,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                  int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
                 
 
-                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, noOfRowsToDisplay, j_id11,p_id11);
+                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, 15, j_id11,p_id11);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
@@ -415,7 +416,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
 
-                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, noOfRowsToDisplay, j_id11,day);
+                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, 15, j_id11,day);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
@@ -456,7 +457,64 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
 
         }
-        
+                
+        if (task.equalsIgnoreCase("jdetails")) {
+            JSONArray jsonarr1 = new JSONArray();
+              
+                JSONObject jobj1 = new JSONObject();
+            try {
+               // String fromdate = request.getParameter("from_date");
+              //  String todate = request.getParameter("to_date");
+              //  int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+                
+
+            list1 = junctionModel.showData();
+               // jobj.put("size_1", list3.size());
+                for (int i = 0; i < list1.size(); i++) {
+
+                    jsonarr1.add(list1.get(i).getJunction_id());
+                    jsonarr1.add(list1.get(i).getJunction_name());
+                    jsonarr1.add(list1.get(i).getAddress1());
+                    jsonarr1.add(list1.get(i).getAddress2());
+                    jsonarr1.add(list1.get(i).getState_name());
+                    jsonarr1.add(list1.get(i).getCity_name());
+                    jsonarr1.add(list1.get(i).getController_model());
+                    jsonarr1.add(list1.get(i).getNo_of_sides());
+                    jsonarr1.add(list1.get(i).getAmber_time());
+                    jsonarr1.add(list1.get(i).getFlash_rate());
+                    jsonarr1.add(list1.get(i).getNo_of_plans());
+                    jsonarr1.add(list1.get(i).getMobile_no());
+                    jsonarr1.add(list1.get(i).getSim_no());
+                    jsonarr1.add(list1.get(i).getImei_no());
+                    jsonarr1.add(list1.get(i).getInstant_green_time());
+                    
+                    jsonarr1.add(list1.get(i).getPedestrian());
+                    jsonarr1.add(list1.get(i).getPedestrian_time());
+                    jsonarr1.add(list1.get(i).getSide1_name());
+                    jsonarr1.add(list1.get(i).getSide2_name());
+                    jsonarr1.add(list1.get(i).getSide3_name());
+                    jsonarr1.add(list1.get(i).getSide4_name());
+                    jsonarr1.add(list1.get(i).getSide5_name());
+                    jsonarr1.add(list1.get(i).getFile_no());
+                    jsonarr1.add(list1.get(i).getProgram_version_no());
+                    
+                     // jobj1.put("jun_id", list1.get(i).getJunction_id());
+                    //  jobj1.put("sides", list1.get(i).getNo_of_sides());
+                    //  jobj1.put("p_no", list1.get(i).getProgram_version_no());
+                 }
+                System.out.println("json array --" + jsonarr1);
+
+                jobj1.put("data", jsonarr1);
+
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                return;
+                 
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
         
         if (task.equalsIgnoreCase("plandetails")) {
             JSONArray jsonarr1 = new JSONArray();
@@ -468,7 +526,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
 
-                list3 = junctionModel.showDataPlansdetails(lowerLimit, noOfRowsToDisplay, j_id11, fromdate, todate);
+                list3 = junctionModel.showDataPlansdetails(lowerLimit, 15, j_id11, fromdate, todate);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
@@ -510,6 +568,12 @@ jsonarr1.add(list3.get(i).getTotalphase());
 
         }
         if (task.equals("testing")) {
+          //  request.setAttribute("junction", list1);
+            if(lowerLimit==0){
+            lowerLimit=0;
+            }else{
+             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
+            }
             JSONArray jsonarr = new JSONArray();
             JSONArray jsonarr1 = new JSONArray();
             JSONObject jobj = new JSONObject();
@@ -520,8 +584,8 @@ jsonarr1.add(list3.get(i).getTotalphase());
             String filter = request.getParameter("filterdata");
             if (junction_id_selected1 != 0) {
                 try {
-                    list2 = junctionModel.showDataPlanMapbyfilter(lowerLimit, 6, junction_id_selected1, filter);
-
+                    list2 = junctionModel.showDataPlanMapbyfilter(lowerLimit, 15, junction_id_selected1, filter);
+                    
                     if (filter.equalsIgnoreCase("date")) {
                         System.out.println("lsit 2 size -" + list2.size());
                         jobj.put("size_1", list2.size());
@@ -892,11 +956,12 @@ jsonarr1.add(list3.get(i).getTotalphase());
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
-
+ 
         request.setAttribute("junction_id", junction_id_selected1);
 
         System.out.println("datatata size  --" + list2.size());
         request.setAttribute("junction", list1);
+  //      request.setAttribute("junctionlist", list1);
         request.setAttribute("SelectedJunctionPlans123", list2);
         request.setAttribute("plandetailsSelected", list3);
         request.setAttribute("phasedetailsSelected", list4);

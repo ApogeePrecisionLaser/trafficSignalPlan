@@ -540,6 +540,52 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
+    public List<Junction> showData() {
+        List<Junction> list = new ArrayList<Junction>();
+        try {
+            String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
+                    + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
+                    + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
+                    + " from junction AS j, city AS c "
+                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' ";
+                     
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Junction junction = new Junction();
+                junction.setJunction_id(rset.getInt("junction_id"));
+                junction.setJunction_name(rset.getString("junction_name"));
+                junction.setAddress1(rset.getString("address1"));
+                junction.setAddress2(rset.getString("address2"));
+                junction.setState_name(getStateName());
+                junction.setCity_name(rset.getString("city_name"));
+                junction.setController_model(rset.getString("controller_model"));
+                junction.setNo_of_sides(rset.getInt("no_of_sides"));
+                junction.setAmber_time(rset.getInt("amber_time"));
+                junction.setFlash_rate(rset.getInt("flash_rate"));
+                junction.setNo_of_plans(rset.getInt("no_of_plans"));
+                junction.setMobile_no(rset.getString("mobile_no"));
+                junction.setSim_no(rset.getString("mobile_no"));
+                junction.setImei_no(rset.getString("imei_no"));
+                junction.setInstant_green_time(rset.getInt("instant_green_time"));
+                String pedestrian = rset.getString("pedestrian");
+                junction.setPedestrian(pedestrian.equals("Y") ? "YES" : "NO");
+                junction.setPedestrian_time(rset.getInt("pedestrian_time"));
+                junction.setSide1_name(rset.getString("side1_name"));
+                junction.setSide2_name(rset.getString("side2_name"));
+                junction.setSide3_name(rset.getString("side3_name"));
+                junction.setSide4_name(rset.getString("side4_name"));
+                junction.setSide5_name(rset.getString("side5_name"));
+                junction.setFile_no(rset.getInt("file_no"));
+                junction.setProgram_version_no(rset.getInt("program_version_no"));
+                junction.setRemark(rset.getString("remark"));
+                list.add(junction);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:junctionModel-showData--- " + e);
+        }
+        return list;
+    }
 
     public List<JunctionPlanMap> showDataPlanMap(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected) {
         List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
