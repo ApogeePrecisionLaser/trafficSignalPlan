@@ -204,6 +204,37 @@ public class PhaseDataModel {
         }
         return list;
     }
+    
+    
+ public List<String> getDayTime(String q, String searchJanctionName) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT distinct day  FROM junction j,day_detail dd,junction_plan_map jpm,phase_map pm "
+                + " Where j.junction_name='" + searchJanctionName + "' and j.junction_id=jpm.junction_id and dd.day_detail_id=jpm.day_id "
+                + " and jpm.junction_plan_map_id=pm.junction_plan_map_id  and jpm.active = 'Y' and dd.active = 'Y' and pm.active = 'Y'";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String day = rset.getString("day");
+               // String to_date = rset.getString("to_date");
+                if (day.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(day);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such day exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+    
+    
 
     public List<String> getDay(String q, String searchJanctionName, String date) {
         List<String> list = new ArrayList<String>();
@@ -619,13 +650,13 @@ int plan_id=selected_plan_id;
 //        }
 //        return list;
 //    }
-    public List<PhaseData> showData(int lowerLimit, int noOfRowsToDisplay, String searchManufacturerName) {
-        List<PhaseData> list = new ArrayList<PhaseData>();
-        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-        if (lowerLimit == -1) {
-            addQuery = "";
-        }
-
+//    public List<PhaseData> showData(int lowerLimit, int noOfRowsToDisplay, String searchManufacturerName) {
+//        List<PhaseData> list = new ArrayList<PhaseData>();
+//        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+//        if (lowerLimit == -1) {
+//            addQuery = "";
+//        }
+//
 //       String query2="SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
 //                    + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no " 
 //                    +"FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
@@ -634,14 +665,61 @@ int plan_id=selected_plan_id;
 //                    +"inner join plan_details p on jp.plan_id = p.plan_id "
 //                    +"where j.final_revision = 'VALID' and p.active = 'Y'  "
 //                    +addQuery;
-        String query2 = "SELECT pd.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dayd.day,j.junction_name,pld.on_time_hour,pld.on_time_min,pld.off_time_hour,pld.off_time_min, "
-                + " pld.plan_no,pd.side13,pd.side24,pd.phase_no,pd.padestrian_info,pd.remark,dayd.day_name "
-                + " from junction j,junction_plan_map jpm,phase_map pm,phase_detail pd ,day_detail dayd,date_detail dd,plan_details pld "
-                + " where pd.phase_info_id=pm.phase_id and pm.junction_plan_map_id=jpm.junction_plan_map_id and jpm.junction_id=j.junction_id "
-                + " and  jpm.plan_id=pld.plan_id and (jpm.day_id=dayd.day_detail_id or jpm.date_id=dd.date_detail_id) "
-                + " and pd.active='Y' and jpm.active='Y' "
-                + " and pld.active='Y' and dayd.active='Y' and dd.active='Y'  and pm.active='Y' and j.final_revision='VALID' "
-                + addQuery;
+////        String query2 = "SELECT pd.phase_info_id,jpm.order_no,dd.from_date,dd.to_date,dayd.day,j.junction_name,pld.on_time_hour,pld.on_time_min,pld.off_time_hour,pld.off_time_min, "
+////                + " pld.plan_no,pd.side13,pd.side24,pd.phase_no,pd.padestrian_info,pd.remark,dayd.day_name "
+////                + " from junction j,junction_plan_map jpm,phase_map pm,phase_detail pd ,day_detail dayd,date_detail dd,plan_details pld "
+////                + " where pd.phase_info_id=pm.phase_id and pm.junction_plan_map_id=jpm.junction_plan_map_id and jpm.junction_id=j.junction_id "
+////                + " and  jpm.plan_id=pld.plan_id and (jpm.day_id=dayd.day_detail_id or jpm.date_id=dd.date_detail_id) "
+////                + " and pd.active='Y' and jpm.active='Y' "
+////                + " and pld.active='Y' and dayd.active='Y' and dd.active='Y'  and pm.active='Y' and j.final_revision='VALID' "
+////                + addQuery;
+//
+//        try {
+//            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+//            ResultSet rset = pstmt.executeQuery();
+//            while (rset.next()) {
+//                PhaseData bean = new PhaseData();
+////                bean.setJunction_plan_map_id(rset.getInt(1));
+//                bean.setPhase_info_id(rset.getInt(1));
+//                bean.setOrder_no(rset.getInt(2));
+//                bean.setFrom_date(rset.getString(3));
+//                bean.setTo_date(rset.getString(4));
+//                bean.setDay(rset.getString(5));
+//                bean.setJunction_name(rset.getString(6));
+//                bean.setOn_time_hr(rset.getInt(7));
+//                bean.setOn_time_min(rset.getInt(8));
+//                bean.setOff_time_hr(rset.getInt(9));
+//                bean.setOff_time_min(rset.getInt(10));
+//                bean.setPlan_no(rset.getInt(11));
+//
+////                bean.setOrder_no(rset.getInt(2));
+////                bean.setJunction_name(rset.getString(3));
+//                bean.setSide13(rset.getInt(12));
+//                bean.setSide24(rset.getInt(13));
+//                bean.setPhase_no(rset.getInt(14));
+//                bean.setPadestrian_info(rset.getString(15));
+//                bean.setRemark(rset.getString(16));
+//                bean.setDay_name(rset.getString(17));
+//                list.add(bean);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("Error: " + e);
+//        }
+//        return list;
+//    }
+     public List<PhaseData> showData(int lowerLimit, int noOfRowsToDisplay, String searchManufacturerName) {
+        List<PhaseData> list = new ArrayList<PhaseData>();
+        String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+        if (lowerLimit == -1) {
+            addQuery = "";
+        }
+
+       String query2="select p.phase_info_id ,j.junction_name,pa.plan_no,pa.mode,pm.order_no,p.side13,p.side24,pm.remark "
+               + " from junction j,phase_map pm,phase_detail p,plan_details pa,junction_plan_map jpm "
+               + " where pm.phase_id=p.phase_info_id and pm.junction_plan_map_id=jpm.junction_plan_map_id "
+               + " and jpm.plan_id=pa.plan_id and jpm.junction_id=j.junction_id and j.final_revision='VALID' "
+               + " and pm.active='Y' and jpm.active='Y' and pa.active='Y'";
+
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
@@ -649,25 +727,20 @@ int plan_id=selected_plan_id;
                 PhaseData bean = new PhaseData();
 //                bean.setJunction_plan_map_id(rset.getInt(1));
                 bean.setPhase_info_id(rset.getInt(1));
-                bean.setOrder_no(rset.getInt(2));
-                bean.setFrom_date(rset.getString(3));
-                bean.setTo_date(rset.getString(4));
-                bean.setDay(rset.getString(5));
-                bean.setJunction_name(rset.getString(6));
-                bean.setOn_time_hr(rset.getInt(7));
-                bean.setOn_time_min(rset.getInt(8));
-                bean.setOff_time_hr(rset.getInt(9));
-                bean.setOff_time_min(rset.getInt(10));
-                bean.setPlan_no(rset.getInt(11));
-
+             
+              
+                bean.setJunction_name(rset.getString(2));
+               
+                bean.setPlan_no(rset.getInt(3));
+                                bean.setMode(rset.getString(4));
+                      bean.setOrder_no(rset.getInt(5));
 //                bean.setOrder_no(rset.getInt(2));
 //                bean.setJunction_name(rset.getString(3));
-                bean.setSide13(rset.getInt(12));
-                bean.setSide24(rset.getInt(13));
-                bean.setPhase_no(rset.getInt(14));
-                bean.setPadestrian_info(rset.getString(15));
-                bean.setRemark(rset.getString(16));
-                bean.setDay_name(rset.getString(17));
+                bean.setSide13(rset.getInt(6));
+                bean.setSide24(rset.getInt(7));
+             
+                bean.setRemark(rset.getString(8));
+               
                 list.add(bean);
             }
         } catch (Exception e) {

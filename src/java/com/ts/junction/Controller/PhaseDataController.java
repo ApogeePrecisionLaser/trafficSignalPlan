@@ -76,7 +76,7 @@ public class PhaseDataController extends HttpServlet {
                     list = phaseDataModel.getsearchJunctionName(q);
                 }
                 if (jqstring.equals("getDay")) {
-                    list = phaseDataModel.getDay(q, request.getParameter("action2"), request.getParameter("action3"));
+                    list = phaseDataModel.getDayTime(q, request.getParameter("action2"));
 
                 }
                 Iterator<String> iter = list.iterator();
