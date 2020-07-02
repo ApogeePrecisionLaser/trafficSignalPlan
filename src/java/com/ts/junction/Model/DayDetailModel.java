@@ -161,9 +161,14 @@ public class DayDetailModel {
     public List<DayDetail> showData(int lowerLimit, int noOfRowsToDisplay,String searchitem,String searchday) {
         List<DayDetail> list = new ArrayList<DayDetail>();
         // Use DESC or ASC for descending or ascending order respectively of fetched data.
-        String query = "SELECT d.day_detail_id,d.day_name,d.day,j.remark,j.junction_name "
-                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y'and "
-             + " IF('" + searchitem + "' = '',j.junction_name LIKE '%%',  j.junction_name ='"+searchitem+"') and "
+//        String query = "SELECT d.day_detail_id,d.day_name,d.day,j.remark,j.junction_name "
+//                + "FROM day_detail as d, junction as j where d.junction_id=j.junction_id and j.final_revision='VALID' and d.active='Y'and "
+//             + " IF('" + searchitem + "' = '',j.junction_name LIKE '%%',  j.junction_name ='"+searchitem+"') and "
+//                + " IF('" + searchday + "' = '',d.day LIKE '%%',  d.day ='"+searchday+"') "
+//                + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+       String query = "SELECT d.day_detail_id,d.day_name,d.day,d.remark "
+                + "FROM day_detail as d where   d.active='Y'and "
+           
                 + " IF('" + searchday + "' = '',d.day LIKE '%%',  d.day ='"+searchday+"') "
                 + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         try {
@@ -174,7 +179,7 @@ public class DayDetailModel {
 
                 dateDetail.setDay_name(rset.getString("day_name"));
                 dateDetail.setDay(rset.getString("day"));
-                dateDetail.setJunction_name(rset.getString("junction_name"));
+                //dateDetail.setJunction_name(rset.getString("junction_name"));
                 dateDetail.setRemark(rset.getString("remark"));
                 list.add(dateDetail);
             }
@@ -211,14 +216,17 @@ public class DayDetailModel {
     }
 
     public int insertRecord(DayDetail dayDetail) {
-        String query = "INSERT INTO day_detail(day_name, day, junction_id) "
-                + "VALUES(?, ?, ?) ";
+//        String query = "INSERT INTO day_detail(day_name, day, junction_id) "
+//                + "VALUES(?, ?, ?) ";
+ String query = "INSERT INTO day_detail(day_name, day,remark) "
+                + "VALUES(?, ?,?) ";
         int rowsAffected = 0;
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             pstmt.setString(1, dayDetail.getDay_name());
             pstmt.setString(2, dayDetail.getDay());
-            pstmt.setInt(3, dayDetail.getJunction_id());
+             pstmt.setString(3, dayDetail.getRemark());
+            //pstmt.setInt(3, dayDetail.getJunction_id());
            
             rowsAffected = pstmt.executeUpdate();
         } catch (Exception e) {
@@ -273,7 +281,9 @@ public class DayDetailModel {
 
                 int revision_no = getRevisionNo(dayDetail.getDay_detail_id()) + 1;
 
-                insert_query = "INSERT into day_detail(day_detail_id,day_name, day, junction_id,revision_no ) "
+//                insert_query = "INSERT into day_detail(day_detail_id,day_name, day, junction_id,revision_no ) "
+//                        + " VALUES(?, ?, ?, ?, ?) ";
+ insert_query = "INSERT into day_detail(day_detail_id,day_name, day,revision_no ) "
                         + " VALUES(?, ?, ?, ?, ?) ";
                 try {
                     connection.setAutoCommit(false);
@@ -282,9 +292,9 @@ public class DayDetailModel {
                     pstmt.setInt(1, dayDetail.getDay_detail_id());
                    pstmt.setString(2, dayDetail.getDay_name());
                     pstmt.setString(3, dayDetail.getDay());
-                    pstmt.setInt(4, dayDetail.getJunction_id());
+                    //pstmt.setInt(4, dayDetail.getJunction_id());
                      
-                    pstmt.setInt(5, revision_no);
+                    pstmt.setInt(4, revision_no);
                     rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
                         // Finally commit the connection.

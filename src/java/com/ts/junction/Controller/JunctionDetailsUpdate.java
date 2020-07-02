@@ -1,4 +1,4 @@
- /*
+  /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -6,6 +6,7 @@ package com.ts.junction.Controller;
 
 import com.ts.junction.Model.JunctionModel;
 import com.ts.junction.Model.JunctionPlanMapModel;
+import com.ts.junction.Model.PlanDetailModel;
 import com.ts.junction.Model.junctionupdatemodel;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.JunctionPlanMap;
@@ -15,6 +16,7 @@ import com.ts.junction.tableClasses.PlanDetails;
 import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +42,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
     public static JSONArray junplanmaparray = new JSONArray();
     public static JSONArray plandetails = new JSONArray();
     //public static JSONObject junobj=new JSONObject();
-
+  static int p_id14_junction_plan_map=0;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -210,7 +212,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
 
-        List<Junction> list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Junction> list1 = junctionModel.showData(0, 15);
+        request.setAttribute("junction", list1);
         int junction_id_selected = 0;
         if (task.equals("SelectedJunctionPlans")) {
 
@@ -246,9 +249,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
             if (junction_id_selected1 != 0) {
                 try {
-                    list2 = junctionModel.showDataPlanMap(lowerLimit, noOfRowsToDisplay, junction_id_selected1);
-                    list3 = junctionModel.showDataPlans(lowerLimit, noOfRowsToDisplay, junction_id_selected1, plan_no);
-                    list4 = junctionModel.showDataPhaseDetails(lowerLimit, noOfRowsToDisplay, junction_plan_map_id_selected, plan_no);
+                    list2 = junctionModel.showDataPlanMap(0, 15, junction_id_selected1);
+                    list3 = junctionModel.showDataPlans(0, 15, junction_id_selected1, plan_no);
+                    list4 = junctionModel.showDataPhaseDetails(0, 15, junction_plan_map_id_selected, plan_no);
 
 //                            JSONObject gson = new JSONObject();
 //                     gson.put("list3",list2);
@@ -261,6 +264,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 System.out.println("junction selected id is 0");
             }
         }
+    
+  
+       
         if (task.equalsIgnoreCase("plandetailsnormal")) {
             JSONArray jsonarr1 = new JSONArray();
               
@@ -268,16 +274,19 @@ public class JunctionDetailsUpdate extends HttpServlet {
             try {
                 String day = request.getParameter("day");
              //   String todate = request.getParameter("to_date");
+             
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                  int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
-                
+                      p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+                     
+                   //int p_id16 = Integer.parseInt(request.getParameter("junction_plan_map_id1"));
 
-                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, noOfRowsToDisplay, j_id11,p_id11);
+                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, 15, j_id11,p_id11);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
 
-                    jsonarr1.add(list3.get(i).getPlan_no());
+                    jsonarr1.add(list3.get(i).getPlan_id());
                     jsonarr1.add(list3.get(i).getOn_time_hour());
                     jsonarr1.add(list3.get(i).getOn_time_min());
                     jsonarr1.add(list3.get(i).getOff_time_hour());
@@ -295,11 +304,103 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+                             jsonarr1.add(list3.get(i).getTotalphase()); //p_id14
 
                  jobj1.put("p_id", list3.get(i).getPlan_id());
+                  jobj1.put("jpm_test_id", p_id14_junction_plan_map);
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
+
+                jobj1.put("data", jsonarr1);
+
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                  request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+                return;
+                 
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
+                
+        if (task.equalsIgnoreCase("phasedataviewdetails")) {
+            JSONArray jsonarr1 = new JSONArray();
+              
+                JSONObject jobj1 = new JSONObject();
+            try {
+              //  String day = request.getParameter("day");
+             //   String todate      String day = request.getParameter("day");
+             //   St= request.getParameter("to_date");
+                int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+                 int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
+                
+
+                list4 = junctionModel.showDataPhaseNew(j_id11,p_id11);
+
+               // jobj.put("size_1", list3.size());
+                for (int i = 0; i < list4.size(); i++) {
+                     jobj1.put("no_of_sides", list4.get(i).getNo_of_sides());
+                  //  jobj1.put("no_of_sides", "3");
+                    jsonarr1.add(list4.get(i).getPhase_info_id());
+                    jsonarr1.add(list4.get(i).getJunction_name());
+                       jsonarr1.add(list4.get(i).getPhase_no());
+                  //  jsonarr1.add(list4.get(i).getSide13());
+                String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
+           
+                   // jsonarr1.add(list4.get(i).getSide24());
+                     String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
+                        String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
+                    String side2 = junctionModel.decToBinaryAndSplitFirst(side24Status);
+                 String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
+                String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
+                String side5 = "00000000";
+                side1 = side1.concat("0000");
+                   side2 = side2.concat("0000");
+                     side3 = side3.concat("0000");
+              side4 = side4.concat("0000");
+                String s1[] =  side1.split("");
+                String []s2= side2.split("");
+                String []s3=side3.split("");
+                String []s4= side4.split("");
+                
+                
+          
+          
+             
+                  
+                    // jsonarr1.add(list4.get(i).getRemark());
+                             for(int k=0;k<8;k++){
+                         // jobj1.put("s1"+i+k,s1[k]);
+                         // jobj1.put("s2"+i+k,s2[k]);
+                         // jobj1.put("s3"+i+k,s3[k]);
+                         // jobj1.put("s4"+i+k,s4[k]);
+
+                                //
+                                //   jsonarr1.add(s2[k]);
+                                  //    jsonarr1.add(s3[k]);
+                                   //      jsonarr1.add(s4[k]);
+                                       
+                             }
+                               for(int a=0;a<8;a++){
+                                   jsonarr1.add(s1[a]);
+                               }
+                               for(int b=0;b<8;b++){
+                                   jsonarr1.add(s2[b]);
+                               }
+                               for(int c=0;c<8;c++){
+                                   jsonarr1.add(s3[c]);
+                               }
+                               for(int d=0;d<8;d++){
+                                   jsonarr1.add(s4[d]);
+                               }
+                              jobj1.put("listsize",list4.size());
+                // jobj1.put("p_id", list3.get(i).getPlan_id());
+                    // jobj1.put("j_id", list2.get(i).getJunction_id());
+                }
+                System.out.println("json array --" + jsonarr1);
+                System.out.println("json object --" + jobj1);
 
                 jobj1.put("data", jsonarr1);
 
@@ -324,13 +425,13 @@ public class JunctionDetailsUpdate extends HttpServlet {
              //   String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
-
-                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, noOfRowsToDisplay, j_id11,day);
+     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, 15, j_id11,day);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
 
-                    jsonarr1.add(list3.get(i).getPlan_no());
+                    jsonarr1.add(list3.get(i).getPlan_id());
                     jsonarr1.add(list3.get(i).getOn_time_hour());
                     jsonarr1.add(list3.get(i).getOn_time_min());
                     jsonarr1.add(list3.get(i).getOff_time_hour());
@@ -348,6 +449,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+                    jsonarr1.add(list3.get(i).getTotalphase());
 
                  jobj1.put("jpm", list3.get(i).getMode());
                     jobj1.put("p_id", list3.get(i).getPlan_id());
@@ -365,7 +467,64 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
 
         }
-        
+                
+        if (task.equalsIgnoreCase("jdetails")) {
+            JSONArray jsonarr1 = new JSONArray();
+              
+                JSONObject jobj1 = new JSONObject();
+            try {
+               // String fromdate = request.getParameter("from_date");
+              //  String todate = request.getParameter("to_date");
+              //  int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+                
+
+            list1 = junctionModel.showData();
+               // jobj.put("size_1", list3.size());
+                for (int i = 0; i < list1.size(); i++) {
+
+                    jsonarr1.add(list1.get(i).getJunction_id());
+                    jsonarr1.add(list1.get(i).getJunction_name());
+                    jsonarr1.add(list1.get(i).getAddress1());
+                    jsonarr1.add(list1.get(i).getAddress2());
+                    jsonarr1.add(list1.get(i).getState_name());
+                    jsonarr1.add(list1.get(i).getCity_name());
+                    jsonarr1.add(list1.get(i).getController_model());
+                    jsonarr1.add(list1.get(i).getNo_of_sides());
+                    jsonarr1.add(list1.get(i).getAmber_time());
+                    jsonarr1.add(list1.get(i).getFlash_rate());
+                    jsonarr1.add(list1.get(i).getNo_of_plans());
+                    jsonarr1.add(list1.get(i).getMobile_no());
+                    jsonarr1.add(list1.get(i).getSim_no());
+                    jsonarr1.add(list1.get(i).getImei_no());
+                    jsonarr1.add(list1.get(i).getInstant_green_time());
+                    
+                    jsonarr1.add(list1.get(i).getPedestrian());
+                    jsonarr1.add(list1.get(i).getPedestrian_time());
+                    jsonarr1.add(list1.get(i).getSide1_name());
+                    jsonarr1.add(list1.get(i).getSide2_name());
+                    jsonarr1.add(list1.get(i).getSide3_name());
+                    jsonarr1.add(list1.get(i).getSide4_name());
+                    jsonarr1.add(list1.get(i).getSide5_name());
+                    jsonarr1.add(list1.get(i).getFile_no());
+                    jsonarr1.add(list1.get(i).getProgram_version_no());
+                    
+                     // jobj1.put("jun_id", list1.get(i).getJunction_id());
+                    //  jobj1.put("sides", list1.get(i).getNo_of_sides());
+                    //  jobj1.put("p_no", list1.get(i).getProgram_version_no());
+                 }
+                System.out.println("json array --" + jsonarr1);
+
+                jobj1.put("data", jsonarr1);
+
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                return;
+                 
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
         
         if (task.equalsIgnoreCase("plandetails")) {
             JSONArray jsonarr1 = new JSONArray();
@@ -376,8 +535,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
-
-                list3 = junctionModel.showDataPlansdetails(lowerLimit, noOfRowsToDisplay, j_id11, fromdate, todate);
+     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+                list3 = junctionModel.showDataPlansdetails(lowerLimit, 15, j_id11, fromdate, todate);
 
                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
@@ -400,9 +559,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
+jsonarr1.add(list3.get(i).getTotalphase());
 
                  jobj1.put("jpm", list3.get(i).getMode());
-                    // jobj1.put("j_id", list2.get(i).getJunction_id());
+                     jobj1.put("p_id", list3.get(i).getPlan_id());
                 }
                 System.out.println("json array --" + jsonarr1);
 
@@ -410,6 +570,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
+                     request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                 return;
                  
             } catch (JSONException ex) {
@@ -418,6 +579,12 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
         }
         if (task.equals("testing")) {
+          //  request.setAttribute("junction", list1);
+            if(lowerLimit==0){
+            lowerLimit=0;
+            }else{
+             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
+            }
             JSONArray jsonarr = new JSONArray();
             JSONArray jsonarr1 = new JSONArray();
             JSONObject jobj = new JSONObject();
@@ -428,16 +595,16 @@ public class JunctionDetailsUpdate extends HttpServlet {
             String filter = request.getParameter("filterdata");
             if (junction_id_selected1 != 0) {
                 try {
-                    list2 = junctionModel.showDataPlanMapbyfilter(lowerLimit, 6, junction_id_selected1, filter);
-
+                    list2 = junctionModel.showDataPlanMapbyfilter(lowerLimit, 15, junction_id_selected1, filter);
+                    
                     if (filter.equalsIgnoreCase("date")) {
                         System.out.println("lsit 2 size -" + list2.size());
                         jobj.put("size_1", list2.size());
                         for (int i = 0; i < list2.size(); i++) {
                             jsonarr1.add(list2.get(i).getFrom_date());
                             jsonarr1.add(list2.get(i).getTo_date());
-                            jsonarr1.add(list2.get(i).getPlan_no());
-
+                            jsonarr1.add(list2.get(i).getPlan_id());
+                            jsonarr1.add(list2.get(i).getJunction_plan_map_id());
                             // jsonarr1.add("");
                             jobj1.put("jpm", list2.get(i).getJunction_plan_map_id());
                             jobj1.put("j_id", list2.get(i).getJunction_id());
@@ -458,6 +625,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
                             jsonarr1.add(list2.get(i).getDay());
                             // jsonarr1.add(list2.get(i).getTo_date());
                             jsonarr1.add(list2.get(i).getPlan_no());
+                             jsonarr1.add(list2.get(i).getJunction_plan_map_id());
+                           // jsonarr1.add(list2.get(i).getPlan_id());
 
                         }
                         System.out.println("json array --" + jsonarr1);
@@ -478,6 +647,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                             // jsonarr1.add(list2.get(i).getOff_time_min());
                            
                              jsonarr1.add(list2.get(i).getPlan_id());
+                              jsonarr1.add(list2.get(i).getJunction_plan_map_id());
                              //jobj1.put("p_id", list2.get(i).getPlan_id());
                             
 
@@ -487,6 +657,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                         jobj1.put("data", jsonarr1);
                         PrintWriter out1 = response.getWriter();
                         out1.print(jobj1.toString());
+                             request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                         return;
 
                     }
@@ -504,7 +675,75 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 System.out.println("junction selected id is 0");
             }
         }
-
+// plan update code
+//for update or insert updatedetails data start
+        task="SaveupdateDetails";
+        if (task.equals("SaveupdateDetails")) {
+          PlanDetailModel planDetailModel = new PlanDetailModel();
+           
+        planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
+        planDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
+        planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
+        planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
+        planDetailModel.setConnection();
+        try{
+                PlanDetails planDetails = new PlanDetails();
+                int plan_detail_id;
+                try {
+                    plan_detail_id = Integer.parseInt(request.getParameter("plan_id").trim());
+                } catch (Exception e) {
+                    plan_detail_id = 0;
+                }
+                int junction_plan_map_id_test=0;
+                try {
+                    junction_plan_map_id_test = Integer.parseInt(request.getParameter("junction_plan_map_id1p").trim());
+                } catch (Exception e) {
+                    junction_plan_map_id_test = 0;
+                   junction_plan_map_id_test=p_id14_junction_plan_map;
+                }
+                planDetails.setJunction_plan_map_id(junction_plan_map_id_test);               
+                planDetails.setPlan_id(plan_detail_id);
+                planDetails.setPlan_no(Integer.parseInt(request.getParameter("plan_no").trim()));
+                planDetails.setOn_time_hour(Integer.parseInt(request.getParameter("on_time_hour").trim()));
+                planDetails.setOn_time_min(Integer.parseInt(request.getParameter("on_time_min").trim()));
+                planDetails.setOff_time_hour(Integer.parseInt(request.getParameter("off_time_hour").trim()));
+                planDetails.setOff_time_min(Integer.parseInt(request.getParameter("off_time_min").trim()));
+                planDetails.setMode(request.getParameter("mode").trim());
+                planDetails.setSide1_green_time(Integer.parseInt(request.getParameter("side1_green_time").trim()));
+                planDetails.setSide2_green_time(Integer.parseInt(request.getParameter("side2_green_time").trim()));
+                planDetails.setSide3_green_time(Integer.parseInt(request.getParameter("side3_green_time").trim()));
+                planDetails.setSide4_green_time(Integer.parseInt(request.getParameter("side4_green_time").trim()));
+                planDetails.setSide5_green_time(Integer.parseInt(request.getParameter("side5_green_time").trim()));
+                planDetails.setSide1_amber_time(Integer.parseInt(request.getParameter("side1_amber_time").trim()));
+                planDetails.setSide2_amber_time(Integer.parseInt(request.getParameter("side2_amber_time").trim()));
+                planDetails.setSide3_amber_time(Integer.parseInt(request.getParameter("side3_amber_time").trim()));
+                planDetails.setSide4_amber_time(Integer.parseInt(request.getParameter("side4_amber_time").trim()));
+                planDetails.setSide5_amber_time(Integer.parseInt(request.getParameter("side5_amber_time").trim()));
+                planDetails.setTransferred_status(request.getParameter("transferred_status").trim());
+                planDetails.setRemark(request.getParameter("remark").trim());
+                int planCheck=0;
+                planCheck= planDetailModel.checkplan(planDetails);
+                if(planCheck==0){
+                    if (plan_detail_id == 0) {
+                // validation was successful so now insert record.
+                planDetailModel.insertRecordMapNewPlanId(planDetails,planCheck);
+            }
+                // validation was successful so now insert record.
+                
+            
+                }else {
+                    try {
+                        planDetailModel.mapNewPlanId(planDetails,planCheck);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+        }catch(Exception e)
+        {}
+        }    
+        
+        //end
+//end
         if (task.equals("junctionsave")) {
 
             try {
@@ -799,14 +1038,16 @@ public class JunctionDetailsUpdate extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
-
+ 
         request.setAttribute("junction_id", junction_id_selected1);
 
         System.out.println("datatata size  --" + list2.size());
         request.setAttribute("junction", list1);
+  //      request.setAttribute("junctionlist", list1);
         request.setAttribute("SelectedJunctionPlans123", list2);
-        request.setAttribute("plandetailsSelected", list3);
+        request.setAttribute("plandetailsSelected", list3);//p_id14_junction_plan_map
         request.setAttribute("phasedetailsSelected", list4);
+         request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
         request.setAttribute("message", junctionModel.getMessage());
         request.setAttribute("msgBgColor", junctionModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

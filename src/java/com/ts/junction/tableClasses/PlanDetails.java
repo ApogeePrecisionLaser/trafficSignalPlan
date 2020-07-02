@@ -12,8 +12,25 @@ package com.ts.junction.tableClasses;
 public class PlanDetails {
     private int plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min;
     private int side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time;
-    private int side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time;
-    private String mode, transferred_status,  remark;
+    private int side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,junction_plan_map_id;
+    private String mode, transferred_status,  remark,totalphase;
+   //int ontime_hr,int ontime_min,int offtime_hr,int ontime_min
+
+    public int getJunction_plan_map_id() {
+        return junction_plan_map_id;
+    }
+
+    public void setJunction_plan_map_id(int junction_plan_map_id) {
+        this.junction_plan_map_id = junction_plan_map_id;
+    }
+
+    public String getTotalphase() {
+        return totalphase;
+    }
+
+    public void setTotalphase(String totalphase) {
+        this.totalphase = totalphase;
+    }
 
     public int getPlan_id() {
         return plan_id;

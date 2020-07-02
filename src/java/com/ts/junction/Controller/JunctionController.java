@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -34,6 +34,7 @@ public class JunctionController extends HttpServlet {
         junctionModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
         junctionModel.setConnection();
         String task = request.getParameter("task");
+        String searchjunction = request.getParameter("searchjunction");
         String requester = request.getParameter("requester");
         try {
             //----- This is only for Vendor key Person JQuery
@@ -45,8 +46,10 @@ public class JunctionController extends HttpServlet {
                 List<String> list = null;
                 if (jqstring.equals("getCityName")) {
                     list = junctionModel.getCityName(q, request.getParameter("action2"));
-                } else if (jqstring.equals("getStateName")) {
+                }  if (jqstring.equals("getStateName")) {
                     list = junctionModel.getStateName(q);
+                } if (jqstring.equals("getJunction")) {
+                    list = junctionModel.getJunc();
                 }
                 Iterator<String> iter = list.iterator();
                 while (iter.hasNext()) {
@@ -63,11 +66,17 @@ public class JunctionController extends HttpServlet {
             System.out.println("\n Error --SiteListController get JQuery Parameters Part-" + e);
         }
 
-        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 4, noOfRowsInTable;
+        int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 5, noOfRowsInTable;
         if (task == null) {
             task = "";
         }
-
+        if (searchjunction == null) {
+            searchjunction = "";
+        }
+ if (task.equals("SearchAllRecords")) {
+         searchjunction="";
+         //searchdistrict="";
+        }
         if (task.equals("Delete")) {
             // Pretty sure that junction_id will be available.
             int junction_id = Integer.parseInt(request.getParameter("junction_id").trim());
@@ -155,7 +164,7 @@ public class JunctionController extends HttpServlet {
         }
 
 
-        noOfRowsInTable = junctionModel.getNoOfRows();                  // get the number of records (rows) in the table.
+        noOfRowsInTable = junctionModel.getNoOfRows(searchjunction);                  // get the number of records (rows) in the table.
 
         try {
             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
@@ -189,7 +198,7 @@ public class JunctionController extends HttpServlet {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
 
-        List<Junction> list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay);
+        List<Junction> list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay,searchjunction);
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
 

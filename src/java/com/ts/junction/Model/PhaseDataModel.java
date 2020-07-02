@@ -267,8 +267,7 @@ public class PhaseDataModel {
         }
         return list;
     }
-
-    public List<String> getsearchJunctionName(String q) {
+ public List<String> getsearchJunctionName(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
         String query = "SELECT DISTINCT junction_name "
@@ -288,6 +287,32 @@ public class PhaseDataModel {
             }
             if (count == 0) {
                 list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+    public List<String> getPlanMode(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT DISTINCT mode "
+                + " FROM plan_details";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String junction_name = rset.getString("mode");
+                if (junction_name.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(junction_name);
+                    count++;
+                }
+
+            }
+            if (count == 0) {
+                list.add("No such mode_name exists.");
             }
         } catch (Exception e) {
             System.out.println("Error: " + e);
@@ -707,7 +732,7 @@ int plan_id=selected_plan_id;
 //        }
 //        return list;
 //    }
-     public List<PhaseData> showData(int lowerLimit, int noOfRowsToDisplay, String searchManufacturerName) {
+     public List<PhaseData> showData(int lowerLimit, int noOfRowsToDisplay,String searchJunctionNameSearch,String mode) {
         List<PhaseData> list = new ArrayList<PhaseData>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
@@ -718,10 +743,16 @@ int plan_id=selected_plan_id;
                + " from junction j,phase_map pm,phase_detail p,plan_details pa,junction_plan_map jpm "
                + " where pm.phase_id=p.phase_info_id and pm.junction_plan_map_id=jpm.junction_plan_map_id "
                + " and jpm.plan_id=pa.plan_id and jpm.junction_id=j.junction_id and j.final_revision='VALID' "
-               + " and pm.active='Y' and jpm.active='Y' and pa.active='Y'";
+               + " and pm.active='Y' and jpm.active='Y' and pa.active='Y'"
+                +" and IF('" + searchJunctionNameSearch + "' = '', j.junction_name LIKE '%%',j.junction_name =?) "
+                 +" and IF('" + mode + "' = '', pa.mode LIKE '%%',pa.mode =?) "
+               
+               + addQuery ;
 
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+              pstmt.setString(1, searchJunctionNameSearch);
+               pstmt.setString(2, mode);
             ResultSet rset = pstmt.executeQuery();
             while (rset.next()) {
                 PhaseData bean = new PhaseData();

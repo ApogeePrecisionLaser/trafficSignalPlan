@@ -1,4 +1,4 @@
- /*
+  /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -133,7 +133,21 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-
+public List<String> getJunc() {
+        String query = "SELECT distinct junction_name from junction WHERE final_revision = 'VALID'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("junction_name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
     public List<String> getStateName(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
@@ -196,7 +210,26 @@ public class JunctionModel extends HttpServlet {
         return rowsAffected;
     }
 
-    public int getNoOfRows() {
+    public int getNoOfRows(String searchjunction) {
+        
+        String query="select count(*) from junction WHERE final_revision= 'VALID' and "
+                + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='"+searchjunction+"')";
+                
+        int noOfRows = 0;
+        try {
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            rset.next();
+            noOfRows = Integer.parseInt(rset.getString(1));
+            System.out.println(noOfRows);
+        } catch (Exception e) {
+            System.out.println("JunctionModel getNoOfRows() Error: " + e);
+        }
+        return noOfRows;
+    }
+    
+    
+      public int getNoOfRows() {
+        
         int noOfRows = 0;
         try {
             ResultSet rset = connection.prepareStatement("select count(*) from junction WHERE final_revision= 'VALID' ").executeQuery();
@@ -208,6 +241,7 @@ public class JunctionModel extends HttpServlet {
         }
         return noOfRows;
     }
+
 
     public int getCityID(String city_name) {
         int city_id = 0;
@@ -247,6 +281,54 @@ public class JunctionModel extends HttpServlet {
         return state_name;
     }
 
+    
+      public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay) {
+        List<Junction> list = new ArrayList<Junction>();
+        try {
+            String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
+                    + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
+                    + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
+                    + " from junction AS j, city AS c "
+                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' and "
+                    + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
+            System.out.println(lowerLimit + "," + noOfRowsToDisplay);
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Junction junction = new Junction();
+                junction.setJunction_id(rset.getInt("junction_id"));
+                junction.setJunction_name(rset.getString("junction_name"));
+                junction.setAddress1(rset.getString("address1"));
+                junction.setAddress2(rset.getString("address2"));
+                junction.setState_name(getStateName());
+                junction.setCity_name(rset.getString("city_name"));
+                junction.setController_model(rset.getString("controller_model"));
+                junction.setNo_of_sides(rset.getInt("no_of_sides"));
+                junction.setAmber_time(rset.getInt("amber_time"));
+                junction.setFlash_rate(rset.getInt("flash_rate"));
+                junction.setNo_of_plans(rset.getInt("no_of_plans"));
+                junction.setMobile_no(rset.getString("mobile_no"));
+                junction.setSim_no(rset.getString("mobile_no"));
+                junction.setImei_no(rset.getString("imei_no"));
+                junction.setInstant_green_time(rset.getInt("instant_green_time"));
+                String pedestrian = rset.getString("pedestrian");
+                junction.setPedestrian(pedestrian.equals("Y") ? "YES" : "NO");
+                junction.setPedestrian_time(rset.getInt("pedestrian_time"));
+                junction.setSide1_name(rset.getString("side1_name"));
+                junction.setSide2_name(rset.getString("side2_name"));
+                junction.setSide3_name(rset.getString("side3_name"));
+                junction.setSide4_name(rset.getString("side4_name"));
+                junction.setSide5_name(rset.getString("side5_name"));
+                junction.setFile_no(rset.getInt("file_no"));
+                junction.setProgram_version_no(rset.getInt("program_version_no"));
+                junction.setRemark(rset.getString("remark"));
+                list.add(junction);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:junctionModel-showData--- " + e);
+        }
+        return list;
+    }
     public boolean insertRecord(Junction junction) {
         String junctionQuery = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
@@ -493,16 +575,63 @@ public class JunctionModel extends HttpServlet {
         return rowsAffected;
     }
 
-    public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay,String searchjunction) {
         List<Junction> list = new ArrayList<Junction>();
         try {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
                     + " from junction AS j, city AS c "
-                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' "
+                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' and "
+                    + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='"+searchjunction+"')"
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-            System.out.println(lowerLimit + "," + noOfRowsToDisplay);
+          //  System.out.println(lowerLimit + "," + noOfRowsToDisplay);
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Junction junction = new Junction();
+                junction.setJunction_id(rset.getInt("junction_id"));
+                junction.setJunction_name(rset.getString("junction_name"));
+                junction.setAddress1(rset.getString("address1"));
+                junction.setAddress2(rset.getString("address2"));
+                junction.setState_name(getStateName());
+                junction.setCity_name(rset.getString("city_name"));
+                junction.setController_model(rset.getString("controller_model"));
+                junction.setNo_of_sides(rset.getInt("no_of_sides"));
+                junction.setAmber_time(rset.getInt("amber_time"));
+                junction.setFlash_rate(rset.getInt("flash_rate"));
+                junction.setNo_of_plans(rset.getInt("no_of_plans"));
+                junction.setMobile_no(rset.getString("mobile_no"));
+                junction.setSim_no(rset.getString("mobile_no"));
+                junction.setImei_no(rset.getString("imei_no"));
+                junction.setInstant_green_time(rset.getInt("instant_green_time"));
+                String pedestrian = rset.getString("pedestrian");
+                junction.setPedestrian(pedestrian.equals("Y") ? "YES" : "NO");
+                junction.setPedestrian_time(rset.getInt("pedestrian_time"));
+                junction.setSide1_name(rset.getString("side1_name"));
+                junction.setSide2_name(rset.getString("side2_name"));
+                junction.setSide3_name(rset.getString("side3_name"));
+                junction.setSide4_name(rset.getString("side4_name"));
+                junction.setSide5_name(rset.getString("side5_name"));
+                junction.setFile_no(rset.getInt("file_no"));
+                junction.setProgram_version_no(rset.getInt("program_version_no"));
+                junction.setRemark(rset.getString("remark"));
+                list.add(junction);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:junctionModel-showData--- " + e);
+        }
+        return list;
+    }
+    public List<Junction> showData() {
+        List<Junction> list = new ArrayList<Junction>();
+        try {
+            String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
+                    + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
+                    + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
+                    + " from junction AS j, city AS c "
+                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' ";
+                     
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 Junction junction = new Junction();
@@ -779,7 +908,28 @@ public class JunctionModel extends HttpServlet {
         return list;
     }
     
-    
+     public String getTotalPhase(String city_name) {
+        String city_id = "";
+        String query = " Select count(*) from phase_detail pd,phase_map pm ,junction_plan_map jpm "
+                + "where pm.phase_id=pd.phase_info_id and \n" +
+"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' "
+                + "and jpm.active='Y' and pd.active='Y' and jpm.plan_id='"+city_name+"'";
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(query);
+          //  pstmt.setString(1, city_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count=0;
+            while (rset.next()) {
+                
+              city_id =rset.getString(1);
+            }
+             
+        } catch (Exception ex) {
+            System.out.println("JunctionModel getCityID() Error: " + ex);
+        }
+        return city_id;
+    }
      public List<PlanDetails> showDataPlansdetails(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String fromdate,String todate) {
 List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
@@ -787,7 +937,7 @@ List<String> list1 = new ArrayList<String>();
         if (lowerLimit == -1) {
             addQuery = "";
         }
-
+ String totalphase=null;
         String query2 = "SELECT p.plan_id "
                 + "FROM junction_plan_map jp "
                 + "left join date_detail dd on jp.date_id = dd.date_detail_id "
@@ -817,8 +967,13 @@ List<String> list1 = new ArrayList<String>();
                     + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
                     + "where s.plan_id IN ("+joined+")");
             ResultSet rset1 = pstmt1.executeQuery(); 
-            while (rset1.next()) {
+           int count1=0;
+           while (rset1.next()) {
+                
                  PlanDetails bean = new PlanDetails();
+                 
+                 totalphase=getTotalPhase(list1.get(count1));
+                 count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -838,6 +993,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -855,7 +1011,7 @@ List<String> list1 = new ArrayList<String>();
         if (lowerLimit == -1) {
             addQuery = "";
         }
-
+String totalphase=""; 
         String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
                 + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
                 + "left join day_detail d on jp.day_id = d.day_detail_id "
@@ -871,7 +1027,7 @@ List<String> list1 = new ArrayList<String>();
             int count=0;
             while (rset.next()) {
                 String plan_id = rset.getString("plan_id");
-             
+            // totalphase=getTotalPhase(plan_id);
                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
                     list1.add(plan_id);
                     count++;
@@ -884,8 +1040,11 @@ List<String> list1 = new ArrayList<String>();
                     + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
                     + "where s.plan_id IN ("+joined+")");
             ResultSet rset1 = pstmt1.executeQuery(); 
+             int count1=0; 
             while (rset1.next()) {
                  PlanDetails bean = new PlanDetails();
+                 totalphase=getTotalPhase(list1.get(count1));
+                 count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -905,6 +1064,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                 bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -917,6 +1077,7 @@ List<String> list1 = new ArrayList<String>();
       public List<PlanDetails> showDataPlansdetailsnormal(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_id) {
         List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
+        String totalphase="";
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
@@ -928,7 +1089,7 @@ List<String> list1 = new ArrayList<String>();
                 + "inner join junction j on jp.junction_id = j.junction_id "
                 + "inner join plan_details p on jp.plan_id = p.plan_id "
                 + "where j.final_revision = 'VALID' and jp.active='Y' "
-                + "and p.active = 'Y' and jp.day_id is null and jp.date_id is null and jp.junction_id='"+junction_id_selected1+"' and p.plan_id='"+plan_id+"'"
+                + "and p.active = 'Y' and jp.day_id is null and jp.date_id is null and jp.junction_id='"+junction_id_selected1+"' and p.plan_no='"+plan_id+"'"
                 + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
@@ -937,7 +1098,7 @@ List<String> list1 = new ArrayList<String>();
             int count=0;
             while (rset.next()) {
                 String plan_ids = rset.getString("plan_id");
-             
+                totalphase=getTotalPhase(plan_ids);
                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
                     list1.add(plan_ids);
                     count++;
@@ -971,6 +1132,7 @@ List<String> list1 = new ArrayList<String>();
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
+                bean.setTotalphase(totalphase);
                 list.add(bean);
              
             }
@@ -1078,8 +1240,7 @@ List<String> list1 = new ArrayList<String>();
         String phaseString2 = phaseString1.substring(1);
         return phaseString2;
     }
-
-    public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
+public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
         List<PhaseData> list = new ArrayList<PhaseData>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
@@ -1131,6 +1292,92 @@ List<String> list1 = new ArrayList<String>();
                 bean.setPadestrian_info(rset.getString(15));
                 bean.setRemark(rset.getString(16));
 
+                list.add(bean);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+ public String decToBinaryAndSplitFirst(String n) 
+    { 
+        //perform decToBinary
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+         //String binary = n;
+      int a=n.length();
+      String remain="";
+      String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      n=str.concat(n);
+}
+
+        String sideFirst = n.substring(0, 4);
+        return sideFirst;
+    }
+    
+    public String decToBinaryAndSplitLater(String n) 
+    { 
+        //perform decToBinary
+//        int[] binaryNum = decToBinary(n);
+//        int len = binaryNum.length;
+//        String binary = "";
+//        for (int i = 0; i < binaryNum.length; i++) {
+//            binary = binary + binaryNum[i];            
+//        }
+        // String binary = Integer.toBinaryString(n);
+      int a=n.length();
+       String str="";
+if(a<=7){
+    a=8-a;
+    
+      for(int k=0;k<a;k++){
+          
+          str = str.concat("0");
+      
+      }
+      n=str.concat(n);
+}
+        String sideFirst = n.substring(4, 8);
+        return sideFirst;
+    }
+    
+    public List<PhaseData> showDataPhaseNew(int junction_plan_map_id_selected, int plan_no) {
+        List<PhaseData> list = new ArrayList<PhaseData>();
+         
+        
+         
+        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides  from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j\n" +
+"                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n" +
+"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"'"
+                ;
+
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                PhaseData bean = new PhaseData();
+//                bean.setJunction_plan_map_id(rset.getInt(1));
+                bean.setPhase_info_id(rset.getInt(1));
+               
+                bean.setJunction_name(rset.getString(2));
+               bean.setSide13(rset.getInt(3));
+                bean.setSide24(rset.getInt(4));
+                bean.setPhase_no(rset.getInt(5));
+                 bean.setRemark(rset.getString(6));
+                 
+                 bean.setNo_of_sides(rset.getString(7));
                 list.add(bean);
             }
         } catch (Exception e) {

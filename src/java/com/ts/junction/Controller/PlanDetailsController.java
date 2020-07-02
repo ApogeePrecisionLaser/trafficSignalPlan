@@ -190,7 +190,6 @@ public class PlanDetailsController extends HttpServlet {
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
         request.setAttribute("no_of_plans", list1.size());
         request.setAttribute("plandetails", list1);
-        
         request.setAttribute("message", planDetailModel.getMessage());
         request.setAttribute("msgBgColor", planDetailModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

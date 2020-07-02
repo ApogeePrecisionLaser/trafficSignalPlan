@@ -1,4 +1,4 @@
-<%--
+ <%--
     Document   : junction
     Created on : Aug 10, 2012, 9:33:33 AM
     Author     : Shruti
@@ -506,6 +506,16 @@
         
         document.forms['redirectPhase'].submit();
     }
+    
+     jQuery(function () {
+            $("#searchjunction").autocomplete("junctionCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getJunction";
+                        }
+                    }
+                });
+                });
 </script>
 <html>
     <head>
@@ -530,7 +540,25 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
-
+<tr><td>
+                                    <form action="junctionCont" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                              Junction<input type="text" name="searchjunction" id="searchjunction" value="${searchjunction}">
+                                            </td>
+                                          
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+<!--                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                           -->
+                                        </tr>
+                                    </table></form></td></tr>
                             <tr>
                                 <td>
                                     <div style="width: 990px;max-height: 340px;overflow: auto;margin-bottom: 20px; margin-top: 20px">
@@ -644,7 +672,7 @@
                                                     </td>  </tr>
                                             </table>
                                             <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
-                                            <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                             <input type="hidden" name="manname" value="${manname}">    <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                             <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                         </form></div>
                                 </td>

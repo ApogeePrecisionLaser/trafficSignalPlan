@@ -70,11 +70,9 @@
                                             Junction<input type="text" name="searchJunctionNameSearch" id="searchJunctionNameSearch" value="${searchJunctionNameSearch}">
                                             </td>
                                              <td>
-                                              Date<input type="text" name="dateSearch" id="dateSearch" value="${dateSearch}">
+                                             Mode<input type="text" name="mode" id="mode" value="${mode}">
                                             </td>
-                                             <td>
-                                              Day<input type="text" name="daySearch" id="daySearch" value="${daySearch}">
-                                            </td>
+                                            
                                        
                                          <td>
                                               <input type="submit" name="search" id="search" value="Search"/>  
@@ -113,16 +111,16 @@
                                                                     <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.phase_info_id}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
                                                     
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.phase_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.mode}</td>
+                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side13}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side24}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.padestrian_info}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day_name}</td>
+                                                                   
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.remark}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
-                                                                    <td>${selected_plan_id1}</td>
+                                                                
 
 
                                                                 </tr>
@@ -242,6 +240,22 @@
                                         }
                                     }
                                 });
+                                  $("#searchJunctionNameSearch").autocomplete("PhaseDataCont", {
+
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getsearchJunctionName";
+                                        }
+                                    }
+                                });
+                                   $("#mode").autocomplete("PhaseDataCont", {
+
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getMode";
+                                        }
+                                    }
+                                });
                                 $("#date").autocomplete("PhaseDataCont", {
                                     extraParams: {
                                         action1: function () {
@@ -251,15 +265,8 @@
                                             return  $("#searchJunctionName").val();
                                         }
                                     }
-                                    
-                                      $("#searchJunctionNameSearch").autocomplete("PhaseDataCont", {
-
-                                    extraParams: {
-                                        action1: function () {
-                                            return "getsearchJunctionName";
-                                        }
-                                    }
-                                });
+                                     });
+                                  
                                 $("#dateSearch").autocomplete("PhaseDataCont", {
                                     extraParams: {
                                         action1: function () {
@@ -269,6 +276,7 @@
                                             return  $("#searchJunctionName").val();
                                         }
                                     }
+                                     });
                                      $("#daySearch").autocomplete("PhaseDataCont", {
                                     extraParams: {
                                         action1: function () {
