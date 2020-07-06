@@ -10,7 +10,7 @@
     "http://www.w3.org/TR/html4/loose.dtd">  
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
- 
+  
 <!--<script src="../../JS/jquery.dataTables.js"></script>
 	<script src="../../JS/dataTables.bootstrap.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -1002,6 +1002,7 @@
             {
                 debugger;
                 var no = response_data.no_of_sides;
+                var plan_id = response_data.plan_id;
                // alert(no);
                 if (no === "4") {
                     // alert("hi");
@@ -1037,56 +1038,36 @@
                      //   alert(j + "    jj");
                     //    alert(i + "    1");
                         debugger;
-                        moduleHtml += '<tr class="row6"  >';
-                     //   moduleHtml += '   <td width="15%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                      //  moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
-                        //  alert(i);   
+                        moduleHtml += '<tr class="row6" id="'+j+'"  >';
+                        
                         var fdata = "'" + data[i] + "'";
                         var tdata = "'" + data[i] + "'";
 
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        var jun_name="'" + data[i] + "'";
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-
-
-                        //moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"></td>';  
-                      //  alert("data ii  -" + data[i]);
-
-
-
-
-                        //var d=data[++i];
-
-//                if(data[++i]==='0'){
-//                    moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value=""></td>';
-//                }else{
-//                    moduleHtml += '<td width="25%"><input type="checkbox"  checked class="preference" id="t1cs" name="rb1" value=""></td>';  
-//                }
-
- 
-                       
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                       //var d= document.getElementById("tlcs").value;
-
+                        var phase_no="'" + data[i] + "'";
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs11' + j + '" name="rb1" value="' + data[++i] + '"  ><label>Y</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"    value="' + data[++i] + '"  ><label>G1</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"  ><label>G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '" ><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G3</lable></br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs2' + j + '" name="rb1" value="' + data[++i] + '"  ><label>Y</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"    value="' + data[++i] + '"   ><label>G1</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"  ><label>G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G3</lable></br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs3' + j + '" name="rb1" value="' + data[++i] + '"  ><label>Y</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"    value="' + data[++i] + '"  ><label>G1</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"  ><label>G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G3</lable></br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs4' + j + '" name="rb1" value="' + data[++i] + '"  ><label>Y</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"    value="' + data[++i] + '"  ><label>G1</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"  ><label>G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs' + j + '" name="rb1"   value="' + data[++i] + '"  ><label>G3</lable></br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>';
+                //  var jp=document.getElementById("t1cs110").value;
+                   
+                moduleHtml += '<td width="35%"><input type="button" id="button1" class="button1" value="Edit" /></td>';
+               // moduleHtml += '<td width="35%"><input type="button" id="button1" value="Edit" onclick="editable('+j+')"/></td>';
+                        moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="Check" onclick="CheckPhase('+jun_name+',id,'+phase_no+','+plan_id+')"></td>';
                         moduleHtml += '</tr>'
-                        //  var r=document.getElementById("tlcs1").value;
-                        //   alert(r);
+                       
                         i++;
-                        
-
-                        //$(".DateDayClass").html(moduleHtml + '</tr>');
-                        //$("#table3").html(moduleHtml + '</tr>');
+                     
                     }
 
                     $("#tab5").append(moduleHtml);
-                    //$(".DateDayClass").append(moduleHtml);
-                   // var a = document.getElementById("foot1");
-                   //
-                   //  $("#tab5").append(a);
-                    
-                    
+              
+
+ $('#button1').click(function() {
+        $(this).parent().prop('disabled', false);
+    });
                     
                         $('input[type=checkbox]').each(function () {
                             var val = $(this).val();
@@ -1097,16 +1078,11 @@
                                 $(this).attr('checked', true);
                             }
                         });
+                         
                     
                 } else if (no === "3") {
                      var data = response_data.data;
-                    // alert("data js -" + data);
-                    // alert("data js -" + data[7]);
-                    // var jpm=response_data.jpm;
-                    // var j_id=response_data.j_id;
-                    // alert(jpm);
-                    // alert(j_id);
-                    //  alert(response_data.no_of_sides);
+                    
                     var data_len = data.length / 36;
                     var i = 0;
                     // alert("data lemn --"+data_len);
@@ -1140,42 +1116,25 @@
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
 
-
-                        //moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="'+ data[++i] +'"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="'+ data[++i] +'"></td>';  
-                      //  alert("data ii  -" + data[i]);
-
-
-
-
-                        //var d=data[++i];
-
-//                if(data[++i]==='0'){
-//                    moduleHtml += '<td width="25%"><input type="checkbox" class="preference" id="t1cs" name="rb1" value=""></td>';
-//                }else{
-//                    moduleHtml += '<td width="25%"><input type="checkbox"  checked class="preference" id="t1cs" name="rb1" value=""></td>';  
-//                }
-
  
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '"><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '"><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '"><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"></td>';
-                        //var d= document.getElementById("tlcs").value;
+ 
+                       moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
+                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
+                         moduleHtml += '<td width="35%"><input type="button" class="" id="button1" name="rb1" value="Edit" ></td>';
+                        moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="Check"></td>';
+                        moduleHtml += '</tr>'
 
                         moduleHtml += '</tr>'
-                        //  var r=document.getElementById("tlcs1").value;
-                        //   alert(r);
+                       
                         i++;
                         
-
-                        //$(".DateDayClass").html(moduleHtml + '</tr>');
-                        //$("#table3").html(moduleHtml + '</tr>');
+ 
                     }
 
                     $("#tab5").append(moduleHtml);
                     //$(".DateDayClass").append(moduleHtml);
-                    var a = document.getElementById("foot1");
-                    $("#tab5").append(a);
-                    
+                   
                     
                     
                         $('input[type=checkbox]').each(function () {
@@ -1195,14 +1154,84 @@
             }
         });
     }
+    $(document).ready(function(){
+      $('#button1').click(function() {
+        $(this).parent().prop('disabled', false);
+    });
+    });
+    
+    
+    function CheckPhase(j_name,id,phase_no,plan_id) {
+        debugger;
+     //  alert("phase_no"+phase_no);
+     //  alert("plan_id"+plan_id);
+        var b1="1000"
+        var b2="1000"
+        var b3="0100"
+        var b4="1010"
+        var rowid;
+         var looplength=0;
+          var finallooplength;
+       $('#tab5 tr').click(function() {
+        rowid = $(this).attr('id'); // table row ID 
+        alert("row===="+rowid);
+        if(rowid>0){
+      looplength=rowid*20;
+  }
+    finallooplength=looplength+20;
+  
+  
+ 
+  //  alert(looplength+"  looplength");
+  //  alert(finallooplength+"  looplength");
+  var count=0;
+      for(var p=looplength;p<finallooplength;p++){
+        $('input[type=checkbox]').each(function () {
+            count++;
+            alert(count+"   count val");
+       
+             //   alert(p);
+            if($(this).is(':checked')){
+                 alert("checked val  -"+$(this).val());
+            }else{
+                alert("unnnchecked val-"+$(this).val());
+            }
+           
+          
+        });
+             }
+ 
+        });
+        $.ajax({url: "JunctionDetailsUpdate?task=checkphasedata",
+           
+            dataType: 'json',
+           
+            data: {side1: b1, side2: b2,side3:b3,side4:b4,junction_names:j_name,phase_no:phase_no,plan_id:plan_id},
 
-    function checkboxvalid(val) {
-        alert("wwwwwwwwww");
-        if (val === "1") {
-            //var sa= document.getElementsByClassName("dateviewdata");
-
+            success: function (response_data)
+            {
+          var data = response_data.data;
+                    if(data===0){
+                        alert("No Match Found!!!!Are You Want To Insert New Record");
+                    }else{
+                          alert("Match Found!!!!Are You Want To Update  Record");
+                    }
+            }
+        });
+         
         }
-    }
+ 
+
+
+
+  function editable(id){
+      debugger;
+       var ids= "t1cs"+id ; 
+       
+       document.getElementById("ids").disabled=false;
+        alert("okk");
+  }
+    
     function fillColumns1(id) {
         openjunctionplandetails();
         debugger;

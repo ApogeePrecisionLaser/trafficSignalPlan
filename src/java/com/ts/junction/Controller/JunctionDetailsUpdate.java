@@ -335,7 +335,43 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
 
         }
-
+                
+        if (task.equalsIgnoreCase("checkphasedata")) {
+            try {
+                String side1byte=request.getParameter("side1");
+                String side2byte=request.getParameter("side2");
+                String side3byte=request.getParameter("side3");
+                String side4byte=request.getParameter("side4");
+                String j_name=request.getParameter("junction_names");
+                String phase_no=request.getParameter("phase_no");
+                String plan_id=request.getParameter("plan_id");
+                // System.out.println("hi");
+                String side13=side1byte.concat(side3byte);
+                String side24=side2byte.concat(side4byte);
+                int side13decimal=Integer.parseInt(side13,2);
+                int side24decimal=Integer.parseInt(side24,2);
+                PhaseData pd=new PhaseData();
+                pd.setJunction_name(j_name);
+                pd.setSide13(side13decimal);
+                pd.setSide24(side24decimal);
+                pd.setPhase_no(Integer.parseInt(phase_no));
+                pd.setPlan_id(Integer.parseInt(plan_id));
+                List listcheck=junctionModel.checkPhase(side13decimal,side24decimal);
+ 
+                JSONArray jsonarr1 = new JSONArray();
+                
+                JSONObject jobj1 = new JSONObject();
+                jobj1.put("data", listcheck.size());
+                if(listcheck.size()==0){
+                junctionModel.insertRecord(pd,Integer.parseInt(plan_id));
+                }
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                return;
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
         if (task.equalsIgnoreCase("phasedataviewdetails")) {
             JSONArray jsonarr1 = new JSONArray();
 
@@ -406,6 +442,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 System.out.println("json array --" + jsonarr1);
                 System.out.println("json object --" + jobj1);
 
+                jobj1.put("plan_id", p_id11);
                 jobj1.put("data", jsonarr1);
 
                 PrintWriter out1 = response.getWriter();
