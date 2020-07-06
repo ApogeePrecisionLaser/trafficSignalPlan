@@ -1716,11 +1716,11 @@
                 var data = response_data.data;
                      var data_jpm = response_data.jpm;
                      //alert(data_jpm);
-                var data_len = data.length /2;
+                var data_len = data.length /3;
 
 
                 var i = 0;
-                alert("data lemn --"+data_len);
+               
                 var moduleHtml = "";
 
                 moduleHtml += '<tr class="row1" id="r1" >';
@@ -1738,27 +1738,29 @@
 
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata"  name="fromdate"onclick="fillColumns2(id)">' + data[i] + '</td>';
                     
-
+                    
         // moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>'; 
             moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
                     var pid = "'" + data[i] + "'";
-                    if(j===0)
-                    {
-                  var check_test_plan=2;
-                     var jpm_id = "'" + data[check_test_plan] + "'";
-                     
-                }
-                    if(j>0)
-                    {
-                
-                   var h=3;
-                     var jpm_id = "'" + data[check_test_plan+h] + "'";
-                     
-                    check_test_plan=check_test_plan+h;
                     
-                    
-                }
-                
+                    var jpm_id = "'" + data[++i] + "'";
+//                    if(j===0)
+//                    {
+//                  var check_test_plan=2;
+//                     var jpm_id = "'" + data[check_test_plan] + "'";
+//                     
+//                }
+//                    if(j>0)
+//                    {
+//                
+//                   var h=3;
+//                     var jpm_id = "'" + data[check_test_plan+h] + "'";
+//                     
+//                    check_test_plan=check_test_plan+h;
+//                    
+//                    
+//                }
+//                
                     moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase13(' + jid + ',' + pid + ','+ jpm_id +')"></td>';
                    
                     moduleHtml += '</tr>'
@@ -2020,6 +2022,14 @@ function myFunctiontest(id) {
              
            
                 var data1 = response_data.data;
+                var pp="Plan not Exsist";
+                if(data1==pp)
+                {
+                   
+                       var xp = document.getElementById(id);
+                      xp.style.backgroundColor = "red";
+                    
+                }
                   $("#pkc").append(data1[0]);
 //         alert(data1[0]);
 //          alert("hi");
