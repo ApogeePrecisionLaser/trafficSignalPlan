@@ -5,150 +5,15 @@
  */
 package com.ts.junction.tableClasses;
 
-import java.util.List;
-
 /**
  *
- * @author DELL
+ * @author user
  */
-public class PlanDetails {
-    private int plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min;
+public class JunctionUpdateBean {
+     private int plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min;
     private int side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time;
     private int side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,junction_plan_map_id;
     private String mode, transferred_status,  remark,totalphase;
-   //int ontime_hr,int ontime_min,int offtime_hr,int ontime_min
-    private List<Integer> plan_id1,plan_no1, on_time_hour1, on_time_min1, off_time_hour1, off_time_min1,side1_amber_time1, side2_amber_time1, side3_amber_time1, side4_amber_time1, side5_amber_time1;
-    private List<String> mode1,transferred_status1,  remark1;
-
-    public List<Integer> getPlan_id1() {
-        return plan_id1;
-    }
-
-    public void setPlan_id1(List<Integer> plan_id1) {
-        this.plan_id1 = plan_id1;
-    }
-
-    public List<Integer> getPlan_no1() {
-        return plan_no1;
-    }
-
-    public void setPlan_no1(List<Integer> plan_no1) {
-        this.plan_no1 = plan_no1;
-    }
-
-    public List<Integer> getOn_time_hour1() {
-        return on_time_hour1;
-    }
-
-    public void setOn_time_hour1(List<Integer> on_time_hour1) {
-        this.on_time_hour1 = on_time_hour1;
-    }
-
-    public List<Integer> getOn_time_min1() {
-        return on_time_min1;
-    }
-
-    public void setOn_time_min1(List<Integer> on_time_min1) {
-        this.on_time_min1 = on_time_min1;
-    }
-
-    public List<Integer> getOff_time_hour1() {
-        return off_time_hour1;
-    }
-
-    public void setOff_time_hour1(List<Integer> off_time_hour1) {
-        this.off_time_hour1 = off_time_hour1;
-    }
-
-    public List<Integer> getOff_time_min1() {
-        return off_time_min1;
-    }
-
-    public void setOff_time_min1(List<Integer> off_time_min1) {
-        this.off_time_min1 = off_time_min1;
-    }
-
-    public List<Integer> getSide1_amber_time1() {
-        return side1_amber_time1;
-    }
-
-    public void setSide1_amber_time1(List<Integer> side1_amber_time1) {
-        this.side1_amber_time1 = side1_amber_time1;
-    }
-
-    public List<Integer> getSide2_amber_time1() {
-        return side2_amber_time1;
-    }
-
-    public void setSide2_amber_time1(List<Integer> side2_amber_time1) {
-        this.side2_amber_time1 = side2_amber_time1;
-    }
-
-    public List<Integer> getSide3_amber_time1() {
-        return side3_amber_time1;
-    }
-
-    public void setSide3_amber_time1(List<Integer> side3_amber_time1) {
-        this.side3_amber_time1 = side3_amber_time1;
-    }
-
-    public List<Integer> getSide4_amber_time1() {
-        return side4_amber_time1;
-    }
-
-    public void setSide4_amber_time1(List<Integer> side4_amber_time1) {
-        this.side4_amber_time1 = side4_amber_time1;
-    }
-
-    public List<Integer> getSide5_amber_time1() {
-        return side5_amber_time1;
-    }
-
-    public void setSide5_amber_time1(List<Integer> side5_amber_time1) {
-        this.side5_amber_time1 = side5_amber_time1;
-    }
-
-    public List<String> getMode1() {
-        return mode1;
-    }
-
-    public void setMode1(List<String> mode1) {
-        this.mode1 = mode1;
-    }
-
-    public List<String> getTransferred_status1() {
-        return transferred_status1;
-    }
-
-    public void setTransferred_status1(List<String> transferred_status1) {
-        this.transferred_status1 = transferred_status1;
-    }
-
-    public List<String> getRemark1() {
-        return remark1;
-    }
-
-    public void setRemark1(List<String> remark1) {
-        this.remark1 = remark1;
-    }
-    
-    //
-
-    public int getJunction_plan_map_id() {
-        return junction_plan_map_id;
-    }
-
-    public void setJunction_plan_map_id(int junction_plan_map_id) {
-        this.junction_plan_map_id = junction_plan_map_id;
-    }
-
-    public String getTotalphase() {
-        return totalphase;
-    }
-
-    public void setTotalphase(String totalphase) {
-        this.totalphase = totalphase;
-    }
 
     public int getPlan_id() {
         return plan_id;
@@ -278,6 +143,14 @@ public class PlanDetails {
         this.side5_amber_time = side5_amber_time;
     }
 
+    public int getJunction_plan_map_id() {
+        return junction_plan_map_id;
+    }
+
+    public void setJunction_plan_map_id(int junction_plan_map_id) {
+        this.junction_plan_map_id = junction_plan_map_id;
+    }
+
     public String getMode() {
         return mode;
     }
@@ -301,6 +174,13 @@ public class PlanDetails {
     public void setRemark(String remark) {
         this.remark = remark;
     }
-    
+
+    public String getTotalphase() {
+        return totalphase;
+    }
+
+    public void setTotalphase(String totalphase) {
+        this.totalphase = totalphase;
+    }
     
 }

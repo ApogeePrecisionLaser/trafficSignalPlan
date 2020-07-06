@@ -1963,6 +1963,43 @@
   document.getElementById("formplandetailss").submit();
  
  }
+ function search(ele) {
+     debugger;
+    if(event.key === 'Enter') {
+        alert(ele.value);        
+    }
+}
+
+function myFunctiontest(id) {
+    
+    debugger;
+   var tr = document.createElement('tr');
+    var x = document.getElementById(id);
+    var x1=x.value;
+    //alert(x1);
+   // x.value = x.value.toUpperCase();
+         $.ajax({url: "JunctionDetailsUpdate?task=testingCheck",
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {id_value:x1,id:id},
+                     
+            success: function (response_data)
+            {
+             
+           
+                var data1 = response_data.data;
+                  $("#pkc").append(data1[0]);
+//         alert(data1[0]);
+//          alert("hi");
+          
+            }
+           
+        });
+        
+}
 </script>
 <html>
     <head>
@@ -1977,6 +2014,7 @@
 
     </head>
     <body onload="Openformphasenewfirst()">
+        
 
         <table align="center" cellpadding="0" cellspacing="0" class="main" border="1" width="1500px">
 
@@ -2468,30 +2506,35 @@
                                                     <c:if test="${not empty message}">
                                                         <td colspan="22" bgcolor="${msgBgColor}"><b>Result: ${message}</b></td>
                                                     </c:if>
+                                                        
                                                 </tr>
 
                                                 <input class="input form-control"  size="15" type="hidden" id="plan_id" name="plan_id" value="" >
                                                                <input type="hidden" id="junction_plan_map_id_test_update" name="junction_plan_map_id" value="" disabled>
                                                                    <input type="hidden"  name="task" value="SaveupdateDetails" disabled>
-                                                               <tr align="center" class="incHeight" >
+                                                                   <tr><div id="pkc">testing:</div></tr>
+                                                                   <tr align="center" class="incHeight" >
                                                     <th  class="heading"  align="center" colspan="2">Plan No</th>
+                                                    
                                                     <td colspan="2">
                                                         <input class="input form-control"  size="15" type="text" id="plan_no" name="plan_no" value="" size="30" disabled><br>
                                                     </td>
 
                                                 </tr>
+                                                
                                                 <tr>
-                                                    <th  class="heading" align="center">On Time Hour</th>
+                                                     <th  class="heading"  align="center">On Time Hr</th>
+
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="on_time_hour" name="on_time_hour" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="on_time_hour" name="on_time_hour" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
 
                                                     <th  class="heading" align="center">On Time Min</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="on_time_min" name="on_time_min" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="on_time_min" name="on_time_min" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
-
+                                                
                                                 <tr align="center" class="incHeight">
 
 
@@ -2499,11 +2542,11 @@
 
                                                     <th  class="heading" align="center">Off Time Hour</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="off_time_hour" name="off_time_hour" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="off_time_hour" name="off_time_hour" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">off Time Min</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="off_time_min" name="off_time_min" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="off_time_min" name="off_time_min" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
 
@@ -2511,7 +2554,7 @@
                                                     <th  class="heading" align="center" colspan="2">MOde</th>
                                                     <td colspan="2">
                                                         <select class="select form-control" id="mode" name="mode" style="height: 20px;width: 80%;margin: 8px 0;display: inline-block;border: 1px solid #ccc;
-                                                                border-radius: 4px;box-sizing: border-box;" disabled>
+                                                                border-radius: 4px;box-sizing: border-box;" onfocusout="myFunctiontest(id)" disabled>
                                                             <option value="Signal" >Signal</option>
                                                             <option value="Blinker" >Blinker</option>
                                                             <option value="Off" >Off</option>
@@ -2522,22 +2565,22 @@
                                                 <tr align="center" class="incHeight">
                                                     <th  class="heading" align="center">Side1 Green Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side1_green_time" name="side1_green_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side1_green_time" name="side1_green_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">Side2 Green Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side2_green_time" name="side2_green_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side2_green_time" name="side2_green_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
                                                 <tr align="center" class="incHeight">
 
                                                     <th  class="heading" align="center">Side3 Green Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side3_green_time" name="side3_green_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side3_green_time" name="side3_green_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">Side4 Green Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side4_green_time" name="side4_green_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side4_green_time" name="side4_green_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
 
@@ -2545,11 +2588,11 @@
 
                                                     <th  class="heading" align="center">Side5 Green Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side5_green_time" name="side5_green_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side5_green_time" name="side5_green_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">Side1 Amber Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side1_amber_time" name="side1_amber_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side1_amber_time" name="side1_amber_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
 
@@ -2557,11 +2600,11 @@
 
                                                     <th  class="heading" align="center">Side2 Amber Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side2_amber_time" name="side2_amber_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side2_amber_time" name="side2_amber_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">Side3 Amber Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side3_amber_time" name="side3_amber_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side3_amber_time" name="side3_amber_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
 
@@ -2569,11 +2612,11 @@
 
                                                     <th  class="heading" align="center">Side4 Amber Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side4_amber_time" name="side4_amber_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side4_amber_time" name="side4_amber_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                     <th  class="heading" align="center">Side5 Amber Time</th>
                                                     <td>
-                                                        <input class="input form-control" size="15" type="text" id="side5_amber_time" name="side5_amber_time" value="" maxlength="16" disabled><br>
+                                                        <input class="input form-control" size="15" type="text" id="side5_amber_time" name="side5_amber_time" value="" maxlength="16" onfocusout="myFunctiontest(id)" disabled><br>
                                                     </td>
                                                 </tr>
 
@@ -2589,6 +2632,7 @@
                                                     </td>
                                                 </tr>
 
+                                         
                                                 <input type="hidden" id="clickedButton" name="j_id" value="${j_id}">
                                                 <tr>
                                                     <td align='center' colspan="10">
