@@ -55,7 +55,7 @@
 				<textFieldExpression><![CDATA[$F{state_name}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="119" y="0" width="121" height="20" uuid="2948e513-74a1-4f6d-9df0-8b42f091ffa8"/>
+				<reportElement x="119" y="0" width="121" height="23" uuid="3528d515-d42a-4373-ba30-29109e2e7656"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -63,7 +63,7 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
