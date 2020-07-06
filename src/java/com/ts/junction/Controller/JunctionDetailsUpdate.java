@@ -391,52 +391,44 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     //  jobj1.put("no_of_sides", "3");
                     jsonarr1.add(list4.get(i).getPhase_info_id());
                     jsonarr1.add(list4.get(i).getJunction_name());
-                    jsonarr1.add(list4.get(i).getPhase_no());
-                    //  jsonarr1.add(list4.get(i).getSide13());
-                    String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
-
-                    // jsonarr1.add(list4.get(i).getSide24());
-                    String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
-                    String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
+                       jsonarr1.add(list4.get(i).getPhase_no());
+                  //  jsonarr1.add(list4.get(i).getSide13());
+                String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
+           
+                   // jsonarr1.add(list4.get(i).getSide24());
+                     String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
+                        String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
                     String side2 = junctionModel.decToBinaryAndSplitFirst(side24Status);
-                    String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
-                    String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
-                    String side5 = "00000000";
-                    side1 = side1.concat("0000");
-                    side2 = side2.concat("0000");
-                    side3 = side3.concat("0000");
-                    side4 = side4.concat("0000");
-                    String s1[] = side1.split("");
-                    String[] s2 = side2.split("");
-                    String[] s3 = side3.split("");
-                    String[] s4 = side4.split("");
-
-                    // jsonarr1.add(list4.get(i).getRemark());
-                    for (int k = 0; k < 8; k++) {
-                        // jobj1.put("s1"+i+k,s1[k]);
-                        // jobj1.put("s2"+i+k,s2[k]);
-                        // jobj1.put("s3"+i+k,s3[k]);
-                        // jobj1.put("s4"+i+k,s4[k]);
-
-                        //
-                        //   jsonarr1.add(s2[k]);
-                        //    jsonarr1.add(s3[k]);
-                        //      jsonarr1.add(s4[k]);
-                    }
-                    for (int a = 0; a < 8; a++) {
-                        jsonarr1.add(s1[a]);
-                    }
-                    for (int b = 0; b < 8; b++) {
-                        jsonarr1.add(s2[b]);
-                    }
-                    for (int c = 0; c < 8; c++) {
-                        jsonarr1.add(s3[c]);
-                    }
-                    for (int d = 0; d < 8; d++) {
-                        jsonarr1.add(s4[d]);
-                    }
-                    jobj1.put("listsize", list4.size());
-                    // jobj1.put("p_id", list3.get(i).getPlan_id());
+                 String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
+                String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
+                String side5 = "00000000";
+                side1 = side1.concat("0000");
+                   side2 = side2.concat("0000");
+                     side3 = side3.concat("0000");
+              side4 = side4.concat("0000");
+                String s1[] =  side1.split("");
+                String []s2= side2.split("");
+                String []s3=side3.split("");
+                String []s4= side4.split("");
+                
+                 
+                             for(int k=0;k<8;k++){
+                           
+                             }
+                               for(int a=0;a<8;a++){
+                                   jsonarr1.add(s1[a]);
+                               }
+                               for(int b=0;b<8;b++){
+                                   jsonarr1.add(s2[b]);
+                               }
+                               for(int c=0;c<8;c++){
+                                   jsonarr1.add(s3[c]);
+                               }
+                               for(int d=0;d<8;d++){
+                                   jsonarr1.add(s4[d]);
+                               }
+                              jobj1.put("listsize",list4.size());
+                // jobj1.put("p_id", list3.get(i).getPlan_id());
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
