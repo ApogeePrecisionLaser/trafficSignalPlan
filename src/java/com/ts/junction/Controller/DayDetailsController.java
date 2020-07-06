@@ -167,8 +167,8 @@ public class DayDetailsController extends HttpServlet {
             dayDetail.setDay_detail_id(day_detail_id);
             dayDetail.setDay_name(request.getParameter("day_name").trim());
             dayDetail.setDay(request.getParameter("day").trim());
-            dayDetail.setJunction_id(junction_id);
-             dayDetail.setJunction_name(request.getParameter("junction_name").trim());
+            //dayDetail.setJunction_id(junction_id);
+            // dayDetail.setJunction_name(request.getParameter("junction_name").trim());
             
            dayDetail.setRemark(request.getParameter("remark").trim());
 

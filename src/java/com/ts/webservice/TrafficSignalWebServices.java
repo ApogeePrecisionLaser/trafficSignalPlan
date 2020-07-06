@@ -101,6 +101,10 @@ public class TrafficSignalWebServices {
                             int l=123;
                             byte b=(byte)l;
                             response[i]=b;
+//                            int p=response[15];
+//                            p=123;
+//                             byte p1=(byte)p;
+//                            response[15]=p1;
                         }
                     }
 

@@ -1,4 +1,4 @@
- /*
+  /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -6,6 +6,7 @@ package com.ts.junction.Controller;
 
 import com.ts.junction.Model.JunctionModel;
 import com.ts.junction.Model.JunctionPlanMapModel;
+import com.ts.junction.Model.PlanDetailModel;
 import com.ts.junction.Model.junctionupdatemodel;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.JunctionPlanMap;
@@ -15,6 +16,7 @@ import com.ts.junction.tableClasses.PlanDetails;
 import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -40,7 +42,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
     public static JSONArray junplanmaparray = new JSONArray();
     public static JSONArray plandetails = new JSONArray();
     //public static JSONObject junobj=new JSONObject();
-
+  static int p_id14_junction_plan_map=0;
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -262,6 +264,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 System.out.println("junction selected id is 0");
             }
         }
+    
+  
+       
         if (task.equalsIgnoreCase("plandetailsnormal")) {
             JSONArray jsonarr1 = new JSONArray();
               
@@ -269,9 +274,12 @@ public class JunctionDetailsUpdate extends HttpServlet {
             try {
                 String day = request.getParameter("day");
              //   String todate = request.getParameter("to_date");
+             
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                  int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
-                
+                      p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+                     
+                   //int p_id16 = Integer.parseInt(request.getParameter("junction_plan_map_id1"));
 
                 list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, 15, j_id11,p_id11);
 
@@ -296,9 +304,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
-                             jsonarr1.add(list3.get(i).getTotalphase());
+                             jsonarr1.add(list3.get(i).getTotalphase()); //p_id14
 
                  jobj1.put("p_id", list3.get(i).getPlan_id());
+                  jobj1.put("jpm_test_id", p_id14_junction_plan_map);
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
@@ -307,6 +316,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
+                  request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                 return;
                  
             } catch (JSONException ex) {
@@ -438,7 +448,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
              //   String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
-
+     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
                 list3 = junctionModel.showDataPlansdetailsday(lowerLimit, 15, j_id11,day);
 
                // jobj.put("size_1", list3.size());
@@ -548,7 +558,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
                 
-
+     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
                 list3 = junctionModel.showDataPlansdetails(lowerLimit, 15, j_id11, fromdate, todate);
 
                // jobj.put("size_1", list3.size());
@@ -583,6 +593,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
+                     request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                 return;
                  
             } catch (JSONException ex) {
@@ -616,7 +627,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
                             jsonarr1.add(list2.get(i).getFrom_date());
                             jsonarr1.add(list2.get(i).getTo_date());
                             jsonarr1.add(list2.get(i).getPlan_id());
-
+                            jsonarr1.add(list2.get(i).getJunction_plan_map_id());
                             // jsonarr1.add("");
                             jobj1.put("jpm", list2.get(i).getJunction_plan_map_id());
                             jobj1.put("j_id", list2.get(i).getJunction_id());
@@ -637,6 +648,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
                             jsonarr1.add(list2.get(i).getDay());
                             // jsonarr1.add(list2.get(i).getTo_date());
                             jsonarr1.add(list2.get(i).getPlan_no());
+                             jsonarr1.add(list2.get(i).getJunction_plan_map_id());
                            // jsonarr1.add(list2.get(i).getPlan_id());
 
                         }
@@ -658,6 +670,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
                             // jsonarr1.add(list2.get(i).getOff_time_min());
                            
                              jsonarr1.add(list2.get(i).getPlan_id());
+                              jsonarr1.add(list2.get(i).getJunction_plan_map_id());
                              //jobj1.put("p_id", list2.get(i).getPlan_id());
                             
 
@@ -667,6 +680,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
                         jobj1.put("data", jsonarr1);
                         PrintWriter out1 = response.getWriter();
                         out1.print(jobj1.toString());
+                             request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                         return;
 
                     }
@@ -684,7 +698,75 @@ jsonarr1.add(list3.get(i).getTotalphase());
                 System.out.println("junction selected id is 0");
             }
         }
-
+// plan update code
+//for update or insert updatedetails data start
+        task="SaveupdateDetails";
+        if (task.equals("SaveupdateDetails")) {
+          PlanDetailModel planDetailModel = new PlanDetailModel();
+           
+        planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
+        planDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
+        planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
+        planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
+        planDetailModel.setConnection();
+        try{
+                PlanDetails planDetails = new PlanDetails();
+                int plan_detail_id;
+                try {
+                    plan_detail_id = Integer.parseInt(request.getParameter("plan_id").trim());
+                } catch (Exception e) {
+                    plan_detail_id = 0;
+                }
+                int junction_plan_map_id_test=0;
+                try {
+                    junction_plan_map_id_test = Integer.parseInt(request.getParameter("junction_plan_map_id1p").trim());
+                } catch (Exception e) {
+                    junction_plan_map_id_test = 0;
+                   junction_plan_map_id_test=p_id14_junction_plan_map;
+                }
+                planDetails.setJunction_plan_map_id(junction_plan_map_id_test);               
+                planDetails.setPlan_id(plan_detail_id);
+                planDetails.setPlan_no(Integer.parseInt(request.getParameter("plan_no").trim()));
+                planDetails.setOn_time_hour(Integer.parseInt(request.getParameter("on_time_hour").trim()));
+                planDetails.setOn_time_min(Integer.parseInt(request.getParameter("on_time_min").trim()));
+                planDetails.setOff_time_hour(Integer.parseInt(request.getParameter("off_time_hour").trim()));
+                planDetails.setOff_time_min(Integer.parseInt(request.getParameter("off_time_min").trim()));
+                planDetails.setMode(request.getParameter("mode").trim());
+                planDetails.setSide1_green_time(Integer.parseInt(request.getParameter("side1_green_time").trim()));
+                planDetails.setSide2_green_time(Integer.parseInt(request.getParameter("side2_green_time").trim()));
+                planDetails.setSide3_green_time(Integer.parseInt(request.getParameter("side3_green_time").trim()));
+                planDetails.setSide4_green_time(Integer.parseInt(request.getParameter("side4_green_time").trim()));
+                planDetails.setSide5_green_time(Integer.parseInt(request.getParameter("side5_green_time").trim()));
+                planDetails.setSide1_amber_time(Integer.parseInt(request.getParameter("side1_amber_time").trim()));
+                planDetails.setSide2_amber_time(Integer.parseInt(request.getParameter("side2_amber_time").trim()));
+                planDetails.setSide3_amber_time(Integer.parseInt(request.getParameter("side3_amber_time").trim()));
+                planDetails.setSide4_amber_time(Integer.parseInt(request.getParameter("side4_amber_time").trim()));
+                planDetails.setSide5_amber_time(Integer.parseInt(request.getParameter("side5_amber_time").trim()));
+                planDetails.setTransferred_status(request.getParameter("transferred_status").trim());
+                planDetails.setRemark(request.getParameter("remark").trim());
+                int planCheck=0;
+                planCheck= planDetailModel.checkplan(planDetails);
+                if(planCheck==0){
+                    if (plan_detail_id == 0) {
+                // validation was successful so now insert record.
+                planDetailModel.insertRecordMapNewPlanId(planDetails,planCheck);
+            }
+                // validation was successful so now insert record.
+                
+            
+                }else {
+                    try {
+                        planDetailModel.mapNewPlanId(planDetails,planCheck);
+                    } catch (SQLException ex) {
+                        Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+            }
+        }catch(Exception e)
+        {}
+        }    
+        
+        //end
+//end
         if (task.equals("junctionsave")) {
 
             try {
@@ -986,8 +1068,9 @@ jsonarr1.add(list3.get(i).getTotalphase());
         request.setAttribute("junction", list1);
   //      request.setAttribute("junctionlist", list1);
         request.setAttribute("SelectedJunctionPlans123", list2);
-        request.setAttribute("plandetailsSelected", list3);
+        request.setAttribute("plandetailsSelected", list3);//p_id14_junction_plan_map
         request.setAttribute("phasedetailsSelected", list4);
+         request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
         request.setAttribute("message", junctionModel.getMessage());
         request.setAttribute("msgBgColor", junctionModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

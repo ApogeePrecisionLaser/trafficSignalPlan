@@ -1,4 +1,4 @@
-<%--
+ <%--
     Document   : junction
     Created on : Aug 10, 2012, 9:33:33 AM
     Author     : prachi
@@ -41,11 +41,13 @@
         var divbody = document.getElementById("body");
         var div = document.getElementById("jdt");
         var div1 = document.getElementById("t1");
+         var divplan = document.getElementById("pform");
         //var div2=document.getElementById("jundetails");
         div1.style.display = 'block';
         div.style.display = 'block';
         divbody.style.display = 'block';
         plus.style.display = 'none';
+        divplan.style.display = 'block';
         // div2.style.display='none';
  
     }
@@ -217,13 +219,13 @@
         }
     }
 
-    function setDefaultColor(noOfRowsTraversed, noOfColumns) {
-        for (var i = 0; i < noOfRowsTraversed; i++) {
-            for (var j = 1; j <= noOfColumns; j++) {
-                document.getElementById("t1c" + (i * noOfColumns + j)).bgColor = "";     // set the default color.
-            }
-        }
-    }
+//    function setDefaultColor(noOfRowsTraversed, noOfColumns) {
+//        for (var i = 0; i < noOfRowsTraversed; i++) {
+//            for (var j = 1; j <= noOfColumns; j++) {
+//                document.getElementById("t1c" + (i * noOfColumns + j)).bgColor = "";     // set the default color.
+//            }
+//        }
+//    }
     function fillColumns(id) {
         openjdetailsdiv();
         var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
@@ -650,7 +652,7 @@
 
 
 
-    function Openformphase11(fdata1, tdata1, j_id) {
+    function Openformphase11(fdata1, tdata1, j_id,jpm_id) {
        
            hidediv1();
         $(".row2").remove();
@@ -665,7 +667,7 @@
             //contentType: 'application/json',
             //context: document.body,
 
-            data: {junction_id: j_id, from_date: fdata1, to_date: tdata1},
+            data: {junction_id: j_id, from_date: fdata1, to_date: tdata1, jun_plan_map_id:jpm_id},
 
             success: function (response_data)
             {
@@ -709,34 +711,34 @@
                 for (var j = 0; j < data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row3"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(faaaaaaaaaaaaaaaaaaaaaaaaaaaaaromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
 
                     moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
 
@@ -760,7 +762,7 @@
     }
 
 
-    function Openformphase12(fdata1, j_id) {
+    function Openformphase12(fdata1, j_id,jpm_id) {
         
            hidediv1();
         $(".row2").remove();
@@ -774,7 +776,7 @@
             //contentType: 'application/json',
             //context: document.body,
 
-            data: {junction_id: j_id, day: fdata1},
+            data: {junction_id: j_id, day: fdata1, jun_plan_map_id:jpm_id},
 
             success: function (response_data)
             {
@@ -818,34 +820,34 @@
                 for (var j = 0; j < data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row3"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
 
                     moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
 
@@ -870,7 +872,10 @@
     }
 
 
-    function Openformphase13(j_id, p_id) {
+    function Openformphase13(j_id, p_id,jpm_id) {
+       debugger;
+        alert(j_id, p_id);
+        alert(jpm_id);
         hidediv1();
         $(".row2").remove();
         $(".row3").remove();
@@ -883,7 +888,7 @@
             //contentType: 'application/json',
             //context: document.body,
 
-            data: {junction_id: j_id, plan_id: p_id},
+            data: {junction_id: j_id, plan_id: p_id, jun_plan_map_id:jpm_id},
 
             success: function (response_data)
             {
@@ -928,34 +933,34 @@
                 for (var j = 0; j < data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row3"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + ':' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + ':' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     //moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
 
                     moduleHtml += '<td><input type="button" value="View Phases" id="pdet" onclick="OpenformphasedataView(' + fdata + ',' + j_id + ')"></td>';
 
@@ -1306,10 +1311,11 @@
 
 
     function fillColumns2(id) {
+        debugger;
         openplandet();
-        //debugger;
+      
         var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
-
+               noOfRowsTraversed=1;
         debugger;
         var noOfColumns = 19;
         var columnId = id;
@@ -1327,7 +1333,7 @@
         var lower = lowerLimit;
 
         // debugger;
-        setDefaultColor(noOfRowsTraversed, noOfColumns);        // set default color of rows (i.e. of multiple coloumns).
+       // setDefaultColor(noOfRowsTraversed, noOfColumns);        // set default color of rows (i.e. of multiple coloumns).
         //alert(lowerLimit);
         var t1id12 = "t1cs11";
         document.getElementById("plan_no").value = document.getElementById(t1id12 + (lower + 2)).innerHTML;
@@ -1459,7 +1465,7 @@
 
                 var jpm = response_data.jpm;
                 var j_id = response_data.j_id;
-                // alert(jpm);
+                alert(jpm);
                 // alert(j_id);
                 var data_len = data.length / 2;
                 var i = 0;
@@ -1476,18 +1482,37 @@
                 for (var j = 0; j < data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ')"></td>';
+                    
+                   
+            moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                   
+              if(j===0)
+                    {
+                  var check_test_plan=2;
+                     var jpm_id = "'" + data[check_test_plan] + "'";
+                     
+                }
+                    if(j>0)
+                    {
+                
+                   var h=3;
+                     var jpm_id = "'" + data[check_test_plan+h] + "'";
+                     
+                    check_test_plan=check_test_plan+h;
+                     moduleHtml += '<td id="t1cs11' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[check_test_plan+h] + '</td>';
+                    
+                }
+            moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase11(' + fdata + ',' + tdata + ',' + j_id + ','+ jpm_id +')"></td>';
 
 
                     moduleHtml += '</tr>'
@@ -1578,12 +1603,29 @@
                 for (var j = 0; j < data_len; j++) {
 
                     moduleHtml += '<tr class="row" id="r2" >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
                     var fdata = "'" + data[i] + "'";
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase12(' + fdata + ',' + jid + ')"></td>';
+                    if(j===0)
+                    {
+                  var check_test_plan=2;
+                     var jpm_id = "'" + data[check_test_plan] + "'";
+                     
+                }
+                    if(j>0)
+                    {
+                
+                   var h=3;
+                     var jpm_id = "'" + data[check_test_plan+h] + "'";
+                     
+                    check_test_plan=check_test_plan+h;
+                     moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[check_test_plan+h] + '</td>';
+                    
+                }
+                 
+            moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase12(' + fdata + ',' + jid + ','+ jpm_id +')"></td>';
 
                     moduleHtml += '</tr>'
                     i++;
@@ -1672,12 +1714,13 @@
             {
                 debugger;
                 var data = response_data.data;
-
+                     var data_jpm = response_data.jpm;
+                     //alert(data_jpm);
                 var data_len = data.length /2;
 
 
                 var i = 0;
-                // alert("data lemn --"+data_len);
+                alert("data lemn --"+data_len);
                 var moduleHtml = "";
 
                 moduleHtml += '<tr class="row1" id="r1" >';
@@ -1691,14 +1734,32 @@
                 for (var j = 0; j < data_len; j++) {
 
                     moduleHtml += '<tr class="row" id="r2" >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + i + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + i + '" name="rb1" onclick="fillColumns2(id)"  value=""></td>';
 
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata"  name="fromdate"onclick="fillColumns1(id)">' + data[i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata"  name="fromdate"onclick="fillColumns2(id)">' + data[i] + '</td>';
+                    
 
-
-                    moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+        // moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>'; 
+            moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
                     var pid = "'" + data[i] + "'";
-                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase13(' + jid + ',' + pid + ')"></td>';
+                    if(j===0)
+                    {
+                  var check_test_plan=2;
+                     var jpm_id = "'" + data[check_test_plan] + "'";
+                     
+                }
+                    if(j>0)
+                    {
+                
+                   var h=3;
+                     var jpm_id = "'" + data[check_test_plan+h] + "'";
+                     
+                    check_test_plan=check_test_plan+h;
+                    
+                    
+                }
+                
+                    moduleHtml += '<td><input type="button" value="PlanDetails" id="pdet" onclick="Openformphase13(' + jid + ',' + pid + ','+ jpm_id +')"></td>';
                    
                     moduleHtml += '</tr>'
                      i++;
@@ -1922,6 +1983,15 @@
         });
     }
  
+ 
+ 
+ 
+ 
+ function submitForms() {
+     debugger;
+  document.getElementById("formplandetailss").submit();
+ 
+ }
 </script>
 <html>
     <head>
@@ -2280,8 +2350,8 @@
                                                             <th class="heading" >Junction Name</th>
                                                             <td><input class="input" type="text" id="junction_name1" name="junction_name1" value="${junction_name}" size="50" disabled>
                                                                 <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
-                                                                <input class="input" type="hidden" id="junction_plan_map_id1" name="junction_plan_map_id1" value="" size="50" ></td>
-                                                        </tr>
+                                                                <input class="input" type="hidden" id="junction_plan_map_id1p" name="junction_plan_map_id1p" value="${p_id14_junction_plan_map}" size="50" ></td>
+                                                       <td>${p_id14_junction_plan_map}</td> </tr>
                                                         <tr>
                                                             <th class="heading" >On Time -  Off Time</th>
                                                             <td><input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="40" onkeyup="myFunction()"  >
@@ -2421,7 +2491,7 @@
                             <tr>
                                 <td>
                                     <div style="overflow: scroll; height: 450px; display: none;" id="pform">
-                                        <form name="form" id="form6"  action="JunctionDetailsUpdate" method="post" >
+                                        <form name="form" id="formplandetailss"  action="JunctionDetailsUpdate" method="post" >
                                             <table name="table8" class="reference"  border="1" align="center" style="width: 80% !important;">
                                                 <tr id="message">
                                                     <c:if test="${not empty message}">
@@ -2430,8 +2500,9 @@
                                                 </tr>
 
                                                 <input class="input form-control"  size="15" type="hidden" id="plan_id" name="plan_id" value="" >
-
-                                                <tr align="center" class="incHeight" >
+                                                               <input type="hidden" id="junction_plan_map_id_test_update" name="junction_plan_map_id" value="" disabled>
+                                                                   <input type="hidden"  name="task" value="SaveupdateDetails" disabled>
+                                                               <tr align="center" class="incHeight" >
                                                     <th  class="heading"  align="center" colspan="2">Plan No</th>
                                                     <td colspan="2">
                                                         <input class="input form-control"  size="15" type="text" id="plan_no" name="plan_no" value="" size="30" disabled><br>
@@ -2550,7 +2621,7 @@
                                                 <input type="hidden" id="clickedButton" name="j_id" value="${j_id}">
                                                 <tr>
                                                     <td align='center' colspan="10">
-                                                        <input class="button" type="submit" id="plandet" name="task" value="plandet" onclick="setStatus(id)" />
+                                                        <!--<input class="button" type="submit" id="plandet" name="task" value="plandet" onclick="setStatus(id)" />-->
                                                         <input class="button" type="reset" id="NEW1" name="task" value="New" onclick="makeEditable2(id)"/>
                                                         <input class="button" type="button" id="EDIT1" name="task" value="Edit"  onclick="makeEditable2(id)" />
                                                         <input class="button" type="submit" id="DELETE1" name="task" value="Delete" disabled>
@@ -2778,7 +2849,11 @@
 
 
             <tr><td><form action="" id="mainform" method="post">
-                        <center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="setStatus(id)" /></center>                                                
+<!--                        <center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="setStatus(id)" /></center>                                                -->
+<!--<center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="submitForms()" /></center>-->
+                   
+                    <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">
+                   
                     </form></td></tr>
             <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
 

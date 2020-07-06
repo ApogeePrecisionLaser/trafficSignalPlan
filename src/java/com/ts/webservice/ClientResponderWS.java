@@ -318,7 +318,13 @@ public class ClientResponderWS extends HttpServlet
                         // if (validateDataByCrc(bytes, firstStartDataPosition, receivedDataSize)) {
                         boolean testRequestFromJunction = false;
                         int junctionID = (int) bytes[firstStartDataPosition];
-                        int program_version_no = (int) bytes[firstStartDataPosition + 1];
+                        int  program_version_no= (int) bytes[firstStartDataPosition + 1];
+                        /*------19-6-20--start-----range of byte array -127to127*/
+                        if(program_version_no <0){
+                        program_version_no=256+program_version_no;
+                        } 
+                        //done because when program version exceeded 127 it gets value in negative and throws erroe
+                        /*------19-6-20--end-----*/
                         int fileNo = (int) bytes[firstStartDataPosition + 2];
                         int functionNo = (int) bytes[firstStartDataPosition + 3];
                         currentVisitedTime = this.currentTime;
@@ -1676,6 +1682,12 @@ public class ClientResponderWS extends HttpServlet
             int dataSize2 = dataToProcess[firstStartDataPosition - 1];
             int junctionID = dataToProcess[firstStartDataPosition];
             int program_version_no = dataToProcess[firstStartDataPosition + 1];
+            /*------19-6-20--start-----range of byte array -127to127*/
+                        if(program_version_no <0){
+                        program_version_no=256+program_version_no;
+                        } 
+                        //done because when program version exceeded 127 it gets value in negative and throws erroe
+                        /*------19-6-20--end-----*/
             int fileNo = dataToProcess[firstStartDataPosition + 2];
             int functionNo = dataToProcess[firstStartDataPosition + 3];
             String currentTimeSynchronizationStatus = "Y";

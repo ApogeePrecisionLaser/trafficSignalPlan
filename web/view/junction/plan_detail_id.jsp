@@ -163,7 +163,7 @@
                                     </table> </td> </tr>
                             
                             <tr><td>
-                                    <form action="PlanDetailIdController" method="post" class="form-group container-fluid">
+                                    <form action="CityCont" method="post" class="form-group container-fluid">
                    
                                     <table align="center">
                                         <tr >

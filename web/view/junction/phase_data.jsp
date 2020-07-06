@@ -60,6 +60,28 @@
                                     </table> 
                                 </td> 
                             </tr>
+                            </tr>
+<tr><td>
+                                    <form action="PhaseDataCont" method="post" class="form-group container-fluid">
+                   
+                                        <table align="center" border="1px">
+                                        <tr >
+                                             <td>
+                                            Junction<input type="text" name="searchJunctionNameSearch" id="searchJunctionNameSearch" value="${searchJunctionNameSearch}">
+                                            </td>
+                                             <td>
+                                             Mode<input type="text" name="mode" id="mode" value="${mode}">
+                                            </td>
+                                            
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td>
                                     <table id="table1"  align="center" width="500">
@@ -71,37 +93,34 @@
                                                             <tr>
                                                                 <th class="heading" >S.No.</th>
                                                                 <th class="heading" >Junction Name</th>
-                                                                <th class="heading" >To&From Date</th>
-                                                                <th class="heading" >Day</th>
-                                                                <th class="heading" >Time</th>
-                                                                <th class="heading" >Order No</th>
+                                                            
+                                                               
+                                                           
                                                                 <th class="heading" >Plan No</th>
-                                                                <th class="heading" >Phase No</th>
+                                                                     <th class="heading" >Plan mode</th>
+                                                                     <th class="heading" >Phase Order No</th>
+                                                              
                                                                 <th class="heading" >Side13</th>
                                                                 <th class="heading" >Side24</th>
-                                                                <th class="heading" >Padestrian Info</th>
-                                                                <th class="heading" >Day Name</th>
+                                                               
                                                                 <th class="heading" >Remark</th>
-                                                                <th></th>
+
                                                             </tr>
                                                             <c:forEach var="planMap" items="${requestScope['junctionPlanMapPhaseList']}" varStatus="loopCounter">
                                                                 <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_plan_map_id}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.phase_info_id}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">${lowerLimit - noOfRowsTraversed + loopCounter.count}</td>
+                                                    
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.junction_name}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.from_date}//${planMap.to_date}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.on_time_hr}:${planMap.on_time_min}-${planMap.off_time_hr}:${planMap.off_time_min}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.plan_no}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.phase_no}</td>
+                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.mode}</td>
+                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.order_no}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side13}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.side24}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.padestrian_info}</td>
-                                                                    <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.day_name}</td>
+                                                                   
                                                                     <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)">${planMap.remark}</td>
                                                                     <td id="t1c${IDGenerator.uniqueID}" style="display: none" onclick="fillColumns(id)">${planMap.junction_id}</td>
-                                                                    <td>${selected_plan_id1}</td>
+                                                                
 
 
                                                                 </tr>
@@ -142,11 +161,18 @@
                                                                     </c:choose>
                                                                 </td>
                                                             </tr>
+                                                            
+                                                            
                                                             <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
                                                             <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                                             <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                                             <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
                                                         </table>
+                                                        <table>   <tr id="message">
+                                                    <c:if test="${not empty message}">
+                                                        <td colspan="8" bgcolor="${msgBgColor}"><b>Result: ${message}</b></td>
+                                                    </c:if>
+                                                </tr></table>
                                                     </DIV>
                                                 </form>
                                             </td>
@@ -214,10 +240,47 @@
                                         }
                                     }
                                 });
+                                  $("#searchJunctionNameSearch").autocomplete("PhaseDataCont", {
+
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getsearchJunctionName";
+                                        }
+                                    }
+                                });
+                                   $("#mode").autocomplete("PhaseDataCont", {
+
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getMode";
+                                        }
+                                    }
+                                });
                                 $("#date").autocomplete("PhaseDataCont", {
                                     extraParams: {
                                         action1: function () {
                                             return "getDate"
+                                        },
+                                        action2: function () {
+                                            return  $("#searchJunctionName").val();
+                                        }
+                                    }
+                                     });
+                                  
+                                $("#dateSearch").autocomplete("PhaseDataCont", {
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getDate"
+                                        },
+                                        action2: function () {
+                                            return  $("#searchJunctionName").val();
+                                        }
+                                    }
+                                     });
+                                     $("#daySearch").autocomplete("PhaseDataCont", {
+                                    extraParams: {
+                                        action1: function () {
+                                            return "getDay"
                                         },
                                         action2: function () {
                                             return  $("#searchJunctionName").val();

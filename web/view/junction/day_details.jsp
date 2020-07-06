@@ -35,9 +35,9 @@
                 document.getElementById("day_detail_id").disabled = false;
                 document.getElementById("day_name").disabled = false;
                 document.getElementById("day").disabled = false;
-                document.getElementById("junction_name").disabled = false;
+            
                 document.getElementById("remark").disabled = false;
-                if (id == 'new') {
+                if (id === 'new') {
                     document.getElementById("message").innerHTML = "";      // Remove message
                     document.getElementById("edit").disabled = true;
                     document.getElementById("delete").disabled = true;
@@ -45,7 +45,7 @@
                     setDefaultColor(document.getElementById("noOfRowsTraversed").value, 4);
                     document.getElementById("junction_name").focus();
                 }
-                if (id == 'edit') {
+                if (id === 'edit') {
                     document.getElementById("save_As").disabled = false;
                     document.getElementById("delete").disabled = false;
                 }
@@ -61,7 +61,7 @@
             function fillColumns(id) {
                 debugger;
                 var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
-                var noOfColumns = 6;
+                var noOfColumns = 5;
                 var columnId = id;
             <%-- holds the id of the column being clicked, excluding the prefix t1c e.g. t1c3 (column 3 of table 1). --%>
                 columnId = columnId.substring(3, id.length);
@@ -84,8 +84,8 @@
                 document.getElementById("day_detail_id").value = document.getElementById(t1id + (lowerLimit + 0)).innerHTML;
                 document.getElementById("day_name").value = document.getElementById(t1id + (lowerLimit + 2)).innerHTML;
                 document.getElementById("day").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
-                document.getElementById("junction_name").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
-                document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 5)).innerHTML;
+              
+                document.getElementById("remark").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
                 // Now enable/disable various buttons.
                 document.getElementById("edit").disabled = false;
                 if (!document.getElementById("save").disabled) {
@@ -203,9 +203,9 @@
                    
                                         <table align="center" border="1px">
                                         <tr >
-                                             <td>
+<!--                                             <td>
                                             Junction<input type="text" name="searchstate" id="searchstate" value="${searchstate}">
-                                            </td>
+                                            </td>-->
                                              <td>
                                               Day<input type="text" name="searchday" id="searchday" value="${searchday}">
                                             </td>
@@ -229,7 +229,7 @@
                                                     <th class="heading">S.No.</th>
                                                     <th class="heading">Day Name</th>
                                                     <th class="heading">Day</th>
-                                                    <th class="heading">Junction Name</th>
+<!--                                                    <th class="heading">Junction Name</th>-->
                                                     <th class="heading">Remark</th>
 
                                                 </tr>
@@ -241,7 +241,7 @@
                                                         </td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${dayDetail.day_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${dayDetail.day}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${dayDetail.junction_name}</td>
+                                                      
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${dayDetail.remark}</td>
                                                     <input style="display: none" onclick="fillColumns(id)" value="${dayDetail.junction_id}">
 
@@ -305,7 +305,8 @@
 
                                                 <tr>
                                                     <th class="heading">Day Name</th>
-                                                    <td><input class="input" type="text" id="day_name" name="day_name" size="30" value="" disabled></td>
+                                                    <td><input class="input" type="text" id="day_name" name="day_name" size="30" value="" disabled>
+                                                     <input type="hidden" id="day_detail_id" name="day_detail_id" disabled></td>
                                                 </tr>
                                                 <tr> <th class="heading" >Day</th><td><select name="day" id="day" style="width: 83%; align-content: center;">
                                                             <option>--select--</option>
@@ -320,11 +321,7 @@
                                                         </select></td>
 
                                                 </tr> 
-                                                <tr>
-                                                    <th class="heading">Junction Name</th>
-                                                <input type="hidden" id="day_detail_id" name="day_detail_id" disabled>
-                                                <td><input class="input" type="text" id="junction_name" name="junction_name" size="30" value="" disabled></td>
-                                                </tr>
+                                              
                                                 <tr>
                                                     <th class="heading">Remark</th>
                                                     <td><input class="input" type="text" id="remark" name="remark" size="30" value="" disabled></td>
@@ -334,7 +331,7 @@
                                                 <tr>
                                                     <td align='center' colspan="2">
                                                         <input class="button" type="button" name="edit" id="edit" value="Edit" onclick="makeEditable(id)" disabled>
-                                                        <input class="button" type="submit" name="task" id="save" value="Save" onclick="setStatus(id)" disabled>
+                                                        <input class="button" type="submit" name="task" id="save" value="Save" onclick="setStatus(id)">
                                                         <input class="button" type="submit" name="task" id="save_As" value="Save AS New" onclick="setStatus(id)" disabled>  
                                                         <input class="button" type="reset" name="new" id="new" value="New" onclick="makeEditable(id)"> 
                                                         <input class="button" type="submit" name="task" id="delete" value="Delete" onclick="setStatus(id)" disabled>

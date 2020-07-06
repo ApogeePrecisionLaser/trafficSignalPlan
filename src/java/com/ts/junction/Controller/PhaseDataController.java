@@ -68,15 +68,15 @@ public class PhaseDataController extends HttpServlet {
 //                    list = phaseDataModel.getOnOffTime(q, request.getParameter("action2"), request.getParameter("action3"), request.getParameter("action4"));
 //                }
 
-                if (jqstring.equals("getDate")) {
-                    list = phaseDataModel.getDateTime(q, request.getParameter("action2"));
+                if (jqstring.equals("getMode")) {
+                    list = phaseDataModel.getPlanMode(q);
 
                 }
                 if (jqstring.equals("getsearchJunctionName")) {
                     list = phaseDataModel.getsearchJunctionName(q);
                 }
                 if (jqstring.equals("getDay")) {
-                    list = phaseDataModel.getDay(q, request.getParameter("action2"), request.getParameter("action3"));
+                    list = phaseDataModel.getDayTime(q, request.getParameter("action2"));
 
                 }
                 Iterator<String> iter = list.iterator();
@@ -221,14 +221,20 @@ public class PhaseDataController extends HttpServlet {
                 System.out.println("Exception" + e);
             }
         }
-        String searchCommandName = "";
+        String searchJunctionNameSearch = "";
+        String mode = "";
         List<PhaseData> list1 = new ArrayList<>();
 
-        searchCommandName = request.getParameter("searchParameterName");
+       
+                searchJunctionNameSearch = request.getParameter("searchJunctionNameSearch");
+                 mode = request.getParameter("mode");
 
         try {
-            if (searchCommandName == null) {
-                searchCommandName = "";
+            if (searchJunctionNameSearch == null) {
+                searchJunctionNameSearch = "";
+            }
+             if (mode == null) {
+                mode = "";
             }
         } catch (Exception e) {
             System.out.println("Exception while searching in controller" + e);
@@ -249,10 +255,8 @@ public class PhaseDataController extends HttpServlet {
             buttonAction = "none";
         }
 
-        if (buttonAction.equals(
-                "Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
-        else if (buttonAction.equals(
-                "Previous")) {
+        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        else if (buttonAction.equals("Previous")) {
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -260,23 +264,20 @@ public class PhaseDataController extends HttpServlet {
             } else {
                 lowerLimit = temp;
             }
-        } else if (buttonAction.equals(
-                "First")) {
+        } else if (buttonAction.equals("First")) {
             lowerLimit = 0;
-        } else if (buttonAction.equals(
-                "Last")) {
+        } else if (buttonAction.equals("Last")) {
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
             }
         }
 
-        if (task.equals(
-                "Save") || task.equals("Delete") || task.equals("Save AS New")) {
+        if (task.equals("Save") || task.equals("Delete") || task.equals("Save AS New")) {
             lowerLimit = lowerLimit - noOfRowsTraversed;    // Here objective is to display the same view again, i.e. reset lowerLimit to its previous value.
         }
 
-        list1 = phaseDataModel.showData(lowerLimit, noOfRowsToDisplay, searchCommandName);
+        list1 = phaseDataModel.showData(lowerLimit, noOfRowsToDisplay, searchJunctionNameSearch,mode);
         lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
 
@@ -304,6 +305,8 @@ public class PhaseDataController extends HttpServlet {
         request.setAttribute("msgBgColor", phaseDataModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());
         request.setAttribute("side_no", side_no);
+                 request.setAttribute("searchJunctionNameSearch", searchJunctionNameSearch);
+                  request.setAttribute("mode", mode);
         request.setAttribute("no_of_phase", no_of_phase);
         request.getRequestDispatcher("/phase_data").forward(request, response);
     }

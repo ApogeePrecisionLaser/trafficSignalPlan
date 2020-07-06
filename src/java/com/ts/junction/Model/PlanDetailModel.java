@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -148,6 +149,86 @@ public class PlanDetailModel {
         return !errorOccured;
     }
     
+      public int checkplan(PlanDetails planDetails){
+        boolean plan_check = false;
+        List<PlanDetails> list = new ArrayList<PlanDetails>();
+       int rowAffected=0;
+        int generatedKey = 0;
+
+       String query2="select plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min,"
+               + " mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time,"
+               + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time,"
+               + " transferred_status, remark"
+                     +" from plan_details s"
+                     +" where s.active='Y' and s.plan_no="+planDetails.getPlan_no()+" "
+               + " and s.on_time_hour="+planDetails.getOn_time_hour()+" and "
+              +" s.on_time_min="+planDetails.getOn_time_min()+" and s.off_time_hour="+planDetails.getOff_time_hour()+ " and "
+              +" s.off_time_min="+planDetails.getOff_time_min()+" and s.mode='"+planDetails.getMode()+ "' and "
+              +" s.side1_green_time="+planDetails.getSide1_green_time()+" and s.side2_green_time="+planDetails.getSide2_green_time()+ " and "
+         + "  s.side3_green_time="+planDetails.getSide3_green_time()+" and "
+         + "  s.side4_green_time="+planDetails.getSide4_green_time()+" and "
+         + "  s.side5_green_time="+planDetails.getSide5_green_time()+" and "
+         + "  s.side1_amber_time="+planDetails.getSide1_amber_time()+" and "
+          + "  s.side2_amber_time="+planDetails.getSide2_amber_time()+" and "
+         + "  s.side3_amber_time="+planDetails.getSide3_amber_time()+" and "
+         + "  s.side4_amber_time="+planDetails.getSide4_amber_time()+" and "
+         + "  s.side5_amber_time="+planDetails.getSide5_amber_time()+" and "         
+    + "  s.transferred_status='"+planDetails.getTransferred_status()+"' and "
+         + "  s.remark='"+planDetails.getRemark()+"' "            
+               + "  ORDER BY plan_no ";
+                   
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+//             if (rowAffected != 0) {
+//            rset = pstmt.getGeneratedKeys();
+//               
+//                if (rset.next()) {
+//                    generatedKey = rset.getInt(1);
+//                }
+//             }
+            while (rset.next()) {
+                PlanDetails bean = new PlanDetails();
+                bean.setPlan_id(rset.getInt(1));
+                bean.setPlan_no(rset.getInt(2));
+                bean.setOn_time_hour(rset.getInt(3));
+                bean.setOn_time_min(rset.getInt(4));
+                bean.setOff_time_hour(rset.getInt(5));
+                bean.setOff_time_min(rset.getInt(6));
+                bean.setMode(rset.getString(7));
+                bean.setSide1_green_time(rset.getInt(8));
+                bean.setSide2_green_time(rset.getInt(9));
+                bean.setSide3_green_time(rset.getInt(10));
+                bean.setSide4_green_time(rset.getInt(11));
+                bean.setSide5_green_time(rset.getInt(12));
+                bean.setSide1_amber_time(rset.getInt(13));
+                bean.setSide2_amber_time(rset.getInt(14));
+                bean.setSide3_amber_time(rset.getInt(15));
+                bean.setSide4_amber_time(rset.getInt(16));
+                bean.setSide5_amber_time(rset.getInt(17));
+                bean.setTransferred_status(rset.getString(18));
+                bean.setRemark(rset.getString(19));
+                list.add(bean);
+                generatedKey=bean.getPlan_id();
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+      // check if the list is empty or not 
+        // after adding an element 
+        plan_check = list.isEmpty(); 
+        if (plan_check == true)
+        {
+            System.out.println("The List is empty"); 
+        }
+        else
+        {
+             System.out.println(generatedKey);
+            System.out.println("The List is not empty");
+        }
+        return generatedKey;
+    }
+     
     public boolean checkPlanNo(int plan_no){
         boolean plan_no_check = false;
         PreparedStatement pstmt;
@@ -162,8 +243,7 @@ public class PlanDetailModel {
         }
         return plan_no_check;
     }
-    
-    public boolean updatePreviousRecord(int plan_id) throws SQLException {
+     public boolean updatePreviousRecord(int plan_id) throws SQLException {
         PreparedStatement pstmt;
         int rowAffected = 0;
         try {
@@ -183,6 +263,195 @@ public class PlanDetailModel {
         }
         return rowAffected > 0;
     }
+    
+    public boolean mapNewPlanId(PlanDetails planDetails,int plan_update_map_id) throws SQLException {
+        PreparedStatement pstmt;
+        int rowAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            pstmt = connection.prepareStatement(" UPDATE junction_plan_map SET plan_id = "+plan_update_map_id+" "
+                    + " where junction_plan_map_id = " +planDetails.getJunction_plan_map_id());
+            rowAffected = pstmt.executeUpdate();   
+            if (rowAffected > 0) {
+                // Finally commit the connection.
+                connection.commit();
+            } else {
+                throw new SQLException("All records were NOT plan id not Update in junction plan map.");
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return rowAffected > 0;
+    }
+    
+   
+        public boolean insertRecordMapNewPlanId(PlanDetails planDetails,int planCheck) {
+      
+         String insert_query = null;
+         PreparedStatement pstmt = null;
+        boolean errorOccured = false;
+        boolean isUpdated = false;
+        int generatedKey=0;
+        int rowsAffected = 0;
+        int plan_no=0;
+         int plan_id =0;
+        if(checkPlanNo(planDetails.getPlan_no())) {
+          plan_no= getMaxPlanNo();
+         plan_no=plan_no+1;
+          plan_id = getMaxPlanId()+1;
+            insert_query = "INSERT into plan_details(plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, "
+                    + " side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, "
+                    + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status,"
+                    + " remark,plan_revision_no) "
+                    + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";    
+            try {
+                boolean autoCommit = connection.getAutoCommit();
+                try {
+                    connection.setAutoCommit(false);                
+
+                        pstmt = connection.prepareStatement(insert_query,Statement.RETURN_GENERATED_KEYS);
+                        pstmt.setInt(1, plan_id);
+                        pstmt.setInt(2, plan_no);
+                        pstmt.setInt(3, planDetails.getOn_time_hour());
+                        pstmt.setInt(4, planDetails.getOn_time_min());
+                        pstmt.setInt(5, planDetails.getOff_time_hour());
+                        pstmt.setInt(6, planDetails.getOff_time_min());
+                        pstmt.setString(7, planDetails.getMode());
+                        pstmt.setInt(8, planDetails.getSide1_green_time());
+                        pstmt.setInt(9, planDetails.getSide2_green_time());
+                        pstmt.setInt(10, planDetails.getSide3_green_time());
+                        pstmt.setInt(11, planDetails.getSide4_green_time());
+                        pstmt.setInt(12, planDetails.getSide5_green_time());
+                        pstmt.setInt(13, planDetails.getSide1_amber_time());
+                        pstmt.setInt(14, planDetails.getSide2_amber_time());
+                        pstmt.setInt(15, planDetails.getSide3_amber_time());
+                        pstmt.setInt(16, planDetails.getSide4_amber_time());
+                        pstmt.setInt(17, planDetails.getSide5_amber_time());
+                        pstmt.setString(18, planDetails.getTransferred_status());
+                        pstmt.setString(19, planDetails.getRemark());
+                        pstmt.setInt(20, 0);
+                        rowsAffected = pstmt.executeUpdate();
+                          if (rowsAffected != 0) {
+           ResultSet rset = pstmt.getGeneratedKeys();
+               
+                if (rset.next()) {
+                    generatedKey = rset.getInt(1);
+                }
+                if(generatedKey>0)
+                {
+                    rowsAffected = 0;
+                    pstmt = connection.prepareStatement(" UPDATE junction_plan_map SET plan_id = "+generatedKey+" "
+                    + " where junction_plan_map_id = " +planDetails.getJunction_plan_map_id());
+                     rowsAffected = pstmt.executeUpdate();
+                }
+             }
+                          
+                    if (rowsAffected > 0) {
+                        // Finally commit the connection.
+                        connection.commit();
+                        message = "Data has been update successfully.";
+                        msgBgColor = COLOR_OK;
+                    } else {
+                        throw new SQLException("All records were NOT saved.");
+                    }
+
+
+                } catch (SQLException sqlEx) {
+                    errorOccured = true;
+                    connection.rollback();
+                    message = "Could NOT save all data , some error.";
+                    msgBgColor = COLOR_ERROR;
+                    System.out.println("PlanInfoModel insert() Error: " + message + " Cause: " + sqlEx.getMessage());
+                } finally {
+                    pstmt.close();
+                    connection.setAutoCommit(autoCommit);
+                }
+            } catch (Exception e) {
+                System.out.println("PlanInfoModel insert() Error: " + e);
+            }
+        
+            
+        } else {
+            plan_id = getMaxPlanId()+1;
+            insert_query = "INSERT into plan_details(plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, "
+                    + " side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, "
+                    + " side1_amber_time, side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status,"
+                    + " remark,plan_revision_no) "
+                    + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";    
+            try {
+                boolean autoCommit = connection.getAutoCommit();
+                try {
+                    connection.setAutoCommit(false);                
+
+                        pstmt = connection.prepareStatement(insert_query,Statement.RETURN_GENERATED_KEYS);
+                        pstmt.setInt(1, plan_id);
+                        pstmt.setInt(2, planDetails.getPlan_no());
+                        pstmt.setInt(3, planDetails.getOn_time_hour());
+                        pstmt.setInt(4, planDetails.getOn_time_min());
+                        pstmt.setInt(5, planDetails.getOff_time_hour());
+                        pstmt.setInt(6, planDetails.getOff_time_min());
+                        pstmt.setString(7, planDetails.getMode());
+                        pstmt.setInt(8, planDetails.getSide1_green_time());
+                        pstmt.setInt(9, planDetails.getSide2_green_time());
+                        pstmt.setInt(10, planDetails.getSide3_green_time());
+                        pstmt.setInt(11, planDetails.getSide4_green_time());
+                        pstmt.setInt(12, planDetails.getSide5_green_time());
+                        pstmt.setInt(13, planDetails.getSide1_amber_time());
+                        pstmt.setInt(14, planDetails.getSide2_amber_time());
+                        pstmt.setInt(15, planDetails.getSide3_amber_time());
+                        pstmt.setInt(16, planDetails.getSide4_amber_time());
+                        pstmt.setInt(17, planDetails.getSide5_amber_time());
+                        pstmt.setString(18, planDetails.getTransferred_status());
+                        pstmt.setString(19, planDetails.getRemark());
+                        pstmt.setInt(20, 0);
+                        rowsAffected = pstmt.executeUpdate();
+                          if (rowsAffected != 0) {
+           ResultSet rset = pstmt.getGeneratedKeys();
+               
+                if (rset.next()) {
+                    generatedKey = rset.getInt(1);
+                }
+                if(generatedKey>0)
+                {
+                    rowsAffected = 0;
+                    pstmt = connection.prepareStatement(" UPDATE junction_plan_map SET plan_id = "+generatedKey+" "
+                    + " where junction_plan_map_id = " +planDetails.getJunction_plan_map_id());
+                     rowsAffected = pstmt.executeUpdate();
+                }
+             }
+                          
+                    if (rowsAffected > 0) {
+                        // Finally commit the connection.
+                        connection.commit();
+                        message = "Data has been update successfully.";
+                        msgBgColor = COLOR_OK;
+                    } else {
+                        throw new SQLException("All records were NOT saved.");
+                    }
+
+
+                } catch (SQLException sqlEx) {
+                    errorOccured = true;
+                    connection.rollback();
+                    message = "Could NOT save all data , some error.";
+                    msgBgColor = COLOR_ERROR;
+                    System.out.println("PlanInfoModel insert() Error: " + message + " Cause: " + sqlEx.getMessage());
+                } finally {
+                    pstmt.close();
+                    connection.setAutoCommit(autoCommit);
+                }
+            } catch (Exception e) {
+                System.out.println("PlanInfoModel insert() Error: " + e);
+            }
+        }
+        
+        return !errorOccured;
+    }
+    
+    
+    
     
     public int getMaxPlanId() {
         int plan_id = 0;

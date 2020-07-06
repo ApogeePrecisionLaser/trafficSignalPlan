@@ -18,7 +18,7 @@
         <description>	</description>
         <param-name>db_userPassword</param-name>
 <!--        <param-value>jpss</param-value>-->
-<param-value></param-value>
+<param-value>root</param-value>
    
     </context-param>
     <context-param>
