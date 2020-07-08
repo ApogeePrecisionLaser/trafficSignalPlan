@@ -351,8 +351,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 
                 JSONObject jobj1 = new JSONObject();
                 jobj1.put("data", listcheck.size());
-                if(listcheck.size()==0){
+                if(listcheck.isEmpty()){
                 junctionModel.insertRecord(pd,Integer.parseInt(plan_id));
+                }else{
+                  junctionModel.insertRecord(pd,Integer.parseInt(plan_id));
                 }
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());

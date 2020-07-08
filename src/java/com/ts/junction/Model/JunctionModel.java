@@ -1458,9 +1458,10 @@ int plan_id=selected_plan_id;
                     rowsAffected = pstmt.executeUpdate();
                 } else {
                     max_phase_id = getMaxPhaseId() + 1;
+                    int max_phase_no=getMaxPhaseno(max_phase_id)+1;
                     pstmt = connection.prepareStatement(insert_phase_query);
                     pstmt.setInt(1, max_phase_id);
-                    pstmt.setInt(2, phaseData.getPhase_no());
+                    pstmt.setInt(2, max_phase_no);
                     pstmt.setInt(3, phaseData.getSide13());
                     pstmt.setInt(4, phaseData.getSide24());
                     rowsAffected = pstmt.executeUpdate();
@@ -1509,6 +1510,20 @@ int plan_id=selected_plan_id;
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(" SELECT Max(phase_info_id) as phase_info_id FROM phase_detail ");
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            plan_id = rset.getInt("phase_info_id");
+            System.out.println(plan_id);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return plan_id;
+    }
+      public int getMaxPhaseno(int phase_info_id) {
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT Max(phase_info_id) as phase_info_id FROM phase_detail where phase_info_id='"+phase_info_id+"'");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             plan_id = rset.getInt("phase_info_id");
