@@ -6,6 +6,7 @@
 package com.ts.junction.Model;
 
 import com.ts.junction.tableClasses.PlanDetails;
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -13,7 +14,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  *
@@ -228,6 +233,113 @@ public class PlanDetailModel {
         }
         return generatedKey;
     }
+      
+      //////////check update according to the fields
+          public  List<PlanDetails> checkplanOneSearch(String on_time_hr){
+        boolean plan_check = false;
+        List<PlanDetails> list = new ArrayList<PlanDetails>();
+    
+     
+          
+       int rowAffected=0;
+        int generatedKey = 0;
+
+       String query2="select * from plan_details where on_time_hour='"+on_time_hr+"'"           
+               + "  ORDER BY plan_no ";
+                   
+        try {
+            PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
+            ResultSet rset = pstmt.executeQuery();
+//             if (rowAffected != 0) {
+//            rset = pstmt.getGeneratedKeys();
+//               
+//                if (rset.next()) {
+//                    generatedKey = rset.getInt(1);
+//                }
+//             }
+            while (rset.next()) {
+                PlanDetails bean = new PlanDetails();
+                bean.setPlan_id(rset.getInt(1));
+                bean.setPlan_no(rset.getInt(2));
+                bean.setOn_time_hour(rset.getInt(3));
+                bean.setOn_time_min(rset.getInt(4));
+                bean.setOff_time_hour(rset.getInt(5));
+                bean.setOff_time_min(rset.getInt(6));
+                bean.setMode(rset.getString(7));
+                bean.setSide1_green_time(rset.getInt(8));
+                bean.setSide2_green_time(rset.getInt(9));
+                bean.setSide3_green_time(rset.getInt(10));
+                bean.setSide4_green_time(rset.getInt(11));
+                bean.setSide5_green_time(rset.getInt(12));
+                bean.setSide1_amber_time(rset.getInt(13));
+                bean.setSide2_amber_time(rset.getInt(14));
+                bean.setSide3_amber_time(rset.getInt(15));
+                bean.setSide4_amber_time(rset.getInt(16));
+                bean.setSide5_amber_time(rset.getInt(17));
+                bean.setTransferred_status(rset.getString(18));
+                bean.setRemark(rset.getString(19));
+                
+                list.add(bean);
+               
+//                list1.add(rset.getInt(1));
+//                list2.add(rset.getInt(2));
+//                list3.add(rset.getInt(3));
+//                list4.add(rset.getInt(4));
+//                list5.add(rset.getInt(5));
+//                list6.add(rset.getInt(6));
+//                list7.add(rset.getString(7));
+//                list8.add(rset.getInt(8));
+//                list9.add(rset.getInt(9));
+//                list10.add(rset.getInt(10));
+//                list11.add(rset.getInt(11));
+//                list12.add(rset.getInt(12));
+//                list13.add(rset.getInt(13));
+//                list14.add(rset.getInt(14));
+//                list15.add(rset.getInt(15));
+//                list16.add(rset.getInt(16));
+//                list17.add(rset.getInt(17));
+//                 list18.add(rset.getString(18));
+//                list19.add(rset.getString(19));
+             
+                
+//                listHash.put("plan_id", list1);
+//               listHash.put("plan_no", list2);
+//               listHash.put("on_time_hour", list3);
+//               listHash.put("on_time_min", list4);
+//               listHash.put("off_time_hour", list5);
+//               listHash.put("off_time_min", list6);
+//               listHash.put("mode", list7);
+//               listHash.put("side1_green_time", list8);
+//               listHash.put("side2_green_time",list9);
+//               listHash.put("side3_green_time", list10);
+//                listHash.put("side4_green_time", list11);
+//                 listHash.put("side5_green_time", list12);
+//                  listHash.put("side1_amber_time", list13);
+//                   listHash.put("side2_amber_time", list14);
+//                    listHash.put("side3_amber_time", list15);
+//                     listHash.put("side4_amber_time", list16);
+//                      listHash.put("side5_amber_time", list17);
+//                       listHash.put("transferred_status", list18);
+//                        listHash.put("remark", list19);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+      // check if the list is empty or not 
+        // after adding an element 
+        plan_check = list.isEmpty(); 
+        if (plan_check == true)
+        {
+            System.out.println("The List is empty"); 
+        }
+        else
+        {
+             System.out.println(generatedKey);
+            System.out.println("The List is not empty");
+        }
+        return list;
+    }
+      ///end
      
     public boolean checkPlanNo(int plan_no){
         boolean plan_no_check = false;
@@ -264,12 +376,12 @@ public class PlanDetailModel {
         return rowAffected > 0;
     }
     
-    public boolean mapNewPlanId(PlanDetails planDetails,int plan_update_map_id) throws SQLException {
+    public boolean mapNewPlanId(PlanDetails planDetails,int plan_update_id) throws SQLException {
         PreparedStatement pstmt;
         int rowAffected = 0;
         try {
             connection.setAutoCommit(false);
-            pstmt = connection.prepareStatement(" UPDATE junction_plan_map SET plan_id = "+plan_update_map_id+" "
+            pstmt = connection.prepareStatement(" UPDATE junction_plan_map SET plan_id = "+plan_update_id+" "
                     + " where junction_plan_map_id = " +planDetails.getJunction_plan_map_id());
             rowAffected = pstmt.executeUpdate();   
             if (rowAffected > 0) {

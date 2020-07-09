@@ -1,4 +1,4 @@
-  /*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -10,6 +10,7 @@ import com.ts.junction.Model.PlanDetailModel;
 import com.ts.junction.Model.junctionupdatemodel;
 import com.ts.junction.tableClasses.Junction;
 import com.ts.junction.tableClasses.JunctionPlanMap;
+import com.ts.junction.tableClasses.JunctionUpdateBean;
 import com.ts.junction.tableClasses.PhaseData;
 import com.ts.junction.tableClasses.PhaseInfo;
 import com.ts.junction.tableClasses.PlanDetails;
@@ -18,8 +19,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletContext;
@@ -41,8 +46,17 @@ public class JunctionDetailsUpdate extends HttpServlet {
     //public static JSONObject junobj=new JSONObject();
     public static JSONArray junplanmaparray = new JSONArray();
     public static JSONArray plandetails = new JSONArray();
+    public static List<PlanDetails> pchecklist = new ArrayList<>();
+     public static List<JunctionUpdateBean> pchecklistStored = new ArrayList<>();
+    public static Map<String, Object> pchecklistHashLast = new HashMap<String, Object>();
+
+    public static Map<String, Object> pchecklistselected = new HashMap<String, Object>();
+
     //public static JSONObject junobj=new JSONObject();
-  static int p_id14_junction_plan_map=0;
+    static int p_id14_junction_plan_map = 0;
+    static  int plan_id_value_final = 0;
+    static String testinglist="";
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
@@ -264,26 +278,23 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 System.out.println("junction selected id is 0");
             }
         }
-    
-  
-       
+
         if (task.equalsIgnoreCase("plandetailsnormal")) {
             JSONArray jsonarr1 = new JSONArray();
-              
-                JSONObject jobj1 = new JSONObject();
+
+            JSONObject jobj1 = new JSONObject();
             try {
                 String day = request.getParameter("day");
-             //   String todate = request.getParameter("to_date");
-             
+                //   String todate = request.getParameter("to_date");
+
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
-                 int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
-                      p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
-                     
-                   //int p_id16 = Integer.parseInt(request.getParameter("junction_plan_map_id1"));
+                int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
+                p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
 
-                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, 15, j_id11,p_id11);
+                //int p_id16 = Integer.parseInt(request.getParameter("junction_plan_map_id1"));
+                list3 = junctionModel.showDataPlansdetailsnormal(lowerLimit, 15, j_id11, p_id11);
 
-               // jobj.put("size_1", list3.size());
+                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
 
                     jsonarr1.add(list3.get(i).getPlan_id());
@@ -304,10 +315,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
-                             jsonarr1.add(list3.get(i).getTotalphase()); //p_id14
+                    jsonarr1.add(list3.get(i).getTotalphase()); //p_id14
 
-                 jobj1.put("p_id", list3.get(i).getPlan_id());
-                  jobj1.put("jpm_test_id", p_id14_junction_plan_map);
+                    jobj1.put("p_id", list3.get(i).getPlan_id());
+                    jobj1.put("jpm_test_id", p_id14_junction_plan_map);
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
@@ -316,9 +327,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
-                  request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+                request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                 return;
-                 
+
             } catch (JSONException ex) {
                 Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -365,22 +376,21 @@ public class JunctionDetailsUpdate extends HttpServlet {
         }
         if (task.equalsIgnoreCase("phasedataviewdetails")) {
             JSONArray jsonarr1 = new JSONArray();
-              
-                JSONObject jobj1 = new JSONObject();
+
+            JSONObject jobj1 = new JSONObject();
             try {
-              //  String day = request.getParameter("day");
-             //   String todate      String day = request.getParameter("day");
-             //   St= request.getParameter("to_date");
+                //  String day = request.getParameter("day");
+                //   String todate      String day = request.getParameter("day");
+                //   St= request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
-                 int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
-                
+                int p_id11 = Integer.parseInt(request.getParameter("plan_id"));
 
-                list4 = junctionModel.showDataPhaseNew(j_id11,p_id11);
+                list4 = junctionModel.showDataPhaseNew(j_id11, p_id11);
 
-               // jobj.put("size_1", list3.size());
+                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list4.size(); i++) {
-                     jobj1.put("no_of_sides", list4.get(i).getNo_of_sides());
-                  //  jobj1.put("no_of_sides", "3");
+                    jobj1.put("no_of_sides", list4.get(i).getNo_of_sides());
+                    //  jobj1.put("no_of_sides", "3");
                     jsonarr1.add(list4.get(i).getPhase_info_id());
                     jsonarr1.add(list4.get(i).getJunction_name());
                        jsonarr1.add(list4.get(i).getPhase_no());
@@ -432,28 +442,26 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
                 return;
-                 
+
             } catch (JSONException ex) {
                 Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-                
-                
-                
-          if (task.equalsIgnoreCase("plandetailsday")) {
+
+        if (task.equalsIgnoreCase("plandetailsday")) {
             JSONArray jsonarr1 = new JSONArray();
-              
-                JSONObject jobj1 = new JSONObject();
+
+            JSONObject jobj1 = new JSONObject();
             try {
                 String day = request.getParameter("day");
-             //   String todate = request.getParameter("to_date");
+                //   String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
-                
-     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
-                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, 15, j_id11,day);
 
-               // jobj.put("size_1", list3.size());
+                p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+                list3 = junctionModel.showDataPlansdetailsday(lowerLimit, 15, j_id11, day);
+
+                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
 
                     jsonarr1.add(list3.get(i).getPlan_id());
@@ -476,7 +484,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getRemark());
                     jsonarr1.add(list3.get(i).getTotalphase());
 
-                 jobj1.put("jpm", list3.get(i).getMode());
+                    jobj1.put("jpm", list3.get(i).getMode());
                     jobj1.put("p_id", list3.get(i).getPlan_id());
                 }
                 System.out.println("json array --" + jsonarr1);
@@ -486,25 +494,24 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
                 return;
-                 
+
             } catch (JSONException ex) {
                 Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-                
+
         if (task.equalsIgnoreCase("jdetails")) {
             JSONArray jsonarr1 = new JSONArray();
-              
-                JSONObject jobj1 = new JSONObject();
-            try {
-               // String fromdate = request.getParameter("from_date");
-              //  String todate = request.getParameter("to_date");
-              //  int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
-                
 
-            list1 = junctionModel.showData();
-               // jobj.put("size_1", list3.size());
+            JSONObject jobj1 = new JSONObject();
+            try {
+                // String fromdate = request.getParameter("from_date");
+                //  String todate = request.getParameter("to_date");
+                //  int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+
+                list1 = junctionModel.showData();
+                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list1.size(); i++) {
 
                     jsonarr1.add(list1.get(i).getJunction_id());
@@ -522,7 +529,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list1.get(i).getSim_no());
                     jsonarr1.add(list1.get(i).getImei_no());
                     jsonarr1.add(list1.get(i).getInstant_green_time());
-                    
+
                     jsonarr1.add(list1.get(i).getPedestrian());
                     jsonarr1.add(list1.get(i).getPedestrian_time());
                     jsonarr1.add(list1.get(i).getSide1_name());
@@ -532,38 +539,38 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list1.get(i).getSide5_name());
                     jsonarr1.add(list1.get(i).getFile_no());
                     jsonarr1.add(list1.get(i).getProgram_version_no());
-                    
-                     // jobj1.put("jun_id", list1.get(i).getJunction_id());
+
+                    // jobj1.put("jun_id", list1.get(i).getJunction_id());
                     //  jobj1.put("sides", list1.get(i).getNo_of_sides());
                     //  jobj1.put("p_no", list1.get(i).getProgram_version_no());
-                 }
+                }
                 System.out.println("json array --" + jsonarr1);
-
+ 
                 jobj1.put("data", jsonarr1);
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
                 return;
-                 
+
             } catch (JSONException ex) {
                 Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
-        
+
         if (task.equalsIgnoreCase("plandetails")) {
             JSONArray jsonarr1 = new JSONArray();
-              
-                JSONObject jobj1 = new JSONObject();
+
+            JSONObject jobj1 = new JSONObject();
             try {
                 String fromdate = request.getParameter("from_date");
                 String todate = request.getParameter("to_date");
                 int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
-                
-     p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
+
+                p_id14_junction_plan_map = Integer.parseInt(request.getParameter("jun_plan_map_id"));
                 list3 = junctionModel.showDataPlansdetails(lowerLimit, 15, j_id11, fromdate, todate);
 
-               // jobj.put("size_1", list3.size());
+                // jobj.put("size_1", list3.size());
                 for (int i = 0; i < list3.size(); i++) {
 
                     jsonarr1.add(list3.get(i).getPlan_no());
@@ -584,10 +591,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     jsonarr1.add(list3.get(i).getSide5_amber_time());
                     jsonarr1.add(list3.get(i).getTransferred_status());
                     jsonarr1.add(list3.get(i).getRemark());
-jsonarr1.add(list3.get(i).getTotalphase());
+                    jsonarr1.add(list3.get(i).getTotalphase());
 
-                 jobj1.put("jpm", list3.get(i).getMode());
-                     jobj1.put("p_id", list3.get(i).getPlan_id());
+                    jobj1.put("jpm", list3.get(i).getMode());
+                    jobj1.put("p_id", list3.get(i).getPlan_id());
                 }
                 System.out.println("json array --" + jsonarr1);
 
@@ -595,20 +602,20 @@ jsonarr1.add(list3.get(i).getTotalphase());
 
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
-                     request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+                request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                 return;
-                 
+
             } catch (JSONException ex) {
                 Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
             }
 
         }
         if (task.equals("testing")) {
-          //  request.setAttribute("junction", list1);
-            if(lowerLimit==0){
-            lowerLimit=0;
-            }else{
-             lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
+            //  request.setAttribute("junction", list1);
+            if (lowerLimit == 0) {
+                lowerLimit = 0;
+            } else {
+                lowerLimit = Integer.parseInt(request.getParameter("lowerLimit"));
             }
             JSONArray jsonarr = new JSONArray();
             JSONArray jsonarr1 = new JSONArray();
@@ -621,7 +628,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
             if (junction_id_selected1 != 0) {
                 try {
                     list2 = junctionModel.showDataPlanMapbyfilter(lowerLimit, 15, junction_id_selected1, filter);
-                    
+
                     if (filter.equalsIgnoreCase("date")) {
                         System.out.println("lsit 2 size -" + list2.size());
                         jobj.put("size_1", list2.size());
@@ -650,8 +657,8 @@ jsonarr1.add(list3.get(i).getTotalphase());
                             jsonarr1.add(list2.get(i).getDay());
                             // jsonarr1.add(list2.get(i).getTo_date());
                             jsonarr1.add(list2.get(i).getPlan_no());
-                             jsonarr1.add(list2.get(i).getJunction_plan_map_id());
-                           // jsonarr1.add(list2.get(i).getPlan_id());
+                            jsonarr1.add(list2.get(i).getJunction_plan_map_id());
+                            // jsonarr1.add(list2.get(i).getPlan_id());
 
                         }
                         System.out.println("json array --" + jsonarr1);
@@ -670,11 +677,10 @@ jsonarr1.add(list3.get(i).getTotalphase());
                             //  jsonarr1.add(list2.get(i).getOn_time_min());
                             // jsonarr1.add(list2.get(i).getOff_time_hr());
                             // jsonarr1.add(list2.get(i).getOff_time_min());
-                           
-                             jsonarr1.add(list2.get(i).getPlan_id());
-                              jsonarr1.add(list2.get(i).getJunction_plan_map_id());
-                             //jobj1.put("p_id", list2.get(i).getPlan_id());
-                            
+
+                            jsonarr1.add(list2.get(i).getPlan_id());
+                            jsonarr1.add(list2.get(i).getJunction_plan_map_id());
+                            //jobj1.put("p_id", list2.get(i).getPlan_id());
 
                         }
                         System.out.println("json array --" + jsonarr1);
@@ -682,7 +688,7 @@ jsonarr1.add(list3.get(i).getTotalphase());
                         jobj1.put("data", jsonarr1);
                         PrintWriter out1 = response.getWriter();
                         out1.print(jobj1.toString());
-                             request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+                        request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
                         return;
 
                     }
@@ -701,17 +707,996 @@ jsonarr1.add(list3.get(i).getTotalphase());
             }
         }
 // plan update code
-//for update or insert updatedetails data start
-        task="SaveupdateDetails";
-        if (task.equals("SaveupdateDetails")) {
-          PlanDetailModel planDetailModel = new PlanDetailModel();
+        if (task.equals("testingCheck")) {
+            PlanDetailModel planDetailModel = new PlanDetailModel();
+            JSONArray jsonarr1 = new JSONArray();
+
+            JSONObject jobj1 = new JSONObject();
+
+            planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
+            planDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
+            planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
+            planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
+            planDetailModel.setConnection();
+
+            try {
+                List<String> plist = new ArrayList<>();
+
+                JSONArray jsonarr = new JSONArray();
+                String p = request.getParameter("id");
+                String p1 = request.getParameter("id_value");
+                try {
+                    pchecklistHashLast.put(p, p1);
+                } catch (Exception e) {
+                    System.out.println("Exception" + e);
+                }
+                int planCheck1 = 0;
+                if (p.equals("on_time_hour")) {
+                    pchecklist = planDetailModel.checkplanOneSearch(p1);
+                    for (int i = 0; i < pchecklist.size(); i++) {
+                       // pchecklist.get(i);
+                        int plan_id_value = pchecklist.get(i).getPlan_id();
+                        int plan_no_value = pchecklist.get(i).getPlan_no();
+                        int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                        int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                        int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                        int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                        String mode_value = pchecklist.get(i).getMode();
+                        int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                        int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                        int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                        int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                        int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                        int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                        int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                        int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                        int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                        int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                        String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                        String remark_value = pchecklist.get(i).getRemark();
+                        if (p.equals("on_time_hour")) {
+                            if (Integer.parseInt(request.getParameter("id_value").trim()) == on_time_hour_value) {
+                                //int a = pchecklist.get(i).getOn_time_hour();
+                               JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                //pchecklist.set(i, bean);
+                                bean.setPlan_id(plan_id_value);
+                                bean.setPlan_no(plan_no_value);
+                                bean.setOn_time_hour(on_time_hour_value);
+                                bean.setOn_time_min(on_time_min_value);
+                                bean.setOff_time_hour(off_time_hour_value);
+                                bean.setOff_time_min(off_time_min_value);
+                                bean.setMode(mode_value);
+                                bean.setSide1_green_time(side1_green_time_value);
+                                bean.setSide2_green_time(side2_green_time_value);
+                                bean.setSide3_green_time(side3_green_time_value);
+                                bean.setSide4_green_time(side4_green_time_value);
+                                bean.setSide5_green_time(side5_green_time_value);
+                                bean.setSide1_amber_time(side1_amber_time_value);
+                                bean.setSide2_amber_time(side2_amber_time_value);
+                                bean.setSide3_amber_time(side3_amber_time_value);
+                                bean.setSide4_amber_time(side4_amber_time_value);
+                                bean.setSide5_amber_time(side5_amber_time_value);
+                                bean.setTransferred_status(transferred_status_value);
+                                bean.setRemark(remark_value);
+                                pchecklistStored.add(bean);
+                                   
+                            }
+
+                        }
+                    }
+
+                } else {
+                    if (pchecklistStored.isEmpty()&& pchecklist.isEmpty()) {
+                        System.out.println("no list for search");
+                    } 
+                    else {
+
+//                        if (p.equals("on_time_hour")) {
+//                          
+//                            for (int i = 0; i < pchecklist.size(); i++) {
+//                                pchecklist.get(i);
+//                                int plan_id_value = pchecklist.get(i).getPlan_id();
+//                                int plan_no_value = pchecklist.get(i).getPlan_no();
+//                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+//
+//                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+//                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+//                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+//                                String mode_value = pchecklist.get(i).getMode();
+//                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+//                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+//                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+//                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+//                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+//                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+//                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+//                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+//                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+//                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+//                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+//                                String remark_value = pchecklist.get(i).getRemark();
+//                                if (p.equals("on_time_hour")) {
+//                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == on_time_hour_value) {
+//                                        int a = pchecklist.get(i).getOn_time_hour();
+//                                      JunctionUpdateBean bean = new JunctionUpdateBean();
+//
+//                                       // pchecklist.set(i, bean);
+//                                        bean.setPlan_id(plan_id_value);
+//                                        bean.setPlan_no(plan_no_value);
+//                                        bean.setOn_time_hour(on_time_hour_value);
+//                                        bean.setOn_time_min(on_time_min_value);
+//                                        bean.setOff_time_hour(off_time_hour_value);
+//                                        bean.setOff_time_min(off_time_min_value);
+//                                        bean.setMode(mode_value);
+//                                        bean.setSide1_green_time(side1_green_time_value);
+//                                        bean.setSide2_green_time(side2_green_time_value);
+//                                        bean.setSide3_green_time(side3_green_time_value);
+//                                        bean.setSide4_green_time(side4_green_time_value);
+//                                        bean.setSide5_green_time(side5_green_time_value);
+//                                        bean.setSide1_amber_time(side1_amber_time_value);
+//                                        bean.setSide2_amber_time(side2_amber_time_value);
+//                                        bean.setSide3_amber_time(side3_amber_time_value);
+//                                        bean.setSide4_amber_time(side4_amber_time_value);
+//                                        bean.setSide5_amber_time(side5_amber_time_value);
+//                                        bean.setTransferred_status(transferred_status_value);
+//                                        bean.setRemark(remark_value);
+//
+//                                    }
+//
+//                                }
+//
+//                            }
+//                        }
+                         if (p.equals("on_time_min")) {
+                                pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                pchecklistStored.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("on_time_min")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == on_time_min_value) {
+                                       // int a = pchecklist.get(i).getOn_time_hour();
+                                        PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                         pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                         ///
+                          if (p.equals("off_time_hour")) {
+                          pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("off_time_hour")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == off_time_hour_value) {
+                                        //int a = pchecklist.get(i).getOn_time_hour();
+                                      JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                          pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                          ///
+                           if (p.equals("off_time_min")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                //pchecklistStored.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("off_time_min")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == off_time_min_value) {
+                                       // int a = pchecklist.get(i).getOn_time_hour();
+                                        PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                           pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                           ///
+                            if (p.equals("mode")) {
+                          pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("mode")) {
+                                    if (request.getParameter("id_value").equals(mode_value)) {
+                                        //int a = pchecklist.get(i).getOn_time_hour();
+                                      JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                          pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                            ///
+                             if (p.equals("side1_green_time")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                //pchecklistStored.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("side1_green_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side1_green_time_value) {
+                                        //int a = pchecklistStored.get(i).getOn_time_hour();
+                                      PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                         pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                             //
+                              if (p.equals("side2_green_time")) {
+                          pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("side2_green_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side2_green_time_value) {
+                                        int a = pchecklist.get(i).getOn_time_hour();
+                                        JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                        pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                              //
+                               if (p.equals("side3_green_time")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                //pchecklistStored.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("side3_green_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side3_green_time_value) {
+                                        //int a = pchecklistStored.get(i).getOn_time_hour();
+                                        PlanDetails bean = new PlanDetails();
+
+                                      //  pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                        pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                               //
+                                if (p.equals("side4_green_time")) {
+                                  pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("side4_green_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side4_green_time_value) {
+                                        int a = pchecklist.get(i).getOn_time_hour();
+                                       JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                        pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                                //
+                                 if (p.equals("side5_green_time")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                               // pchecklistStored.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("side5_green_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side5_green_time_value) {
+                                        //int a = pchecklistStored.get(i).getOn_time_hour();
+                                        PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                         pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                                 //
+                                  if (p.equals("side1_amber_time")) {
+                                         pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("side1_amber_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side1_amber_time_value) {
+                                        int a = pchecklist.get(i).getOn_time_hour();
+                                        JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                         pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                                  // 
+                                  if (p.equals("side2_amber_time")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                //pchecklist.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("side2_amber_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side2_amber_time_value) {
+                                        //int a = pchecklist.get(i).getOn_time_hour();
+                                      PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                             pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                    //
+                     if (p.equals("side3_amber_time")) {
+                          pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("side3_amber_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side3_amber_time_value) {
+                                        //int a = pchecklist.get(i).getOn_time_hour();
+                                         JunctionUpdateBean bean = new JunctionUpdateBean();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                         pchecklistStored.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                     //
+                      if (p.equals("side4_amber_time")) {
+                          pchecklist.clear();
+                            for (int i = 0; i < pchecklistStored.size(); i++) {
+                                //pchecklist.get(i);
+                                int plan_id_value = pchecklistStored.get(i).getPlan_id();
+                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
+                                String mode_value = pchecklistStored.get(i).getMode();
+                                int side1_green_time_value = pchecklistStored.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklistStored.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklistStored.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklistStored.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklistStored.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklistStored.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklistStored.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklistStored.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklistStored.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
+                                String remark_value = pchecklistStored.get(i).getRemark();
+                                if (p.equals("side4_amber_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side4_amber_time_value) {
+                                       // int a = pchecklist.get(i).getOn_time_hour();
+                                       PlanDetails bean = new PlanDetails();
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                       pchecklist.add(bean);
+                                    }
+
+                                }
+
+                            }
+                        }
+                      //
+                      if (p.equals("side5_amber_time")) {
+                          pchecklistStored.clear();
+                            for (int i = 0; i < pchecklist.size(); i++) {
+                                pchecklist.get(i);
+                                int plan_id_value = pchecklist.get(i).getPlan_id();
+                                int plan_no_value = pchecklist.get(i).getPlan_no();
+                                int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
+
+                                int on_time_min_value = pchecklist.get(i).getOn_time_min();
+                                int off_time_hour_value = pchecklist.get(i).getOff_time_hour();
+                                int off_time_min_value = pchecklist.get(i).getOff_time_min();
+                                String mode_value = pchecklist.get(i).getMode();
+                                int side1_green_time_value = pchecklist.get(i).getSide1_green_time();
+                                int side2_green_time_value = pchecklist.get(i).getSide2_green_time();
+                                int side3_green_time_value = pchecklist.get(i).getSide3_green_time();
+                                int side4_green_time_value = pchecklist.get(i).getSide4_green_time();
+                                int side5_green_time_value = pchecklist.get(i).getSide5_green_time();
+                                int side1_amber_time_value = pchecklist.get(i).getSide1_amber_time();
+                                int side2_amber_time_value = pchecklist.get(i).getSide2_amber_time();
+                                int side3_amber_time_value = pchecklist.get(i).getSide3_amber_time();
+                                int side4_amber_time_value = pchecklist.get(i).getSide4_amber_time();
+                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
+                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
+                                String remark_value = pchecklist.get(i).getRemark();
+                                if (p.equals("side5_amber_time")) {
+                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side5_amber_time_value) {
+                                        //int a = pchecklist.get(i).getOn_time_hour();
+                                        JunctionUpdateBean bean = new JunctionUpdateBean();
+                                        
+
+                                        //pchecklist.set(i, bean);
+                                        bean.setPlan_id(plan_id_value);
+                                        bean.setPlan_no(plan_no_value);
+                                        bean.setOn_time_hour(on_time_hour_value);
+                                        bean.setOn_time_min(on_time_min_value);
+                                        bean.setOff_time_hour(off_time_hour_value);
+                                        bean.setOff_time_min(off_time_min_value);
+                                        bean.setMode(mode_value);
+                                        bean.setSide1_green_time(side1_green_time_value);
+                                        bean.setSide2_green_time(side2_green_time_value);
+                                        bean.setSide3_green_time(side3_green_time_value);
+                                        bean.setSide4_green_time(side4_green_time_value);
+                                        bean.setSide5_green_time(side5_green_time_value);
+                                        bean.setSide1_amber_time(side1_amber_time_value);
+                                        bean.setSide2_amber_time(side2_amber_time_value);
+                                        bean.setSide3_amber_time(side3_amber_time_value);
+                                        bean.setSide4_amber_time(side4_amber_time_value);
+                                        bean.setSide5_amber_time(side5_amber_time_value);
+                                        bean.setTransferred_status(transferred_status_value);
+                                        bean.setRemark(remark_value);
+                                        pchecklistStored.add(bean);
+
+                                    }
+
+                                }
+
+                            }
+                        }
+                    }
+                }
+                System.out.println(pchecklistStored);
+                 if(pchecklistStored.isEmpty()){
+                 plan_id_value_final=0;
+                      try{
+                         
+                        jsonarr1.add("Plan not Exsist");
+                          System.out.println("json array --" + jsonarr1);
+                       
+                        jobj1.put("data", jsonarr1);
+                        PrintWriter out1 = response.getWriter();
+                        out1.print(jobj1.toString());
+                }catch(Exception e){}
+                 }else{
+                     plan_id_value_final = pchecklistStored.get(0).getPlan_id();
+                          try{
+                         
+                        jsonarr1.add("Plan Exsist");
+                          System.out.println("json array --" + jsonarr1);
+                       
+                        jobj1.put("data", jsonarr1);
+                        PrintWriter out1 = response.getWriter();
+                        out1.print(jobj1.toString());
+                }catch(Exception e){}
+                 }
            
-        planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
-        planDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
-        planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
-        planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
-        planDetailModel.setConnection();
-        try{
+               // jobj1.put("data", "Plan Exsist");
+                
+//
+//                jsonarr.add(p);
+//                JSONObject jobj = new JSONObject();
+//                jobj.put("data", jsonarr);
+                return ;
+            } catch (Exception ex) {
+                System.out.println("Exception" + ex);
+            }
+        }
+//for update or insert updatedetails data start
+        task = "SaveupdateDetails";
+        if (task.equals("SaveupdateDetails")) {
+            PlanDetailModel planDetailModel = new PlanDetailModel();
+
+            planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
+            planDetailModel.setConnectionString(ctx.getInitParameter("connectionString"));
+            planDetailModel.setDb_userName(ctx.getInitParameter("db_userName"));
+            planDetailModel.setDb_userPasswrod(ctx.getInitParameter("db_userPassword"));
+            planDetailModel.setConnection();
+            try {
                 PlanDetails planDetails = new PlanDetails();
                 int plan_detail_id;
                 try {
@@ -719,14 +1704,14 @@ jsonarr1.add(list3.get(i).getTotalphase());
                 } catch (Exception e) {
                     plan_detail_id = 0;
                 }
-                int junction_plan_map_id_test=0;
+                int junction_plan_map_id_test = 0;
                 try {
                     junction_plan_map_id_test = Integer.parseInt(request.getParameter("junction_plan_map_id1p").trim());
                 } catch (Exception e) {
                     junction_plan_map_id_test = 0;
-                   junction_plan_map_id_test=p_id14_junction_plan_map;
+                    junction_plan_map_id_test = p_id14_junction_plan_map;
                 }
-                planDetails.setJunction_plan_map_id(junction_plan_map_id_test);               
+                planDetails.setJunction_plan_map_id(junction_plan_map_id_test);
                 planDetails.setPlan_id(plan_detail_id);
                 planDetails.setPlan_no(Integer.parseInt(request.getParameter("plan_no").trim()));
                 planDetails.setOn_time_hour(Integer.parseInt(request.getParameter("on_time_hour").trim()));
@@ -746,27 +1731,50 @@ jsonarr1.add(list3.get(i).getTotalphase());
                 planDetails.setSide5_amber_time(Integer.parseInt(request.getParameter("side5_amber_time").trim()));
                 planDetails.setTransferred_status(request.getParameter("transferred_status").trim());
                 planDetails.setRemark(request.getParameter("remark").trim());
-                int planCheck=0;
-                planCheck= planDetailModel.checkplan(planDetails);
-                if(planCheck==0){
-                    if (plan_detail_id == 0) {
-                // validation was successful so now insert record.
-                planDetailModel.insertRecordMapNewPlanId(planDetails,planCheck);
-            }
-                // validation was successful so now insert record.
-                
-            
-                }else {
+                int planCheck = 0;
+                // int plan_id_value_final
+//                planCheck = planDetailModel.checkplan(planDetails);
+//                if (planCheck == 0) {
+//                    if (plan_detail_id == 0) {
+//                        // validation was successful so now insert record.
+//                        planDetailModel.insertRecordMapNewPlanId(planDetails, planCheck);
+//                    }
+//                    // validation was successful so now insert record.
+//
+//                } 
+//else {
+//                    try {
+//                        planDetailModel.mapNewPlanId(planDetails, planCheck);
+//                    } catch (SQLException ex) {
+//                        Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
+//                    }
+                             String  pktesting    =request.getParameter("on_time_hour");
+                             if(pktesting.equals("")){
+                             
+                             }else
+                             {
+                               pchecklistStored.clear();
+                               pchecklist.clear();
+                             }
+                if (plan_id_value_final == 0) {
+                    if (plan_id_value_final == 0) {
+                        // validation was successful so now insert record.
+                        planDetailModel.insertRecordMapNewPlanId(planDetails, planCheck);
+                    }
+                    // validation was successful so now insert record.
+
+                }
+                 else {
                     try {
-                        planDetailModel.mapNewPlanId(planDetails,planCheck);
+                        planDetailModel.mapNewPlanId(planDetails, plan_id_value_final);
                     } catch (SQLException ex) {
                         Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+            } catch (Exception e) {
             }
-        }catch(Exception e)
-        {}
-        }    
-        
+        }
+
         //end
 //end
         if (task.equals("junctionsave")) {
@@ -1063,16 +2071,16 @@ jsonarr1.add(list3.get(i).getTotalphase());
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
- 
+
         request.setAttribute("junction_id", junction_id_selected1);
 
         System.out.println("datatata size  --" + list2.size());
         request.setAttribute("junction", list1);
-  //      request.setAttribute("junctionlist", list1);
+        //      request.setAttribute("junctionlist", list1);
         request.setAttribute("SelectedJunctionPlans123", list2);
         request.setAttribute("plandetailsSelected", list3);//p_id14_junction_plan_map
         request.setAttribute("phasedetailsSelected", list4);
-         request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+        request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
         request.setAttribute("message", junctionModel.getMessage());
         request.setAttribute("msgBgColor", junctionModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());
@@ -1080,6 +2088,8 @@ jsonarr1.add(list3.get(i).getTotalphase());
         request.setAttribute("IDGenerator2", new xyz());
         request.setAttribute("lowerLimit", lowerLimit);
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
+       // pchecklistStored.clear();
+       // pchecklist.clear();
         request.getRequestDispatcher("view/junction/Junction_detail_update.jsp").forward(request, response);
 
     }
