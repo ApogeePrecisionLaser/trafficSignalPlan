@@ -47,15 +47,15 @@ public class JunctionDetailsUpdate extends HttpServlet {
     public static JSONArray junplanmaparray = new JSONArray();
     public static JSONArray plandetails = new JSONArray();
     public static List<PlanDetails> pchecklist = new ArrayList<>();
-     public static List<JunctionUpdateBean> pchecklistStored = new ArrayList<>();
+    public static List<JunctionUpdateBean> pchecklistStored = new ArrayList<>();
     public static Map<String, Object> pchecklistHashLast = new HashMap<String, Object>();
 
     public static Map<String, Object> pchecklistselected = new HashMap<String, Object>();
 
     //public static JSONObject junobj=new JSONObject();
     static int p_id14_junction_plan_map = 0;
-    static  int plan_id_value_final = 0;
-    static String testinglist="";
+    static int plan_id_value_final = 0;
+    static String testinglist = "";
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -335,36 +335,120 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
 
         }
-                
+
         if (task.equalsIgnoreCase("checkphasedata")) {
             try {
-                String side1byte=request.getParameter("side1");
-                String side2byte=request.getParameter("side2");
-                String side3byte=request.getParameter("side3");
-                String side4byte=request.getParameter("side4");
-                String j_name=request.getParameter("junction_names");
-                String phase_no=request.getParameter("phase_no");
-                String plan_id=request.getParameter("plan_id");
+                String side1byte = request.getParameter("side1");
+                String side2byte = request.getParameter("side2");
+                String side3byte = request.getParameter("side3");
+                String side4byte = request.getParameter("side4");
+                String j_name = request.getParameter("junction_names");
+                String phase_no = request.getParameter("phase_no");
+                String plan_id = request.getParameter("plan_id");
+                String Order_no = request.getParameter("Order_no");
+                String phaseinfoid = request.getParameter("phaseinfoid");
                 // System.out.println("hi");
-                String side13=side1byte.concat(side3byte);
-                String side24=side2byte.concat(side4byte);
-                int side13decimal=Integer.parseInt(side13,2);
-                int side24decimal=Integer.parseInt(side24,2);
-                PhaseData pd=new PhaseData();
+                String side13 = side1byte.concat(side3byte);
+                String side24 = side2byte.concat(side4byte);
+                int side13decimal = Integer.parseInt(side13, 2);
+                int side24decimal = Integer.parseInt(side24, 2);
+                PhaseData pd = new PhaseData();
+                pd.setPhase_info_id(Integer.parseInt(phaseinfoid));
                 pd.setJunction_name(j_name);
                 pd.setSide13(side13decimal);
                 pd.setSide24(side24decimal);
                 pd.setPhase_no(Integer.parseInt(phase_no));
                 pd.setPlan_id(Integer.parseInt(plan_id));
-                List listcheck=junctionModel.checkPhase(side13decimal,side24decimal);
- 
-                JSONArray jsonarr1 = new JSONArray();
                 
+                pd.setOrder_no(Integer.parseInt(Order_no));
+                List listcheck = junctionModel.checkPhase(side13decimal, side24decimal);
+
+                JSONArray jsonarr1 = new JSONArray();
+
                 JSONObject jobj1 = new JSONObject();
                 jobj1.put("data", listcheck.size());
-                if(listcheck.size()==0){
-                junctionModel.insertRecord(pd,Integer.parseInt(plan_id));
+                if(listcheck.isEmpty()) {
+                    junctionModel.insertRecord(pd, Integer.parseInt(plan_id));
+                } else {
+                    junctionModel.insertRecord(pd, Integer.parseInt(plan_id));
                 }
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj1.toString());
+                return;
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        if (task.equalsIgnoreCase("validatephasedata")) {
+            try {
+                String Sa = null,Sb= null,Sc= null,Sd= null;
+                String Sa1 = null,Sb1= null,Sc1= null,Sd1= null;
+                String id = request.getParameter("id");//side1G10
+                String side = id.substring(0, 5);
+                if ("side1".equals(side)) {
+                   // side = "side2";
+                   Sa="side2R";
+                   Sb="side3R";
+                   Sc="side4R";
+                   Sa1="side2R";
+                   Sb1="side3R";
+                   Sc1="side4R";
+                }
+               else if ("side2".equals(side)) {
+                   Sa="side1R";
+                   Sb="side3R";
+                   Sc="side4R";
+                   Sa1="side1R";
+                   Sb1="side3R";
+                   Sc1="side4R";
+                }
+               else if ("side3".equals(side)) {
+                    Sa="side1R";
+                   Sb="side2R";
+                   Sc="side4R";
+                    Sa1="side1R";
+                   Sb1="side2R";
+                   Sc1="side4R";
+                }
+               else if ("side4".equals(side)) {
+                    Sa="side2R";
+                   Sb="side3R";
+                   Sc="side1R";
+                    Sa1="side2R";
+                   Sb1="side3R";
+                   Sc1="side1R";
+                }
+
+                String sidecolor = id.substring(5, 7);
+                String lastone=id.substring(7, 8);
+                 
+                   Sa=Sa.concat(lastone);
+                   Sb=Sb.concat(lastone);
+                   Sc=Sc.concat(lastone);
+                int lastno=Integer.parseInt(lastone);
+        
+                
+                lastno +=1;
+                lastone=Integer.toString(lastno) ;
+                     Sa1=Sa1.concat(lastone);
+                     Sb1=Sb1.concat(lastone);
+                     Sc1=Sc1.concat(lastone);
+               String finalid=side.concat("Y").concat(lastone);
+                JSONArray jsonarr1 = new JSONArray();
+                JSONObject jobj1 = new JSONObject();
+                jsonarr1.add("0");
+
+                jobj1.put("Sa", Sa);
+                jobj1.put("Sb", Sb);
+                jobj1.put("Sc", Sc);
+                jobj1.put("Sa1", Sa1);
+                jobj1.put("Sb1", Sb1);
+                jobj1.put("Sc1", Sc1);
+                jobj1.put("id", id);
+                jobj1.put("finalid", finalid);
+                jobj1.put("data", jsonarr1);
+
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj1.toString());
                 return;
@@ -391,44 +475,44 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     //  jobj1.put("no_of_sides", "3");
                     jsonarr1.add(list4.get(i).getPhase_info_id());
                     jsonarr1.add(list4.get(i).getJunction_name());
-                       jsonarr1.add(list4.get(i).getPhase_no());
-                  //  jsonarr1.add(list4.get(i).getSide13());
-                String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
-           
-                   // jsonarr1.add(list4.get(i).getSide24());
-                     String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
-                        String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
+                    jsonarr1.add(list4.get(i).getPhase_no());
+                    jsonarr1.add(list4.get(i).getOrder_no());
+                    //  jsonarr1.add(list4.get(i).getSide13());
+                    String side13Status = Integer.toBinaryString(list4.get(i).getSide13());
+
+                    // jsonarr1.add(list4.get(i).getSide24());
+                    String side24Status = Integer.toBinaryString(list4.get(i).getSide24());
+                    String side1 = junctionModel.decToBinaryAndSplitFirst(side13Status);
                     String side2 = junctionModel.decToBinaryAndSplitFirst(side24Status);
-                 String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
-                String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
-                String side5 = "00000000";
-                side1 = side1.concat("0000");
-                   side2 = side2.concat("0000");
-                     side3 = side3.concat("0000");
-              side4 = side4.concat("0000");
-                String s1[] =  side1.split("");
-                String []s2= side2.split("");
-                String []s3=side3.split("");
-                String []s4= side4.split("");
-                
-                 
-                             for(int k=0;k<8;k++){
-                           
-                             }
-                               for(int a=0;a<8;a++){
-                                   jsonarr1.add(s1[a]);
-                               }
-                               for(int b=0;b<8;b++){
-                                   jsonarr1.add(s2[b]);
-                               }
-                               for(int c=0;c<8;c++){
-                                   jsonarr1.add(s3[c]);
-                               }
-                               for(int d=0;d<8;d++){
-                                   jsonarr1.add(s4[d]);
-                               }
-                              jobj1.put("listsize",list4.size());
-                // jobj1.put("p_id", list3.get(i).getPlan_id());
+                    String side3 = junctionModel.decToBinaryAndSplitLater(side13Status);
+                    String side4 = junctionModel.decToBinaryAndSplitLater(side24Status);
+                    String side5 = "00000000";
+                    side1 = side1.concat("0000");
+                    side2 = side2.concat("0000");
+                    side3 = side3.concat("0000");
+                    side4 = side4.concat("0000");
+                    String s1[] = side1.split("");
+                    String[] s2 = side2.split("");
+                    String[] s3 = side3.split("");
+                    String[] s4 = side4.split("");
+
+                    for (int k = 0; k < 8; k++) {
+
+                    }
+                    for (int a = 0; a < 8; a++) {
+                        jsonarr1.add(s1[a]);
+                    }
+                    for (int b = 0; b < 8; b++) {
+                        jsonarr1.add(s2[b]);
+                    }
+                    for (int c = 0; c < 8; c++) {
+                        jsonarr1.add(s3[c]);
+                    }
+                    for (int d = 0; d < 8; d++) {
+                        jsonarr1.add(s4[d]);
+                    }
+                    jobj1.put("listsize", list4.size());
+                    // jobj1.put("p_id", list3.get(i).getPlan_id());
                     // jobj1.put("j_id", list2.get(i).getJunction_id());
                 }
                 System.out.println("json array --" + jsonarr1);
@@ -543,7 +627,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                     //  jobj1.put("p_no", list1.get(i).getProgram_version_no());
                 }
                 System.out.println("json array --" + jsonarr1);
- 
+
                 jobj1.put("data", jsonarr1);
 
                 PrintWriter out1 = response.getWriter();
@@ -1722,7 +1806,7 @@ if (task.equals("testingCheck")) {
      off_time_min=Integer.parseInt(check[3].trim());
                     pchecklist = planDetailModel.checkplanOneSearch(p1);
                     for (int i = 0; i < pchecklist.size(); i++) {
-                       // pchecklist.get(i);
+                        // pchecklist.get(i);
                         int plan_id_value = pchecklist.get(i).getPlan_id();
                         int plan_no_value = pchecklist.get(i).getPlan_no();
                         int on_time_hour_value = pchecklist.get(i).getOn_time_hour();
@@ -1746,7 +1830,7 @@ if (task.equals("testingCheck")) {
                         if (p.equals("off_time_min")) {
                             if (off_time_min == off_time_min_value) {
                                 //int a = pchecklist.get(i).getOn_time_hour();
-                               JunctionUpdateBean bean = new JunctionUpdateBean();
+                                JunctionUpdateBean bean = new JunctionUpdateBean();
 
                                 //pchecklist.set(i, bean);
                                 bean.setPlan_id(plan_id_value);
@@ -1769,17 +1853,16 @@ if (task.equals("testingCheck")) {
                                 bean.setTransferred_status(transferred_status_value);
                                 bean.setRemark(remark_value);
                                 pchecklistStored.add(bean);
-                                   
+
                             }
 
                         }
                     }
 
                 } else {
-                    if (pchecklistStored.isEmpty()&& pchecklist.isEmpty()) {
+                    if (pchecklistStored.isEmpty() && pchecklist.isEmpty()) {
                         System.out.println("no list for search");
-                    } 
-                    else {
+                    } else {
 
 //                       
                             
@@ -2288,7 +2371,7 @@ if (task.equals("testingCheck")) {
                                         bean.setSide5_amber_time(side5_amber_time_value);
                                         bean.setTransferred_status(transferred_status_value);
                                         bean.setRemark(remark_value);
-                                         pchecklist.add(bean);
+                                        pchecklist.add(bean);
                                     }
 
                                 }
@@ -2436,16 +2519,16 @@ if (task.equals("testingCheck")) {
                         jobj1.put("data", jsonarr1);
                         PrintWriter out1 = response.getWriter();
                         out1.print(jobj1.toString());
-                }catch(Exception e){}
-                 }
-           
-               // jobj1.put("data", "Plan Exsist");
-                
+                    } catch (Exception e) {
+                    }
+                }
+
+                // jobj1.put("data", "Plan Exsist");
 //
 //                jsonarr.add(p);
 //                JSONObject jobj = new JSONObject();
 //                jobj.put("data", jsonarr);
-                return ;
+                return;
             } catch (Exception ex) {
                 System.out.println("Exception" + ex);
             }
@@ -2519,14 +2602,13 @@ if (task.equals("testingCheck")) {
 //                    } catch (SQLException ex) {
 //                        Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
 //                    }
-                             String  pktesting    =request.getParameter("on_time_hour");
-                             if(pktesting.equals("")){
-                             
-                             }else
-                             {
-                               pchecklistStored.clear();
-                               pchecklist.clear();
-                             }
+                String pktesting = request.getParameter("on_time_hour");
+                if (pktesting.equals("")) {
+
+                } else {
+                    pchecklistStored.clear();
+                    pchecklist.clear();
+                }
                 if (plan_id_value_final == 0) {
                     if (plan_id_value_final == 0) {
                         // validation was successful so now insert record.
@@ -2534,8 +2616,7 @@ if (task.equals("testingCheck")) {
                     }
                     // validation was successful so now insert record.
 
-                }
-                 else {
+                } else {
                     try {
                        // if(planDetails.getPlan_id()==plan_id_value_final){
                         if(planDetails.getPlan_id()==plan_id_value_final)
@@ -2882,8 +2963,8 @@ System.out.println("hi");
         request.setAttribute("IDGenerator2", new xyz());
         request.setAttribute("lowerLimit", lowerLimit);
         request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
-       // pchecklistStored.clear();
-       // pchecklist.clear();
+        // pchecklistStored.clear();
+        // pchecklist.clear();
         request.getRequestDispatcher("view/junction/Junction_detail_update.jsp").forward(request, response);
 
     }
