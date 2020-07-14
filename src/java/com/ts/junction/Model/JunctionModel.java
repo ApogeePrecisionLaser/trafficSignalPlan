@@ -1433,51 +1433,91 @@ int plan_id=selected_plan_id;
 
         if (phase_id > 0) {
 
-            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
-                    + " VALUES(?, ?, ?, ?, ?) ";
+//            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
+//                    + " VALUES(?, ?, ?, ?, ?) ";
         } else {
             insert_phase_query = "INSERT into phase_detail(phase_info_id, phase_no,side13,side24) Values(?,?,?,?)";
-            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
-                    + " VALUES(?, ?, ?, ?, ?) ";
+//            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
+//                    + " VALUES(?, ?, ?, ?, ?) ";
         }
         try {
             boolean autoCommit = connection.getAutoCommit();
             try {
                 connection.setAutoCommit(false);
                 if (phase_id > 0) {
-                    Junction junc = getJunctionDetail(junction_id);
-                    updateRecordOfJunction(junc);
-                    program_version_no = getProgramVersionNo(junction_id);
-                    int phase_map_id = getMaxPhaseMapId() + 1;
-                    pstmt = connection.prepareStatement(insert_query);
-                    pstmt.setInt(1, phase_map_id);
-                    pstmt.setInt(2, junction_plan_map_id);
-                    pstmt.setInt(3, phase_id);
-                    pstmt.setInt(4, phaseData.getPhase_no() + 1);
-                    pstmt.setInt(5, program_version_no);
-                    rowsAffected = pstmt.executeUpdate();
+                    int pm_id=getPhaseIdupdate(junction_plan_map_id,phaseData.getPhase_info_id());
+                     rowsAffected=phasemapupdate(junction_plan_map_id,phase_id,pm_id,phaseData.getOrder_no());
+//                     max_phase_id = getMaxPhaseId() + 1;
+//                    int max_phase_no=getMaxPhaseno(plan_id);
+//                    Junction junc = getJunctionDetail(junction_id);
+//                    updateRecordOfJunction(junc);
+//                      program_version_no = getProgramVersionNo(junction_id);
+//                    int phase_map_id = getMaxPhaseMapId() + 1;
+//                    pstmt = connection.prepareStatement(insert_query);
+//                    pstmt.setInt(1, phase_map_id);
+//                    pstmt.setInt(2, junction_plan_map_id);
+//                    pstmt.setInt(3, phase_id);
+//                     int phasefinal=phaseData.getOrder_no();
+//                      List<PhaseData> pmid=getMaxPhaseMapIdOrder1(junction_plan_map_id,phase_id);
+//                          if(pmid.size()==0){
+//                             for(int i=0;i<pmid.size();i++){
+//                             int o_no= phaseData.getOrder_no()+1;
+//                          //   int pm_id=pmid.get(i).getPhasemapid();
+//                             
+//                             
+//                                 int update1=updateOrderNo(phase_map_id,o_no);
+//                                 int update=updateOrderNo(phase_map_id,o_no);
+//                             
+//                             }
+//                         
+//                         }
+//                    pstmt.setInt(4, max_phase_no+1);
+//                    pstmt.setInt(5, program_version_no);
+//                    rowsAffected = pstmt.executeUpdate();
+//                 
+                   
+                     
                 } else {
                     max_phase_id = getMaxPhaseId() + 1;
-                    int max_phase_no=getMaxPhaseno(max_phase_id)+1;
+                   int max_phase_no=getMaxPhaseno(plan_id);
                     pstmt = connection.prepareStatement(insert_phase_query);
                     pstmt.setInt(1, max_phase_id);
-                    pstmt.setInt(2, max_phase_no);
+                    pstmt.setInt(2, max_phase_no+1);
                     pstmt.setInt(3, phaseData.getSide13());
                     pstmt.setInt(4, phaseData.getSide24());
                     rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
-                        Junction junc = getJunctionDetail(junction_id);
-                        updateRecordOfJunction(junc);
-                        program_version_no = getProgramVersionNo(junction_id);
-                        int phase_map_id = getMaxPhaseMapId() + 1;
-                        pstmt1 = connection.prepareStatement(insert_query);
-                        pstmt1.setInt(1, phase_map_id);
-                        pstmt1.setInt(2, junction_plan_map_id);
-                        pstmt1.setInt(3, max_phase_id);
-                        pstmt1.setInt(4, phaseData.getPhase_no() + 1);
-                        pstmt1.setInt(5, program_version_no);
-                        rowsAffected = pstmt1.executeUpdate();
-                    }
+                        int pm_id=getPhaseIdupdate(junction_plan_map_id,phaseData.getPhase_info_id());
+                    rowsAffected=phasemapupdate(junction_plan_map_id,max_phase_id,pm_id,phaseData.getOrder_no());
+//                        int phasefinal=phaseData.getOrder_no();
+//                        Junction junc = getJunctionDetail(junction_id);
+//                       updateRecordOfJunction(junc);
+//                        program_version_no = getProgramVersionNo(junction_id);
+//                        int phase_map_id = getMaxPhaseMapId() + 1;
+//                        pstmt1 = connection.prepareStatement(insert_query);
+//                        pstmt1.setInt(1, phase_map_id);
+//                        pstmt1.setInt(2, junction_plan_map_id);
+//                        pstmt1.setInt(3, max_phase_id);
+//                         List<PhaseData> pmid=getMaxPhaseMapIdOrder(junction_plan_map_id);
+//                         if(pmid.size()>0){
+//                             for(int i=0;i<pmid.size();i++){
+//                             int o_no=pmid.get(i).getOrder_no(); 
+//                             int pm_id=pmid.get(i).getPhasemapid();
+//                             
+//                             if(o_no>=phasefinal){
+//                                 o_no+=1;
+//                                  int update1=updateOrderNo(pm_id,o_no);
+//                                 int update=updateOrderNo(pm_id,o_no);
+//                             
+//                             }
+//                             }
+//                         
+//                         }
+//                        pstmt1.setInt(4,phasefinal);
+//                        pstmt1.setInt(5, program_version_no);
+//                        rowsAffected = pstmt1.executeUpdate();
+//                    
+                }
                 }
                 if (rowsAffected > 0) {
                     // Finally commit the connection.
@@ -1504,6 +1544,84 @@ int plan_id=selected_plan_id;
 
         return !errorOccured;
     }
+      public int updateOrderNo(int phase_map_id,int order_no) {
+         String  Query = "UPDATE phase_map SET order_no = '"+order_no+"' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+        int rowsAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            rowsAffected = connection.prepareStatement(Query).executeUpdate();
+           
+        } catch (Exception e) {
+            System.out.println("Error:Delete:JunctionModel-- " + e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (rowsAffected > 0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
+    }
+     
+       public int phasemapupdate(int junction_plan_map_id,int phase_id,int phase_map_id,int orderno) {
+             String  Query = "UPDATE phase_map SET order_no = '"+junction_plan_map_id+"',phase_id='"+phase_id+"',order_no='"+orderno+"'  WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+        int rowsAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            rowsAffected = connection.prepareStatement(Query).executeUpdate();
+           
+        } catch (Exception e) {
+            System.out.println("Error:Delete:JunctionModel-- " + e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (rowsAffected > 0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
+    }
+       public int updateOrderNo1(int phase_map_id,int order_no) {
+         String  Query = "UPDATE phase_map SET active = 'N' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+        int rowsAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            rowsAffected = connection.prepareStatement(Query).executeUpdate();
+           
+        } catch (Exception e) {
+            System.out.println("Error:Delete:JunctionModel-- " + e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (rowsAffected > 0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
+    }
+
+     
      
       public int getMaxPhaseId() {
         int plan_id = 0;
@@ -1519,19 +1637,88 @@ int plan_id=selected_plan_id;
         }
         return plan_id;
     }
-      public int getMaxPhaseno(int phase_info_id) {
+      public int getPhaseIdupdate(int jpm,int phaseid) {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT Max(phase_info_id) as phase_info_id FROM phase_detail where phase_info_id='"+phase_info_id+"'");
+            pstmt = connection.prepareStatement(" SELECT phase_map_id  FROM phase_map where junction_plan_map_id='"+jpm+"' and phase_id='"+phaseid+"' and active='Y'");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
-            plan_id = rset.getInt("phase_info_id");
+            plan_id = rset.getInt("phase_map_id");
             System.out.println(plan_id);
         } catch (Exception e) {
             System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
         }
         return plan_id;
+    }
+      public int getMaxPhaseno(int jpm) {
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement("Select Max(pd.phase_no) as phase_no " +
+" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j \n" +
+"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and \n" +
+"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and\n" +
+"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+jpm+"' \n" +
+"                ;");
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            plan_id = rset.getInt("phase_no");
+            
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return plan_id;
+    }
+     
+      public List<PhaseData> getMaxPhaseMapIdOrder(int jpm) {
+          List<PhaseData> list=new ArrayList();
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no " +
+" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  " +
+"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  " +
+"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and " +
+"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='"+jpm+"' " +
+"   ;");
+            ResultSet rset = pstmt.executeQuery();
+             while (rset.next()) {
+                 PhaseData pd=new PhaseData();
+                 pd.setPhasemapid(rset.getInt("phase_map_id"));
+                 pd.setPhase_info_id(rset.getInt("phase_id"));
+                 pd.setOrder_no(rset.getInt("order_no"));
+           list.add(pd);
+             } 
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return list;
+    }
+     
+      public List<PhaseData> getMaxPhaseMapIdOrder1(int jpm,int phase_id) {
+          List<PhaseData> list=new ArrayList();
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no " +
+" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  " +
+"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  " +
+"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and " +
+"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='"+jpm+"' and pm.phase_id='"+phase_id+"'" +
+"   ;");
+            ResultSet rset = pstmt.executeQuery();
+             while (rset.next()) {
+                 PhaseData pd=new PhaseData();
+                 pd.setPhasemapid(rset.getInt("phase_map_id"));
+                 pd.setPhase_info_id(rset.getInt("phase_id"));
+                 pd.setOrder_no(rset.getInt("order_no"));
+           list.add(pd);
+             } 
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return list;
     }
      
      public int getMaxPhaseMapId() {
@@ -1632,7 +1819,7 @@ int plan_id=selected_plan_id;
                 pstmt.setString(19, junction.getSide3_name());
                 pstmt.setString(20, junction.getSide4_name());
                 pstmt.setString(21, junction.getSide5_name());
-                pstmt.setInt(22, program_version_no + 1);
+                pstmt.setInt(22, program_version_no);
                 pstmt.setString(23, "NO");
                 pstmt.setInt(24, junction.getFile_no());
                 pstmt.setString(25, junction.getRemark());
@@ -1721,9 +1908,9 @@ private int getProgramVersionNo(int junction_id) {
          
         
          
-        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides  from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j\n" +
+        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides ,pm.order_no from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j\n" +
 "                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n" +
-"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"'"
+"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"' order by pm.order_no ASC"
                 ;
 
         try {
@@ -1741,6 +1928,7 @@ private int getProgramVersionNo(int junction_id) {
                  bean.setRemark(rset.getString(6));
                  
                  bean.setNo_of_sides(rset.getString(7));
+                 bean.setOrder_no(rset.getInt(8));
                 list.add(bean);
             }
         } catch (Exception e) {

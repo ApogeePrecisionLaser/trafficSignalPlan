@@ -987,7 +987,7 @@
        hidediv2();
         $(".row5").remove();
         $(".row6").remove();
-        $(".row7").remove();
+         $(".row7").remove();
         debugger;
         var moduleHtml;
         // var queryString = "task=SelectedJunctionPhase&from_date=" + from_date + "&to_date=" + to_date + "&junction_id=" + j_id;
@@ -1015,7 +1015,7 @@
                     // alert(jpm);
                     // alert(j_id);
                     //  alert(response_data.no_of_sides);
-                    var data_len = data.length / 36;
+                    var data_len = data.length / 37;
                     var i = 0;
                     // alert("data lemn --"+data_len);
 
@@ -1025,7 +1025,8 @@
                     moduleHtml += '<th class="heading">JunctionName </th>';
 
 
-                    moduleHtml += '<th class="heading">phase_no</th>';
+                   // moduleHtml += '<th class="heading">phase_no</th>';
+                    moduleHtml += '<th class="heading">Order_no</th>';
 
                     moduleHtml += ' <th class="heading">Side1</th>';
                     moduleHtml += ' <th class="heading">Side2</th>';
@@ -1044,21 +1045,28 @@
                        
                 
                         moduleHtml += '<tr class="row6" id="'+j+'"  >';
-                         var fdata = "'" + data[i] + "'";
+                         var phaseinfoid = "'" + data[i] + "'";
                         var tdata = "'" + data[i] + "'";
 
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                         var jun_name="'" + data[i] + "'";
-                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)" style="display:none">' + data[++i] + '</td>';
                         var phase_no="'" + data[i] + "'";
-                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side1R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side1Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side1G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side1G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side1G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
-                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side2R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side2Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side2G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side2G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side2G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
-                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side3R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side3Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side3G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side3G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side3G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
-                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side4R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side4Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side4G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side4G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side4G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        var Order_no="'" + data[i] + "'";
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side1R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side1Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side1G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side1G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side1G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side2R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side2Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side2G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side2G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side2G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side3R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side3Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side3G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side3G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side3G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side4R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side4Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side4G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side4G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side4G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side1R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)" ><label>Y</label><input type="checkbox" class="preference" id="side1Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>G1</label><input type="checkbox" class="preference" id="side1G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side1G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side1G3' + j + '" name="rb1"   value="' + data[++i] + '"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side2R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>Y</label><input type="checkbox" class="preference" id="side2Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>G1</label><input type="checkbox" class="preference" id="side2G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side2G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side2G3' + j + '" name="rb1"   value="' + data[++i] + '"  > </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side3R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>Y</label><input type="checkbox" class="preference" id="side3Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>G1</label><input type="checkbox" class="preference" id="side3G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side3G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side3G3' + j + '" name="rb1"   value="' + data[++i] + '" > </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side4R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)" ><label>Y</label><input type="checkbox" class="preference" id="side4Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>G1</label><input type="checkbox" class="preference" id="side4G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side4G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side4G3' + j + '" name="rb1"   value="' + data[++i] + '"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
                         
                       //  moduleHtml += '<td width="35%"><input type="button" id="Button1" class="button1" value="Demo" onclick="reset()"></td>';
                       //   moduleHtml += '<td width="35%"><input type="button" class="" id="1" name="rb11" value="Edit" onclick="myFunction2(id)"></td>';
-                          moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="SavePhase" onclick="CheckPhase('+jun_name+',id,'+phase_no+','+plan_id+')"></td>';
+                       moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="SavePhase" onclick="CheckPhase('+jun_name+',id,'+phase_no+','+plan_id+','+Order_no+','+phaseinfoid+')"></td>';
                         moduleHtml += '</tr>'
                        
                         i++;
@@ -1083,71 +1091,89 @@
                          
                     
                 } else if (no === "3") {
-                     var data = response_data.data;
-                    
-                    var data_len = data.length / 36;
+                   // alert("hi");
+                    var data = response_data.data;
+                    // alert("data js -" + data);
+                    // alert("data js -" + data[7]);
+                    // var jpm=response_data.jpm;
+                    // var j_id=response_data.j_id;
+                    // alert(jpm);
+                    // alert(j_id);
+                    //  alert(response_data.no_of_sides);
+                    var data_len = data.length / 37;
                     var i = 0;
                     // alert("data lemn --"+data_len);
 
                     moduleHtml += '<tr class="row5"  >';
                   //  moduleHtml += '<th class="heading">Edit</th>';
-                   // moduleHtml += '<th class="heading">phase_info_id</th>';
+                  //  moduleHtml += '<th class="heading">phase_info_id</th>';
                     moduleHtml += '<th class="heading">JunctionName </th>';
 
 
-                    moduleHtml += '<th class="heading">phase_no</th>';
+                   // moduleHtml += '<th class="heading">phase_no</th>';
+                    moduleHtml += '<th class="heading">Order_no</th>';
 
-                    moduleHtml += ' <th class="heading">Side1    </th>';
-                    moduleHtml += ' <th class="heading">Side2    </th>';
-                    moduleHtml += ' <th class="heading">Side3    </th>';
-                    
+                    moduleHtml += ' <th class="heading">Side1</th>';
+                    moduleHtml += ' <th class="heading">Side2</th>';
+                    moduleHtml += ' <th class="heading">Side3</th>';
+                  //  moduleHtml += ' <th class="heading">Side4</th>';
+
 
                     moduleHtml += '</tr>'
-
+                    moduleHtml += '<tr class="row7" id="'+j+'"  >';
+                         moduleHtml += '<td width="35%"><input type="button" class="" id="1" name="rb11" value="Edit" onclick="myFunction2(id)"></td>';
+                        moduleHtml += '</tr>'
                     for (var j = 0; j < data_len; j++) {
                      //   alert(j + "    jj");
                     //    alert(i + "    1");
                         debugger;
-                        moduleHtml += '<tr class="row6"  >';
-                       // moduleHtml += '   <td width="5%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
-                      //  moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
-                        //  alert(i);   
-                        var fdata = "'" + data[i] + "'";
+                       
+                
+                        moduleHtml += '<tr class="row6" id="'+j+'"  >';
+                         var phaseinfoid = "'" + data[i] + "'";
                         var tdata = "'" + data[i] + "'";
 
                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
-
- 
- 
-                       moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
-                        moduleHtml += '<td width="35%"><label>R</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" value="' + data[++i] + '" disabled readonly><label>Y</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"    value="' + data[++i] + '" disabled readonly ><label>G1</lable><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"   value="' + data[++i] + '" disabled readonly><label>G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G1G2</lable><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><label>G3</lable></br><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '"disabled readonly><input type="checkbox" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"disabled readonly></td>';
-                         moduleHtml += '<td width="35%"><input type="button" class="" id="button1" name="rb1" value="Edit" ></td>';
-                        moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="Save"></td>';
-                        moduleHtml += '</tr>'
-
+                        var jun_name="'" + data[i] + "'";
+                        moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)" style="display:none">' + data[++i] + '</td>';
+                        var phase_no="'" + data[i] + "'";
+                         moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
+                        var Order_no="'" + data[i] + "'";
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side1R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side1Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side1G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side1G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side1G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side2R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side2Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side2G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side2G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side2G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side3R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side3Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side3G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side3G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side3G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side4R' + j + '" name="rb1" value="' + data[++i] + '" onclick="myFunction1(id)" ><label>Y</label><input type="checkbox" class="preference" id="side4Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G1</label><input type="checkbox" class="preference" id="side4G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction1(id)"><label>G2</lable><input type="checkbox" class="preference" id="side4G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction1(id)"><label>G3</lable><input type="checkbox" class="preference" id="side4G3' + j + '" name="rb1"   value="' + data[++i] + '"  onclick="myFunction1(id)"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+//                        
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side1R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>Y</label><input type="checkbox" class="preference" id="side1Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)" ><label>G1</label><input type="checkbox" class="preference" id="side1G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side1G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side1G3' + j + '" name="rb1"   value="' + data[++i] + '"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side2R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>Y</label><input type="checkbox" class="preference" id="side2Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)" ><label>G1</label><input type="checkbox" class="preference" id="side2G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side2G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side2G3' + j + '" name="rb1"   value="' + data[++i] + '"  > </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td width="35%"><label>R</label><input type="checkbox" class="preference" id="side3R' + j + '" name="rb1" value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>Y</label><input type="checkbox" class="preference" id="side3Y' + j + '" name="rb1"    value="' + data[++i] + '" onclick="checkboxvalueonclick(id)"><label>G1</label><input type="checkbox" class="preference" id="side3G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side3G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side3G3' + j + '" name="rb1"   value="' + data[++i] + '" > </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        moduleHtml += '<td style="display:none" width="35%"><label>R</label><input type="checkbox" class="preference" id="side4R' + j + '" name="rb1" value="' + data[++i] + '"  ><label>Y</label><input type="checkbox" class="preference" id="side4Y' + j + '" name="rb1"    value="' + data[++i] + '" ><label>G1</label><input type="checkbox" class="preference" id="side4G1' + j + '" name="rb1"    value="' + data[++i] + '" onclick="myFunction3(id)"><label>G2</lable><input type="checkbox" class="preference" id="side4G2' + j + '" name="rb1"   value="' + data[++i] + '" onclick="myFunction3(id)"><label>G3</lable><input type="checkbox" class="preference" id="side4G3' + j + '" name="rb1"   value="' + data[++i] + '"> </br><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '"  ><input type="hidden" class="preference" id="t1cs" name="rb1" onclick="fillColumns1(id)"  value="' + data[++i] + '" disabled=""><input type="hidden" class="preference" id="t1cs" name="rb1"   value="' + data[++i] + '" disabled=""></td>'; 
+                        
+                      //  moduleHtml += '<td width="35%"><input type="button" id="Button1" class="button1" value="Demo" onclick="reset()"></td>';
+                      //   moduleHtml += '<td width="35%"><input type="button" class="" id="1" name="rb11" value="Edit" onclick="myFunction2(id)"></td>';
+                       moduleHtml += '<td width="35%"><input type="button" class="" id="t1cs" name="rb1" value="SavePhase" onclick="CheckPhase('+jun_name+',id,'+phase_no+','+plan_id+','+Order_no+','+phaseinfoid+')"></td>';
                         moduleHtml += '</tr>'
                        
                         i++;
-                        
- 
+                     
                     }
 
                     $("#tab5").append(moduleHtml);
-                    //$(".DateDayClass").append(moduleHtml);
-                   
-                    
-                    
+              
+
+  
+                  
                         $('input[type=checkbox]').each(function () {
                             var val = $(this).val();
-                           // alert("check box val -" + val);
+                       //  alert("check box val -" + val);
+                       //  alert("Id: " + $(this).attr("id") );
                             if (val == 0) {
 
                             } else {
                                 $(this).attr('checked', true);
                             }
                         });
+                         
                     
                 }
                 //else{
@@ -1157,7 +1183,78 @@
         });
     }
     
-    function CheckPhase(j_name,id,phase_no,plan_id) {
+    function myFunction3(id) {
+        debugger;
+         
+        $.ajax({url: "JunctionDetailsUpdate?task=validatephasedata",
+            
+            dataType: 'json',
+           
+            data: {id:id},
+
+            success: function (response_data)
+            {
+          var data = response_data.data;
+            var laterid = response_data.id;
+            var finalid = response_data.finalid;
+          var Sa = response_data.Sa;
+          var Sb = response_data.Sb;
+          var Sc = response_data.Sc;
+          var Sa1 = response_data.Sa1;
+          var Sb1 = response_data.Sb1;
+          var Sc1 = response_data.Sc1;
+        
+       // alert( finalid);
+//          alert(Sa);
+//          alert(Sa);
+//          alert(Sb);
+//          alert(Sc);
+//          alert(Sa1);
+//          alert(Sb1);
+//          alert(Sc1);
+         document.getElementById(laterid).value="1";
+          if(document.getElementById(finalid)!==null){
+          document.getElementById(finalid).value="1";
+     }
+         
+         document.getElementById(Sa).value="1";
+         document.getElementById(Sb).value="1";
+         document.getElementById(Sc).value="1";
+         if(document.getElementById(Sa1)!==null){
+         document.getElementById(Sa1).value="1";
+     }
+        
+         if(document.getElementById(Sb1)!==null){
+         document.getElementById(Sb1).value="1";
+     }
+      if(document.getElementById(Sc1)!==null){
+          document.getElementById(Sc1).value="1";
+     }
+        
+        
+          $('input[type=checkbox]').each(function () {
+                            var val = $(this).val();
+                           // alert("check box val -" + val);
+                            if (val == 0) {
+
+                            } else {
+                                $(this).attr('checked', true);
+                              //  $(this).parent().addClass("redBackground"); 
+                                //$(this).css("background-color", "#808080");
+                            }
+                        });
+         
+         
+//                    if(data===0){
+//                        alert("No Match Found!!!!Are You Want To Insert New Record");
+//                    }else{
+//                          alert("Match Found!!!!Are You Want To Update  Record");
+//                    }
+            }
+        });
+        
+        }
+    function CheckPhase(j_name,id,phase_no,plan_id,Order_no,phaseinfoid) {
         debugger;
         //alert("phase_no"+phase_no);
     // alert("plan_id"+plan_id);
@@ -1168,18 +1265,13 @@
       var s2data;
       var s3data;
       var s4data;
-        var b1="1000"
-        var b2="1000"
-        var b3="0100"
-        var b4="1010"
+         
         var rowid;
          
        $('#tab5 tr').click(function() {
         rowid = $(this).attr('id'); // table row ID 
-        alert("row===="+rowid);
-        
-  
-  
+      //  alert("row===="+rowid);
+     
     if(rowid===rowid){
         var i=rowid;
        // alert("iiiiiiiiiiii"+i);
@@ -1204,10 +1296,10 @@
           s2data=s2r.concat(s2y).concat(s2g1).concat(s2g2);
           s3data=s3r.concat(s3y).concat(s3g1).concat(s3g2);
           s4data=s4r.concat(s4y).concat(s4g1).concat(s4g2);
-        alert("s1data"+s1data);
-      alert("s2data"+s2data);
-         alert("s3data"+s3data);
-       alert("s4data"+s4data);
+      //  alert("s1data"+s1data);
+     // alert("s2data"+s2data);
+    //     alert("s3data"+s3data);
+    //   alert("s4data"+s4data);
     }
   //  alert(looplength+"  looplength");
   //  alert(finallooplength+"  looplength");
@@ -1234,23 +1326,32 @@
             
             dataType: 'json',
            
-            data: {side1: s1data, side2: s2data,side3:s3data,side4:s4data,junction_names:j_name,phase_no:phase_no,plan_id:plan_id},
+            data: {side1: s1data, side2: s2data,side3:s3data,side4:s4data,junction_names:j_name,phase_no:phase_no,plan_id:plan_id,Order_no:Order_no,phaseinfoid:phaseinfoid},
 
             success: function (response_data)
             {
           var data = response_data.data;
                     if(data===0){
                         alert("No Match Found!!!!Are You Want To Insert New Record");
+                        alert("---Please Save Next Phase if Available--- ");
                     }else{
                           alert("Match Found!!!!Are You Want To Update  Record");
+                          alert("---Please Save Next Phase if Available--- ");
                     }
             }
         });
          });
         }
  
-function reset(){
-        alert("hi");
+function checkboxvalueonclick(id){
+      //  alert("hi");
+        $('input[id='+id+']').each(function () {
+                            
+                            
+                                $(this).attr('checked', true);
+                               this.value = this.checked ? 1 : 0;
+                                
+                        });
     //
     }
  function myFunction1(id) {
@@ -1406,20 +1507,22 @@ function reset(){
     this.value ^= 1;
 });
     }
-    
+   
  function myFunction2(id) {
     // var rowid;
      
       // alert("hi");
-     
+       // $('input:checkbox').removeAttr('checked');
          var rowcount = $('#tab5 tr').length;
          rowcount=rowcount-4;
-      // alert("No. Of Rows ::" +rowcount);
+      //  alert("No. Of Rows ::" +rowcount);
      
            for(var i=0;i<rowcount;i++){
-              document.getElementById("side1R"+i).value="0";
+              // alert(i);
+           document.getElementById("side1R"+i).value="0";
          document.getElementById("side1Y"+i).value="0";
          document.getElementById("side1G1"+i).value="0";
+        
          document.getElementById("side1G2"+i).value="0";
          document.getElementById("side2R"+i).value="0";
          document.getElementById("side2Y"+i).value="0";
@@ -1435,15 +1538,14 @@ function reset(){
          document.getElementById("side4G2"+i).value="0";
                
            }
-        $('input:checkbox').removeAttr('checked');
-        
-      
-        
-        
-        
-        
+          
+         
+         $('input:checkbox').removeAttr('checked');
+        document.getElementById("1").style.display='none';
+         
         // onclick="$(this).attr('value', this.checked ? 1 : 0)"
     }
+    
   function editable(id){
       debugger;
        var ids= "t1cs"+id ; 
@@ -3023,8 +3125,7 @@ function myFunctiontest(id) {
                                                     </table>-->
                                                         <table class="reference" border="1" width="100%" align="center" id="tab5">
                                                             <tr id="head1">
-
-
+                                                            
                                                             </tr>
 
                                                             <tr id="foot1" style="display: none">
