@@ -1991,6 +1991,7 @@
  
  function submitForms() {
      debugger;
+//      getConfirmation();
   document.getElementById("formplandetailss").submit();
  
  }
@@ -2006,7 +2007,64 @@ function myFunctiontest(id) {
     debugger;
    var tr = document.createElement('tr');
     var x = document.getElementById(id);
+    var x1_test = document.getElementById("on_time_hour");
+    var x2_test = document.getElementById("on_time_min");
+    var x3_test = document.getElementById("off_time_hour");
+    var x4_test = document.getElementById("off_time_min");
+    
     var x1=x.value;
+    var on1='on_time_hour';
+    var on2='on_time_min';
+    var on3='off_time_hour';
+      var on4='off_time_min';
+     var value_all_on_off_time =   x1_test.value+","+x2_test.value+","+x3_test.value+","+x4_test.value;
+    if(id == on1 || id == on2 || id == on3 ||  id == on4 )
+    {
+        
+        if(id == on4){
+       
+        $.ajax({url: "JunctionDetailsUpdate?task=testingCheck",
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {id_value:value_all_on_off_time,id:id},
+                     
+            success: function (response_data)
+            {
+             
+           
+                var data1 = response_data.data;
+                var pp="Plan not Exist";
+                 var pp1="Plan Exist";
+                if(data1==pp)
+                {
+                   
+                       var xp = document.getElementById(id);
+                      xp.style.backgroundColor = "red";
+                    
+                }
+                if(data1 == pp1){
+                 myFunction_on_off_popup(value_all_on_off_time);
+             }
+                var conform_test="on_time_hour";
+                if(id == conform_test){
+                   
+               
+            }
+                 // $("#pkc").append(data1[0]);
+//         alert(data1[0]);
+//          alert("hi");
+          
+            }
+           
+        });
+    }
+        
+     
+    }else{
+    
     //alert(x1);
    // x.value = x.value.toUpperCase();
          $.ajax({url: "JunctionDetailsUpdate?task=testingCheck",
@@ -2022,15 +2080,18 @@ function myFunctiontest(id) {
              
            
                 var data1 = response_data.data;
-                var pp="Plan not Exsist";
-                if(data1==pp)
+                //alert(data1);
+                var pp="Plan not Exist";
+                if(data1 == pp)
                 {
-                   
+                  // alert("hi2");
                        var xp = document.getElementById(id);
                       xp.style.backgroundColor = "red";
                     
                 }
-                  $("#pkc").append(data1[0]);
+              
+
+                 // $("#pkc").append(data1[0]);
 //         alert(data1[0]);
 //          alert("hi");
           
@@ -2039,6 +2100,48 @@ function myFunctiontest(id) {
         });
         
 }
+}
+
+        function myFunction_on_off_popup(value_all_on_off_time) {
+          debugger;
+                var url = "PlanDetailIdController1?&check_task="+value_all_on_off_time;
+                popupwin = openPopUp(url, "plan_detail_id", 580, 900);
+
+
+            }
+//  function getConfirmation() {
+//               var retVal = confirm("Do you want to change next plan on time ?");
+//               if( retVal == true ) {
+//                  //document.write ("User wants to change next plan on time!");
+//                    $.ajax({url: "JunctionDetailsUpdate?task=testingCheckonofftime",
+//            //type: 'POST',
+//            dataType: 'json',
+//            //contentType: 'application/json',
+//            //context: document.body,
+//
+//            data: {id_value:"x1,id:id"},
+//                     
+//            success: function (response_data)
+//            {
+//             
+//           
+//                var data1 = response_data.data;
+//                var pp="Plan not Exsist";
+//              
+//              
+//                 // $("#pkc").append(data1[0]);
+////         alert(data1[0]);
+////          alert("hi");
+//          
+//            }
+//           
+//        });
+//                  return true;
+//               } else {
+//                 // document.write ("User does not want to change next plan on time!");
+//                  return false;
+//               }
+//            }
 </script>
 <html>
     <head>
@@ -2673,6 +2776,7 @@ function myFunctiontest(id) {
 
                                          
                                                 <input type="hidden" id="clickedButton" name="j_id" value="${j_id}">
+                                                 <input type="hidden" id="SaveupdateDetails" name="task" value="SaveupdateDetails">
                                                 <tr>
                                                     <td align='center' colspan="10">
                                                         <!--<input class="button" type="submit" id="plandet" name="task" value="plandet" onclick="setStatus(id)" />-->

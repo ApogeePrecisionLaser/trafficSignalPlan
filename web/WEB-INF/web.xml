@@ -64,7 +64,10 @@
         <servlet-name>PlanDetailIdController</servlet-name>
         <servlet-class>com.ts.junction.Controller.PlanDetailIdController</servlet-class>
     </servlet>
-   
+   <servlet>
+        <servlet-name>PlanDetailIdController1</servlet-name>
+        <servlet-class>com.ts.junction.Controller.PlanDetailIdController1</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>ServletAdaptor</servlet-name>
         <url-pattern>/api/*</url-pattern>
@@ -515,6 +518,16 @@
         <servlet-name>plan_detail_id</servlet-name>
         <url-pattern>/plan_detail_id</url-pattern>
     </servlet-mapping>
+    
+    
+     <servlet>
+        <servlet-name>plan_detail_id_1</servlet-name>
+        <jsp-file>/view/junction/plan_detail_id_1.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>plan_detail_id_1</servlet-name>
+        <url-pattern>/plan_detail_id_1</url-pattern>
+    </servlet-mapping>
     <servlet>
         <servlet-name>JunctionPlanMapController</servlet-name>
         <servlet-class>com.ts.junction.Controller.JunctionPlanMapController</servlet-class>
@@ -638,6 +651,10 @@
     <servlet-mapping>
         <servlet-name>PlanDetailIdController</servlet-name>
         <url-pattern>/PlanDetailIdController</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
+        <servlet-name>PlanDetailIdController1</servlet-name>
+        <url-pattern>/PlanDetailIdController1</url-pattern>
     </servlet-mapping>
    
      <servlet>
