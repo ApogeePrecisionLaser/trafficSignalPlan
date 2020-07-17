@@ -2362,6 +2362,89 @@ function myFunctiontest(id) {
         });
         
 }
+
+function makeAllEditable(id){
+    if(id==="editrecord"){
+    // junction details
+     document.getElementById("junction_id").disabled = false;
+        document.getElementById("junction_name").disabled = false;
+        document.getElementById("address_1").disabled = false;
+        document.getElementById("address_2").disabled = false;
+        document.getElementById("state_name").disabled = false;
+        document.getElementById("city_name").disabled = false;
+        document.getElementById("controller_model").disabled = false;
+        document.getElementById("no_of_sides").disabled = false;
+        document.getElementById("amber_time").disabled = false;
+        document.getElementById("flash_rate").disabled = false;
+        document.getElementById("no_of_plans").disabled = false;
+        document.getElementById("mobile_no").disabled = false;
+        document.getElementById("sim_no").disabled = false;
+        document.getElementById("imei_no").disabled = false;
+        document.getElementById("instant_green_time").disabled = false;
+        document.getElementById("pedestrian1").disabled = false;
+        document.getElementById("pedestrian2").disabled = false;
+        document.getElementById("pedestrian_time").disabled = false;
+        document.getElementById("side_1_name").disabled = false;
+        document.getElementById("side_2_name").disabled = false;
+        document.getElementById("side_3_name").disabled = false;
+        document.getElementById("side_4_name").disabled = false;
+        document.getElementById("file_no").disabled = false;
+        document.getElementById("remark").disabled = false;
+        document.getElementById("junctionsave").disabled = false;
+        
+
+        //plan map
+         document.getElementById("junction_name1").disabled = false;
+        document.getElementById("start_time").disabled = false;
+        document.getElementById("order_no").disabled = false;
+        // document.getElementById("day").disabled = false;
+        document.getElementById("date").disabled = false;
+         document.getElementById("junctionplanmap").disabled = false;
+       
+        //plan details
+         document.getElementById("plan_id").disabled = false;
+        document.getElementById("plan_no").disabled = false;
+        document.getElementById("on_time_hour").disabled = false;
+        document.getElementById("on_time_min").disabled = false;
+        document.getElementById("off_time_hour").disabled = false;
+        document.getElementById("off_time_min").disabled = false;
+        document.getElementById("mode").disabled = false;
+        document.getElementById("side1_green_time").disabled = false;
+        document.getElementById("side2_green_time").disabled = false;
+        document.getElementById("side3_green_time").disabled = false;
+        document.getElementById("side4_green_time").disabled = false;
+        document.getElementById("side5_green_time").disabled = false;
+        document.getElementById("side1_amber_time").disabled = false;
+        document.getElementById("side2_amber_time").disabled = false;
+        document.getElementById("side3_amber_time").disabled = false;
+        document.getElementById("side4_amber_time").disabled = false;
+        document.getElementById("side5_amber_time").disabled = false;
+        document.getElementById("transferred_status").disabled = false;
+        document.getElementById("remark11").disabled = false;
+        document.getElementById("SAVENEW1").disabled = false;
+        }
+
+// ajax call to insert data in temp tables
+  $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
+            
+            dataType: 'json',
+           
+           // data: {id:id},
+
+            success: function (response_data)
+            {
+          var status = response_data.status;
+          var data = response_data.data;
+          var listsize = response_data.listsize;
+   alert("status"+status);
+   alert("data "+data);
+   alert("listsize "+listsize);
+         
+            }
+        });
+
+
+}
 </script>
 <html>
     <head>
@@ -2383,6 +2466,8 @@ function myFunctiontest(id) {
             <!--DWLayoutDefaultTable-->
             <tr><td><%@include file="/layout/header.jsp" %></td></tr>
             <tr><td><%@include file="/layout/menu.jsp" %></td></tr>
+            <tr><td><center><input type="button" id="editrecord" value="Edit Records" onclick="makeAllEditable()"><input type="button" id="viewrecord" value="View Records" onclick="makeAllEditable()"></center></td> 
+           </tr>
             <tr>
                 <td>
                     <div><table class="header_table" width="100%">
@@ -2563,11 +2648,11 @@ function myFunctiontest(id) {
                                                 <tr>
                                                     <td align='center' colspan="8">
                                                         <input class="button" type="submit" id="junctionsave" name="task" value="junctionsave" onclick="setStatus(id)" />
-                                                        <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id)"/>
+<!--                                                        <input class="button" type="reset" id="NEW" name="task" value="New" onclick="makeEditable(id)"/>
                                                         <input class="button" type="button" id="EDIT" name="task" value="Edit" onclick="makeEditable(id)" disabled/>
                                                         <input class="button" type="submit" id="DELETE" name="task" value="Delete" onclick="setStatus(id)" disabled>
                                                         <input class="button1" type="submit" name="task" id="Save AS New" value="Save AS New" onclick="setStatus(id)" disabled>
-                                                </tr>
+                                            -->    </tr>
 
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
@@ -2756,11 +2841,13 @@ function myFunctiontest(id) {
                                                         </tr>
                                                         <tr>
                                                             <td align='center' colspan="6">
-                                                                <input class="button" type="button" name="edit" id="edit" value="Edit" onclick="makeEditable1(id)"> &nbsp;&nbsp;&nbsp;&nbsp;
+<!--                                                                <input class="button" type="button" name="edit" id="edit" value="Edit" onclick="makeEditable1(id)"> &nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <input class="button" type="submit" name="task" id="junctionplanmap" value="junctionplanmap" onclick="setStatus(id)" disabled>&nbsp;&nbsp;&nbsp;&nbsp;
-                                                                <input class="button" type="submit" name="task" id="junctionplanmap" value="Save AS New" onclick="setStatus(id)" disabled>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                                               -->
+                                                                <input class="button" type="submit" name="task" id="junctionplanmap" value="Save" onclick="setStatus(id)" disabled>  &nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <!--                                                                <input class="button" type="reset" name="new" id="new" value="New" onclick="makeEditable1(id)">&nbsp;&nbsp;&nbsp;&nbsp;-->
-                                                                <input class="button" type="submit" name="task" id="delete" value="Delete" onclick="setStatus(id)" disabled>
+<!--                                                                <input class="button" type="submit" name="task" id="delete" value="Delete" onclick="setStatus(id)" disabled>
+                                                            -->
                                                             </td>
                                                         </tr>
                                                         <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form2 of table2. --%>
@@ -2999,10 +3086,11 @@ function myFunctiontest(id) {
                                                 <tr>
                                                     <td align='center' colspan="10">
                                                         <!--<input class="button" type="submit" id="plandet" name="task" value="plandet" onclick="setStatus(id)" />-->
-                                                        <input class="button" type="reset" id="NEW1" name="task" value="New" onclick="makeEditable2(id)"/>
+<!--                                                        <input class="button" type="reset" id="NEW1" name="task" value="New" onclick="makeEditable2(id)"/>
                                                         <input class="button" type="button" id="EDIT1" name="task" value="Edit"  onclick="makeEditable2(id)" />
                                                         <input class="button" type="submit" id="DELETE1" name="task" value="Delete" disabled>
-                                                        <input class="button" type="submit" name="task" id="SAVENEW1" value="Save AS New" onclick="setStatus(id)" disabled>
+                                                       -->
+                                                        <input class="button" type="submit" name="task" id="SAVENEW1" value="Save" onclick="setStatus(id)" disabled>
                                                 </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">

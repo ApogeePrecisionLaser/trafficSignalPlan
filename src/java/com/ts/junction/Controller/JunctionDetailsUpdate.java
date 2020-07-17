@@ -591,6 +591,9 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 // String fromdate = request.getParameter("from_date");
                 //  String todate = request.getParameter("to_date");
                 //  int j_id11 = Integer.parseInt(request.getParameter("junction_id"));
+              List<Junction> li=junctionModel.showTempData();
+              int size=li.size();
+                System.out.println("size array --" + size);
 
                 list1 = junctionModel.showData();
                 // jobj.put("size_1", list3.size());
@@ -692,6 +695,32 @@ public class JunctionDetailsUpdate extends HttpServlet {
             }
 
         }
+         if (task.equals("inserttempdata")) {
+            try {
+                JSONArray jsonarr = new JSONArray();
+                JSONObject jobj = new JSONObject();
+               // jobj.put("data", "Inserted");
+                // function to create temp table
+                Junction j=new Junction();
+              // int status=junctionModel.createTempTables();
+               int status1=junctionModel.insertTempTables();
+              List<Junction> li=junctionModel.showTempData();
+              int size=li.size();
+              for(int i=0;i<size;i++){
+              int id=li.get(i).getJunction_id();
+                  System.out.println("id==="+id);
+              }
+                jobj.put("status",status1);
+                jobj.put("listsize",size);
+                jobj.put("data", "Inserted");
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj.toString());
+                return;
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         }
+        
         if (task.equals("testing")) {
             //  request.setAttribute("junction", list1);
             if (lowerLimit == 0) {

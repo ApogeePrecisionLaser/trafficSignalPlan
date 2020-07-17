@@ -226,7 +226,175 @@ public List<String> getJunc() {
         }
         return noOfRows;
     }
+    public int createTempTables() {
+          int status = 0;
+        String query1="CREATE TEMPORARY TABLE junction_temp SELECT * FROM junction";
+        String query2="CREATE TEMPORARY TABLE junction_plan_map_temp SELECT * FROM junction_plan_map";
+        String query3="CREATE TEMPORARY TABLE day_detail_temp SELECT * FROM day_detail";
+        String query4="CREATE TEMPORARY TABLE date_detail_temp SELECT * FROM date_detail";
+        String query5="CREATE TEMPORARY TABLE plan_details_temp SELECT * FROM plan_details";
+        String query6="CREATE TEMPORARY TABLE phase_detail_temp SELECT * FROM phase_detail";
+        String query7="CREATE TEMPORARY TABLE phase_map_temp SELECT * FROM phase_map";
+        String query8="CREATE TEMPORARY TABLE city_temp SELECT * FROM city";
+            PreparedStatement ps;
+        try {
+            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0;
+            ps = connection.prepareStatement(query1);
+              int st1=ps.executeUpdate();
+              if(st1>0){
+               status=1;
+               ps = connection.prepareStatement(query2);
+             st2=ps.executeUpdate();
+              }
+              if(st2>0){
+               status=2;
+               ps = connection.prepareStatement(query3);
+              st3=ps.executeUpdate();
+              }
+              if(st3>0){
+               status=3;
+               ps = connection.prepareStatement(query4);
+              st4=ps.executeUpdate();
+              }
+              if(st4>0){
+               status=4;
+               ps = connection.prepareStatement(query5);
+               st5=ps.executeUpdate();
+              }
+              if(st5>0){
+               status=5;
+               ps = connection.prepareStatement(query6);
+              st6=ps.executeUpdate();
+              }
+              if(st6>0){
+               status=6;
+               ps = connection.prepareStatement(query7);
+              st7=ps.executeUpdate();
+              }
+              if(st7>0){
+               status=7;
+               ps = connection.prepareStatement(query8);
+              st8=ps.executeUpdate();
+              }
+              
+        } catch (SQLException ex) {
+            status=0;
+            Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+      
+      
+        return status;
+    }
     
+     public int insertTempTables() {
+          int status = 0;
+        String query1="insert into state_temp SELECT * FROM traffic_signal_plan2.state";
+        String query2="insert into district_temp SELECT * FROM traffic_signal_plan2.district";
+        String query3="insert into city_temp SELECT * FROM traffic_signal_plan2.city";
+        String query4="insert into junction_temp SELECT * FROM traffic_signal_plan2.junction";
+        String query5="insert into date_detail_temp SELECT * FROM traffic_signal_plan2.date_detail";
+        String query6="insert into day_detail_temp SELECT * FROM traffic_signal_plan2.day_detail";
+        String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+        String query8="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+        String query9="insert into junction_plan_map_temp SELECT * FROM traffic_signal_plan2.junction_plan_map";
+        String query10="insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map";
+        
+            PreparedStatement ps;
+        try {
+            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
+            ps = connection.prepareStatement(query1);
+              int st1=ps.executeUpdate();
+              status=1;
+              if(st1>0){
+               ps = connection.prepareStatement(query2);
+                st2=ps.executeUpdate();
+              status=2;
+              
+              }
+              if(st2>0){
+               ps = connection.prepareStatement(query3);
+                st3=ps.executeUpdate();
+              status=3;
+              
+              }
+              if(st3>0){
+               ps = connection.prepareStatement(query4);
+                st4=ps.executeUpdate();
+              status=4;
+              
+              }
+
+              if(st4>0){
+               ps = connection.prepareStatement(query5);
+                st5=ps.executeUpdate();
+              status=5;
+              
+              }
+              if(st5>0){
+               ps = connection.prepareStatement(query6);
+                st6=ps.executeUpdate();
+              status=6;
+              
+              }
+              if(st6>0){
+               ps = connection.prepareStatement(query7);
+                st7=ps.executeUpdate();
+              status=7;
+              
+              }
+              if(st7>0){
+               ps = connection.prepareStatement(query8);
+                st8=ps.executeUpdate();
+              status=8;
+              
+              }
+              if(st8>0){
+               ps = connection.prepareStatement(query9);
+                st9=ps.executeUpdate();
+              status=9;
+              
+              }
+              if(st9>0){
+               ps = connection.prepareStatement(query10);
+                st10=ps.executeUpdate();
+              status=10;
+              
+              }
+//              if(st10>0){
+//               ps = connection.prepareStatement(query4);
+//                st11=ps.executeUpdate();
+//              status=2;
+//              
+//              }
+        } catch (SQLException ex) {
+            status=0;
+            Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+          
+      
+      
+        return status;
+    }
+     public List<Junction> showTempData() {
+        List<Junction> list = new ArrayList<Junction>();
+        try {
+            String query = "SELECT junction_id from junction_temp WHERE final_revision= 'VALID'";
+                   
+             
+            ResultSet rset = connection.prepareStatement(query).executeQuery();
+            while (rset.next()) {
+                Junction junction = new Junction();
+                junction.setJunction_id(rset.getInt("junction_id"));
+               
+                list.add(junction);
+            }
+
+        } catch (Exception e) {
+            System.out.println("Error:junctionModel-showData--- " + e);
+        }
+        return list;
+    }
     
       public int getNoOfRows() {
         
@@ -629,7 +797,7 @@ public List<String> getJunc() {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
-                    + " from junction AS j, city AS c "
+                    + " from junction_temp AS j, city_temp AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' ";
                      
             ResultSet rset = connection.prepareStatement(query).executeQuery();
