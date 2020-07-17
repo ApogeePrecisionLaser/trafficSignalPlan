@@ -610,9 +610,31 @@
         popupwin = openPopUp(url, "View PlanInfo ", 580, 900);
 
     }
+function insertTempData(id){
+   // alert();
+    // ajax call to insert data in temp tables
+  $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
+            
+            dataType: 'json',
+           
+             data: {id:id},
 
+            success: function (response_data)
+            {
+          var status = response_data.status;
+          var data = response_data.data;
+          var listsize = response_data.listsize;
+    alert("status"+status);
+    
+         
+            }
+        });
+
+}
     function Openform(junction_id, program_version_no, no_of_sides) {
         debugger;
+     //   alert(junction_id);
+         insertTempData(junction_id);        
         var queryString = "task=SelectedJunctionPlans&junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
 
         var url = "JunctionDetailsUpdate?" + queryString;
@@ -2423,9 +2445,9 @@ function myFunctiontest(id) {
         });
         
 }
-
+}
 function makeAllEditable(id){
-    if(id==="editrecord"){
+     alert();
     // junction details
      document.getElementById("junction_id").disabled = false;
         document.getElementById("junction_name").disabled = false;
@@ -2483,30 +2505,32 @@ function makeAllEditable(id){
         document.getElementById("transferred_status").disabled = false;
         document.getElementById("remark11").disabled = false;
         document.getElementById("SAVENEW1").disabled = false;
-        }
+        
 
 // ajax call to insert data in temp tables
-  $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
-            
-            dataType: 'json',
-           
-           // data: {id:id},
-
-            success: function (response_data)
-            {
-          var status = response_data.status;
-          var data = response_data.data;
-          var listsize = response_data.listsize;
-   alert("status"+status);
-   alert("data "+data);
-   alert("listsize "+listsize);
-         
-            }
-        });
-
+//  $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
+//            
+//            dataType: 'json',
+//           
+//           // data: {id:id},
+//
+//            success: function (response_data)
+//            {
+//          var status = response_data.status;
+//          var data = response_data.data;
+//          var listsize = response_data.listsize;
+//   alert("status"+status);
+//   alert("data "+data);
+//   alert("listsize "+listsize);
+//         
+//            }
+//        });
 
 }
-}
+
+
+
+
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;

@@ -701,9 +701,10 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 JSONObject jobj = new JSONObject();
                // jobj.put("data", "Inserted");
                 // function to create temp table
-                Junction j=new Junction();
+                
+                int j_id=Integer.parseInt(request.getParameter("id"));
               // int status=junctionModel.createTempTables();
-               int status1=junctionModel.insertTempTables();
+               int status1=junctionModel.insertTempTables(j_id);
               List<Junction> li=junctionModel.showTempData();
               int size=li.size();
               for(int i=0;i<size;i++){

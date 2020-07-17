@@ -226,6 +226,110 @@ public List<String> getJunc() {
         }
         return noOfRows;
     }
+     public List<JunctionPlanMap> getdateid(int j_id) {
+        List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
+        PreparedStatement pstmt;
+        String query = "select  date_id from junction_plan_map where junction_id='"+j_id+"' and active='y' and date_id!='null'";
+        try {
+            pstmt = connection.prepareStatement(query);
+         //   pstmt.setString(1, state_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            
+            while (rset.next()) {    // move cursor from BOR to valid record.
+              JunctionPlanMap jpm=new JunctionPlanMap();
+               jpm.setDate_id(rset.getInt("date_id"));
+                
+                    list.add(jpm);
+                    count++;
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+     public List<JunctionPlanMap> getJpm_id(int j_id) {
+        List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
+        PreparedStatement pstmt;
+        String query = "select junction_plan_map_id from junction_plan_map_temp where junction_id='"+j_id+"'";
+        try {
+            pstmt = connection.prepareStatement(query);
+         //   pstmt.setString(1, state_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            
+            while (rset.next()) {    // move cursor from BOR to valid record.
+              JunctionPlanMap jpm=new JunctionPlanMap();
+               jpm.setJunction_plan_map_id(rset.getInt("junction_plan_map_id"));
+                
+                    list.add(jpm);
+                    count++;
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+     public List<PhaseData> getPhases_id(List<JunctionPlanMap> jpm_id) {
+        List<PhaseData> list = new ArrayList<PhaseData>();
+       String asp="";
+        
+        for(int j=0;j<jpm_id.size();j++){
+            
+           String joinned=Integer.toString(jpm_id.get(j).getJunction_plan_map_id());
+           asp=asp.concat(joinned).concat(",");
+        }
+            asp=asp.substring(0, asp.length() - 1);
+        PreparedStatement pstmt;
+        String query = "select  distinct phase_id from phase_map where active='y' and junction_plan_map_id IN ("+asp+") ";
+        try {
+            pstmt = connection.prepareStatement(query);
+         //   pstmt.setString(1, state_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            
+            while (rset.next()) {    // move cursor from BOR to valid record.
+              PhaseData pd=new PhaseData();
+               pd.setPhase_info_id(rset.getInt("phase_id"));
+                
+                    list.add(pd);
+                    count++;
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+     public List<JunctionPlanMap> getPlanid(int j_id) {
+        List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
+        PreparedStatement pstmt;
+        String query = "select  plan_id from junction_plan_map where junction_id='"+j_id+"' and active='y'";
+        try {
+            pstmt = connection.prepareStatement(query);
+         //   pstmt.setString(1, state_name);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            
+            while (rset.next()) {    // move cursor from BOR to valid record.
+              JunctionPlanMap jpm=new JunctionPlanMap();
+               jpm.setPlan_id(rset.getInt("plan_id"));
+                
+                    list.add(jpm);
+                    count++;
+                
+            }
+            
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
     public int createTempTables() {
           int status = 0;
         String query1="CREATE TEMPORARY TABLE junction_temp SELECT * FROM junction";
@@ -287,18 +391,29 @@ public List<String> getJunc() {
         return status;
     }
     
-     public int insertTempTables() {
+     public int insertTempTables(int j_id)  {
           int status = 0;
+          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+          JunctionPlanMap jpmbean=new JunctionPlanMap();
         String query1="insert into state_temp SELECT * FROM traffic_signal_plan2.state";
         String query2="insert into district_temp SELECT * FROM traffic_signal_plan2.district";
         String query3="insert into city_temp SELECT * FROM traffic_signal_plan2.city";
-        String query4="insert into junction_temp SELECT * FROM traffic_signal_plan2.junction";
+        String query4="insert into junction_temp SELECT * FROM traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
+        
+        
         String query5="insert into date_detail_temp SELECT * FROM traffic_signal_plan2.date_detail";
         String query6="insert into day_detail_temp SELECT * FROM traffic_signal_plan2.day_detail";
-        String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
-        String query8="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
-        String query9="insert into junction_plan_map_temp SELECT * FROM traffic_signal_plan2.junction_plan_map";
-        String query10="insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map";
+       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+        String query8="insert into junction_plan_map_temp SELECT * FROM traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
+        
+      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+      // 
+       
+        String query9="insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map";
         
             PreparedStatement ps;
         try {
@@ -325,23 +440,30 @@ public List<String> getJunc() {
               
               }
 
-              if(st4>0){
-               ps = connection.prepareStatement(query5);
-                st5=ps.executeUpdate();
-              status=5;
-              
-              }
+ 
+             if(st4>0){
+                ps = connection.prepareStatement(query5);
+                 st5=ps.executeUpdate();
+               status=7;
+             }
+               
+      
               if(st5>0){
                ps = connection.prepareStatement(query6);
                 st6=ps.executeUpdate();
               status=6;
               
               }
+  
+          List <JunctionPlanMap> plan_id=getPlanid(j_id);
               if(st6>0){
-               ps = connection.prepareStatement(query7);
+                   for(int i=0;i<plan_id.size();i++){
+                ps = connection.prepareStatement("insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+             
+             
                 st7=ps.executeUpdate();
               status=7;
-              
+                   }
               }
               if(st7>0){
                ps = connection.prepareStatement(query8);
@@ -349,29 +471,29 @@ public List<String> getJunc() {
               status=8;
               
               }
+  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+List <PhaseData> phase_id=getPhases_id(jpm_id);
               if(st8>0){
-               ps = connection.prepareStatement(query9);
-                st9=ps.executeUpdate();
+                   for(int i=0;i<phase_id.size();i++){
+                ps = connection.prepareStatement("insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+               st9=ps.executeUpdate();
               status=9;
-              
+                   }
               }
+              
               if(st9>0){
-               ps = connection.prepareStatement(query10);
-                st10=ps.executeUpdate();
+                   for(int i=0;i<jpm_id.size();i++){
+                ps = connection.prepareStatement("insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+               st10=ps.executeUpdate();
               status=10;
-              
+                   }
               }
-//              if(st10>0){
-//               ps = connection.prepareStatement(query4);
-//                st11=ps.executeUpdate();
-//              status=2;
-//              
-//              }
         } catch (SQLException ex) {
-            status=0;
             Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
         }
           
+      
+                
       
       
         return status;
@@ -457,7 +579,7 @@ public List<String> getJunc() {
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
                     + " from junction AS j, city AS c "
-                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' and "
+                    + " WHERE c.city_id=j.city_id AND j.final_revision='VALID'  "
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
             System.out.println(lowerLimit + "," + noOfRowsToDisplay);
             ResultSet rset = connection.prepareStatement(query).executeQuery();
@@ -797,7 +919,7 @@ public List<String> getJunc() {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
-                    + " from junction_temp AS j, city_temp AS c "
+                    + " from junction AS j, city AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' ";
                      
             ResultSet rset = connection.prepareStatement(query).executeQuery();
