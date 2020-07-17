@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  *
  * @author DELL
  */
-public class PlanDetailIdController extends HttpServlet {
+public class PlanDetailIdController1 extends HttpServlet {
 
  
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -161,11 +161,51 @@ public class PlanDetailIdController extends HttpServlet {
                 lowerLimit = 0;
             }
         }
-               
-          
+             
+           String check_task=request.getParameter("check_task");
+         if(check_task==null)
+         {
+             check_task="";
+         }
+         else{
+             if(check_task!=null)
+             {
+                 String check_task1[]=check_task.split(",");
+             ontime_hr = check_task1[0];
+             ontime_min = check_task1[1];
+           offtime_hr=check_task1[2];
+        offtime_min=check_task1[3];
+         list1 = planDetailModel.showDataPhase(lowerLimit, noOfRowsToDisplay,searchCommandName, ontime_hr,ontime_min,offtime_hr,offtime_min);
+              lowerLimit = lowerLimit + list1.size();
+        noOfRowsTraversed = list1.size();
+        if ((lowerLimit - noOfRowsTraversed) == 0) {     // if this is the only data in the table or when viewing the data 1st time.
+            request.setAttribute("showFirst", "false");
+            request.setAttribute("showPrevious", "false");
+        }
+        if (lowerLimit == noOfRowsInTable) {             // if No further data (rows) in the table.
+            request.setAttribute("showNext", "false");
+            request.setAttribute("showLast", "false");
+        }
+         request.setAttribute("lowerLimit", lowerLimit);
+        request.setAttribute("noOfRowsTraversed", noOfRowsTraversed);
+        request.setAttribute("no_of_plans", list1.size());
+        request.setAttribute("plandetails", list1);
+        
+//        request.setAttribute("ontime_hr", ontime_hr);
+//        request.setAttribute("ontime_min", ontime_min);
+//        request.setAttribute("offtime_hr", offtime_hr);
+//        request.setAttribute("offtime_min", offtime_min);
+        request.setAttribute("IDGenerator", new xyz());
+       request.getRequestDispatcher("/plan_detail_id_1").forward(request, response);
+             
+             
+             }
+         
+         }
+   
          
   
-  list1 = planDetailModel.showDataPhase(lowerLimit, noOfRowsToDisplay,searchCommandName, ontime_hr,ontime_min,offtime_hr,offtime_min);
+
                lowerLimit = lowerLimit + list1.size();
         noOfRowsTraversed = list1.size();
         if ((lowerLimit - noOfRowsTraversed) == 0) {     // if this is the only data in the table or when viewing the data 1st time.
@@ -186,7 +226,7 @@ public class PlanDetailIdController extends HttpServlet {
 //        request.setAttribute("offtime_hr", offtime_hr);
 //        request.setAttribute("offtime_min", offtime_min);
         request.setAttribute("IDGenerator", new xyz());
-         request.getRequestDispatcher("/plan_detail_id").forward(request, response);
+       request.getRequestDispatcher("/plan_detail_id").forward(request, response);
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">

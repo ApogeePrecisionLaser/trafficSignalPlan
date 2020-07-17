@@ -235,16 +235,25 @@ public class PlanDetailModel {
     }
       
       //////////check update according to the fields
-          public  List<PlanDetails> checkplanOneSearch(String on_time_hr){
+          public  List<PlanDetails> checkplanOneSearch(String on_off_time){
         boolean plan_check = false;
         List<PlanDetails> list = new ArrayList<PlanDetails>();
-    
-     
-          
+    String check[]=on_off_time.split(",");
+     int on_time_hr=0;
+     int on_time_min=0;
+     int off_time_hr=0;
+     int off_time_min=0;
+      on_time_hr=Integer.parseInt(check[0].trim());
+     on_time_min=Integer.parseInt(check[1].trim());
+     off_time_hr=Integer.parseInt(check[2].trim());
+     off_time_min=Integer.parseInt(check[3].trim());
        int rowAffected=0;
         int generatedKey = 0;
 
-       String query2="select * from plan_details where on_time_hour='"+on_time_hr+"'"           
+//       String query2="select * from plan_details where on_time_hour='"+on_time_hr+"'"           
+//               + "  ORDER BY plan_no ";
+   String query2="select * from plan_details where on_time_hour='"+on_time_hr+"' and on_time_min='"+on_time_min+"' and "
+           + " off_time_hour='"+off_time_hr+"' and off_time_min='"+off_time_min+"'"            
                + "  ORDER BY plan_no ";
                    
         try {

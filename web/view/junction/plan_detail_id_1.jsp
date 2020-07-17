@@ -57,16 +57,53 @@
           
     }
     
-    function myFunction(t1,t2,t3,t4,t5){
+    function myFunction(t1,t2,t3,t4,t5,t6,t7,t8,t9,t10,t11,t12,t13,t14,t15,t16,t17,t18,t19){
         debugger;
         var time =t1+":"+t2+"-"+t3+":"+t4;    
         document.getElementById("test1").value = time;
           if (window.opener != null && !window.opener.closed) {
-            var txtName = window.opener.document.getElementById("start_time");
-            var txtName1 = window.opener.document.getElementById("selected_plan_id");
-            txtName.value = document.getElementById("test1").value;
-            txtName1.value = t5;
-            alert(t5);
+            var txtName1 = window.opener.document.getElementById("plan_id");
+             var txtName2 = window.opener.document.getElementById("plan_no");
+              var txtName3 = window.opener.document.getElementById("on_time_hour");
+               var txtName4 = window.opener.document.getElementById("on_time_min");
+                var txtName5 = window.opener.document.getElementById("off_time_hour");
+                 var txtName6 = window.opener.document.getElementById("off_time_min");
+                  var txtName7 = window.opener.document.getElementById("mode");
+                   var txtName8 = window.opener.document.getElementById("side1_green_time");
+                         var txtName9 = window.opener.document.getElementById("side2_green_time");
+                         var txtName10 = window.opener.document.getElementById("side3_green_time");
+                         var txtName11 = window.opener.document.getElementById("side4_green_time");
+                         var txtName12 = window.opener.document.getElementById("side5_green_time");
+                         var txtName13 = window.opener.document.getElementById("side1_amber_time");
+                         var txtName14 = window.opener.document.getElementById("side2_amber_time");
+                         var txtName15 = window.opener.document.getElementById("side3_amber_time");
+                         var txtName16 = window.opener.document.getElementById("side4_amber_time");
+                         var txtName17 = window.opener.document.getElementById("side5_amber_time");
+                         var txtName18 = window.opener.document.getElementById("transferred_status");
+                         var txtName19 = window.opener.document.getElementById("remark11");
+            //var txtName1 = window.opener.document.getElementById("selected_plan_id");
+            txtName1.value = t1;
+            txtName2.value = t2;
+             txtName3.value = t3;
+            txtName4.value = t4;
+             txtName5.value = t5;
+            txtName6.value = t6;
+            
+               txtName7.value = t7;
+            txtName8.value = t8;
+             txtName9.value = t9;
+            txtName10.value = t10;
+             txtName11.value = t11;
+            txtName12.value = t12;
+                  txtName13.value = t13;
+            txtName14.value = t14;
+             txtName15.value = t15;
+            txtName16.value = t16;
+             txtName17.value = t17;
+            txtName18.value = t18;
+              txtName19.value = t19;
+           
+            alert(t1);
         }
         window.close();      
     }
@@ -167,7 +204,7 @@
                                     </table> </td> </tr>
                             
                             <tr><td>
-                                    <form action="PlanDetailIdController" method="post" class="form-group container-fluid">
+                                    <form action="PlanDetailIdController1" method="post" class="form-group container-fluid">
                    
                                     <table align="center">
                                         <tr >
@@ -223,7 +260,7 @@
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['plandetails']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor='#E3ECF3' onmouseout=this.style.backgroundColor='white'>
-                                                        <td><input type="radio" name="plan" value="${list.plan_no}" onchange="myFunction('${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}','${list.plan_id}')"><br></td>
+                                                        <td><input type="radio" name="plan" value="${list.plan_no}" onchange="myFunction('${list.plan_id}','${list.plan_no}','${list.on_time_hour}','${list.on_time_min}','${list.off_time_hour}','${list.off_time_min}','${list.mode}','${list.side1_green_time}','${list.side2_green_time}','${list.side3_green_time}','${list.side4_green_time}','${list.side5_green_time}','${list.side1_amber_time}','${list.side2_amber_time}','${list.side3_amber_time}','${list.side4_amber_time}','${list.side5_amber_time}','${list.transferred_status}','${list.remark}')"><br></td>
                                                         <td id="t1c${IDGenerator.uniqueID}" onclick="fillColumns(id)" align="center">
                                                             ${lowerLimit - noOfRowsTraversed + loopCounter.count}
 
