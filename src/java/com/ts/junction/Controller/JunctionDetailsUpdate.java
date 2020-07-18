@@ -2542,7 +2542,7 @@ if (task.equals("testingCheck")) {
        plan_task_chek="";
      }
      plan_task_chek="SaveupdateDetails";
-        if (plan_task_chek.equals("SaveupdateDetails")) {
+        if (task.equals("Save Plan")) {
             PlanDetailModel planDetailModel = new PlanDetailModel();
 
             planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
@@ -2925,7 +2925,12 @@ if(task.equals("testingCheckonofftime"))
 System.out.println("hi");
 
 }
-//
+//final submission 
+if(task.equals("save_final"))
+{
+    
+
+}
         
         
         

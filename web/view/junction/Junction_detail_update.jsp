@@ -2465,6 +2465,46 @@ function myFunctiontest(id) {
 //                  return false;
 //               }
 //            }
+
+function finalSave(id) {
+    
+    debugger;
+  
+   // x.value = x.value.toUpperCase();
+         $.ajax({url: "JunctionDetailsUpdate?task=save_final",
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {id:id},
+                     
+            success: function (response_data)
+            {
+             
+           
+                var data1 = response_data.data;
+                //alert(data1);
+                var pp="Plan not Exist";
+                if(data1 == pp)
+                {
+                  // alert("hi2");
+                       var xp = document.getElementById(id);
+                      xp.style.backgroundColor = "red";
+                    
+                }
+              
+
+                 // $("#pkc").append(data1[0]);
+//         alert(data1[0]);
+//          alert("hi");
+          
+            }
+           
+        });
+        
+}
+}
 </script>
 <html>
     <head>
@@ -3106,6 +3146,7 @@ function myFunctiontest(id) {
                                                         <input class="button" type="reset" id="NEW1" name="task" value="New" onclick="makeEditable2(id)"/>
                                                         <input class="button" type="button" id="EDIT1" name="task" value="Edit"  onclick="makeEditable2(id)" />
                                                         <input class="button" type="submit" id="DELETE1" name="task" value="Delete" disabled>
+                                                        <input class="button" type="submit" id="SaveupdateDetails" name="task" value="Save Plan" disabled>
                                                         <input class="button" type="submit" name="task" id="SAVENEW1" value="Save AS New" onclick="setStatus(id)" disabled>
                                                 </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
@@ -3331,9 +3372,10 @@ function myFunctiontest(id) {
             <tr><td><form action="" id="mainform" method="post">
 <!--                        <center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="setStatus(id)" /></center>                                                -->
 <!--<center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="submitForms()" /></center>-->
-                   
-                    <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">
-                   
+<!--                   
+                    <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">-->
+                      
+                    <input type="button" id="SaveFinal" name="task" value="Final" onclick="submitForms()">
                     </form></td></tr>
             <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
 
