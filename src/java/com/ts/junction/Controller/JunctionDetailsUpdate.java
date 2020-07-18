@@ -1020,8 +1020,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                         ///
 //                          if (p.equals("off_time_hour")) {
 //                          pchecklistStored.clear();
-<<<<<<< HEAD
-=======
+
 //                            for (int i = 0; i < pchecklist.size(); i++) {
 //                                pchecklist.get(i);
 //                                int plan_id_value = pchecklist.get(i).getPlan_id();
@@ -1501,17 +1500,17 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                int side5_amber_time_value = pchecklist.get(i).getSide5_amber_time();
 //                                String transferred_status_value = pchecklist.get(i).getTransferred_status();
 //                                String remark_value = pchecklist.get(i).getRemark();
-<<<<<<< HEAD
+
 //                                if (p.equals("off_time_hour")) {
 //                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == off_time_hour_value) {
 //                                        //int a = pchecklist.get(i).getOn_time_hour();
 //                                      JunctionUpdateBean bean = new JunctionUpdateBean();
-=======
+
 //                                if (p.equals("side1_amber_time")) {
 //                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side1_amber_time_value) {
 //                                        int a = pchecklist.get(i).getOn_time_hour();
 //                                        JunctionUpdateBean bean = new JunctionUpdateBean();
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //
 //                                        //pchecklist.set(i, bean);
 //                                        bean.setPlan_id(plan_id_value);
@@ -1533,7 +1532,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                        bean.setSide5_amber_time(side5_amber_time_value);
 //                                        bean.setTransferred_status(transferred_status_value);
 //                                        bean.setRemark(remark_value);
-<<<<<<< HEAD
+
 //                                          pchecklistStored.add(bean);
 //                                    }
 //
@@ -1550,7 +1549,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
 //                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
 //
-=======
+
 //                                         pchecklistStored.add(bean);
 //                                    }
 //
@@ -1567,7 +1566,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                int plan_no_value = pchecklistStored.get(i).getPlan_no();
 //                                int on_time_hour_value = pchecklistStored.get(i).getOn_time_hour();
 //
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //                                int on_time_min_value = pchecklistStored.get(i).getOn_time_min();
 //                                int off_time_hour_value = pchecklistStored.get(i).getOff_time_hour();
 //                                int off_time_min_value = pchecklistStored.get(i).getOff_time_min();
@@ -1584,17 +1583,17 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                int side5_amber_time_value = pchecklistStored.get(i).getSide5_amber_time();
 //                                String transferred_status_value = pchecklistStored.get(i).getTransferred_status();
 //                                String remark_value = pchecklistStored.get(i).getRemark();
-<<<<<<< HEAD
+
 //                                if (p.equals("off_time_min")) {
 //                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == off_time_min_value) {
 //                                       // int a = pchecklist.get(i).getOn_time_hour();
 //                                        PlanDetails bean = new PlanDetails();
-=======
+
 //                                if (p.equals("side2_amber_time")) {
 //                                    if (Integer.parseInt(request.getParameter("id_value").trim()) == side2_amber_time_value) {
 //                                        //int a = pchecklist.get(i).getOn_time_hour();
 //                                      PlanDetails bean = new PlanDetails();
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //
 //                                        //pchecklist.set(i, bean);
 //                                        bean.setPlan_id(plan_id_value);
@@ -1616,18 +1615,18 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                        bean.setSide5_amber_time(side5_amber_time_value);
 //                                        bean.setTransferred_status(transferred_status_value);
 //                                        bean.setRemark(remark_value);
-<<<<<<< HEAD
+
 //                                           pchecklist.add(bean);
-=======
+
 //                                             pchecklist.add(bean);
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //                                    }
 //
 //                                }
 //
 //                            }
 //                        }
-<<<<<<< HEAD
+
 //                           ///
 //                            if (p.equals("mode")) {
 //                          pchecklistStored.clear();
@@ -2084,8 +2083,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //
 //                            }
 //                        }
-=======
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //                    //
 //                     if (p.equals("side3_amber_time")) {
 //                          pchecklistStored.clear();
@@ -2298,7 +2296,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //            }
 //        }
 ////////////////////////////////new updates
-if (task.equals("testingCheck")) {
+if(task.equals("testingCheck")) 
+{
             PlanDetailModel planDetailModel = new PlanDetailModel();
             JSONArray jsonarr1 = new JSONArray();
 
