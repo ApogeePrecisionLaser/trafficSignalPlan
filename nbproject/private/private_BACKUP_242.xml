@@ -3,12 +3,14 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
+<<<<<<< HEAD
             <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionDetailsUpdate.java</file>
             <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/src/java/com/ts/junction/Model/JunctionModel.java</file>
             <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
-
-
+=======
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionDetailsUpdate.java</file>
+>>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
         </group>
     </open-files>
 </project-private>

@@ -2446,6 +2446,7 @@ function myFunctiontest(id) {
         
 }
 }
+<<<<<<< HEAD
 function makeAllEditable(id){
      alert();
     // junction details
@@ -2531,6 +2532,8 @@ function makeAllEditable(id){
 
 
 
+=======
+>>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;
