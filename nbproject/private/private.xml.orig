@@ -3,12 +3,31 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/src/java/com/ts/junction/Model/PhaseInfoModel.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/src/java/com/ts/webservice/TrafficSignalWebServices.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/src/java/com/ts/junction/Controller/PhaseInfoController.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/src/java/com/ts/webservice/ClientResponderWS.java</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/web/WEB-INF/web.xml</file>
-            <file>file:/C:/Users/DELL/Documents/NetBeansProjects/TrafficSignalsPhase/src/java/com/ts/tcpServer/ClientResponderModel.java</file>
+<<<<<<< HEAD
+<<<<<<< HEAD
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/log/Controller/LogTableController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/log/Model/LogTableModel.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/TS_StatusShowerController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/LoggerHistoryController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionDetailsUpdate.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/webservice/ClientResponderWS.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/tcpServer/ClientResponderModel.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/TS_StatusUpdaterController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/web/view/general/ts_statusShower.jsp</file>
+=======
+=======
+>>>>>>> f3a143256e65bf71d19c08f158b46fb6c85a9d49
+
+            <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionDetailsUpdate.java</file>
+            <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/src/java/com/ts/junction/Model/JunctionModel.java</file>
+            <file>file:/F:/NetBeans%20Repo/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
+
+
+<<<<<<< HEAD
+>>>>>>> origin/V1
+=======
+>>>>>>> f3a143256e65bf71d19c08f158b46fb6c85a9d49
         </group>
     </open-files>
 </project-private>

@@ -1478,7 +1478,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
 //                                 //
 //                                  if (p.equals("side1_amber_time")) {
 //                                         pchecklistStored.clear();
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+
 //                            for (int i = 0; i < pchecklist.size(); i++) {
 //                                pchecklist.get(i);
 //                                int plan_id_value = pchecklist.get(i).getPlan_id();

@@ -631,6 +631,18 @@ function insertTempData(id){
         });
 
 }
+            success: function (response_data)
+            {
+          var status = response_data.status;
+          var data = response_data.data;
+          var listsize = response_data.listsize;
+    alert("status"+status);
+    
+         
+            }
+        });
+
+}
     function Openform(junction_id, program_version_no, no_of_sides) {
         debugger;
      //   alert(junction_id);
@@ -2446,6 +2458,7 @@ function myFunctiontest(id) {
         
 }
 }
+<<<<<<< HEAD
 function makeAllEditable(id){
      alert();
     // junction details
@@ -2531,6 +2544,8 @@ function makeAllEditable(id){
 
 
 
+=======
+>>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;
@@ -3257,8 +3272,8 @@ function finalSave(id) {
 <!--                                                        <input class="button" type="reset" id="NEW1" name="task" value="New" onclick="makeEditable2(id)"/>
                                                         <input class="button" type="button" id="EDIT1" name="task" value="Edit"  onclick="makeEditable2(id)" />
                                                         <input class="button" type="submit" id="DELETE1" name="task" value="Delete" disabled>
-                                                        <input class="button" type="submit" id="SaveupdateDetails" name="task" value="Save Plan" disabled>
-                                                        <input class="button" type="submit" name="task" id="SAVENEW1" value="Save AS New" onclick="setStatus(id)" disabled>
+                                                       -->
+                                                        <input class="button" type="submit" name="task" id="SAVENEW1" value="Save" onclick="setStatus(id)" disabled>
                                                 </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
