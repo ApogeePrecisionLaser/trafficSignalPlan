@@ -56,6 +56,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
     static int p_id14_junction_plan_map = 0;
     static int plan_id_value_final = 0;
     static String testinglist = "";
+    static int j_id_truncate=0;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -703,6 +704,7 @@ public class JunctionDetailsUpdate extends HttpServlet {
                 // function to create temp table
                 
                 int j_id=Integer.parseInt(request.getParameter("id"));
+                              j_id_truncate=j_id;
               // int status=junctionModel.createTempTables();
                int status1=junctionModel.insertTempTables(j_id);
               List<Junction> li=junctionModel.showTempData();
@@ -3070,7 +3072,7 @@ if(task.equals("testingCheck"))
        plan_task_chek="";
      }
      plan_task_chek="SaveupdateDetails";
-        if (task.equals("Save Plan")) {
+        if (task.equals("SaveupdateDetails")) {
             PlanDetailModel planDetailModel = new PlanDetailModel();
 
             planDetailModel.setDriverClass(ctx.getInitParameter("driverClass"));
@@ -3456,7 +3458,38 @@ System.out.println("hi");
 //final submission 
 if(task.equals("save_final"))
 {
-    
+     try {
+                JSONArray jsonarr = new JSONArray();
+                JSONObject jobj = new JSONObject();
+               // jobj.put("data", "Inserted");
+                // function to create temp table
+                
+               // int j_id=Integer.parseInt(request.getParameter("id"));
+               int j_id=j_id_truncate;
+              // j_id=15;
+              // int status=junctionModel.createTempTables();
+               int status1=junctionModel.UpdateOriginalTables(j_id);
+               if(status1>0)
+               {
+               int status2=junctionModel.deleteTempTables(j_id);
+               }
+//              List<Junction> li=junctionModel.showTempData();
+//              int size=li.size();
+//              for(int i=0;i<size;i++){
+//              int id=li.get(i).getJunction_id();
+//                  System.out.println("id==="+id);
+//              }
+                jobj.put("status",status1);
+            
+                jobj.put("data", "Updated");
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj.toString());
+                return;
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
 }
         
@@ -3487,8 +3520,9 @@ if(task.equals("save_final"))
         //      request.setAttribute("junctionlist", list1);
         request.setAttribute("SelectedJunctionPlans123", list2);
         request.setAttribute("plandetailsSelected", list3);//p_id14_junction_plan_map
-        request.setAttribute("phasedetailsSelected", list4);
+        request.setAttribute("phasedetailsSelected", list4);//j_id
         request.setAttribute("p_id14_junction_plan_map", p_id14_junction_plan_map);
+        request.setAttribute("j_id_truncate", j_id_truncate);
         request.setAttribute("message", junctionModel.getMessage());
         request.setAttribute("msgBgColor", junctionModel.getMsgBgColor());
         request.setAttribute("IDGenerator", new xyz());

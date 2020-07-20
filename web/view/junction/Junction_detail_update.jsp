@@ -10,45 +10,37 @@
     "http://www.w3.org/TR/html4/loose.dtd">  
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
-  
-<!--<script src="../../JS/jquery.dataTables.js"></script>
-	<script src="../../JS/dataTables.bootstrap.js"></script>-->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
  
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"> 
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
- 
-
-<!--<script type="text/javascript" src="../../JS/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../../JS/jquery.autocomplete.js"></script>
- -->
- 
-<!--<script type="text/javascript" src="JS/jquery-ui.min.js"></script>-->
-<script>
-		$(document).ready(function() {
+<script> $(document).ready(function() {
 			$('#tab6').dataTable();
-		});
-	</script>
+		});</script>
 <script type="text/javascript" language="javascript">
+    
+    
+   
+    
     
     function showdiv() {
         
-       //gh();
-      // form1.submit();
+       debugger;
         var plus = document.getElementById("plus");
         var divbody = document.getElementById("body");
         var div = document.getElementById("jdt");
         var div1 = document.getElementById("t1");
          var divplan = document.getElementById("pform");
-        //var div2=document.getElementById("jundetails");
+     
         div1.style.display = 'block';
         div.style.display = 'block';
         divbody.style.display = 'block';
         plus.style.display = 'none';
         divplan.style.display = 'block';
-        // div2.style.display='none';
+     
  
     }
     function hidediv() {
@@ -613,6 +605,7 @@
 function insertTempData(id){
    // alert();
     // ajax call to insert data in temp tables
+    debugger;
   $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
             
             dataType: 'json',
@@ -631,18 +624,7 @@ function insertTempData(id){
         });
 
 }
-            success: function (response_data)
-            {
-          var status = response_data.status;
-          var data = response_data.data;
-          var listsize = response_data.listsize;
-    alert("status"+status);
-    
-         
-            }
-        });
-
-}
+     
     function Openform(junction_id, program_version_no, no_of_sides) {
         debugger;
      //   alert(junction_id);
@@ -2458,7 +2440,7 @@ function myFunctiontest(id) {
         
 }
 }
-<<<<<<< HEAD
+
 function makeAllEditable(id){
      alert();
     // junction details
@@ -2544,8 +2526,6 @@ function makeAllEditable(id){
 
 
 
-=======
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;
@@ -2554,46 +2534,18 @@ function makeAllEditable(id){
 
 
             }
-//  function getConfirmation() {
-//               var retVal = confirm("Do you want to change next plan on time ?");
-//               if( retVal == true ) {
-//                  //document.write ("User wants to change next plan on time!");
-//                    $.ajax({url: "JunctionDetailsUpdate?task=testingCheckonofftime",
-//            //type: 'POST',
-//            dataType: 'json',
-//            //contentType: 'application/json',
-//            //context: document.body,
-//
-//            data: {id_value:"x1,id:id"},
-//                     
-//            success: function (response_data)
-//            {
-//             
-//           
-//                var data1 = response_data.data;
-//                var pp="Plan not Exsist";
-//              
-//              
-//                 // $("#pkc").append(data1[0]);
-////         alert(data1[0]);
-////          alert("hi");
-//          
-//            }
-//           
-//        });
-//                  return true;
-//               } else {
-//                 // document.write ("User does not want to change next plan on time!");
-//                  return false;
-//               }
-//            }
+
 
 function finalSave(id) {
     
+  
+    
     debugger;
   
-   // x.value = x.value.toUpperCase();
+   
          $.ajax({url: "JunctionDetailsUpdate?task=save_final",
+          
+         
             //type: 'POST',
             dataType: 'json',
             //contentType: 'application/json',
@@ -2617,16 +2569,13 @@ function finalSave(id) {
                 }
               
 
-                 // $("#pkc").append(data1[0]);
-//         alert(data1[0]);
-//          alert("hi");
           
             }
            
         });
-        
 }
-}
+
+
 </script>
 <html>
     <head>
@@ -3501,7 +3450,7 @@ function finalSave(id) {
 <!--                   
                     <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">-->
                       
-                    <input type="button" id="SaveFinal" name="task" value="Final" onclick="submitForms()">
+                    <input type="button" id="SaveFinal" name="task" value="Final" onclick="finalSave()">
                     </form></td></tr>
             <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
 

@@ -390,7 +390,398 @@ public List<String> getJunc() {
       
         return status;
     }
+        
+     public int UpdateOriginalTables(int j_id) throws SQLException  {
+          int status = 0;
+         
+          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        
+          JunctionPlanMap jpmbean=new JunctionPlanMap();
+            String query="SET FOREIGN_KEY_CHECKS=0";
+         String query1="truncate table traffic_signal_plan2.state_temp";
+       // String query2="insert into state SELECT * FROM traffic_signal_plan2.state_temp";
+         String query3="truncate table traffic_signal_plan2.district_temp";
+        //String query4="insert into district SELECT * FROM traffic_signal_plan2.district_temp";
+         String query5="truncate table traffic_signal_plan2.city_temp";
+        //String query6="insert into city SELECT * FROM traffic_signal_plan2.city_temp";
+        String query7="delete from traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
+        String query8="insert into junction SELECT * FROM traffic_signal_plan2.junction_temp where junction_id='"+j_id+"' and final_revision='valid'";
+        
+        String query9="truncate table traffic_signal_plan2.date_detail_temp";
+       // String query10="insert into date_detail SELECT * FROM traffic_signal_plan2.date_detail_temp";
+         String query11="truncate table traffic_signal_plan2.day_detail_temp";
+        //String query12="insert into day_detail SELECT * FROM traffic_signal_plan2.day_detail_temp";
+       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+       String query13="delete from traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
+        String query14="insert into junction_plan_map SELECT * FROM traffic_signal_plan2.junction_plan_map_temp where junction_id='"+j_id+"' and active='Y'";
+        
+      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+      String query15="truncate table traffic_signal_plan2.junction_plan_map_temp";
+       String query16="truncate table traffic_signal_plan2.junction_temp";
+        // String query15="truncate table traffic_signal_plan2.phase_map";
+        //String query16="insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp";
+        
+            PreparedStatement ps = null;
+         boolean autoCommit = connection.getAutoCommit();
+            try {
+                connection.setAutoCommit(false);
+                int test=0;
+            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
+            try{
+//              ps = connection.prepareStatement("SET GLOBAL FOREIGN_KEY_CHECKS=0");//query
+              ps = connection.prepareStatement(query);
+              ps.executeUpdate();
+            }catch(Exception e)
+            {
+                System.out.println("Exception key checks :"+e);
+            }
+           
+            ps = connection.prepareStatement(query1);
+             ps.executeUpdate();
+              status=1;
+            
+             
+//                  test=0;
+//               ps = connection.prepareStatement(query2);
+//                test=ps.executeUpdate();
+//              status=2;
+           
+//              if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query3);
+                test=ps.executeUpdate();
+              status=3;
+              
+//              }
+//              if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query4);
+//                test=ps.executeUpdate();
+//              status=4;
+//              
+//              }
+
+ 
+//             if(test>0){
+                 test=0;
+                ps = connection.prepareStatement(query5);
+                 test=ps.executeUpdate();
+               status=7;
+//             }
+               
+      
+//              if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query6);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//              }
+//               if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query7);
+                test=ps.executeUpdate();
+              status=6;
+              
+            //}
+                if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query8);
+                test=ps.executeUpdate();
+              status=6;
+              
+              }
+                 if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query9);
+                test=ps.executeUpdate();
+              status=6;
+              
+              }
+//                  if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query10);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//              }
+//                   if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query11);
+                test=ps.executeUpdate();
+              status=6;
+              
+             // }
+//                    if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query12);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//              }
+//                     if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query13);
+                test=ps.executeUpdate();
+              status=6;
+              
+              //}
+              test=1;
+                      if(test>0){
+                  test=0;
+               ps = connection.prepareStatement(query14);
+                test=ps.executeUpdate();
+              status=6;
+              
+              }
+  
+          List <JunctionPlanMap> plan_id=getPlanid(j_id);
+              if(test>0){
+                 
+                      for(int i=0;i<plan_id.size();i++){
+                           test=0;
+                ps = connection.prepareStatement("delete from traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+               // ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+             
+             
+                test=ps.executeUpdate();
+              status=7;
+                   }
+              }
+              test=1;
+              if(test>0){
+                  test=0;
+                   for(int i=0;i<plan_id.size();i++){
+                //ps = connection.prepareStatement("delete table traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+                ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+             
+             
+                test=ps.executeUpdate();
+              status=7;
+                   }
+                   if(test>0)
+                   {
+                                     ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
+                                     ps.executeUpdate();
+                   }
+              }
+          
+  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+List <PhaseData> phase_id=getPhases_id(jpm_id);
+test=1;
+  if(test>0){
+      test=0;
+                   for(int i=0;i<phase_id.size();i++){
+                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+               test=ps.executeUpdate();
+              status=9;
+                   }
+              }
+              if(test>0){
+               
+                   for(int i=0;i<phase_id.size();i++){
+                          test=0;
+                ps = connection.prepareStatement("insert into phase_detail SELECT * FROM traffic_signal_plan2.phase_detail_temp where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+               test=ps.executeUpdate();
+              status=9;
+                   }
+                   if(test>0)
+                   {
+                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp");
+                      ps.executeUpdate();
+                   }
+              }
+              
+              
+              if(test>0){
+                   for(int i=0;i<jpm_id.size();i++){
+                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+               test=ps.executeUpdate();
+              status=10;
+                   }
+              }
+              if(test>0){
+                   for(int i=0;i<jpm_id.size();i++){
+                ps = connection.prepareStatement("insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+               test=ps.executeUpdate();
+              status=10;
+                   }
+                   if(test>0)
+                   {
+                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_map_temp");
+                        
+                   }
+              }
+                    if(test>0){
+                   // test=0;
+               ps = connection.prepareStatement(query15);
+                ps.executeUpdate();
+              status=8;
+              
+              }
+//              test=1;
+              if(test>0){
+               ps = connection.prepareStatement(query16);
+                ps.executeUpdate();
+              status=8;
+              
+              }
+                } catch (SQLException sqlEx) {
+                connection.rollback();
+                message = "Could NOT save data , some error.";
+                msgBgColor = COLOR_ERROR;
+                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+            } finally {
+                ps.close();
+                connection.setAutoCommit(autoCommit);
+            }
+       
+          
+      
+                
+      
+      
+        return status;
+    }
     
+        public int deleteTempTables(int j_id) throws SQLException  {
+          int status = 0;
+         
+          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        
+          JunctionPlanMap jpmbean=new JunctionPlanMap();
+           String query="SET FOREIGN_KEY_CHECKS=0";
+        String query1="truncate table traffic_signal_plan2.state_temp";
+        String query2="truncate table traffic_signal_plan2.district_temp";
+        String query3=" truncate table traffic_signal_plan2.city_temp";
+        String query4="truncate table traffic_signal_plan2.junction_temp";
+        
+        
+        String query5="truncate table traffic_signal_plan2.date_detail_temp";
+        String query6="truncate table traffic_signal_plan2.day_detail_temp";
+       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+        String query7="truncate table traffic_signal_plan2.junction_plan_map_temp";
+        
+      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+      // 
+       
+        String query8="truncate table traffic_signal_plan2.phase_map_temp";
+        
+            PreparedStatement ps = null;
+         boolean autoCommit = connection.getAutoCommit();
+            try {
+                connection.setAutoCommit(false);
+            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0,st0=0,st1=0;
+            ps = connection.prepareStatement(query);
+            ps.executeUpdate();
+               //st0=ps.executeUpdate();
+//               if(st0>0){
+            ps = connection.prepareStatement(query1);
+            ps.executeUpdate();
+              // st1=ps.executeUpdate();
+              status=1;
+//               }
+//              if(st1>0){
+               ps = connection.prepareStatement(query2);
+               ps.executeUpdate();
+                //st2=ps.executeUpdate();
+//              status=2;
+//              
+//              }
+//              if(st2>0){
+               ps = connection.prepareStatement(query3);
+//                st3=ps.executeUpdate();
+//              status=3;
+              ps.executeUpdate();
+//              }
+//              if(st3>0){
+               ps = connection.prepareStatement(query4);
+               ps.executeUpdate();
+//                st4=ps.executeUpdate();
+//              status=4;
+//              
+//              }
+
+ 
+//             if(st4>0){
+                ps = connection.prepareStatement(query5);
+                ps.executeUpdate();
+                // st5=ps.executeUpdate();
+//               status=7;
+//             }
+               
+      
+//                ps.executeUpdate();
+               ps = connection.prepareStatement(query6);
+               ps.executeUpdate();
+//                st6=ps.executeUpdate();
+//              status=6;
+//              
+//              }
+  
+          List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//              if(st6>0){
+                   //for(int i=0;i<plan_id.size();i++){
+                ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
+             
+             
+                st7=ps.executeUpdate();
+              status=7;
+                  // }
+//              }
+//              if(st7>0){
+               ps = connection.prepareStatement(query8);
+               ps.executeUpdate();
+//                st8=ps.executeUpdate();
+//              status=8;
+//              
+//              }
+  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+List <PhaseData> phase_id=getPhases_id(jpm_id);
+//              if(st8>0){
+                   //for(int i=0;i<phase_id.size();i++){
+                ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp ");
+                ps.executeUpdate();
+//               st9=ps.executeUpdate();
+//              status=9;
+//                   }
+            //}
+              
+//              if(st9>0){
+//                   for(int i=0;i<jpm_id.size();i++){
+//               // ps = connection.prepareStatement();
+//               ps.executeUpdate();
+////               st10=ps.executeUpdate();
+////              status=10;
+//                  }
+              //}
+                } catch (SQLException sqlEx) {
+                connection.rollback();
+                message = "Could NOT save data , some error.";
+                msgBgColor = COLOR_ERROR;
+                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+            } finally {
+                ps.close();
+                connection.setAutoCommit(autoCommit);
+            }
+       
+          
+      
+                
+      
+      
+        return status;
+    }
+     
+     
      public int insertTempTables(int j_id)  {
           int status = 0;
           //List <JunctionPlanMap> jpm_id=getdateid(j_id);
@@ -498,6 +889,8 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
       
         return status;
     }
+     
+     
      public List<Junction> showTempData() {
         List<Junction> list = new ArrayList<Junction>();
         try {

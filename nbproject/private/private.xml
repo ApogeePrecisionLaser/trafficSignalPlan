@@ -3,17 +3,16 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-
             <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/log/Controller/LogTableController.java</file>
             <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/log/Model/LogTableModel.java</file>
-        
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/TS_StatusShowerController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/LoggerHistoryController.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/web/view/junction/Junction_detail_update.jsp</file>
             <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/webservice/ClientResponderWS.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/junction/Controller/JunctionDetailsUpdate.java</file>
             <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/tcpServer/ClientResponderModel.java</file>
+            <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/junction/Model/JunctionModel.java</file>
             <file>file:/F:/BLEon%20git/trafficSignalPlan/src/java/com/ts/general/Controller/TS_StatusUpdaterController.java</file>
-            <file>file:/F:/BLEon%20git/trafficSignalPlan/web/view/general/ts_statusShower.jsp</file>
-
-
-
         </group>
     </open-files>
 </project-private>
