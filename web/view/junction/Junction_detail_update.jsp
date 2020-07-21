@@ -15,15 +15,16 @@
 	<script src="../../JS/dataTables.bootstrap.js"></script>-->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
- 
+  
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"> 
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
  
-
-<!--<script type="text/javascript" src="../../JS/jquery-3.2.1.min.js"></script>
-<script type="text/javascript" src="../../JS/jquery.autocomplete.js"></script>
- -->
+ 
+ <script type="text/javascript" src="../../JS/jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../JS/jquery.autocomplete.js"></script> 
+     <script type="text/javascript" src="JS/jquery-1.4.2.min.js"></script>
+        <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
  
 <!--<script type="text/javascript" src="JS/jquery-ui.min.js"></script>-->
 <script>
@@ -32,7 +33,56 @@
 		});
 	</script>
 <script type="text/javascript" language="javascript">
-    
+    function savejunctionplanmap(){
+        alert("sssssssssssssss");
+        debugger;
+        var date="null";
+        var day="null";
+         var junction_name=document.getElementById("junction_name").value;
+         var start_time=document.getElementById("start_time").value;
+         var orderno=document.getElementById("order_no").value;
+         if(document.getElementById("date").value!==null){
+              date=document.getElementById("date").value;
+         }
+         if(document.getElementById("day").value!==null){
+                day=document.getElementById("day").value;
+         }
+       
+         
+alert("sssssssssssssss");
+             $.ajax({url: "JunctionDetailsUpdate?task=junctionplanmapinsert",
+            
+            dataType: 'json',
+           
+            data: {junction_name:junction_name,start_time:start_time,order_no:orderno,date:date,day:day},
+
+            success: function (response_data)
+            {
+          var data = response_data.data;
+            
+            }
+        });
+        
+    }
+    // jQuery(function () {
+    function f22(){
+                $("#junction_name1").autocomplete("JunctionDetailsUpdate", {
+                    extraParams: {
+                        action1: function () {
+                            return "getjunc";
+                        }
+                    }
+                    });
+                $("#date").autocomplete("JunctionDetailsUpdate", {
+                    extraParams: {
+                        action1: function () {
+                            return "getDate";
+                        }
+                    }
+                });
+           //    });
+                
+}   
     function showdiv() {
         
        //gh();
@@ -133,30 +183,9 @@
         var plus = document.getElementById("plus3");
         plus.style.display = 'block';
     }
-
-
-
-
-
-    jQuery(function () {
-        $("#state_name").autocomplete("junctionCont", {
-            extraParams: {
-                action1: function () {
-                    return "getStateName"
-                }
-            }
-        });
-        $("#city_name").autocomplete("junctionCont", {
-            extraParams: {
-                action1: function () {
-                    return "getCityName"
-                },
-                action2: function () {
-                    return document.getElementById("state_name").value;
-                }
-            }
-        });
-    });
+ 
+ 
+     
 
     function makeEditable(id) {
         document.getElementById("junction_id").disabled = false;
@@ -624,7 +653,7 @@ function insertTempData(id){
           var status = response_data.status;
           var data = response_data.data;
           var listsize = response_data.listsize;
-    alert("status"+status);
+    alert("RECORD INSERTED IN TEMP TABLES");
     
          
             }
@@ -634,7 +663,7 @@ function insertTempData(id){
     function Openform(junction_id, program_version_no, no_of_sides) {
         debugger;
      //   alert(junction_id);
-         insertTempData(junction_id);        
+        // insertTempData(junction_id);        
         var queryString = "task=SelectedJunctionPlans&junction_id_selected=" + junction_id + "&program_version_no=" + program_version_no + "&no_of_sides=" + no_of_sides;
 
         var url = "JunctionDetailsUpdate?" + queryString;
@@ -1577,6 +1606,8 @@ function checkboxvalueonclick(id){
   }
     
     function fillColumns1(id) {
+        
+        f22();
         openjunctionplandetails();
         debugger;
         var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
@@ -1826,19 +1857,19 @@ function checkboxvalueonclick(id){
                 for (var j = 0; j < data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns2(id)"  value=""></td>';
-                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs11' + j + '" name="rb2" onclick="fillColumns1(id)"  value=""></td>';
+                    moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
                     //  alert(i);   
                     var fdata = "'" + data[i] + "'";
                     // alert(fromdata);
-                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     var tdata = "'" + data[i] + "'";
 
                     //  alert(i);
                     //  alert(todata);
                     
                    
-            moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+            moduleHtml += '<td id="t1cs11' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                    
               if(j===0)
                     {
@@ -1947,10 +1978,10 @@ function checkboxvalueonclick(id){
                 for (var j = 0; j < data_len; j++) {
 
                     moduleHtml += '<tr class="row" id="r2" >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns2(id)"  value=""></td>';
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[i] + '</td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[i] + '</td>';
                     var fdata = "'" + data[i] + "'";
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     // moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     if(j===0)
                     {
@@ -1965,7 +1996,7 @@ function checkboxvalueonclick(id){
                      var jpm_id = "'" + data[check_test_plan+h] + "'";
                      
                     check_test_plan=check_test_plan+h;
-                     moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[check_test_plan+h] + '</td>';
+                     moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns1(id)">' + data[check_test_plan+h] + '</td>';
                     
                 }
                  
@@ -2078,13 +2109,13 @@ function checkboxvalueonclick(id){
                 for (var j = 0; j < data_len; j++) {
 
                     moduleHtml += '<tr class="row" id="r2" >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + i + '" name="rb1" onclick="fillColumns2(id)"  value=""></td>';
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + i + '" name="rb1" onclick="fillColumns1(id)"  value=""></td>';
 
-                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata"  name="fromdate"onclick="fillColumns2(id)">' + data[i] + '</td>';
+                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata"  name="fromdate"onclick="fillColumns1(id)">' + data[i] + '</td>';
                     
                     
         // moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>'; 
-            moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns2(id)">' + data[++i] + '</td>';
+            moduleHtml += '<td id="t1cs' + j + '" style="display:none" class="dateviewdata" onclick="fillColumns1(id)">' + data[++i] + '</td>';
                     var pid = "'" + data[i] + "'";
                     
                     var jpm_id = "'" + data[++i] + "'";
@@ -2277,9 +2308,10 @@ function checkboxvalueonclick(id){
                 for (var j = 0; j <data_len; j++) {
                     debugger;
                     moduleHtml += '<tr class="row31"  >';
-                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="fillColumns(id)"  value=""></td>';
+                      var jun_id=data[i];
+                    moduleHtml += '   <td width="25%"><input type="radio" id="t1cs' + j + '" name="rb1" onclick="insertTempData('+jun_id+')"  value=""></td>';
                     moduleHtml += '<td id="abc" class="dateviewdata" onclick="fillColumns(id)">' + data[i] + '</td>';
-                    var jun_id=data[i];
+                  
                   //  alert(jun_id+"j_id");
                    moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns(id)">' + data[++i] + '</td>';
                     moduleHtml += '<td id="t1cs' + j + '" class="dateviewdata" onclick="fillColumns(id)">' + data[++i] + '</td>';
@@ -2446,7 +2478,7 @@ function myFunctiontest(id) {
         
 }
 }
-<<<<<<< HEAD
+ 
 function makeAllEditable(id){
      alert();
     // junction details
@@ -2528,12 +2560,7 @@ function makeAllEditable(id){
 //        });
 
 }
-
-
-
-
-=======
->>>>>>> 85371e7894cd74d582af0c237ce82aaf63cfee31
+ 
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;
@@ -2575,6 +2602,8 @@ function makeAllEditable(id){
 //                  return false;
 //               }
 //            }
+
+ 
 </script>
 <html>
     <head>
@@ -2934,10 +2963,10 @@ function makeAllEditable(id){
 
                                                         <tr>
                                                             <th class="heading" >Junction Name</th>
-                                                            <td><input class="input" type="text" id="junction_name1" name="junction_name1" value="${junction_name}" size="50" disabled>
+                                                            <td><input class="input" type="text" id="junction_name1" name="junction_name1" value="" size="50" autocomplete="on" disabled>
                                                                 <input class="input" type="hidden" id="junction_id" name="junction_id" value="${junction_id}" size="50" >
                                                                 <input class="input" type="hidden" id="junction_plan_map_id1p" name="junction_plan_map_id1p" value="${p_id14_junction_plan_map}" size="50" ></td>
-                                                       <td>${p_id14_junction_plan_map}</td> </tr>
+<!--                                                       <td>${p_id14_junction_plan_map}</td> </tr>-->
                                                         <tr>
                                                             <th class="heading" >On Time -  Off Time</th>
                                                             <td><input class="input" type="text" id="start_time" name="start_time" value="" maxlength="6" size="40" onkeyup="myFunction()"  >
@@ -2974,7 +3003,7 @@ function makeAllEditable(id){
 <!--                                                                <input class="button" type="button" name="edit" id="edit" value="Edit" onclick="makeEditable1(id)"> &nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <input class="button" type="submit" name="task" id="junctionplanmap" value="junctionplanmap" onclick="setStatus(id)" disabled>&nbsp;&nbsp;&nbsp;&nbsp;
                                                                -->
-                                                                <input class="button" type="submit" name="task" id="junctionplanmap" value="Save" onclick="setStatus(id)" disabled>  &nbsp;&nbsp;&nbsp;&nbsp;
+                                                                <input class="button" type="button" name="task" id="junctionplanmap" value="Save" onclick="savejunctionplanmap()" disabled>  &nbsp;&nbsp;&nbsp;&nbsp;
                                                                 <!--                                                                <input class="button" type="reset" name="new" id="new" value="New" onclick="makeEditable1(id)">&nbsp;&nbsp;&nbsp;&nbsp;-->
 <!--                                                                <input class="button" type="submit" name="task" id="delete" value="Delete" onclick="setStatus(id)" disabled>
                                                             -->

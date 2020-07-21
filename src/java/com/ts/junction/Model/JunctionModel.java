@@ -133,6 +133,33 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
+    
+    public List<String> getDateTime() {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT from_date, to_date "
+                + " FROM date_detail Where active = 'Y' ";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+           // q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String from_date = rset.getString("from_date");
+                String to_date = rset.getString("to_date");
+                
+                    list.add(from_date + "//" + to_date);
+                    count++;
+                 
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
 public List<String> getJunc() {
         String query = "SELECT distinct junction_name from junction WHERE final_revision = 'VALID'";
         List<String> cameraMakeList = new ArrayList();
@@ -392,6 +419,7 @@ public List<String> getJunc() {
     }
     
      public int insertTempTables(int j_id)  {
+        
           int status = 0;
           //List <JunctionPlanMap> jpm_id=getdateid(j_id);
          // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
@@ -417,6 +445,7 @@ public List<String> getJunc() {
         
             PreparedStatement ps;
         try {
+             connection.setAutoCommit(false);
             int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
             ps = connection.prepareStatement(query1);
               int st1=ps.executeUpdate();
@@ -487,6 +516,11 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                st10=ps.executeUpdate();
               status=10;
                    }
+              }
+              if(status>=10){
+              connection.commit();
+              }else{
+              connection.rollback();
               }
         } catch (SQLException ex) {
             Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
@@ -1005,12 +1039,12 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
          
         String query = "";
         if (filter.equalsIgnoreCase("date")) {
-            query = "SELECT  count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and dd.from_date='"+Fromdate+"' and dd.to_date='"+todate+"' group by dd.from_date;";
+            query = "SELECT  count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and dd.from_date='"+Fromdate+"' and dd.to_date='"+todate+"' group by dd.from_date;";
         } else if (filter.equalsIgnoreCase("day")) {
-            query = "SELECT count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected+"'";
+            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected+"'";
 
         } else {
-            query = "SELECT count(*) FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '"+day+"' group by p.on_time_hour";
+            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '"+day+"' group by p.on_time_hour";
 
         }
         try {
@@ -1040,20 +1074,20 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
 
             query2 = "SELECT  distinct jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
                     + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id "
-                    + "inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id "
+                    + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                    + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
+                    + "inner join junction_temp j on jp.junction_id = j.junction_id "
+                    + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
                     + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and j.junction_id = '" + junction_id_selected + "' group by dd.from_date "
                     + addQuery;
         } else if (filter.equalsIgnoreCase("day")) {
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
             query2 = "SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
                     + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id "
-                    + "inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id "
+                    + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                    + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
+                    + "inner join junction_temp j on jp.junction_id = j.junction_id "
+                    + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
                     + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and day_id!='' and j.junction_id =" + junction_id_selected
                     + addQuery;
 
@@ -1062,9 +1096,9 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
             query2 = "SELECT distinct  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
                     + " d.day, j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
-                    + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                    + "left join day_detail d on jp.day_id = d.day_detail_id inner join junction j on jp.junction_id = j.junction_id "
-                    + "inner join plan_details p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' "
+                    + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                    + "left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id "
+                    + "inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' "
                     + "and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '" + junction_id_selected + "' group by p.on_time_hour"
                     + addQuery;
         }
@@ -1648,7 +1682,7 @@ if(a<=7){
         int junction_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT junction_id FROM junction where junction_name = ? "
+            pstmt = connection.prepareStatement(" SELECT junction_id FROM junction_temp where junction_name = ? "
                     + "and final_revision ='VALID'  Order by junction_id");
             pstmt.setString(1, junction_name);
 
@@ -1667,7 +1701,7 @@ if(a<=7){
         PreparedStatement pstmt;
         try {
            
-                pstmt = connection.prepareStatement(" SELECT junction_plan_map_id FROM junction_plan_map where "
+                pstmt = connection.prepareStatement(" SELECT junction_plan_map_id FROM junction_plan_map_temp where "
                         + " plan_id = ? and junction_id = ? and active = 'Y'");
                 pstmt.setInt(1, plan_id);
                 pstmt.setInt(2, junction_id);
@@ -1689,7 +1723,7 @@ if(a<=7){
         int phase_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT phase_info_id FROM phase_detail where side13 = ? "
+            pstmt = connection.prepareStatement(" SELECT phase_info_id FROM phase_detail_temp where side13 = ? "
                     + " and side24 = ? and active ='Y' ");
             pstmt.setInt(1, side13);
             pstmt.setInt(2, side24);
@@ -1702,6 +1736,294 @@ if(a<=7){
         }
         return phase_id;
     }
+         public int getMaxJunctionPlanId() {
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT Max(junction_plan_map_id) FROM junction_plan_map_temp");
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            plan_id = Integer.parseInt(rset.getString(1));
+            System.out.println(plan_id);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return plan_id;
+    }
+private int getDateId(String from_date, String to_date) {
+        int date_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT date_detail_id FROM date_detail_temp where from_date = ? "
+                    + "and to_date = ? and active ='Y' Order by date_detail_id");
+            pstmt.setString(1, from_date);
+            pstmt.setString(2, to_date);
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            date_id = Integer.parseInt(rset.getString(1));
+            System.out.println(date_id);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getPlanId() Error: " + e);
+        }
+        return date_id;
+    }
+
+    private int getDayId(String day) {
+        int day_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT day_detail_id FROM day_detail_temp where day = ? "
+                    + " and active ='Y' Order by day_detail_id");
+            pstmt.setString(1, day);
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            day_id = Integer.parseInt(rset.getString(1));
+            System.out.println(day_id);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getPlanId() Error: " + e);
+        }
+        return day_id;
+    }
+     public boolean updatePreviousRecord(int id) throws SQLException {
+        PreparedStatement pstmt;
+        int rowAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            pstmt = connection.prepareStatement(" UPDATE junction_plan_map_temp SET active = 'N' where junction_plan_map_id = " + id);
+            rowAffected = pstmt.executeUpdate();
+            if (rowAffected > 0) {
+                // Finally commit the connection.
+                connection.commit();
+            } else {
+                throw new SQLException("All records were NOT saved.");
+            }
+            connection.commit();
+        } catch (SQLException e) {
+            connection.rollback();
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return rowAffected > 0;
+    }
+
+    private int getPlanId(int on_time_hr, int on_time_min, int off_time_hr, int off_time_min) {
+        int plan_id = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT plan_id FROM plan_details_temp where on_time_hour = ? "
+                    + "and on_time_min = ? and off_time_hour = ? and off_time_min = ? and active='Y' Order by plan_id");
+            pstmt.setInt(1, on_time_hr);
+            pstmt.setInt(2, on_time_min);
+            pstmt.setInt(3, off_time_hr);
+            pstmt.setInt(4, off_time_min);
+
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            plan_id = Integer.parseInt(rset.getString(1));
+            System.out.println(plan_id);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getPlanId() Error: " + e);
+        }
+        return plan_id;
+    }
+  public int getRevisionNo(int plan_id) {
+        int revision_no = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement(" SELECT revision_no FROM junction_plan_map_temp where junction_plan_map_id=" + plan_id + " AND active='Y'");
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            revision_no = Integer.parseInt(rset.getString(1));
+            System.out.println(revision_no);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return revision_no;
+    }
+   public List<String> getJName(String q) {
+        List<String> list = new ArrayList<String>();
+        PreparedStatement pstmt;
+        String query = "SELECT junction_name"
+                + " FROM junction_temp Where final_revision='VALID' ";
+        try {
+            pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            int count = 0;
+            q = q.trim();
+            while (rset.next()) {    // move cursor from BOR to valid record.
+                String from_date = rset.getString("from_date");
+                String to_date = rset.getString("to_date");
+                if (from_date.toUpperCase().startsWith(q.toUpperCase())) {
+                    list.add(from_date + "//" + to_date);
+                    count++;
+                }
+            }
+            if (count == 0) {
+                list.add("No such state_name exists.");
+            }
+        } catch (Exception e) {
+            System.out.println("Error: " + e);
+        }
+        return list;
+    }
+
+  
+ public boolean updateJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap) {
+        String insert_query = null;
+        PreparedStatement pstmt = null;
+        boolean errorOccured = false;
+        boolean isUpdated = false;
+        int rowsAffected = 0;
+        try {
+            boolean autoCommit = connection.getAutoCommit();
+            if (!updatePreviousRecord(junctionPlanMap.getJunction_plan_map_id())) {
+                errorOccured = true;
+                message = "Plan Not updated";
+                msgBgColor = COLOR_ERROR;
+            } else {
+                int plan_id = getPlanId(junctionPlanMap.getOn_time_hr(), junctionPlanMap.getOn_time_min(), junctionPlanMap.getOff_time_hr(), junctionPlanMap.getOff_time_min());
+                int junction_id = getJunctionId(junctionPlanMap.getJunction_name());
+                Junction junc = getJunctionDetail(junction_id);
+                updateRecordOfJunction(junc);
+                int program_version_no = getProgramVersionNo(junction_id);
+                int date_id = getDateId(junctionPlanMap.getFrom_date(), junctionPlanMap.getTo_date());
+                int day_id = getDayId(junctionPlanMap.getDay());
+                int revision_no = getRevisionNo(junctionPlanMap.getJunction_plan_map_id()) + 1;
+                if (date_id > 0) {
+                    insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, date_id, order_no,revision_no,remark) "
+                            + " VALUES(?, ?, ?, ?, ?, ?, ?) ";
+                } else if (day_id > 0) {
+                    insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, day_id, order_no,revision_no,remark) "
+                            + " VALUES(?, ?, ?, ?, ?, ?, ?) ";
+                } else {
+                    insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, order_no,revision_no,remark ) "
+                            + " VALUES(?, ?, ?, ?, ?, ?) ";
+                }
+
+                try {
+                    connection.setAutoCommit(false);
+
+                    pstmt = connection.prepareStatement(insert_query);
+                    pstmt.setInt(1, junctionPlanMap.getJunction_plan_map_id());
+                    pstmt.setInt(2, plan_id);
+                    pstmt.setInt(3, junction_id);
+                    if (date_id > 0) {
+                        pstmt.setInt(4, date_id);
+                        pstmt.setInt(5, junctionPlanMap.getOrder_no());
+                        pstmt.setInt(6, revision_no);
+                        pstmt.setInt(7, program_version_no);
+                    } else if (day_id > 0) {
+                        pstmt.setInt(4, day_id);
+                        pstmt.setInt(5, junctionPlanMap.getOrder_no());
+                        pstmt.setInt(6, revision_no);
+                        pstmt.setInt(7, program_version_no);
+                    } else {
+                        pstmt.setInt(4, junctionPlanMap.getOrder_no());
+                        pstmt.setInt(5, revision_no);
+                        pstmt.setInt(6, program_version_no);
+                    }
+                    rowsAffected = pstmt.executeUpdate();
+                    if (rowsAffected > 0) {
+                        // Finally commit the connection.
+                        connection.commit();
+                        message = "Data has been updated successfully.";
+                        msgBgColor = COLOR_OK;
+                    } else {
+                        throw new SQLException("All records were NOT saved.");
+                    }
+
+                } catch (SQLException sqlEx) {
+                    errorOccured = true;
+                    connection.rollback();
+                    message = "Could NOT save all data , some error.";
+                    msgBgColor = COLOR_ERROR;
+                    System.out.println("PlanInfoModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+                } finally {
+                    pstmt.close();
+                    connection.setAutoCommit(autoCommit);
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel updateRecord() Error: " + e);
+        }
+
+        return !errorOccured;
+    }
+        public boolean insertJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap,int selected_plan_id) {
+        String insert_query = null;
+        PreparedStatement pstmt = null;
+        boolean errorOccured = false;
+        boolean isUpdated = false;
+        int rowsAffected = 0;
+
+        int junction_plan_map_id = getMaxJunctionPlanId() + 1;
+//       int plan_id = getPlanId(junctionPlanMap.getOn_time_hr(), junctionPlanMap.getOn_time_min(), junctionPlanMap.getOff_time_hr(), junctionPlanMap.getOff_time_min());
+        int plan_id =selected_plan_id;
+        int junction_id = getJunctionId(junctionPlanMap.getJunction_name());
+        Junction junc = getJunctionDetail(junction_id);
+       // updateRecordOfJunction(junc);
+        int program_version_no = getProgramVersionNo(junction_id);
+        int date_id = getDateId(junctionPlanMap.getFrom_date(), junctionPlanMap.getTo_date());
+        int day_id = getDayId(junctionPlanMap.getDay());
+        if (date_id > 0) {
+            insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, date_id, order_no,remark) "
+                    + " VALUES(?, ?, ?, ?, ?, ?) ";
+        } else if (day_id > 0) {
+            insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, day_id, order_no,remark) "
+                    + " VALUES(?, ?, ?, ?, ?, ?) ";
+        } else {
+            insert_query = "INSERT into junction_plan_map_temp(junction_plan_map_id, plan_id, junction_id, order_no,remark) "
+                    + " VALUES(?, ?, ?, ?, ?) ";
+        }
+        try {
+            boolean autoCommit = connection.getAutoCommit();
+            try {
+                connection.setAutoCommit(false);
+
+                pstmt = connection.prepareStatement(insert_query);
+                pstmt.setInt(1, junction_plan_map_id);
+                pstmt.setInt(2, plan_id);
+                pstmt.setInt(3, junction_id);
+                if (date_id > 0) {
+                    pstmt.setInt(4, date_id);
+                    pstmt.setInt(5, junctionPlanMap.getOrder_no());
+                    pstmt.setInt(6, program_version_no);
+                } else if (day_id > 0) {
+                    pstmt.setInt(4, day_id);
+                    pstmt.setInt(5, junctionPlanMap.getOrder_no());
+                    pstmt.setInt(6, program_version_no);
+                } else {
+                    pstmt.setInt(4, junctionPlanMap.getOrder_no());
+                    pstmt.setInt(5, program_version_no);
+                }
+
+                rowsAffected = pstmt.executeUpdate();
+                if (rowsAffected > 0) {
+                    // Finally commit the connection.
+                    connection.commit();
+                    message = "Data has been saved successfully.";
+                    msgBgColor = COLOR_OK;
+                } else {
+                    throw new SQLException("All records were NOT saved.");
+                }
+
+            } catch (SQLException sqlEx) {
+                errorOccured = true;
+                connection.rollback();
+                message = "Could NOT save all data , some error.";
+                msgBgColor = COLOR_ERROR;
+                System.out.println("JunctionPlanMapModel insert() Error: " + message + " Cause: " + sqlEx.getMessage());
+            } finally {
+                pstmt.close();
+                connection.setAutoCommit(autoCommit);
+            }
+        } catch (Exception e) {
+            System.out.println("JunctionPlanMapModel insert() Error: " + e);
+        }
+
+        return !errorOccured;
+    }
+      
+      
      public boolean insertRecord(PhaseData phaseData,int selected_plan_id) {
         String insert_query = null;
         String insert_phase_query = null;
@@ -1726,7 +2048,7 @@ int plan_id=selected_plan_id;
 //            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
 //                    + " VALUES(?, ?, ?, ?, ?) ";
         } else {
-            insert_phase_query = "INSERT into phase_detail(phase_info_id, phase_no,side13,side24) Values(?,?,?,?)";
+            insert_phase_query = "INSERT into phase_detail_temp(phase_info_id, phase_no,side13,side24) Values(?,?,?,?)";
 //            insert_query = "INSERT into phase_map(phase_map_id,junction_plan_map_id, phase_id, order_no, remark) "
 //                    + " VALUES(?, ?, ?, ?, ?) ";
         }
@@ -1861,7 +2183,7 @@ int plan_id=selected_plan_id;
     }
      
        public int phasemapupdate(int junction_plan_map_id,int phase_id,int phase_map_id,int orderno) {
-             String  Query = "UPDATE phase_map SET order_no = '"+junction_plan_map_id+"',phase_id='"+phase_id+"',order_no='"+orderno+"'  WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+             String  Query = "UPDATE phase_map_temp SET order_no = '"+junction_plan_map_id+"',phase_id='"+phase_id+"',order_no='"+orderno+"'  WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
         int rowsAffected = 0;
         try {
             connection.setAutoCommit(false);
@@ -1917,7 +2239,7 @@ int plan_id=selected_plan_id;
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT Max(phase_info_id) as phase_info_id FROM phase_detail ");
+            pstmt = connection.prepareStatement(" SELECT Max(phase_info_id) as phase_info_id FROM phase_detail_temp ");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             plan_id = rset.getInt("phase_info_id");
@@ -1931,7 +2253,7 @@ int plan_id=selected_plan_id;
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT phase_map_id  FROM phase_map where junction_plan_map_id='"+jpm+"' and phase_id='"+phaseid+"' and active='Y'");
+            pstmt = connection.prepareStatement(" SELECT phase_map_id  FROM phase_map_temp where junction_plan_map_id='"+jpm+"' and phase_id='"+phaseid+"' and active='Y'");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             plan_id = rset.getInt("phase_map_id");
@@ -1946,7 +2268,7 @@ int plan_id=selected_plan_id;
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement("Select Max(pd.phase_no) as phase_no " +
-" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j \n" +
+" from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j \n" +
 "        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and \n" +
 "   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and\n" +
 "   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+jpm+"' \n" +
@@ -2032,7 +2354,7 @@ int plan_id=selected_plan_id;
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
                     + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
-                    + " from junction AS j, city AS c "
+                    + " from junction_temp AS j, city_temp AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' and j.junction_id = " + junction_id;
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
@@ -2075,7 +2397,7 @@ int plan_id=selected_plan_id;
         String query = null;
         PreparedStatement pstmt = null;
         int program_version_no = getProgramVersionNo(junction.getJunction_id());
-        query = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
+        query = "INSERT INTO junction_temp (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
                 + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
                 + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
@@ -2155,7 +2477,7 @@ private int getProgramVersionNo(int junction_id) {
         int program_version_no = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT program_version_no FROM junction where junction_id = ? "
+            pstmt = connection.prepareStatement(" SELECT program_version_no FROM junction_temp where junction_id = ? "
                     + "and final_revision ='VALID'  Order by junction_id");
             pstmt.setInt(1, junction_id);
 
@@ -2175,7 +2497,7 @@ private int getProgramVersionNo(int junction_id) {
          
         
          
-        String query2 = "Select pd.phase_info_id from phase_detail pd where pd.active='Y' and pd.side13='"+side13+"' and pd.side24='"+side24+"'";
+        String query2 = "Select pd.phase_info_id from phase_detail_temp pd where pd.active='Y' and pd.side13='"+side13+"' and pd.side24='"+side24+"'";
 
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
@@ -2198,7 +2520,7 @@ private int getProgramVersionNo(int junction_id) {
          
         
          
-        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides ,pm.order_no from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j\n" +
+        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides ,pm.order_no from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j\n" +
 "                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n" +
 "                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"' order by pm.order_no ASC"
                 ;
