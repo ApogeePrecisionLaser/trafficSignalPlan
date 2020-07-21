@@ -10,15 +10,14 @@
     "http://www.w3.org/TR/html4/loose.dtd">  
 <link rel="stylesheet" type="text/css" href="css/style.css" />
 <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
-  
-<!--<script src="../../JS/jquery.dataTables.js"></script>
-	<script src="../../JS/dataTables.bootstrap.js"></script>-->
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <link rel="stylesheet" type="text/css" href="http://cdn.datatables.net/1.10.13/css/jquery.dataTables.css">
   
 <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css"> 
 <script type="text/javascript" charset="utf8" src="http://cdn.datatables.net/1.10.13/js/jquery.dataTables.js"></script>
 
+ 
  
  
  <script type="text/javascript" src="../../JS/jquery-3.2.1.min.js"></script>
@@ -29,10 +28,12 @@
 <!--<script type="text/javascript" src="JS/jquery-ui.min.js"></script>-->
 <script>
 		$(document).ready(function() {
+ 
+ 
 			$('#tab6').dataTable();
-		});
-	</script>
+		});</script>
 <script type="text/javascript" language="javascript">
+ 
     function savejunctionplanmap(){
         alert("sssssssssssssss");
         debugger;
@@ -83,22 +84,26 @@ alert("sssssssssssssss");
            //    });
                 
 }   
+ 
+    
+    
+   
+     
     function showdiv() {
         
-       //gh();
-      // form1.submit();
+       debugger;
         var plus = document.getElementById("plus");
         var divbody = document.getElementById("body");
         var div = document.getElementById("jdt");
         var div1 = document.getElementById("t1");
          var divplan = document.getElementById("pform");
-        //var div2=document.getElementById("jundetails");
+     
         div1.style.display = 'block';
         div.style.display = 'block';
         divbody.style.display = 'block';
         plus.style.display = 'none';
         divplan.style.display = 'block';
-        // div2.style.display='none';
+     
  
     }
     function hidediv() {
@@ -642,6 +647,7 @@ alert("sssssssssssssss");
 function insertTempData(id){
    // alert();
     // ajax call to insert data in temp tables
+    debugger;
   $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
             
             dataType: 'json',
@@ -660,6 +666,7 @@ function insertTempData(id){
         });
 
 }
+     
     function Openform(junction_id, program_version_no, no_of_sides) {
         debugger;
      //   alert(junction_id);
@@ -2478,7 +2485,7 @@ function myFunctiontest(id) {
         
 }
 }
- 
+  
 function makeAllEditable(id){
      alert();
     // junction details
@@ -2561,6 +2568,10 @@ function makeAllEditable(id){
 
 }
  
+ 
+ 
+
+ 
 
         function myFunction_on_off_popup(value_all_on_off_time) {
           debugger;
@@ -2569,6 +2580,7 @@ function makeAllEditable(id){
 
 
             }
+ 
 //  function getConfirmation() {
 //               var retVal = confirm("Do you want to change next plan on time ?");
 //               if( retVal == true ) {
@@ -2602,6 +2614,50 @@ function makeAllEditable(id){
 //                  return false;
 //               }
 //            }
+
+ 
+ 
+
+
+function finalSave(id) {
+    
+  
+    
+    debugger;
+  
+   
+         $.ajax({url: "JunctionDetailsUpdate?task=save_final",
+          
+         
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {id:id},
+                     
+            success: function (response_data)
+            {
+             
+           
+                var data1 = response_data.data;
+                //alert(data1);
+                var pp="Plan not Exist";
+                if(data1 == pp)
+                {
+                  // alert("hi2");
+                       var xp = document.getElementById(id);
+                      xp.style.backgroundColor = "red";
+                    
+                }
+              
+
+          
+            }
+           
+        });
+}
+
 
  
 </script>
@@ -3475,9 +3531,10 @@ function makeAllEditable(id){
             <tr><td><form action="" id="mainform" method="post">
 <!--                        <center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="setStatus(id)" /></center>                                                -->
 <!--<center><input class="button" type="submit" id="finalsubmit" name="task" value="Final" onclick="submitForms()" /></center>-->
-                   
-                    <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">
-                   
+<!--                   
+                    <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">-->
+                      
+                    <input type="button" id="SaveFinal" name="task" value="Final" onclick="finalSave()">
                     </form></td></tr>
             <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
 
