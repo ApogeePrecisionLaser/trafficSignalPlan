@@ -1,4 +1,4 @@
- <%--
+  <%--
     Document   : junction
     Created on : Aug 10, 2012, 9:33:33 AM
     Author     : prachi
@@ -26,14 +26,18 @@
         <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
  
 <!--<script type="text/javascript" src="JS/jquery-ui.min.js"></script>-->
-<script>
-		$(document).ready(function() {
  
- 
-			$('#tab6').dataTable();
-		});</script>
 <script type="text/javascript" language="javascript">
- 
+    
+    
+     
+  
+ function enableFinal()
+{
+    
+    document.getElementById("SaveFinal").style.display ='block';
+    
+}
     function savejunctionplanmap(){
         alert("sssssssssssssss");
         debugger;
@@ -235,6 +239,26 @@ alert("sssssssssssssss");
     }
 
     function setStatus(id) {
+        enableFinal();
+        
+        
+          $.ajax({url: "JunctionDetailsUpdate?task=SaveupdateDetails",
+            
+            dataType: 'json',
+             
+            success: function (response_data)
+            {
+          alert("ok");  
+            }
+        });
+        
+        
+        
+        if(id  == 'SAVENEW1'){
+             document.getElementById("clickedButton").value = "SaveupdateDetails";
+            
+        }
+        
         if (id == 'SAVE') {
             document.getElementById("clickedButton").value = "SAVE";
         } else if (id == 'junctionsave') {
@@ -644,10 +668,36 @@ alert("sssssssssssssss");
         popupwin = openPopUp(url, "View PlanInfo ", 580, 900);
 
     }
+     function deletetempdataonloadpage(id){
+         $.ajax({url: "JunctionDetailsUpdate?task=deleteonload",
+          
+         
+            //type: 'POST',
+            dataType: 'json',
+            //contentType: 'application/json',
+            //context: document.body,
+
+            data: {id:id},
+                     
+            success: function (response_data)
+            {
+             
+           
+                var data1 = response_data.data;
+                alert(data1);
+               // var pp="Updated";
+               // alert(data1);
+               
+            }
+           
+        });
+}
 function insertTempData(id){
-   // alert();
+      //deletetempdataonloadpage(id);
+     // document.getElementById("demo").innerHTML = deletetempdataonloadpage();
+    
     // ajax call to insert data in temp tables
-    debugger;
+   
   $.ajax({url: "JunctionDetailsUpdate?task=inserttempdata",
             
             dataType: 'json',
@@ -657,10 +707,15 @@ function insertTempData(id){
             success: function (response_data)
             {
           var status = response_data.status;
-          var data = response_data.data;
-          var listsize = response_data.listsize;
+           debugger;
+           ////var data = response_data.data;
+         // var listsize = response_data.listsize;
+        alert(" Status"+status);
+         if(status == "10"){
     alert("RECORD INSERTED IN TEMP TABLES");
-    
+         }else{
+           alert("RECORD Not INSERTED IN TEMP TABLES");  
+         }
          
             }
         });
@@ -1314,6 +1369,7 @@ function insertTempData(id){
         }
     function CheckPhase(j_name,id,phase_no,plan_id,Order_no,phaseinfoid) {
         debugger;
+        enableFinal();
         //alert("phase_no"+phase_no);
     // alert("plan_id"+plan_id);
     // alert("j_name"+j_name);
@@ -1688,14 +1744,17 @@ function checkboxvalueonclick(id){
         }
         document.getElementById("junctionplanmap").disabled = false;
     }
-
+function edit(id){
+    
+}
 
 
 
     function fillColumns2(id) {
         debugger;
-        openplandet();
       
+        openplandet();
+      makeAllEditable(id);
         var noOfRowsTraversed = document.getElementById("noOfRowsTraversed").value;
                noOfRowsTraversed=1;
         debugger;
@@ -1847,9 +1906,9 @@ function checkboxvalueonclick(id){
 
                 var jpm = response_data.jpm;
                 var j_id = response_data.j_id;
-                alert(jpm);
+               // alert(jpm);
                 // alert(j_id);
-                var data_len = data.length / 2;
+                var data_len = data.length / 3;
                 var i = 0;
                 // alert("data lemn --"+data_len);
 
@@ -1967,7 +2026,7 @@ function checkboxvalueonclick(id){
                 var data = response_data.data;
                 //alert("data js -" + data[7]);
 
-                var data_len = data.length / 2;
+                var data_len = data.length / 3;
 
 
                 var i = 0;
@@ -2245,9 +2304,12 @@ function checkboxvalueonclick(id){
 
 
     }
+     
+   
    
     
      function Openformphasenewfirst(fdata1, tdata1, j_id) {
+    
         $(".row21").remove();
          $(".row31").remove();
         debugger;
@@ -2268,8 +2330,8 @@ function checkboxvalueonclick(id){
 //      var jun_id = response_data.jun_id;
 //      var p_no = response_data.p_no;
 //      var no_sides = response_data.sides;
-//                alert("jun_id   -" + jun_id);
-//                alert("p_no   -" + p_no);
+                // alert("jun_id   -" + jun_id);
+                // alert("p_no   -" + p_no);
  //              alert("no_sides   -" + no_sides);
               //  alert("data js -" + data);
                 // var jpm=response_data.jpm;
@@ -2487,7 +2549,7 @@ function myFunctiontest(id) {
 }
   
 function makeAllEditable(id){
-     alert();
+     alert("Edit Data");
     // junction details
      document.getElementById("junction_id").disabled = false;
         document.getElementById("junction_name").disabled = false;
@@ -2617,12 +2679,11 @@ function makeAllEditable(id){
 
  
  
-
-
+  
 function finalSave(id) {
     
   
-    
+    enableFinal();
     debugger;
   
    
@@ -2642,13 +2703,15 @@ function finalSave(id) {
            
                 var data1 = response_data.data;
                 //alert(data1);
-                var pp="Plan not Exist";
-                if(data1 == pp)
+               // var pp="Updated";
+               // alert(data1);
+                if(data1 === "Updated")
                 {
-                  // alert("hi2");
-                       var xp = document.getElementById(id);
-                      xp.style.backgroundColor = "red";
+                     alert("Data Updated");
+               
                     
+                }else{
+                    alert("Data Not Updated");
                 }
               
 
@@ -2658,7 +2721,11 @@ function finalSave(id) {
         });
 }
 
-
+function checkupdationTrue()
+{
+    alert("data Updated");
+    
+}
  
 </script>
 <html>
@@ -2681,7 +2748,7 @@ function finalSave(id) {
             <!--DWLayoutDefaultTable-->
             <tr><td><%@include file="/layout/header.jsp" %></td></tr>
             <tr><td><%@include file="/layout/menu.jsp" %></td></tr>
-            <tr><td><center><input type="button" id="editrecord" value="Edit Records" onclick="makeAllEditable()"><input type="button" id="viewrecord" value="View Records" onclick="makeAllEditable()"></center></td> 
+            <tr><td><center><input type="button" id="editrecord" value="Edit Records" onclick="makeAllEditable()"></center></td> 
            </tr>
             <tr>
                 <td>
@@ -3306,7 +3373,7 @@ function finalSave(id) {
                                                         <input class="button" type="button" id="EDIT1" name="task" value="Edit"  onclick="makeEditable2(id)" />
                                                         <input class="button" type="submit" id="DELETE1" name="task" value="Delete" disabled>
                                                        -->
-                                                        <input class="button" type="submit" name="task" id="SAVENEW1" value="Save" onclick="setStatus(id)" disabled>
+                                                        <input class="button" type="button" name="task" id="SAVENEW1" value="Save" onclick="setStatus(id)" disabled>
                                                 </tr>
                                                 <%-- These hidden fields "lowerLimit", "noOfRowsTraversed", and "clickedButton" belong to form of table. --%>
                                                 <input type="hidden" name="lowerLimit" value="${lowerLimit}">
@@ -3534,7 +3601,7 @@ function finalSave(id) {
 <!--                   
                     <input type="button" id="SaveupdateDetails" name="task" value="SaveupdateDetails" onclick="submitForms()">-->
                       
-                    <input type="button" id="SaveFinal" name="task" value="Final" onclick="finalSave()">
+<input type="button" id="SaveFinal" name="task" value="Final" onclick="finalSave()" style="display: none">
                     </form></td></tr>
             <tr><td><%@include file="/layout/footer.jsp" %></td> </tr>
 

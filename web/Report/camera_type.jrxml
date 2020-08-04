@@ -91,7 +91,7 @@
 				<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="52" y="0" width="121" height="20" uuid="a7be6d72-0e2c-430a-a4f0-b57d54fd84bd"/>
+				<reportElement x="52" y="1" width="121" height="20" uuid="211d8af3-6b09-470b-8683-2fab5075ad34"/>
 				<box>
 					<pen lineWidth="1.0"/>
 					<topPen lineWidth="1.0"/>
@@ -99,7 +99,7 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

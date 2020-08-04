@@ -34,6 +34,7 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  */
 public class CameraController extends HttpServlet {
 
+    @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         int lowerLimit, noOfRowsTraversed, noOfRowsToDisplay = 5, noOfRowsInTable;
         ServletContext ctx = getServletContext();
@@ -51,7 +52,7 @@ String s=null;
        if (task == null) {
            task = "";
        }
-       
+        
        String searchCamIp = request.getParameter("searchCamIp");
           String searchcammake = request.getParameter("searchcammake");
            String searchjunction = request.getParameter("searchjunction");
@@ -453,6 +454,7 @@ camera.setImage_folder(imagePath);
         request.getRequestDispatcher("camera_view").forward(request, response);
     }
 
+    @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         doGet(request, response);
     }

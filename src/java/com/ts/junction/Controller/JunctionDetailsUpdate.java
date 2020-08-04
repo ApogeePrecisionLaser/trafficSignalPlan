@@ -1,4 +1,4 @@
-/*
+ /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -754,7 +754,8 @@ public class JunctionDetailsUpdate extends HttpServlet {
                               j_id_truncate=j_id;
               // int status=junctionModel.createTempTables();
                int status1=junctionModel.insertTempTables(j_id);
-              List<Junction> li=junctionModel.showTempData();
+
+               List<Junction> li=junctionModel.showTempData();
               int size=li.size();
               for(int i=0;i<size;i++){
               int id=li.get(i).getJunction_id();
@@ -3186,10 +3187,11 @@ if(task.equals("testingCheck"))
                     pchecklistStored.clear();
                     pchecklist.clear();
                 }
+                boolean p=false;
                 if (plan_id_value_final == 0) {
                     if (plan_id_value_final == 0) {
                         // validation was successful so now insert record.
-                        planDetailModel.insertRecordMapNewPlanId(planDetails, planCheck);
+                       p= planDetailModel.insertRecordMapNewPlanId(planDetails, planCheck);
                     }
                     // validation was successful so now insert record.
 
@@ -3199,14 +3201,23 @@ if(task.equals("testingCheck"))
                         if(planDetails.getPlan_id()==plan_id_value_final)
                         {
                             if(planDetails.getPlan_id()>0){
-                            planDetailModel.mapNewPlanId(planDetails, planDetails.getPlan_id()); 
+                           p= planDetailModel.mapNewPlanId(planDetails, planDetails.getPlan_id()); 
                         }
                         }else{
-                        planDetailModel.mapNewPlanId(planDetails, plan_id_value_final);
+                       p= planDetailModel.mapNewPlanId(planDetails, plan_id_value_final);
                         }
                     } catch (SQLException ex) {
                         Logger.getLogger(PlanDetailsController.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                }
+                String message="";
+                if(p==true)
+                {
+                    message="Plan Data Inserted";
+                     request.setAttribute("message_plan", message);
+                }else{
+                 message="Plan Data Not Inserted";
+                     request.setAttribute("message_plan", message);
                 }
             } catch (Exception e) {
                 System.out.println("Exception in plan updation :"+e);
@@ -3513,12 +3524,14 @@ if(task.equals("save_final"))
                 
                // int j_id=Integer.parseInt(request.getParameter("id"));
                int j_id=j_id_truncate;
-              // j_id=15;
+               int status2=0;
+              //int j_id=15;
               // int status=junctionModel.createTempTables();
                int status1=junctionModel.UpdateOriginalTables(j_id);
                if(status1>0)
                {
-               int status2=junctionModel.deleteTempTables(j_id);
+               //int status2=junctionModel.deleteTempTables(j_id);
+                    status2=junctionModel.updateProgramVersion(j_id);
                }
 //              List<Junction> li=junctionModel.showTempData();
 //              int size=li.size();
@@ -3527,8 +3540,43 @@ if(task.equals("save_final"))
 //                  System.out.println("id==="+id);
 //              }
                 jobj.put("status",status1);
-            
+            if(status1==22){
+                if(status2>0){
                 jobj.put("data", "Updated");
+                }
+            }else{ 
+             jobj.put("data", " Data not  Updated");
+            
+            }
+                PrintWriter out1 = response.getWriter();
+                out1.print(jobj.toString());
+                return;
+            } catch (JSONException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionDetailsUpdate.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+}
+        
+if(task.equals("deleteonload"))
+{
+     try {
+               
+                JSONObject jobj = new JSONObject();
+               
+               int j_id=j_id_truncate;
+               int status2=0;
+              
+               
+               int status1=junctionModel.DeleteOnloadTables(j_id);
+               if(status1>0)
+               {
+               jobj.put("data","Updated");
+               }
+ 
+                
+            
                 PrintWriter out1 = response.getWriter();
                 out1.print(jobj.toString());
                 return;
@@ -3561,7 +3609,7 @@ if(task.equals("save_final"))
         }
 
         request.setAttribute("junction_id", junction_id_selected1);
-
+ 
         System.out.println("datatata size  --" + list2.size());
         request.setAttribute("junction", list1);
         //      request.setAttribute("junctionlist", list1);
