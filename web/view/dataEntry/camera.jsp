@@ -422,7 +422,7 @@
  
                             <tr>
                                 <td align="center">
-                                    <form name="form3" method="POST" action="CameraCont" onsubmit="return verify()" enctype = "multipart/form-data" >
+                                    <form name="form3" method="POST" action="CameraCont" onsubmit="return verify()"   >
                                         <div STYLE="overflow: auto; width: 800px;padding:0px; margin: 0px">
                                             <table class="divv" border="1" border-color="blue">
                                                 <tr id="message">

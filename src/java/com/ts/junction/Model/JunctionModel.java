@@ -1,4 +1,4 @@
-  /*
+/*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
@@ -13,6 +13,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -133,7 +134,7 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-    
+
     public List<String> getDateTime() {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
@@ -143,14 +144,14 @@ public class JunctionModel extends HttpServlet {
             pstmt = connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-           // q = q.trim();
+            // q = q.trim();
             while (rset.next()) {    // move cursor from BOR to valid record.
                 String from_date = rset.getString("from_date");
                 String to_date = rset.getString("to_date");
-                
-                    list.add(from_date + "//" + to_date);
-                    count++;
-                 
+
+                list.add(from_date + "//" + to_date);
+                count++;
+
             }
             if (count == 0) {
                 list.add("No such state_name exists.");
@@ -160,21 +161,23 @@ public class JunctionModel extends HttpServlet {
         }
         return list;
     }
-public List<String> getJunc() {
+
+    public List<String> getJunc() {
         String query = "SELECT distinct junction_name from junction WHERE final_revision = 'VALID'";
         List<String> cameraMakeList = new ArrayList();
         try {
             PreparedStatement pstmt = connection.prepareStatement(query);
             ResultSet rset = pstmt.executeQuery();
-            while(rset.next()){
+            while (rset.next()) {
                 cameraMakeList.add(rset.getString("junction_name"));
             }
-            
-        }catch (Exception e) {
+
+        } catch (Exception e) {
             System.out.println("CameraModel getJunctionName() Error: " + e);
         }
         return cameraMakeList;
     }
+
     public List<String> getStateName(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
@@ -238,10 +241,10 @@ public List<String> getJunc() {
     }
 
     public int getNoOfRows(String searchjunction) {
-        
-        String query="select count(*) from junction WHERE final_revision= 'VALID' and "
-                + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='"+searchjunction+"')";
-                
+
+        String query = "select count(*) from junction WHERE final_revision= 'VALID' and "
+                + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='" + searchjunction + "')";
+
         int noOfRows = 0;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
@@ -253,535 +256,912 @@ public List<String> getJunc() {
         }
         return noOfRows;
     }
-     public List<JunctionPlanMap> getdateid(int j_id) {
+
+    public List<JunctionPlanMap> getdateid(int j_id) {
         List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
         PreparedStatement pstmt;
-        String query = "select  date_id from junction_plan_map where junction_id='"+j_id+"' and active='y' and date_id!='null'";
+        String query = "select  date_id from junction_plan_map where junction_id='" + j_id + "' and active='y' and date_id!='null'";
         try {
             pstmt = connection.prepareStatement(query);
-         //   pstmt.setString(1, state_name);
+            //   pstmt.setString(1, state_name);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-            
+
             while (rset.next()) {    // move cursor from BOR to valid record.
-              JunctionPlanMap jpm=new JunctionPlanMap();
-               jpm.setDate_id(rset.getInt("date_id"));
-                
-                    list.add(jpm);
-                    count++;
-                
+                JunctionPlanMap jpm = new JunctionPlanMap();
+                jpm.setDate_id(rset.getInt("date_id"));
+
+                list.add(jpm);
+                count++;
+
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-     public List<JunctionPlanMap> getJpm_id(int j_id) {
+
+    public List<JunctionPlanMap> getJpm_id(int j_id) {
         List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
         PreparedStatement pstmt;
-        String query = "select junction_plan_map_id from junction_plan_map_temp where junction_id='"+j_id+"'";
+        String query = "select junction_plan_map_id from junction_plan_map_temp where junction_id='" + j_id + "'";
         try {
             pstmt = connection.prepareStatement(query);
-         //   pstmt.setString(1, state_name);
+            //   pstmt.setString(1, state_name);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-            
+
             while (rset.next()) {    // move cursor from BOR to valid record.
-              JunctionPlanMap jpm=new JunctionPlanMap();
-               jpm.setJunction_plan_map_id(rset.getInt("junction_plan_map_id"));
-                
-                    list.add(jpm);
-                    count++;
-                
+                JunctionPlanMap jpm = new JunctionPlanMap();
+                jpm.setJunction_plan_map_id(rset.getInt("junction_plan_map_id"));
+
+                list.add(jpm);
+                count++;
+
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-     public List<PhaseData> getPhases_id(List<JunctionPlanMap> jpm_id) {
+
+    public List<PhaseData> getPhases_id(List<JunctionPlanMap> jpm_id) {
         List<PhaseData> list = new ArrayList<PhaseData>();
-       String asp="";
-        
-        for(int j=0;j<jpm_id.size();j++){
-            
-           String joinned=Integer.toString(jpm_id.get(j).getJunction_plan_map_id());
-           asp=asp.concat(joinned).concat(",");
+        String asp = "";
+
+        for (int j = 0; j < jpm_id.size(); j++) {
+
+            String joinned = Integer.toString(jpm_id.get(j).getJunction_plan_map_id());
+            asp = asp.concat(joinned).concat(",");
         }
-            asp=asp.substring(0, asp.length() - 1);
+        asp = asp.substring(0, asp.length() - 1);
         PreparedStatement pstmt;
-        String query = "select  distinct phase_id from phase_map where active='y' and junction_plan_map_id IN ("+asp+") ";
+        String query = "select  distinct phase_id from phase_map where active='y' and junction_plan_map_id IN (" + asp + ") ";
         try {
             pstmt = connection.prepareStatement(query);
-         //   pstmt.setString(1, state_name);
+            //   pstmt.setString(1, state_name);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-            
+
             while (rset.next()) {    // move cursor from BOR to valid record.
-              PhaseData pd=new PhaseData();
-               pd.setPhase_info_id(rset.getInt("phase_id"));
-                
-                    list.add(pd);
-                    count++;
-                
+                PhaseData pd = new PhaseData();
+                pd.setPhase_info_id(rset.getInt("phase_id"));
+
+                list.add(pd);
+                count++;
+
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-     public List<JunctionPlanMap> getPlanid(int j_id) {
+
+    public List<JunctionPlanMap> getPlanid(int j_id) {
         List<JunctionPlanMap> list = new ArrayList<JunctionPlanMap>();
         PreparedStatement pstmt;
-        String query = "select  plan_id from junction_plan_map where junction_id='"+j_id+"' and active='y'";
+        String query = "select  plan_id from junction_plan_map where junction_id='" + j_id + "' and active='y'";
         try {
             pstmt = connection.prepareStatement(query);
-         //   pstmt.setString(1, state_name);
+            //   pstmt.setString(1, state_name);
             ResultSet rset = pstmt.executeQuery();
             int count = 0;
-            
+
             while (rset.next()) {    // move cursor from BOR to valid record.
-              JunctionPlanMap jpm=new JunctionPlanMap();
-               jpm.setPlan_id(rset.getInt("plan_id"));
-                
-                    list.add(jpm);
-                    count++;
-                
+                JunctionPlanMap jpm = new JunctionPlanMap();
+                jpm.setPlan_id(rset.getInt("plan_id"));
+
+                list.add(jpm);
+                count++;
+
             }
-            
+
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
+
     public int createTempTables() {
-          int status = 0;
-        String query1="CREATE TEMPORARY TABLE junction_temp SELECT * FROM junction";
-        String query2="CREATE TEMPORARY TABLE junction_plan_map_temp SELECT * FROM junction_plan_map";
-        String query3="CREATE TEMPORARY TABLE day_detail_temp SELECT * FROM day_detail";
-        String query4="CREATE TEMPORARY TABLE date_detail_temp SELECT * FROM date_detail";
-        String query5="CREATE TEMPORARY TABLE plan_details_temp SELECT * FROM plan_details";
-        String query6="CREATE TEMPORARY TABLE phase_detail_temp SELECT * FROM phase_detail";
-        String query7="CREATE TEMPORARY TABLE phase_map_temp SELECT * FROM phase_map";
-        String query8="CREATE TEMPORARY TABLE city_temp SELECT * FROM city";
-            PreparedStatement ps;
+        int status = 0;
+        String query1 = "CREATE TEMPORARY TABLE junction_temp SELECT * FROM junction";
+        String query2 = "CREATE TEMPORARY TABLE junction_plan_map_temp SELECT * FROM junction_plan_map";
+        String query3 = "CREATE TEMPORARY TABLE day_detail_temp SELECT * FROM day_detail";
+        String query4 = "CREATE TEMPORARY TABLE date_detail_temp SELECT * FROM date_detail";
+        String query5 = "CREATE TEMPORARY TABLE plan_details_temp SELECT * FROM plan_details";
+        String query6 = "CREATE TEMPORARY TABLE phase_detail_temp SELECT * FROM phase_detail";
+        String query7 = "CREATE TEMPORARY TABLE phase_map_temp SELECT * FROM phase_map";
+        String query8 = "CREATE TEMPORARY TABLE city_temp SELECT * FROM city";
+        PreparedStatement ps;
         try {
-            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0;
+            int st2 = 0, st3 = 0, st4 = 0, st5 = 0, st6 = 0, st7 = 0, st8 = 0;
             ps = connection.prepareStatement(query1);
-              int st1=ps.executeUpdate();
-              if(st1>0){
-               status=1;
-               ps = connection.prepareStatement(query2);
-             st2=ps.executeUpdate();
-              }
-              if(st2>0){
-               status=2;
-               ps = connection.prepareStatement(query3);
-              st3=ps.executeUpdate();
-              }
-              if(st3>0){
-               status=3;
-               ps = connection.prepareStatement(query4);
-              st4=ps.executeUpdate();
-              }
-              if(st4>0){
-               status=4;
-               ps = connection.prepareStatement(query5);
-               st5=ps.executeUpdate();
-              }
-              if(st5>0){
-               status=5;
-               ps = connection.prepareStatement(query6);
-              st6=ps.executeUpdate();
-              }
-              if(st6>0){
-               status=6;
-               ps = connection.prepareStatement(query7);
-              st7=ps.executeUpdate();
-              }
-              if(st7>0){
-               status=7;
-               ps = connection.prepareStatement(query8);
-              st8=ps.executeUpdate();
-              }
-              
+            int st1 = ps.executeUpdate();
+            if (st1 > 0) {
+                status = 1;
+                ps = connection.prepareStatement(query2);
+                st2 = ps.executeUpdate();
+            }
+            if (st2 > 0) {
+                status = 2;
+                ps = connection.prepareStatement(query3);
+                st3 = ps.executeUpdate();
+            }
+            if (st3 > 0) {
+                status = 3;
+                ps = connection.prepareStatement(query4);
+                st4 = ps.executeUpdate();
+            }
+            if (st4 > 0) {
+                status = 4;
+                ps = connection.prepareStatement(query5);
+                st5 = ps.executeUpdate();
+            }
+            if (st5 > 0) {
+                status = 5;
+                ps = connection.prepareStatement(query6);
+                st6 = ps.executeUpdate();
+            }
+            if (st6 > 0) {
+                status = 6;
+                ps = connection.prepareStatement(query7);
+                st7 = ps.executeUpdate();
+            }
+            if (st7 > 0) {
+                status = 7;
+                ps = connection.prepareStatement(query8);
+                st8 = ps.executeUpdate();
+            }
+
         } catch (SQLException ex) {
-            status=0;
+            status = 0;
             Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-          
-      
-      
-        return status;
-    }
-        
-     public int UpdateOriginalTables(int j_id) throws SQLException  {
-          int status = 0;
-         
-          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
-         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
-        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
-        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
-        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
-        
-          JunctionPlanMap jpmbean=new JunctionPlanMap();
-            String query="SET FOREIGN_KEY_CHECKS=0";
-         String query1="truncate table traffic_signal_plan2.state_temp";
-       // String query2="insert into state SELECT * FROM traffic_signal_plan2.state_temp";
-         String query3="truncate table traffic_signal_plan2.district_temp";
-        //String query4="insert into district SELECT * FROM traffic_signal_plan2.district_temp";
-         String query5="truncate table traffic_signal_plan2.city_temp";
-        //String query6="insert into city SELECT * FROM traffic_signal_plan2.city_temp";
-        String query7="delete from traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
-        String query8="insert into junction SELECT * FROM traffic_signal_plan2.junction_temp where junction_id='"+j_id+"' and final_revision='valid'";
-        
-        String query9="truncate table traffic_signal_plan2.date_detail_temp";
-       // String query10="insert into date_detail SELECT * FROM traffic_signal_plan2.date_detail_temp";
-         String query11="truncate table traffic_signal_plan2.day_detail_temp";
-        //String query12="insert into day_detail SELECT * FROM traffic_signal_plan2.day_detail_temp";
-       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
-       String query13="delete from traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
-        String query14="insert into junction_plan_map SELECT * FROM traffic_signal_plan2.junction_plan_map_temp where junction_id='"+j_id+"' and active='Y'";
-        
-      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
-      String query15="truncate table traffic_signal_plan2.junction_plan_map_temp";
-       String query16="truncate table traffic_signal_plan2.junction_temp";
-        // String query15="truncate table traffic_signal_plan2.phase_map";
-        //String query16="insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp";
-        
-            PreparedStatement ps = null;
-         boolean autoCommit = connection.getAutoCommit();
-            try {
-                connection.setAutoCommit(false);
-                int test=0;
-            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
-            try{
-//              ps = connection.prepareStatement("SET GLOBAL FOREIGN_KEY_CHECKS=0");//query
-              ps = connection.prepareStatement(query);
-              ps.executeUpdate();
-            }catch(Exception e)
-            {
-                System.out.println("Exception key checks :"+e);
-            }
-           
-            ps = connection.prepareStatement(query1);
-             ps.executeUpdate();
-              status=1;
-            
-             
-//                  test=0;
-//               ps = connection.prepareStatement(query2);
-//                test=ps.executeUpdate();
-//              status=2;
-           
-//              if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query3);
-                test=ps.executeUpdate();
-              status=3;
-              
-//              }
-//              if(test>0){
-//                  test=0;
-//               ps = connection.prepareStatement(query4);
-//                test=ps.executeUpdate();
-//              status=4;
-//              
-//              }
 
- 
-//             if(test>0){
-                 test=0;
-                ps = connection.prepareStatement(query5);
-                 test=ps.executeUpdate();
-               status=7;
-//             }
-               
-      
-//              if(test>0){
-//                  test=0;
-//               ps = connection.prepareStatement(query6);
-//                test=ps.executeUpdate();
-//              status=6;
-//              
-//              }
-//               if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query7);
-                test=ps.executeUpdate();
-              status=6;
-              
-            //}
-                if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query8);
-                test=ps.executeUpdate();
-              status=6;
-              
-              }
-                 if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query9);
-                test=ps.executeUpdate();
-              status=6;
-              
-              }
-//                  if(test>0){
-//                  test=0;
-//               ps = connection.prepareStatement(query10);
-//                test=ps.executeUpdate();
-//              status=6;
-//              
-//              }
-//                   if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query11);
-                test=ps.executeUpdate();
-              status=6;
-              
-             // }
-//                    if(test>0){
-//                  test=0;
-//               ps = connection.prepareStatement(query12);
-//                test=ps.executeUpdate();
-//              status=6;
-//              
-//              }
-//                     if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query13);
-                test=ps.executeUpdate();
-              status=6;
-              
-              //}
-              test=1;
-                      if(test>0){
-                  test=0;
-               ps = connection.prepareStatement(query14);
-                test=ps.executeUpdate();
-              status=6;
-              
-              }
-  
-          List <JunctionPlanMap> plan_id=getPlanid(j_id);
-              if(test>0){
-                 
-                      for(int i=0;i<plan_id.size();i++){
-                           test=0;
-                ps = connection.prepareStatement("delete from traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
-               // ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
-             
-             
-                test=ps.executeUpdate();
-              status=7;
-                   }
-              }
-              test=1;
-              if(test>0){
-                  test=0;
-                   for(int i=0;i<plan_id.size();i++){
-                //ps = connection.prepareStatement("delete table traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
-                ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
-             
-             
-                test=ps.executeUpdate();
-              status=7;
-                   }
-                   if(test>0)
-                   {
-                                     ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
-                                     ps.executeUpdate();
-                   }
-              }
-          
-  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
-List <PhaseData> phase_id=getPhases_id(jpm_id);
-test=1;
-  if(test>0){
-      test=0;
-                   for(int i=0;i<phase_id.size();i++){
-                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
-               test=ps.executeUpdate();
-              status=9;
-                   }
-              }
-              if(test>0){
-               
-                   for(int i=0;i<phase_id.size();i++){
-                          test=0;
-                ps = connection.prepareStatement("insert into phase_detail SELECT * FROM traffic_signal_plan2.phase_detail_temp where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
-               test=ps.executeUpdate();
-              status=9;
-                   }
-                   if(test>0)
-                   {
-                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp");
-                      ps.executeUpdate();
-                   }
-              }
-              
-              
-              if(test>0){
-                   for(int i=0;i<jpm_id.size();i++){
-                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
-               test=ps.executeUpdate();
-              status=10;
-                   }
-              }
-              if(test>0){
-                   for(int i=0;i<jpm_id.size();i++){
-                ps = connection.prepareStatement("insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
-               test=ps.executeUpdate();
-              status=10;
-                   }
-                   if(test>0)
-                   {
-                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_map_temp");
-                        
-                   }
-              }
-                    if(test>0){
-                   // test=0;
-               ps = connection.prepareStatement(query15);
-                ps.executeUpdate();
-              status=8;
-              
-              }
-//              test=1;
-              if(test>0){
-               ps = connection.prepareStatement(query16);
-                ps.executeUpdate();
-              status=8;
-              
-              }
-                } catch (SQLException sqlEx) {
-                connection.rollback();
-                message = "Could NOT save data , some error.";
-                msgBgColor = COLOR_ERROR;
-                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
-            } finally {
-                ps.close();
-                connection.setAutoCommit(autoCommit);
-            }
-       
-          
-      
-                
-      
-      
         return status;
     }
-    
-        public int deleteTempTables(int j_id) throws SQLException  {
-          int status = 0;
-         
-          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
-         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
-        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
-        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
-        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
-        
-          JunctionPlanMap jpmbean=new JunctionPlanMap();
-           String query="SET FOREIGN_KEY_CHECKS=0";
-        String query1="truncate table traffic_signal_plan2.state_temp";
-        String query2="truncate table traffic_signal_plan2.district_temp";
-        String query3=" truncate table traffic_signal_plan2.city_temp";
-        String query4="truncate table traffic_signal_plan2.junction_temp";
-        
-        
-        String query5="truncate table traffic_signal_plan2.date_detail_temp";
-        String query6="truncate table traffic_signal_plan2.day_detail_temp";
-       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
-        String query7="truncate table traffic_signal_plan2.junction_plan_map_temp";
-        
-      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
-      // 
-       
-        String query8="truncate table traffic_signal_plan2.phase_map_temp";
-        
-            PreparedStatement ps = null;
-         boolean autoCommit = connection.getAutoCommit();
-            try {
-                connection.setAutoCommit(false);
-            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0,st0=0,st1=0;
+
+    public int getlastProgramVersionNo(int j_id) {
+        int p_no = 0;
+        PreparedStatement pstmt;
+        try {
+            pstmt = connection.prepareStatement("select program_version_no from traffic_signal_plan2.junction where final_revision='VALID' and junction_id=" + j_id);
+            ResultSet rset = pstmt.executeQuery();
+            rset.next();
+            p_no = Integer.parseInt(rset.getString(1));
+            System.out.println(p_no);
+        } catch (Exception e) {
+            System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
+        }
+        return p_no;
+    }
+
+    public int updateProgramVersion(int j_id) throws SQLException {
+        int row = 0;
+        String query = "";
+        int last_program_version = 0;
+        last_program_version = getlastProgramVersionNo(j_id);
+        last_program_version = last_program_version + 1;
+        if (last_program_version > 0) {
+            query = "update traffic_signal_plan2.junction set program_version_no=" + last_program_version + " where junction_id='" + j_id + "' and "
+                    + "  final_revision='VALID' ";
+        }
+        PreparedStatement ps = null;
+        boolean autoCommit = connection.getAutoCommit();
+        try {
+            connection.setAutoCommit(false);
+            int test = 0;
+
+            ps = connection.prepareStatement("SET FOREIGN_KEY_CHECKS=0");//query
+            ps.executeUpdate();
             ps = connection.prepareStatement(query);
             ps.executeUpdate();
-               //st0=ps.executeUpdate();
+            row = 1;
+        } catch (SQLException sqlEx) {
+            connection.rollback();
+            message = "Could NOT save data , some error.";
+            msgBgColor = COLOR_ERROR;
+            System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+        } finally {
+            ps.close();
+            connection.setAutoCommit(autoCommit);
+        }
+        return row;
+    }
+
+    public int UpdateOriginalTables(int j_id) throws SQLException {
+        int status = 0;
+
+        JunctionPlanMap jpmbean = new JunctionPlanMap();
+        String query = "SET FOREIGN_KEY_CHECKS=0";
+       // String query1 = "truncate table traffic_signal_plan2.state_temp";
+
+       // String query3 = "truncate table traffic_signal_plan2.district_temp";
+
+       // String query5 = "truncate table traffic_signal_plan2.city_temp";
+
+        String query7 = "truncate table traffic_signal_plan2.junction ";
+        String query8 = "insert into junction SELECT * FROM traffic_signal_plan2.junction_temp";
+
+        //String query9 = "truncate table traffic_signal_plan2.date_detail_temp";
+
+       // String query11 = "truncate table traffic_signal_plan2.day_detail_temp";
+
+        String query13 = "truncate table traffic_signal_plan2.junction_plan_map";
+        String query14 = "insert into junction_plan_map SELECT * FROM traffic_signal_plan2.junction_plan_map_temp";
+
+       // String query15 = "truncate table traffic_signal_plan2.junction_plan_map_temp";
+       // String query16 = "truncate table traffic_signal_plan2.junction_temp";
+        String query17 = "SET FOREIGN_KEY_CHECKS=1";
+
+        PreparedStatement ps = null;
+        boolean autoCommit = connection.getAutoCommit();
+        try {
+            connection.setAutoCommit(false);
+            int test = 0;
+
+            try {
+//              ps = connection.prepareStatement("SET GLOBAL FOREIGN_KEY_CHECKS=0");//query
+                ps = connection.prepareStatement(query);
+                ps.executeUpdate();
+                status = 1;
+            } catch (Exception e) {
+                System.out.println("Exception key checks :" + e);
+            }
+
+//            ps = connection.prepareStatement(query1);
+//            ps.executeUpdate();
+//            status = 2;
+//            ps = connection.prepareStatement(query3);
+//            test = ps.executeUpdate();
+//            status = 3;
+//            //  ResultSet rs = ps.executeQuery();
+//            ps = connection.prepareStatement(query5);
+//            test = ps.executeUpdate();
+//            status = 4;
+            ps = connection.prepareStatement(query7);
+            test = ps.executeUpdate();
+            status = 5;
+
+            ps = connection.prepareStatement(query8);
+            test = ps.executeUpdate();
+            status = 6;
+//            ps = connection.prepareStatement(query9);
+//            test = ps.executeUpdate();
+//            status = 7;
+//
+//            ps = connection.prepareStatement(query11);
+//            test = ps.executeUpdate();
+//
+//            status = 8;
+            ps = connection.prepareStatement(query13);
+            test = ps.executeUpdate();
+            status = 9;
+            ps = connection.prepareStatement(query14);
+            test = ps.executeUpdate();
+            status = 10;
+
+            ps = connection.prepareStatement("truncate traffic_signal_plan2.plan_details");
+            test = ps.executeUpdate();
+            status = 11;
+
+            ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp");
+            test = ps.executeUpdate();
+            status = 12;
+//            ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
+//            ps.executeUpdate();
+//            status = 13;
+
+            ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail");
+            test = ps.executeUpdate();
+            status = 14;
+
+            ps = connection.prepareStatement("insert into phase_detail SELECT * FROM traffic_signal_plan2.phase_detail_temp");
+            test = ps.executeUpdate();
+            status = 15;
+//            ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp");
+//            test = ps.executeUpdate();
+//            status = 16;
+
+            ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_map");
+            test = ps.executeUpdate();
+            status = 17;
+
+            ps = connection.prepareStatement("insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp");
+            test = ps.executeUpdate();
+            status = 18;
+//            ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_map_temp");
+//            test = ps.executeUpdate();
+//            status = 19;
+
+//            ps = connection.prepareStatement(query15);
+//            ps.executeUpdate();
+//            status = 20;
+//            ps = connection.prepareStatement(query16);
+//            ps.executeUpdate();
+//            status = 21;
+            ps = connection.prepareStatement(query17);
+            ps.executeUpdate();
+            status = 22;
+        } catch (SQLException sqlEx) {
+            connection.rollback();
+            message = "Could NOT save data , some error.";
+            msgBgColor = COLOR_ERROR;
+            System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+        } finally {
+            ps.close();
+            connection.setAutoCommit(autoCommit);
+        }
+
+        return status;
+    }
+
+    public int DeleteOnloadTables(int j_id) throws SQLException {
+        int status = 0;
+        JunctionPlanMap jpmbean = new JunctionPlanMap();
+        String query = "SET FOREIGN_KEY_CHECKS=0";
+        String query1 = "truncate table traffic_signal_plan2.state_temp";
+        String query2 = "truncate table traffic_signal_plan2.district_temp";
+        String query3 = "truncate table traffic_signal_plan2.city_temp";
+        String query4 = "truncate table traffic_signal_plan2.junction_temp ";
+        String query5 = "truncate table traffic_signal_plan2.date_detail_temp";
+        String query6 = "truncate table traffic_signal_plan2.day_detail_temp";
+        String query7 = "truncate table traffic_signal_plan2.junction_plan_map_temp";
+        String  query8 = "truncate table traffic_signal_plan2.junction_temp";
+        String query9 = "truncate table traffic_signal_plan2.phase_detail_temp";
+        String query10 = "truncate table traffic_signal_plan2.phase_map_temp";
+        String query11 = "truncate table traffic_signal_plan2.plan_details_temp";
+        String query12 = "SET FOREIGN_KEY_CHECKS=1";
+
+        PreparedStatement ps = null;
+        int count = 0;
+      //  boolean autoCommit = connection.getAutoCommit();
+        try {
+            connection.setAutoCommit(false);
+
+              //ps = connection.prepareStatement("SET GLOBAL FOREIGN_KEY_CHECKS=0");//query
+              ps = connection.prepareStatement(query);
+              ps.executeQuery();
+            //status=1;
+            ps=connection.prepareStatement(query1);
+            count=ps.executeUpdate();
+            connection.commit();                      
+  
+           System.out.println("com.ts.junction.Model.JunctionModel.DeleteOnloadTables()-- "+count);
+           // connection.commit();
+            if (count == 0) {
+                //connection.commit();
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query1);
+//                count=ps.executeUpdate();
+            }
+
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query2);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query3);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query4);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query5);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query6);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query7);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query8);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query9);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query10);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query11);
+//                count=ps.executeUpdate();
+//            }
+//
+//            if (count > 0) {
+//                ps = null;
+//                count = 0;
+//                ps = connection.prepareStatement(query12);
+//                count=ps.executeUpdate();
+//            }
+
+//            ps = connection.prepareStatement(query2);
+//            ps.executeUpdate();
+//             status=3;
+//              
+//          
+//            ps = connection.prepareStatement(query3);
+//             ps.executeUpdate();
+//             status=4;
+//              
+//          
+//            ps = connection.prepareStatement(query4);
+//            ps.executeUpdate();
+//             status=5;
+//              
+//            
+//            ps = connection.prepareStatement(query5);
+//           ps.executeUpdate();
+//             status=6;
+//              
+//            
+//            ps = connection.prepareStatement(query6);
+//            ps.executeUpdate();
+//             status=7;
+//              
+//            
+//            ps = connection.prepareStatement(query7);
+//  ps.executeUpdate();
+//             status=8;
+//              
+//          
+//            ps = connection.prepareStatement(query8);
+//            ps.executeUpdate();
+//             status=9;
+//              
+//           
+//            ps = connection.prepareStatement(query9);
+//           ps.executeUpdate();
+//             status=10;
+//              
+//           
+//            ps = connection.prepareStatement(query10);
+//            ps.executeUpdate();
+//             status=11;
+//              
+//          
+//            ps = connection.prepareStatement(query11);
+//            ps.executeUpdate();
+//             status=12;
+//            ps = connection.prepareStatement(query12);
+//            ps.executeUpdate();
+//             status=13;
+            System.out.println("delete all tables " + status);
+            if(count>0){
+                connection.commit();
+                message = "Data saved!";
+                msgBgColor = COLOR_OK;
+            }else{
+                connection.rollback();
+                message = "Error!";
+                msgBgColor = COLOR_ERROR;
+            }
+
+        } catch (SQLException sqlEx) {
+            connection.rollback();
+            
+            System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+        } finally {
+           connection.close();           
+        }
+
+        return count;
+    }
+
+//     public int UpdateOriginalTables(int j_id) throws SQLException  {
+//          int status = 0;
+//         
+//          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+//         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+//        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+//        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//        
+//          JunctionPlanMap jpmbean=new JunctionPlanMap();
+//            String query="SET FOREIGN_KEY_CHECKS=0";
+//         String query1="truncate table traffic_signal_plan2.state_temp";
+//       // String query2="insert into state SELECT * FROM traffic_signal_plan2.state_temp";
+//         String query3="truncate table traffic_signal_plan2.district_temp";
+//        //String query4="insert into district SELECT * FROM traffic_signal_plan2.district_temp";
+//         String query5="truncate table traffic_signal_plan2.city_temp";
+//        //String query6="insert into city SELECT * FROM traffic_signal_plan2.city_temp";
+//                String query7="truncate table traffic_signal_plan2.junction ";
+//        String query8="insert into junction SELECT * FROM traffic_signal_plan2.junction_temp";
+////        String query7="delete from traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
+////        String query8="insert into junction SELECT * FROM traffic_signal_plan2.junction_temp where junction_id='"+j_id+"' and final_revision='valid'";
+//        
+//        String query9="truncate table traffic_signal_plan2.date_detail_temp";
+//       // String query10="insert into date_detail SELECT * FROM traffic_signal_plan2.date_detail_temp";
+//         String query11="truncate table traffic_signal_plan2.day_detail_temp";
+//        //String query12="insert into day_detail SELECT * FROM traffic_signal_plan2.day_detail_temp";
+//       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+//        String query13="truncate table traffic_signal_plan2.junction_plan_map";
+//        String query14="insert into junction_plan_map SELECT * FROM traffic_signal_plan2.junction_plan_map_temp";
+////       String query13="delete from traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
+////        String query14="insert into junction_plan_map SELECT * FROM traffic_signal_plan2.junction_plan_map_temp where junction_id='"+j_id+"' and active='Y'";
+//        
+//      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+//      String query15="truncate table traffic_signal_plan2.junction_plan_map_temp";
+//       String query16="truncate table traffic_signal_plan2.junction_temp";
+//        // String query15="truncate table traffic_signal_plan2.phase_map";
+//        //String query16="insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp";
+//        
+//            PreparedStatement ps = null;
+//         boolean autoCommit = connection.getAutoCommit();
+//            try {
+//                connection.setAutoCommit(false);
+//                int test=0;
+//            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
+//            try{
+////              ps = connection.prepareStatement("SET GLOBAL FOREIGN_KEY_CHECKS=0");//query
+//              ps = connection.prepareStatement(query);
+//              ps.executeUpdate();
+//            }catch(Exception e)
+//            {
+//                System.out.println("Exception key checks :"+e);
+//            }
+//           
+//            ps = connection.prepareStatement(query1);
+//             ps.executeUpdate();
+//              status=1;
+//            
+//             
+////                  test=0;
+////               ps = connection.prepareStatement(query2);
+////                test=ps.executeUpdate();
+////              status=2;
+//           
+////              if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query3);
+//                test=ps.executeUpdate();
+//              status=3;
+//              
+////              }
+////              if(test>0){
+////                  test=0;
+////               ps = connection.prepareStatement(query4);
+////                test=ps.executeUpdate();
+////              status=4;
+////              
+////              }
+//
+// 
+////             if(test>0){
+//                 test=0;
+//                ps = connection.prepareStatement(query5);
+//                 test=ps.executeUpdate();
+//               status=7;
+////             }
+//               
+//      
+////              if(test>0){
+////                  test=0;
+////               ps = connection.prepareStatement(query6);
+////                test=ps.executeUpdate();
+////              status=6;
+////              
+////              }
+////               if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query7);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//            //}
+////                if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query8);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+////              }
+////                 if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query9);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+////              }
+////                  if(test>0){
+////                  test=0;
+////               ps = connection.prepareStatement(query10);
+////                test=ps.executeUpdate();
+////              status=6;
+////              
+////              }
+////                   if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query11);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//             // }
+////                    if(test>0){
+////                  test=0;
+////               ps = connection.prepareStatement(query12);
+////                test=ps.executeUpdate();
+////              status=6;
+////              
+////              }
+////                     if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query13);
+//                test=ps.executeUpdate();
+//              status=6;
+//              
+//              //}
+////              test=1;
+////                      if(test>0){
+//                  test=0;
+//               ps = connection.prepareStatement(query14);
+//                test=ps.executeUpdate();
+////              status=6;
+////              
+////              }
+//   List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//            
+//                 
+//                  
+//                       
+//                ps = connection.prepareStatement("truncate traffic_signal_plan2.plan_details");
+//               // ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+//             
+//             
+//                test=ps.executeUpdate();
+//            
+//            
+////          List <JunctionPlanMap> plan_id=getPlanid(j_id);
+////              if(test>0){
+////                 
+////                      for(int i=0;i<plan_id.size();i++){
+////                           test=0;
+////                ps = connection.prepareStatement("delete from traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+////               // ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+////             
+////             
+////                test=ps.executeUpdate();
+////              status=7;
+////                   }
+////              }
+//              test=1;
+//              if(test>0){
+//                  test=0;
+//                   for(int i=0;i<plan_id.size();i++){
+//                //ps = connection.prepareStatement("delete table traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+//                ps = connection.prepareStatement("insert into plan_details SELECT * FROM traffic_signal_plan2.plan_details_temp where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+//             
+//             
+//                test=ps.executeUpdate();
+//              status=7;
+//                   }
+//                   if(test>0)
+//                   {
+//                                     ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
+//                                     ps.executeUpdate();
+//                   }
+//              }
+//          
+//  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+//List <PhaseData> phase_id=getPhases_id(jpm_id);
+//test=1;
+//  if(test>0){
+//      test=0;
+//                   for(int i=0;i<phase_id.size();i++){
+//                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+//               test=ps.executeUpdate();
+//              status=9;
+//                   }
+//              }
+//              if(test>0){
+//               
+//                   for(int i=0;i<phase_id.size();i++){
+//                          test=0;
+//                ps = connection.prepareStatement("insert into phase_detail SELECT * FROM traffic_signal_plan2.phase_detail_temp where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+//               test=ps.executeUpdate();
+//              status=9;
+//                   }
+//                   if(test>0)
+//                   {
+//                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp");
+//                      ps.executeUpdate();
+//                   }
+//              }
+//              
+//              
+//              if(test>0){
+//                   for(int i=0;i<jpm_id.size();i++){
+//                ps = connection.prepareStatement("delete from traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+//               test=ps.executeUpdate();
+//              status=10;
+//                   }
+//              }
+//              if(test>0){
+//                   for(int i=0;i<jpm_id.size();i++){
+//                ps = connection.prepareStatement("insert into phase_map SELECT * FROM traffic_signal_plan2.phase_map_temp where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+//               test=ps.executeUpdate();
+//              status=10;
+//                   }
+//                   if(test>0)
+//                   {
+//                        ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_map_temp");
+//                        
+//                   }
+//              }
+//                    if(test>0){
+//                   // test=0;
+//               ps = connection.prepareStatement(query15);
+//                ps.executeUpdate();
+//              status=8;
+//              
+//              }
+////              test=1;
+//              if(test>0){
+//               ps = connection.prepareStatement(query16);
+//                ps.executeUpdate();
+//              status=8;
+//              
+//              }
+//                } catch (SQLException sqlEx) {
+//                connection.rollback();
+//                message = "Could NOT save data , some error.";
+//                msgBgColor = COLOR_ERROR;
+//                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+//            } finally {
+//                ps.close();
+//                connection.setAutoCommit(autoCommit);
+//            }
+//       
+//          
+//      
+//                
+//      
+//      
+//        return status;
+//    }
+    public int deleteTempTables(int j_id) throws SQLException {
+        int status = 0;
+
+        //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+        // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+        JunctionPlanMap jpmbean = new JunctionPlanMap();
+        String query = "SET FOREIGN_KEY_CHECKS=0";
+        String query1 = "truncate table traffic_signal_plan2.state_temp";
+        String query2 = "truncate table traffic_signal_plan2.district_temp";
+        String query3 = " truncate table traffic_signal_plan2.city_temp";
+        String query4 = "truncate table traffic_signal_plan2.junction_temp";
+
+        String query5 = "truncate table traffic_signal_plan2.date_detail_temp";
+        String query6 = "truncate table traffic_signal_plan2.day_detail_temp";
+        //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+        String query7 = "truncate table traffic_signal_plan2.junction_plan_map_temp";
+
+        //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+        // 
+        String query8 = "truncate table traffic_signal_plan2.phase_map_temp";
+
+        PreparedStatement ps = null;
+        boolean autoCommit = connection.getAutoCommit();
+        try {
+            connection.setAutoCommit(false);
+            int st2 = 0, st3 = 0, st4 = 0, st5 = 0, st6 = 0, st7 = 0, st8 = 0, st9 = 0, st10 = 0, st11 = 0, st12 = 0, st13 = 0, st14 = 0, st0 = 0, st1 = 0;
+            ps = connection.prepareStatement(query);
+            ps.executeUpdate();
+            //st0=ps.executeUpdate();
 //               if(st0>0){
             ps = connection.prepareStatement(query1);
             ps.executeUpdate();
-              // st1=ps.executeUpdate();
-              status=1;
+            // st1=ps.executeUpdate();
+            status = 1;
 //               }
 //              if(st1>0){
-               ps = connection.prepareStatement(query2);
-               ps.executeUpdate();
-                //st2=ps.executeUpdate();
+            ps = connection.prepareStatement(query2);
+            ps.executeUpdate();
+            //st2=ps.executeUpdate();
 //              status=2;
 //              
 //              }
 //              if(st2>0){
-               ps = connection.prepareStatement(query3);
+            ps = connection.prepareStatement(query3);
 //                st3=ps.executeUpdate();
 //              status=3;
-              ps.executeUpdate();
+            ps.executeUpdate();
 //              }
 //              if(st3>0){
-               ps = connection.prepareStatement(query4);
-               ps.executeUpdate();
+            ps = connection.prepareStatement(query4);
+            ps.executeUpdate();
 //                st4=ps.executeUpdate();
 //              status=4;
 //              
 //              }
 
- 
 //             if(st4>0){
-                ps = connection.prepareStatement(query5);
-                ps.executeUpdate();
-                // st5=ps.executeUpdate();
+            ps = connection.prepareStatement(query5);
+            ps.executeUpdate();
+            // st5=ps.executeUpdate();
 //               status=7;
 //             }
-               
-      
+
 //                ps.executeUpdate();
-               ps = connection.prepareStatement(query6);
-               ps.executeUpdate();
+            ps = connection.prepareStatement(query6);
+            ps.executeUpdate();
 //                st6=ps.executeUpdate();
 //              status=6;
 //              
 //              }
-  
-          List <JunctionPlanMap> plan_id=getPlanid(j_id);
+
+            List<JunctionPlanMap> plan_id = getPlanid(j_id);
 //              if(st6>0){
-                   //for(int i=0;i<plan_id.size();i++){
-                ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
-             
-             
-                st7=ps.executeUpdate();
-              status=7;
-                  // }
+            //for(int i=0;i<plan_id.size();i++){
+            ps = connection.prepareStatement("truncate table traffic_signal_plan2.plan_details_temp");
+
+            st7 = ps.executeUpdate();
+            status = 7;
+            // }
 //              }
 //              if(st7>0){
-               ps = connection.prepareStatement(query8);
-               ps.executeUpdate();
+            ps = connection.prepareStatement(query8);
+            ps.executeUpdate();
 //                st8=ps.executeUpdate();
 //              status=8;
 //              
 //              }
-  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
-List <PhaseData> phase_id=getPhases_id(jpm_id);
+            List<JunctionPlanMap> jpm_id = getJpm_id(j_id);
+            List<PhaseData> phase_id = getPhases_id(jpm_id);
 //              if(st8>0){
-                   //for(int i=0;i<phase_id.size();i++){
-                ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp ");
-                ps.executeUpdate();
+            //for(int i=0;i<phase_id.size();i++){
+            ps = connection.prepareStatement("truncate table traffic_signal_plan2.phase_detail_temp ");
+            ps.executeUpdate();
 //               st9=ps.executeUpdate();
 //              status=9;
 //                   }
             //}
-              
+
 //              if(st9>0){
 //                   for(int i=0;i<jpm_id.size();i++){
 //               // ps = connection.prepareStatement();
@@ -789,153 +1169,341 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
 ////               st10=ps.executeUpdate();
 ////              status=10;
 //                  }
-              //}
-                } catch (SQLException sqlEx) {
-                connection.rollback();
-                message = "Could NOT save data , some error.";
-                msgBgColor = COLOR_ERROR;
-                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
-            } finally {
-                ps.close();
-                connection.setAutoCommit(autoCommit);
-            }
-       
-          
-      
-                
-      
-      
+            //}
+        } catch (SQLException sqlEx) {
+            connection.rollback();
+            message = "Could NOT save data , some error.";
+            msgBgColor = COLOR_ERROR;
+            System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+        } finally {
+            ps.close();
+            connection.setAutoCommit(autoCommit);
+        }
+
         return status;
     }
-     
-     
-     public int insertTempTables(int j_id)  {
-        
-          int status = 0;
-          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
-         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+
+//     
+//     public int insertTempTables(int j_id)  {
+//        
+//          int status = 0;
+//          //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+//         // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+//        //  List <PhaseData> phase_id=getPhases_id(jpm_id);
+//        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//        //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//         // JunctionPlanMap jpmbean=new JunctionPlanMap();
+//        String query1="insert into state_temp SELECT * FROM traffic_signal_plan2.state";
+//        String query2="insert into district_temp SELECT * FROM traffic_signal_plan2.district";
+//        String query3="insert into city_temp SELECT * FROM traffic_signal_plan2.city";
+//        String query4="insert into junction_temp SELECT * FROM traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
+//        
+//        
+//        String query5="insert into date_detail_temp SELECT * FROM traffic_signal_plan2.date_detail";
+//        String query6="insert into day_detail_temp SELECT * FROM traffic_signal_plan2.day_detail";
+//       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
+//        String query8="insert into junction_plan_map_temp SELECT * FROM traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
+//        
+//      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
+//      // 
+//       
+//        String query9="insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map";
+//        
+//            PreparedStatement ps;
+//        try {
+//             connection.setAutoCommit(false);
+//            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
+//            ps = connection.prepareStatement(query1);
+//              int st1=ps.executeUpdate();
+//              status=1;
+//              if(st1>0){
+//               ps = connection.prepareStatement(query2);
+//                st2=ps.executeUpdate();
+//              status=2;
+//              
+//              }
+//              if(st2>0){
+//               ps = connection.prepareStatement(query3);
+//                st3=ps.executeUpdate();
+//              status=3;
+//              
+//              }
+//              if(st3>0){
+//               ps = connection.prepareStatement(query4);
+//                st4=ps.executeUpdate();
+//              status=4;
+//              
+//              }
+//
+// 
+//             if(st4>0){
+//                ps = connection.prepareStatement(query5);
+//                 st5=ps.executeUpdate();
+//               status=7;
+//             }
+//               
+//      
+//              if(st5>0){
+//               ps = connection.prepareStatement(query6);
+//                st6=ps.executeUpdate();
+//              status=6;
+//              
+//              }
+//  
+//          List <JunctionPlanMap> plan_id=getPlanid(j_id);
+//              if(st6>0){
+//                   for(int i=0;i<plan_id.size();i++){
+//                ps = connection.prepareStatement("insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
+//             
+//             
+//                st7=ps.executeUpdate();
+//              status=7;
+//                   }
+//              }
+//              if(st7>0){
+//               ps = connection.prepareStatement(query8);
+//                st8=ps.executeUpdate();
+//              status=8;
+//              
+//              }
+//  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
+//List <PhaseData> phase_id=getPhases_id(jpm_id);
+//              if(st8>0){
+//                   for(int i=0;i<phase_id.size();i++){
+//                ps = connection.prepareStatement("insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
+//               st9=ps.executeUpdate();
+//              status=9;
+//                   }
+//              }
+//              
+//              if(st9>0){
+//                   for(int i=0;i<jpm_id.size();i++){
+//                ps = connection.prepareStatement("insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
+//               st10=ps.executeUpdate();
+//              status=10;
+//                   }
+//              }
+//              if(status>=10){
+//              connection.commit();
+//              }else{
+//              connection.rollback();
+//              }
+//        } catch (SQLException ex) {
+//            Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//          
+//      
+//                
+//      
+//      
+//        return status;
+//    }
+    public int insertTempTables(int j_id) {
+
+       
+        int status = 0;
+        //List <JunctionPlanMap> jpm_id=getdateid(j_id);
+        // List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
         //  List <PhaseData> phase_id=getPhases_id(jpm_id);
         //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
         //  List <JunctionPlanMap> plan_id=getPlanid(j_id);
-          JunctionPlanMap jpmbean=new JunctionPlanMap();
-        String query1="insert into state_temp SELECT * FROM traffic_signal_plan2.state";
-        String query2="insert into district_temp SELECT * FROM traffic_signal_plan2.district";
-        String query3="insert into city_temp SELECT * FROM traffic_signal_plan2.city";
-        String query4="insert into junction_temp SELECT * FROM traffic_signal_plan2.junction where junction_id='"+j_id+"' and final_revision='valid'";
-        
-        
-        String query5="insert into date_detail_temp SELECT * FROM traffic_signal_plan2.date_detail";
-        String query6="insert into day_detail_temp SELECT * FROM traffic_signal_plan2.day_detail";
-       //  String query7="insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details";
-        String query8="insert into junction_plan_map_temp SELECT * FROM traffic_signal_plan2.junction_plan_map where junction_id='"+j_id+"' and active='Y'";
-        
-      //  String query7="insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail";
-      // 
-       
-        String query9="insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map";
-        
-            PreparedStatement ps;
-        try {
-             connection.setAutoCommit(false);
-            int st2=0,st3=0,st4=0,st5=0,st6=0,st7=0,st8=0,st9=0,st10=0,st11=0,st12=0,st13=0,st14=0;
-            ps = connection.prepareStatement(query1);
-              int st1=ps.executeUpdate();
-              status=1;
-              if(st1>0){
-               ps = connection.prepareStatement(query2);
-                st2=ps.executeUpdate();
-              status=2;
-              
-              }
-              if(st2>0){
-               ps = connection.prepareStatement(query3);
-                st3=ps.executeUpdate();
-              status=3;
-              
-              }
-              if(st3>0){
-               ps = connection.prepareStatement(query4);
-                st4=ps.executeUpdate();
-              status=4;
-              
-              }
+        // JunctionPlanMap jpmbean=new JunctionPlanMap();
 
- 
-             if(st4>0){
-                ps = connection.prepareStatement(query5);
-                 st5=ps.executeUpdate();
-               status=7;
-             }
-               
-      
-              if(st5>0){
-               ps = connection.prepareStatement(query6);
-                st6=ps.executeUpdate();
-              status=6;
-              
-              }
-  
-          List <JunctionPlanMap> plan_id=getPlanid(j_id);
-              if(st6>0){
-                   for(int i=0;i<plan_id.size();i++){
-                ps = connection.prepareStatement("insert into plan_details_temp SELECT * FROM traffic_signal_plan2.plan_details where plan_id='"+plan_id.get(i).getPlan_id()+"'");
-             
-             
-                st7=ps.executeUpdate();
-              status=7;
-                   }
-              }
-              if(st7>0){
-               ps = connection.prepareStatement(query8);
-                st8=ps.executeUpdate();
-              status=8;
-              
-              }
-  List <JunctionPlanMap> jpm_id=getJpm_id(j_id);
-List <PhaseData> phase_id=getPhases_id(jpm_id);
-              if(st8>0){
-                   for(int i=0;i<phase_id.size();i++){
-                ps = connection.prepareStatement("insert into phase_detail_temp SELECT * FROM traffic_signal_plan2.phase_detail where phase_info_id='"+phase_id.get(i).getPhase_info_id()+"'");
-               st9=ps.executeUpdate();
-              status=9;
-                   }
-              }
-              
-              if(st9>0){
-                   for(int i=0;i<jpm_id.size();i++){
-                ps = connection.prepareStatement("insert into phase_map_temp SELECT * FROM traffic_signal_plan2.phase_map where junction_plan_map_id='"+jpm_id.get(i).getJunction_plan_map_id()+"'");
-               st10=ps.executeUpdate();
-              status=10;
-                   }
-              }
-              if(status>=10){
-              connection.commit();
-              }else{
-              connection.rollback();
-              }
+        String queryT1 = "truncate state_temp";
+        String queryT2 = "truncate district_temp";
+        String queryT3 = "truncate city_temp";
+        String queryT4 = "truncate junction_temp ";
+        String queryT5 = "truncate date_detail_temp";
+        String queryT6 = "truncate day_detail_temp";
+        String queryT7 = "truncate junction_plan_map_temp";
+        String queryT8 = "truncate phase_detail_temp";
+        String queryT9 = "truncate phase_map_temp";
+        String queryT10 = "truncate plan_details_temp";
+
+        String query1 = "insert into state_temp SELECT * FROM state";
+        String query2 = "insert into district_temp SELECT * FROM district";
+        String query3 = "insert into city_temp SELECT * FROM city";
+        String query4 = "insert into junction_temp SELECT * FROM junction";
+        String query5 = "insert into date_detail_temp SELECT * FROM date_detail";
+        String query6 = "insert into day_detail_temp SELECT * FROM day_detail";
+        String query7 = "insert into phase_detail_temp SELECT * FROM phase_detail";
+        String query8 = "insert into plan_details_temp SELECT * FROM plan_details";
+        String query9 = "insert into junction_plan_map_temp SELECT * FROM junction_plan_map";
+        String query10 = "insert into phase_map_temp SELECT * FROM phase_map";
+
+        
+        try {
+            //connection.setAutoCommit(false);
+            int count = 0, rowsAffected = 0;
+
+            PreparedStatement psmt;
+            String query = " set foreign_key_checks=0 ";
+            psmt = connection.prepareStatement(query);
+            psmt.executeQuery();
+
+            for (int i = 1; i <= 10; i++) {
+                psmt = null;
+                String queryAll = "";
+                if (i == 1) {
+                    queryAll = queryT1;
+                }
+                if (i == 2) {
+                    queryAll = queryT2;
+                }
+                if (i == 3) {
+                    queryAll = queryT3;
+                }
+                if (i == 4) {
+                    queryAll = queryT4;
+                }
+                if (i == 5) {
+                    queryAll = queryT5;
+                }
+                if (i == 6) {
+                    queryAll = queryT6;
+                }
+                if (i == 7) {
+                    queryAll = queryT7;
+                }
+                if (i == 8) {
+                    queryAll = queryT8;
+                }
+                if (i == 9) {
+                    queryAll = queryT9;
+                }
+                if (i == 10) {
+                    queryAll = queryT10;
+                }
+                psmt = connection.prepareStatement(queryAll);
+                rowsAffected = psmt.executeUpdate();
+                //System.out.println("com.ipms.ePass.model.WorkTypeModel.deleteRecord() -" + rowsAffected);
+            }
+
+            for (int j = 1; j <= 10; j++) {
+                psmt = null;
+                String queryAll="";
+                if (j == 1) {
+                    queryAll = query1;
+                }
+                if (j == 2) {
+                    queryAll = query2;
+                }
+                if (j == 3) {
+                    queryAll = query3;
+                }
+                if (j == 4) {
+                    queryAll = query4;
+                }
+                if (j == 5) {
+                    queryAll = query5;
+                }
+                if (j == 6) {
+                    queryAll = query6;
+                }
+                if (j == 7) {
+                    queryAll = query7;
+                }
+                if (j == 8) {
+                    queryAll = query8;
+                }
+                if (j == 9) {
+                    queryAll = query9;
+                }
+                if (j == 10) {
+                    queryAll = query10;
+                }
+                psmt = connection.prepareStatement(queryAll);
+                rowsAffected = psmt.executeUpdate();
+                
+                
+                System.out.println("com.ipms.ePass.model.WorkTypeModel.deleteRecord() 1111 -" + rowsAffected);
+            }
+            
+            if(rowsAffected>0){
+                status = 10;
+            }
+            //connection.commit();
+
+//            ps = connection.prepareStatement(query1);
+//            int st1 = ps.executeUpdate();
+//            
+//            if (st1 > 0) {
+//                ps = connection.prepareStatement(query2);
+//                st2 = ps.executeUpdate();
+//                status = 2;
+//
+//            }
+//            if (st2 > 0) {
+//                ps = connection.prepareStatement(query3);
+//                st3 = ps.executeUpdate();
+//                status = 3;
+//
+//            }
+//            if (st3 > 0) {
+//                ps = connection.prepareStatement(query4);
+//                st4 = ps.executeUpdate();
+//                status = 4;
+//
+//            }
+//
+//            if (st4 > 0) {
+//                ps = connection.prepareStatement(query5);
+//                st5 = ps.executeUpdate();
+//                status = 5;
+//
+//            }
+//            if (st5 > 0) {
+//                ps = connection.prepareStatement(query6);
+//                st6 = ps.executeUpdate();
+//                status = 6;
+//
+//            }
+//            if (st6 > 0) {
+//                ps = connection.prepareStatement(query7);
+//                st7 = ps.executeUpdate();
+//                status = 7;
+//
+//            }
+//            if (st7 > 0) {
+//                ps = connection.prepareStatement(query8);
+//                st8 = ps.executeUpdate();
+//                status = 8;
+//
+//            }
+//            if (st8 > 0) {
+//                ps = connection.prepareStatement(query9);
+//                st9 = ps.executeUpdate();
+//                status = 9;
+//
+//            }
+//            if (st9 > 0) {
+//                ps = connection.prepareStatement(query10);
+//                st10 = ps.executeUpdate();
+//                status = 10;
+//
+//            }
+//            if (status >= 10) {
+//                connection.commit();
+//            } else {
+//                connection.rollback();
+//            }
         } catch (SQLException ex) {
             Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
         }
-          
-      
-                
-      
-      
+
         return status;
     }
-     
-     
-     public List<Junction> showTempData() {
+
+    public List<Junction> showTempData() {
         List<Junction> list = new ArrayList<Junction>();
         try {
             String query = "SELECT junction_id from junction_temp WHERE final_revision= 'VALID'";
-                   
-             
+
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 Junction junction = new Junction();
                 junction.setJunction_id(rset.getInt("junction_id"));
-               
+
                 list.add(junction);
             }
 
@@ -944,9 +1512,9 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         }
         return list;
     }
-    
-      public int getNoOfRows() {
-        
+
+    public int getNoOfRows() {
+
         int noOfRows = 0;
         try {
             ResultSet rset = connection.prepareStatement("select count(*) from junction WHERE final_revision= 'VALID' ").executeQuery();
@@ -958,7 +1526,6 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         }
         return noOfRows;
     }
-
 
     public int getCityID(String city_name) {
         int city_id = 0;
@@ -998,8 +1565,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         return state_name;
     }
 
-    
-      public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay) {
+    public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay) {
         List<Junction> list = new ArrayList<Junction>();
         try {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
@@ -1046,6 +1612,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         }
         return list;
     }
+
     public boolean insertRecord(Junction junction) {
         String junctionQuery = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
                 + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
@@ -1142,6 +1709,155 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         return !errorOccured;
     }
 
+//    public int updateRecord(Junction junction) {
+//        String query = null;
+//        PreparedStatement pstmt = null;
+//        int program_version_no = getFinalProgramVersionNo(junction.getJunction_id());
+//        query = "INSERT INTO junction (junction_id, junction_name, address1, address2, city_id, controller_model, no_of_sides, amber_time, "
+//                + " flash_rate, no_of_plans, mobile_no, sim_no, imei_no, instant_green_time, pedestrian, pedestrian_time, side1_name, "
+//                + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
+//                + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
+//
+//        String updateStatus = "UPDATE junction SET final_revision='EXPIRED' WHERE junction_id = ? AND program_version_no = ? ";
+//
+//        String update_plan_query = "UPDATE plan_info SET program_version_no = ? WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+//
+//        String delete_plan_query = "UPDATE slave_info SET final_revision = 'EXPIRED' WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+//
+//        String update_slave_query = "UPDATE slave_info SET program_version_no = ? WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+//
+//        String slave_insert_query = "INSERT into slave_info(junction_id, program_version_no, side_no, side_revision_no, side_name) "
+//                + " VALUES(?, ?, ?, ?, ?) ";
+//
+//        String update_slave_query1 = "UPDATE slave_info SET final_revision = 'EXPIRED' WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+//
+//        int rowsAffected = 0;
+//        int sideRevisionNo = 0;
+//        int prevNoOfSides = getNoOfSides(junction.getJunction_id(), program_version_no);
+//        int prevNoOfPlans = getNoOfPlans(junction.getJunction_id(), program_version_no);
+//        try {
+//            boolean autoCommit = connection.getAutoCommit();
+//            try {
+//                connection.setAutoCommit(false);
+//                pstmt = connection.prepareStatement(query);
+//                pstmt.setInt(1, (junction.getJunction_id()));
+//                pstmt.setString(2, junction.getJunction_name());
+//                pstmt.setString(3, junction.getAddress1());
+//                pstmt.setString(4, junction.getAddress2());
+//                pstmt.setInt(5, getCityID(junction.getCity_name()));
+//                pstmt.setString(6, junction.getController_model());
+//                pstmt.setInt(7, junction.getNo_of_sides());
+//                pstmt.setInt(8, junction.getAmber_time());
+//                pstmt.setInt(9, junction.getFlash_rate());
+//                pstmt.setInt(10, junction.getNo_of_plans());
+//                pstmt.setString(11, junction.getMobile_no());
+//                pstmt.setString(12, junction.getSim_no());
+//                pstmt.setString(13, junction.getImei_no());
+//                pstmt.setInt(14, junction.getInstant_green_time());
+//                pstmt.setString(15, junction.getPedestrian());
+//                pstmt.setInt(16, junction.getPedestrian_time());
+//                pstmt.setString(17, junction.getSide1_name());
+//                pstmt.setString(18, junction.getSide2_name());
+//                pstmt.setString(19, junction.getSide3_name());
+//                pstmt.setString(20, junction.getSide4_name());
+//                pstmt.setString(21, junction.getSide5_name());
+//                pstmt.setInt(22, program_version_no + 1);
+//                pstmt.setString(23, "NO");
+//                pstmt.setInt(24, junction.getFile_no());
+//                pstmt.setString(25, junction.getRemark());
+//                pstmt.setInt(26, 1);
+//                rowsAffected = pstmt.executeUpdate();
+//                if (rowsAffected > 0) {
+//                    pstmt.close();
+//                    rowsAffected = 0;
+//                    pstmt = connection.prepareStatement(updateStatus);
+//                    pstmt.setInt(1, junction.getJunction_id());
+//                    pstmt.setInt(2, program_version_no);
+//                    rowsAffected = pstmt.executeUpdate();
+//                    if (rowsAffected > 0) {
+//                        if (prevNoOfPlans != junction.getNo_of_plans() && junction.getNo_of_plans() != 0) {
+//                            rowsAffected = 0;
+//                            pstmt.close();
+//                            pstmt = connection.prepareStatement(delete_plan_query);
+//                            pstmt.setInt(1, junction.getJunction_id());
+//                            pstmt.setInt(2, program_version_no);
+//                            rowsAffected = pstmt.executeUpdate();
+//                        } else if (prevNoOfPlans != 0) {
+//                            rowsAffected = 0;
+//                            pstmt.close();
+//                            pstmt = connection.prepareStatement(update_plan_query);
+//                            pstmt.setInt(1, program_version_no + 1);
+//                            pstmt.setInt(2, junction.getJunction_id());
+//                            pstmt.setInt(3, program_version_no);
+//                            rowsAffected = pstmt.executeUpdate();
+//                        }
+//                        if (rowsAffected > 0) {
+//                            pstmt.close();
+//                            if (prevNoOfSides != junction.getNo_of_sides()) {
+//                                rowsAffected = 0;
+//                                sideRevisionNo = getFinalSideRevisionNo(junction.getJunction_id(), program_version_no);
+//                                pstmt = connection.prepareStatement(update_slave_query1);
+//                                pstmt.setInt(1, junction.getJunction_id());
+//                                pstmt.setInt(2, program_version_no);
+//                                rowsAffected = pstmt.executeUpdate();
+//                                if (rowsAffected > 0) {
+//                                    for (int i = 0; i < junction.getNo_of_sides() && rowsAffected > 0; i++) {
+//                                        rowsAffected = 0;
+//                                        pstmt.close();
+//                                        pstmt = connection.prepareStatement(slave_insert_query);
+//                                        pstmt.setInt(1, junction.getJunction_id());
+//                                        pstmt.setInt(2, program_version_no + 1);
+//                                        pstmt.setInt(3, i + 1);
+//                                        pstmt.setInt(4, sideRevisionNo + 1);
+//                                        pstmt.setString(5, i == 0 ? junction.getSide1_name()
+//                                                : i == 1 ? junction.getSide2_name()
+//                                                        : i == 2 ? junction.getSide3_name()
+//                                                                : i == 3 ? junction.getSide4_name()
+//                                                                        : i == 4 ? junction.getSide5_name() : "");
+//                                        rowsAffected = pstmt.executeUpdate();
+//                                    }
+//                                } else {
+//                                    throw new SQLException("all pervious slaves records are not updateded");
+//                                }
+//                            } else {
+//                                pstmt = connection.prepareStatement(update_slave_query);
+//                                pstmt.setInt(1, program_version_no + 1);
+//                                pstmt.setInt(2, junction.getJunction_id());
+//                                pstmt.setInt(3, program_version_no);
+//                                //rowsAffected =
+//                                pstmt.executeUpdate();
+//                            }
+//                        } else {
+//                            throw new SQLException("Record updated in plan_info.");
+//                        }
+//
+//                    } else {
+//                        throw new SQLException("Record NOT updated in junction.");
+//                    }
+//                } else {
+//                    throw new SQLException("Record NOT saved in junction.");
+//                }
+//            } catch (SQLException sqlEx) {
+//                connection.rollback();
+//                message = "Could NOT save data , some error.";
+//                msgBgColor = COLOR_ERROR;
+//                System.out.println("JUnctionModel updateRecord() Error: " + message + " Cause: " + sqlEx.getMessage());
+//            } finally {
+//                pstmt.close();
+//                connection.setAutoCommit(autoCommit);
+//            }
+//        } catch (Exception e) {
+//            System.out.println("JUnctionModel updateRecord() Error: " + e);
+//        }
+//        if (rowsAffected > 0) {
+//            message = "Record updated successfully.";
+//            msgBgColor = COLOR_OK;
+//        } else {
+//            message = "Cannot update the record, some error.";
+//            msgBgColor = COLOR_ERROR;
+//        }
+//        return rowsAffected;
+//    }
     public int updateRecord(Junction junction) {
         String query = null;
         PreparedStatement pstmt = null;
@@ -1151,18 +1867,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                 + " side2_name, side3_name, side4_name, side5_name, program_version_no, transferred_status, file_no, remark, created_by) "
                 + " VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ";
 
-        String updateStatus = "UPDATE junction SET final_revision='EXPIRED' WHERE junction_id = ? AND program_version_no = ? ";
-
-        String update_plan_query = "UPDATE plan_info SET program_version_no = ? WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
-
-        String delete_plan_query = "UPDATE slave_info SET final_revision = 'EXPIRED' WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
-
-        String update_slave_query = "UPDATE slave_info SET program_version_no = ? WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
-
-        String slave_insert_query = "INSERT into slave_info(junction_id, program_version_no, side_no, side_revision_no, side_name) "
-                + " VALUES(?, ?, ?, ?, ?) ";
-
-        String update_slave_query1 = "UPDATE slave_info SET final_revision = 'EXPIRED' WHERE junction_id= ? AND program_version_no = ? AND final_revision='VALID' ";
+        String updateStatus = "UPDATE junction SET final_revision='EXPIRED' WHERE junction_id = ? ";
 
         int rowsAffected = 0;
         int sideRevisionNo = 0;
@@ -1205,64 +1910,15 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                     rowsAffected = 0;
                     pstmt = connection.prepareStatement(updateStatus);
                     pstmt.setInt(1, junction.getJunction_id());
-                    pstmt.setInt(2, program_version_no);
+                    // pstmt.setInt(2, program_version_no);
                     rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
-                        if (prevNoOfPlans != junction.getNo_of_plans() && junction.getNo_of_plans() != 0) {
-                            rowsAffected = 0;
-                            pstmt.close();
-                            pstmt = connection.prepareStatement(delete_plan_query);
-                            pstmt.setInt(1, junction.getJunction_id());
-                            pstmt.setInt(2, program_version_no);
-                            rowsAffected = pstmt.executeUpdate();
-                        } else if (prevNoOfPlans != 0) {
-                            rowsAffected = 0;
-                            pstmt.close();
-                            pstmt = connection.prepareStatement(update_plan_query);
-                            pstmt.setInt(1, program_version_no + 1);
-                            pstmt.setInt(2, junction.getJunction_id());
-                            pstmt.setInt(3, program_version_no);
-                            rowsAffected = pstmt.executeUpdate();
-                        }
-                        if (rowsAffected > 0) {
-                            pstmt.close();
-                            if (prevNoOfSides != junction.getNo_of_sides()) {
-                                rowsAffected = 0;
-                                sideRevisionNo = getFinalSideRevisionNo(junction.getJunction_id(), program_version_no);
-                                pstmt = connection.prepareStatement(update_slave_query1);
-                                pstmt.setInt(1, junction.getJunction_id());
-                                pstmt.setInt(2, program_version_no);
-                                rowsAffected = pstmt.executeUpdate();
-                                if (rowsAffected > 0) {
-                                    for (int i = 0; i < junction.getNo_of_sides() && rowsAffected > 0; i++) {
-                                        rowsAffected = 0;
-                                        pstmt.close();
-                                        pstmt = connection.prepareStatement(slave_insert_query);
-                                        pstmt.setInt(1, junction.getJunction_id());
-                                        pstmt.setInt(2, program_version_no + 1);
-                                        pstmt.setInt(3, i + 1);
-                                        pstmt.setInt(4, sideRevisionNo + 1);
-                                        pstmt.setString(5, i == 0 ? junction.getSide1_name()
-                                                : i == 1 ? junction.getSide2_name()
-                                                        : i == 2 ? junction.getSide3_name()
-                                                                : i == 3 ? junction.getSide4_name()
-                                                                        : i == 4 ? junction.getSide5_name() : "");
-                                        rowsAffected = pstmt.executeUpdate();
-                                    }
-                                } else {
-                                    throw new SQLException("all pervious slaves records are not updateded");
-                                }
-                            } else {
-                                pstmt = connection.prepareStatement(update_slave_query);
-                                pstmt.setInt(1, program_version_no + 1);
-                                pstmt.setInt(2, junction.getJunction_id());
-                                pstmt.setInt(3, program_version_no);
-                                //rowsAffected =
-                                pstmt.executeUpdate();
-                            }
-                        } else {
-                            throw new SQLException("Record updated in plan_info.");
-                        }
+                        pstmt.close();
+                        rowsAffected = 0;
+                        pstmt = connection.prepareStatement(updateStatus);
+                        pstmt.setInt(1, junction.getJunction_id());
+                        // pstmt.setInt(2, program_version_no);
+                        rowsAffected = pstmt.executeUpdate();
 
                     } else {
                         throw new SQLException("Record NOT updated in junction.");
@@ -1292,7 +1948,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         return rowsAffected;
     }
 
-    public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay,String searchjunction) {
+    public List<Junction> showData(int lowerLimit, int noOfRowsToDisplay, String searchjunction) {
         List<Junction> list = new ArrayList<Junction>();
         try {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
@@ -1300,9 +1956,9 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
                     + " from junction AS j, city AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' and "
-                    + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='"+searchjunction+"')"
+                    + " IF('" + searchjunction + "' = '',  junction_name LIKE '%%',  junction_name ='" + searchjunction + "')"
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-          //  System.out.println(lowerLimit + "," + noOfRowsToDisplay);
+            //  System.out.println(lowerLimit + "," + noOfRowsToDisplay);
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 Junction junction = new Junction();
@@ -1340,6 +1996,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         }
         return list;
     }
+
     public List<Junction> showData() {
         List<Junction> list = new ArrayList<Junction>();
         try {
@@ -1348,7 +2005,7 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                     + " side2_name, side3_name, side4_name, side5_name,file_no, program_version_no,remark "
                     + " from junction AS j, city AS c "
                     + " WHERE c.city_id=j.city_id AND j.final_revision='VALID' ";
-                     
+
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 Junction junction = new Junction();
@@ -1427,23 +2084,23 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         return list;
     }
 
-    public int getTotalPlans(int jid, String filter,String Fromdate,String todate,String day,int junction_id_selected) {
+    public int getTotalPlans(int jid, String filter, String Fromdate, String todate, String day, int junction_id_selected) {
         int noOfRows = 0;
-         
+
         String query = "";
         if (filter.equalsIgnoreCase("date")) {
-            query = "SELECT  count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and dd.from_date='"+Fromdate+"' and dd.to_date='"+todate+"' group by dd.from_date;";
+            query = "SELECT  count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and dd.from_date='" + Fromdate + "' and dd.to_date='" + todate + "' group by dd.from_date;";
         } else if (filter.equalsIgnoreCase("day")) {
-            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected+"'";
+            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.day_id!='' and d.day='" + day + "' and jp.junction_id='" + junction_id_selected + "'";
 
         } else {
-            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '"+day+"' group by p.on_time_hour";
+            query = "SELECT count(*) FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '" + day + "' group by p.on_time_hour";
 
         }
         try {
-           
-          PreparedStatement pstmt1 = (PreparedStatement)connection.prepareStatement(query);
-           ResultSet rset1 = pstmt1.executeQuery();
+
+            PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement(query);
+            ResultSet rset1 = pstmt1.executeQuery();
             while (rset1.next()) {
                 noOfRows = Integer.parseInt(rset1.getString(1));
             }
@@ -1465,13 +2122,13 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         String query2 = "";
         if (filter.equalsIgnoreCase("date")) {
 
-            query2 = "SELECT  distinct jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
+            query2 = "SELECT  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date, d.day, "
                     + "j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
                     + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
                     + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
                     + "inner join junction_temp j on jp.junction_id = j.junction_id "
                     + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
-                    + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and j.junction_id = '" + junction_id_selected + "' group by dd.from_date "
+                    + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and jp.date_id!='' and j.junction_id = '" + junction_id_selected + "' "
                     + addQuery;
         } else if (filter.equalsIgnoreCase("day")) {
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
@@ -1487,12 +2144,12 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         } else {
 
             // totalplans=jm.getTotalPlans(junction_id_selected,filter);
-            query2 = "SELECT distinct  jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
+            query2 = "SELECT jp.junction_plan_map_id, jp.order_no, dd.from_date, dd.to_date,"
                     + " d.day, j.junction_name, p.on_time_hour,p.on_time_min,p.off_time_hour,p.off_time_min,p.plan_no,jp.junction_id "
                     + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
                     + "left join day_detail_temp d on jp.day_id = d.day_detail_id inner join junction_temp j on jp.junction_id = j.junction_id "
                     + "inner join plan_details_temp p on jp.plan_id = p.plan_id where j.final_revision = 'VALID' and jp.active='Y' "
-                    + "and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '" + junction_id_selected + "' group by p.on_time_hour"
+                    + "and p.active = 'Y' and date_id IS null and day_id is null and j.junction_id = '" + junction_id_selected + "' "
                     + addQuery;
         }
 
@@ -1511,35 +2168,27 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
                 bean.setOn_time_min(rset.getInt(8));
                 bean.setOff_time_hr(rset.getInt(9));
                 bean.setOff_time_min(rset.getInt(10));
-            
-                String fromdate="";
-                String todate="";
-                String day="";
-                
-                
-                
-               //fromdate= bean.getFrom_date().toString();
-                
-                
-             //  todate= bean.getTo_date().toString();
-               
-                
-                
-                
+
+                String fromdate = "";
+                String todate = "";
+                String day = "";
+
+                //fromdate= bean.getFrom_date().toString();
+                //  todate= bean.getTo_date().toString();
                 if (filter.equalsIgnoreCase("date")) {
-                     fromdate= bean.getFrom_date().toString();
-                      todate= bean.getTo_date().toString();
-                    totalplans = getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
+                    fromdate = bean.getFrom_date().toString();
+                    todate = bean.getTo_date().toString();
+                    totalplans = getTotalPlans(junction_id_selected, filter, fromdate, todate, day, junction_id_selected);
                 } else if (filter.equalsIgnoreCase("day")) {
-                    day=bean.getDay().toString();
-                    totalplans = getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
-                }else{
-                 totalplans =getTotalPlans(junction_id_selected, filter,fromdate,todate,day,junction_id_selected);
+                    day = bean.getDay().toString();
+                    totalplans = getTotalPlans(junction_id_selected, filter, fromdate, todate, day, junction_id_selected);
+                } else {
+                    totalplans = getTotalPlans(junction_id_selected, filter, fromdate, todate, day, junction_id_selected);
                 }
-                 bean.setPlan_no(totalplans);
-                 bean.setPlan_id(rset.getInt(11));
+                bean.setPlan_no(totalplans);
+                bean.setPlan_id(rset.getInt(11));
                 bean.setJunction_id(rset.getInt(12));
-                
+
                 list.add(bean);
             }
         } catch (Exception e) {
@@ -1624,73 +2273,73 @@ List <PhaseData> phase_id=getPhases_id(jpm_id);
         }
         return list;
     }
-    
-     public String getTotalPhase(String city_name) {
+
+    public String getTotalPhase(String city_name,int jun_ids) {
         String city_id = "";
-        String query = " Select count(*) from phase_detail pd,phase_map pm ,junction_plan_map jpm "
-                + "where pm.phase_id=pd.phase_info_id and \n" +
-"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' "
-                + "and jpm.active='Y' and pd.active='Y' and jpm.plan_id='"+city_name+"'";
+        String query = " Select count(*) from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm "
+                + "where pm.phase_id=pd.phase_info_id and \n"
+                + "                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' "
+                + "and jpm.active='Y' and pd.active='Y' and jpm.plan_id='" + city_name + "' and jpm.junction_id='"+jun_ids+"'";
         PreparedStatement pstmt;
         try {
             pstmt = connection.prepareStatement(query);
-          //  pstmt.setString(1, city_name);
+            //  pstmt.setString(1, city_name);
             ResultSet rset = pstmt.executeQuery();
-            int count=0;
+            int count = 0;
             while (rset.next()) {
-                
-              city_id =rset.getString(1);
+
+                city_id = rset.getString(1);
             }
-             
+
         } catch (Exception ex) {
             System.out.println("JunctionModel getCityID() Error: " + ex);
         }
         return city_id;
     }
-     public List<PlanDetails> showDataPlansdetails(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String fromdate,String todate) {
-List<String> list1 = new ArrayList<String>();
+
+    public List<PlanDetails> showDataPlansdetails(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String fromdate, String todate) {
+        List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
         }
- String totalphase=null;
+        String totalphase = null;
         String query2 = "SELECT p.plan_id "
-                + "FROM junction_plan_map jp "
-                + "left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
+                + "FROM junction_plan_map_temp jp "
+                + "left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
+                + "inner join junction_temp j on jp.junction_id = j.junction_id "
+                + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
                 + "where j.final_revision = 'VALID' and jp.active='Y' and p.active = 'Y' and "
-                + "jp.date_id!='' and dd.from_date='"+fromdate+"' and dd.to_date='"+todate+"' and jp.junction_id='"+junction_id_selected1+"'"
+                + "jp.date_id!='' and dd.from_date='" + fromdate + "' and dd.to_date='" + todate + "' and jp.junction_id='" + junction_id_selected1 + "'"
                 + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
+            String joined = "";
+            int count = 0;
             while (rset.next()) {
                 String plan_id = rset.getString("plan_id");
-             
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_id);
-                    count++;
-                
+
+                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
+                list1.add(plan_id);
+                count++;
+
             }
-            
-            
-             joined = String.join(",", list1);
+
+            joined = String.join(",", list1);
             PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
-           int count1=0;
-           while (rset1.next()) {
-                
-                 PlanDetails bean = new PlanDetails();
-                 
-                 totalphase=getTotalPhase(list1.get(count1));
-                 count1++;
+                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details_temp s "
+                    + "where s.plan_id IN (" + joined + ")");
+            ResultSet rset1 = pstmt1.executeQuery();
+            int count1 = 0;
+            while (rset1.next()) {
+
+                PlanDetails bean = new PlanDetails();
+
+                totalphase = getTotalPhase(list1.get(count1),junction_id_selected1);
+                count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -1712,56 +2361,54 @@ List<String> list1 = new ArrayList<String>();
                 bean.setRemark(rset1.getString(19));
                 bean.setTotalphase(totalphase);
                 list.add(bean);
-             
+
             }
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-    
-     
-        public List<PlanDetails> showDataPlansdetailsday(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String day) {
+
+    public List<PlanDetails> showDataPlansdetailsday(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, String day) {
         List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
         }
-String totalphase=""; 
+        String totalphase = "";
         String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
-                + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
+                + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
+                + "inner join junction_temp j on jp.junction_id = j.junction_id "
+                + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
                 + "where j.final_revision = 'VALID' and jp.active='Y' "
-                + "and p.active = 'Y' and jp.day_id!='' and d.day='"+day+"' and jp.junction_id='"+junction_id_selected1+"'"
+                + "and p.active = 'Y' and jp.day_id!='' and d.day='" + day + "' and jp.junction_id='" + junction_id_selected1 + "'"
                 + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
+            String joined = "";
+            int count = 0;
             while (rset.next()) {
                 String plan_id = rset.getString("plan_id");
-            // totalphase=getTotalPhase(plan_id);
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_id);
-                    count++;
-                
+                // totalphase=getTotalPhase(plan_id);
+                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
+                list1.add(plan_id);
+                count++;
+
             }
-            
-            
-             joined = String.join(",", list1);
+
+            joined = String.join(",", list1);
             PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
-             int count1=0; 
+                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details_temp s "
+                    + "where s.plan_id IN (" + joined + ")");
+            ResultSet rset1 = pstmt1.executeQuery();
+            int count1 = 0;
             while (rset1.next()) {
-                 PlanDetails bean = new PlanDetails();
-                 totalphase=getTotalPhase(list1.get(count1));
-                 count1++;
+                PlanDetails bean = new PlanDetails();
+                totalphase = getTotalPhase(list1.get(count1),junction_id_selected1);
+                count1++;
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -1781,55 +2428,54 @@ String totalphase="";
                 bean.setSide5_amber_time(rset1.getInt(17));
                 bean.setTransferred_status(rset1.getString(18));
                 bean.setRemark(rset1.getString(19));
-                 bean.setTotalphase(totalphase);
+                bean.setTotalphase(totalphase);
                 list.add(bean);
-             
+
             }
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-    
-      public List<PlanDetails> showDataPlansdetailsnormal(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_id) {
+
+    public List<PlanDetails> showDataPlansdetailsnormal(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1, int plan_id) {
         List<String> list1 = new ArrayList<String>();
         List<PlanDetails> list = new ArrayList<PlanDetails>();
-        String totalphase="";
+        String totalphase = "";
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
             addQuery = "";
         }
 
         String query2 = "SELECT jp.junction_plan_map_id,p.plan_id "
-                + "FROM junction_plan_map jp left join date_detail dd on jp.date_id = dd.date_detail_id "
-                + "left join day_detail d on jp.day_id = d.day_detail_id "
-                + "inner join junction j on jp.junction_id = j.junction_id "
-                + "inner join plan_details p on jp.plan_id = p.plan_id "
+                + "FROM junction_plan_map_temp jp left join date_detail_temp dd on jp.date_id = dd.date_detail_id "
+                + "left join day_detail_temp d on jp.day_id = d.day_detail_id "
+                + "inner join junction_temp j on jp.junction_id = j.junction_id "
+                + "inner join plan_details_temp p on jp.plan_id = p.plan_id "
                 + "where j.final_revision = 'VALID' and jp.active='Y' "
-                + "and p.active = 'Y' and jp.day_id is null and jp.date_id is null and jp.junction_id='"+junction_id_selected1+"' and p.plan_no='"+plan_id+"'"
+                + "and p.active = 'Y' and jp.day_id is null and jp.date_id is null and jp.junction_id='" + junction_id_selected1 + "' and p.plan_no='" + plan_id + "'"
                 + addQuery;
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
-            String joined="";
-            int count=0;
+            String joined = "";
+            int count = 0;
             while (rset.next()) {
                 String plan_ids = rset.getString("plan_id");
-                totalphase=getTotalPhase(plan_ids);
-               // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
-                    list1.add(plan_ids);
-                    count++;
-                
+                totalphase = getTotalPhase(plan_ids,junction_id_selected1);
+                // if (device_no.toUpperCase().startsWith(q.toUpperCase())) {
+                list1.add(plan_ids);
+                count++;
+
             }
-            
-            
-             joined = String.join(",", list1);
+
+            joined = String.join(",", list1);
             PreparedStatement pstmt1 = (PreparedStatement) connection.prepareStatement("select s.plan_id, plan_no, on_time_hour, on_time_min, off_time_hour, off_time_min, mode, side1_green_time, side2_green_time, side3_green_time, side4_green_time, side5_green_time, side1_amber_time, "
-                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details s "
-                    + "where s.plan_id IN ("+joined+")");
-            ResultSet rset1 = pstmt1.executeQuery(); 
+                    + "side2_amber_time, side3_amber_time, side4_amber_time, side5_amber_time, transferred_status, s.remark from plan_details_temp s "
+                    + "where s.plan_id IN (" + joined + ")");
+            ResultSet rset1 = pstmt1.executeQuery();
             while (rset1.next()) {
-                 PlanDetails bean = new PlanDetails();
+                PlanDetails bean = new PlanDetails();
                 bean.setPlan_id(rset1.getInt(1));
                 bean.setPlan_no(rset1.getInt(2));
                 bean.setOn_time_hour(rset1.getInt(3));
@@ -1851,15 +2497,13 @@ String totalphase="";
                 bean.setRemark(rset1.getString(19));
                 bean.setTotalphase(totalphase);
                 list.add(bean);
-             
+
             }
         } catch (Exception e) {
             System.out.println("Error: " + e);
         }
         return list;
     }
-    
-    
 
 // public List<PlanDetails> showDataPlansbyfilter(int lowerLimit, int noOfRowsToDisplay, int junction_id_selected1,int plan_no,String filter) {
 //         
@@ -1957,7 +2601,8 @@ String totalphase="";
         String phaseString2 = phaseString1.substring(1);
         return phaseString2;
     }
-public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
+
+    public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDisplay, int junction_plan_map_id_selected, int plan_no) {
         List<PhaseData> list = new ArrayList<PhaseData>();
         String addQuery = " LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
         if (lowerLimit == -1) {
@@ -2016,8 +2661,8 @@ public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDispla
         }
         return list;
     }
- public String decToBinaryAndSplitFirst(String n) 
-    { 
+
+    public String decToBinaryAndSplitFirst(String n) {
         //perform decToBinary
 //        int[] binaryNum = decToBinary(n);
 //        int len = binaryNum.length;
@@ -2025,27 +2670,26 @@ public List<PhaseData> showDataPhaseDetails(int lowerLimit, int noOfRowsToDispla
 //        for (int i = 0; i < binaryNum.length; i++) {
 //            binary = binary + binaryNum[i];            
 //        }
-         //String binary = n;
-      int a=n.length();
-      String remain="";
-      String str="";
-if(a<=7){
-    a=8-a;
-    
-      for(int k=0;k<a;k++){
-          
-          str = str.concat("0");
-      
-      }
-      n=str.concat(n);
-}
+        //String binary = n;
+        int a = n.length();
+        String remain = "";
+        String str = "";
+        if (a <= 7) {
+            a = 8 - a;
+
+            for (int k = 0; k < a; k++) {
+
+                str = str.concat("0");
+
+            }
+            n = str.concat(n);
+        }
 
         String sideFirst = n.substring(0, 4);
         return sideFirst;
     }
-    
-    public String decToBinaryAndSplitLater(String n) 
-    { 
+
+    public String decToBinaryAndSplitLater(String n) {
         //perform decToBinary
 //        int[] binaryNum = decToBinary(n);
 //        int len = binaryNum.length;
@@ -2054,24 +2698,23 @@ if(a<=7){
 //            binary = binary + binaryNum[i];            
 //        }
         // String binary = Integer.toBinaryString(n);
-      int a=n.length();
-       String str="";
-if(a<=7){
-    a=8-a;
-    
-      for(int k=0;k<a;k++){
-          
-          str = str.concat("0");
-      
-      }
-      n=str.concat(n);
-}
+        int a = n.length();
+        String str = "";
+        if (a <= 7) {
+            a = 8 - a;
+
+            for (int k = 0; k < a; k++) {
+
+                str = str.concat("0");
+
+            }
+            n = str.concat(n);
+        }
         String sideFirst = n.substring(4, 8);
         return sideFirst;
     }
-    
-    
-      private int getJunctionId(String junction_name) {
+
+    private int getJunctionId(String junction_name) {
         int junction_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2088,31 +2731,28 @@ if(a<=7){
         }
         return junction_id;
     }
-      
-      private int getJunctionPlanMapId(int junction_id, int plan_id) {
+
+    private int getJunctionPlanMapId(int junction_id, int plan_id) {
         int junction_plan_map_id = 0;
         PreparedStatement pstmt;
         try {
-           
-                pstmt = connection.prepareStatement(" SELECT junction_plan_map_id FROM junction_plan_map_temp where "
-                        + " plan_id = ? and junction_id = ? and active = 'Y'");
-                pstmt.setInt(1, plan_id);
-                pstmt.setInt(2, junction_id);
-                ResultSet rset = pstmt.executeQuery();
-                while (rset.next()) {
-                    junction_plan_map_id = rset.getInt(1);
-                }
-           
-           
 
-            
+            pstmt = connection.prepareStatement(" SELECT junction_plan_map_id FROM junction_plan_map_temp where "
+                    + " plan_id = ? and junction_id = ? and active = 'Y'");
+            pstmt.setInt(1, plan_id);
+            pstmt.setInt(2, junction_id);
+            ResultSet rset = pstmt.executeQuery();
+            while (rset.next()) {
+                junction_plan_map_id = rset.getInt(1);
+            }
+
         } catch (Exception e) {
             System.out.println("PlanInfoModel getPlanId() Error: " + e);
         }
         return junction_plan_map_id;
     }
-      
-      private int getPhaseId(int side13, int side24) {
+
+    private int getPhaseId(int side13, int side24) {
         int phase_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2129,7 +2769,8 @@ if(a<=7){
         }
         return phase_id;
     }
-         public int getMaxJunctionPlanId() {
+
+    public int getMaxJunctionPlanId() {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2143,7 +2784,8 @@ if(a<=7){
         }
         return plan_id;
     }
-private int getDateId(String from_date, String to_date) {
+
+    private int getDateId(String from_date, String to_date) {
         int date_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2177,7 +2819,8 @@ private int getDateId(String from_date, String to_date) {
         }
         return day_id;
     }
-     public boolean updatePreviousRecord(int id) throws SQLException {
+
+    public boolean updatePreviousRecord(int id) throws SQLException {
         PreparedStatement pstmt;
         int rowAffected = 0;
         try {
@@ -2218,7 +2861,8 @@ private int getDateId(String from_date, String to_date) {
         }
         return plan_id;
     }
-  public int getRevisionNo(int plan_id) {
+
+    public int getRevisionNo(int plan_id) {
         int revision_no = 0;
         PreparedStatement pstmt;
         try {
@@ -2232,7 +2876,8 @@ private int getDateId(String from_date, String to_date) {
         }
         return revision_no;
     }
-   public List<String> getJName(String q) {
+
+    public List<String> getJName(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
         String query = "SELECT junction_name"
@@ -2259,8 +2904,7 @@ private int getDateId(String from_date, String to_date) {
         return list;
     }
 
-  
- public boolean updateJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap) {
+    public boolean updateJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap) {
         String insert_query = null;
         PreparedStatement pstmt = null;
         boolean errorOccured = false;
@@ -2341,7 +2985,8 @@ private int getDateId(String from_date, String to_date) {
 
         return !errorOccured;
     }
-        public boolean insertJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap,int selected_plan_id) {
+
+    public boolean insertJunctionPlanMapRecord(JunctionPlanMap junctionPlanMap, int selected_plan_id) {
         String insert_query = null;
         PreparedStatement pstmt = null;
         boolean errorOccured = false;
@@ -2350,10 +2995,10 @@ private int getDateId(String from_date, String to_date) {
 
         int junction_plan_map_id = getMaxJunctionPlanId() + 1;
 //       int plan_id = getPlanId(junctionPlanMap.getOn_time_hr(), junctionPlanMap.getOn_time_min(), junctionPlanMap.getOff_time_hr(), junctionPlanMap.getOff_time_min());
-        int plan_id =selected_plan_id;
+        int plan_id = selected_plan_id;
         int junction_id = getJunctionId(junctionPlanMap.getJunction_name());
         Junction junc = getJunctionDetail(junction_id);
-       // updateRecordOfJunction(junc);
+        // updateRecordOfJunction(junc);
         int program_version_no = getProgramVersionNo(junction_id);
         int date_id = getDateId(junctionPlanMap.getFrom_date(), junctionPlanMap.getTo_date());
         int day_id = getDayId(junctionPlanMap.getDay());
@@ -2415,9 +3060,8 @@ private int getDateId(String from_date, String to_date) {
 
         return !errorOccured;
     }
-      
-      
-     public boolean insertRecord(PhaseData phaseData,int selected_plan_id) {
+
+    public boolean insertRecord(PhaseData phaseData, int selected_plan_id) {
         String insert_query = null;
         String insert_phase_query = null;
         PreparedStatement pstmt = null;
@@ -2429,10 +3073,10 @@ private int getDateId(String from_date, String to_date) {
         int program_version_no = 0;
 
 //        int plan_id = getPlanId(phaseData.getOn_time_hr(), phaseData.getOn_time_min(), phaseData.getOff_time_hr(), phaseData.getOff_time_min());
-int plan_id=selected_plan_id;
+        int plan_id = selected_plan_id;
         int junction_id = getJunctionId(phaseData.getJunction_name());
-       // int date_id = getDateId(phaseData.getFrom_date(), phaseData.getTo_date());
-       // int day_id = getDayId(phaseData.getDay());
+        // int date_id = getDateId(phaseData.getFrom_date(), phaseData.getTo_date());
+        // int day_id = getDayId(phaseData.getDay());
         int junction_plan_map_id = getJunctionPlanMapId(junction_id, plan_id);
         int phase_id = getPhaseId(phaseData.getSide13(), phaseData.getSide24());
 
@@ -2446,12 +3090,12 @@ int plan_id=selected_plan_id;
 //                    + " VALUES(?, ?, ?, ?, ?) ";
         }
         try {
-            boolean autoCommit = connection.getAutoCommit();
+          //  boolean autoCommit = connection.getAutoCommit();
             try {
                 connection.setAutoCommit(false);
                 if (phase_id > 0) {
-                    int pm_id=getPhaseIdupdate(junction_plan_map_id,phaseData.getPhase_info_id());
-                     rowsAffected=phasemapupdate(junction_plan_map_id,phase_id,pm_id,phaseData.getOrder_no());
+                    int pm_id = getPhaseIdupdate(junction_plan_map_id, phaseData.getPhase_info_id(),phaseData.getOrder_no());
+                    rowsAffected = phasemapupdate(junction_plan_map_id, phase_id, pm_id, phaseData.getOrder_no());
 //                     max_phase_id = getMaxPhaseId() + 1;
 //                    int max_phase_no=getMaxPhaseno(plan_id);
 //                    Junction junc = getJunctionDetail(junction_id);
@@ -2480,20 +3124,21 @@ int plan_id=selected_plan_id;
 //                    pstmt.setInt(5, program_version_no);
 //                    rowsAffected = pstmt.executeUpdate();
 //                 
-                   
-                     
+
                 } else {
+                    //get last id
+                    // int lastdbid=getlastid();
                     max_phase_id = getMaxPhaseId() + 1;
-                   int max_phase_no=getMaxPhaseno(plan_id);
+                    int max_phase_no = getMaxPhaseno(plan_id);
                     pstmt = connection.prepareStatement(insert_phase_query);
                     pstmt.setInt(1, max_phase_id);
-                    pstmt.setInt(2, max_phase_no+1);
+                    pstmt.setInt(2, max_phase_no + 1);
                     pstmt.setInt(3, phaseData.getSide13());
                     pstmt.setInt(4, phaseData.getSide24());
                     rowsAffected = pstmt.executeUpdate();
                     if (rowsAffected > 0) {
-                        int pm_id=getPhaseIdupdate(junction_plan_map_id,phaseData.getPhase_info_id());
-                    rowsAffected=phasemapupdate(junction_plan_map_id,max_phase_id,pm_id,phaseData.getOrder_no());
+                        int pm_id = getPhaseIdupdate(junction_plan_map_id, phaseData.getPhase_info_id(),phaseData.getOrder_no());
+                        rowsAffected = phasemapupdate(junction_plan_map_id, max_phase_id, pm_id, phaseData.getOrder_no());
 //                        int phasefinal=phaseData.getOrder_no();
 //                        Junction junc = getJunctionDetail(junction_id);
 //                       updateRecordOfJunction(junc);
@@ -2522,7 +3167,7 @@ int plan_id=selected_plan_id;
 //                        pstmt1.setInt(5, program_version_no);
 //                        rowsAffected = pstmt1.executeUpdate();
 //                    
-                }
+                    }
                 }
                 if (rowsAffected > 0) {
                     // Finally commit the connection.
@@ -2541,7 +3186,7 @@ int plan_id=selected_plan_id;
                 System.out.println("JunctionPlanMapModel insert() Error: " + message + " Cause: " + sqlEx.getMessage());
             } finally {
                 pstmt.close();
-                connection.setAutoCommit(autoCommit);
+                connection.setAutoCommit(true);
             }
         } catch (Exception e) {
             System.out.println("JunctionPlanMapModel insert() Error: " + e);
@@ -2549,13 +3194,14 @@ int plan_id=selected_plan_id;
 
         return !errorOccured;
     }
-      public int updateOrderNo(int phase_map_id,int order_no) {
-         String  Query = "UPDATE phase_map SET order_no = '"+order_no+"' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+
+    public int updateOrderNo(int phase_map_id, int order_no) {
+        String Query = "UPDATE phase_map SET order_no = '" + order_no + "' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
         int rowsAffected = 0;
         try {
             connection.setAutoCommit(false);
             rowsAffected = connection.prepareStatement(Query).executeUpdate();
-           
+
         } catch (Exception e) {
             System.out.println("Error:Delete:JunctionModel-- " + e);
         } finally {
@@ -2568,45 +3214,20 @@ int plan_id=selected_plan_id;
         if (rowsAffected > 0) {
             message = "Record deleted successfully.";
             msgBgColor = COLOR_OK;
-        } else {
+        } else { 
             message = "Cannot delete the record, some error.";
             msgBgColor = COLOR_ERROR;
         }
         return rowsAffected;
     }
-     
-       public int phasemapupdate(int junction_plan_map_id,int phase_id,int phase_map_id,int orderno) {
-             String  Query = "UPDATE phase_map_temp SET order_no = '"+junction_plan_map_id+"',phase_id='"+phase_id+"',order_no='"+orderno+"'  WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+
+    public int phasemapupdate(int junction_plan_map_id, int phase_id, int phase_map_id, int orderno) {
+        String Query = "UPDATE phase_map_temp SET junction_plan_map_id = '" + junction_plan_map_id + "',phase_id='" + phase_id + "',order_no='" + orderno + "'  WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
         int rowsAffected = 0;
         try {
             connection.setAutoCommit(false);
             rowsAffected = connection.prepareStatement(Query).executeUpdate();
-           
-        } catch (Exception e) {
-            System.out.println("Error:Delete:JunctionModel-- " + e);
-        } finally {
-            try {
-                connection.setAutoCommit(true);
-            } catch (SQLException ex) {
-                Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (rowsAffected > 0) {
-            message = "Record deleted successfully.";
-            msgBgColor = COLOR_OK;
-        } else {
-            message = "Cannot delete the record, some error.";
-            msgBgColor = COLOR_ERROR;
-        }
-        return rowsAffected;
-    }
-       public int updateOrderNo1(int phase_map_id,int order_no) {
-         String  Query = "UPDATE phase_map SET active = 'N' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
-        int rowsAffected = 0;
-        try {
-            connection.setAutoCommit(false);
-            rowsAffected = connection.prepareStatement(Query).executeUpdate();
-           
+
         } catch (Exception e) {
             System.out.println("Error:Delete:JunctionModel-- " + e);
         } finally {
@@ -2626,9 +3247,33 @@ int plan_id=selected_plan_id;
         return rowsAffected;
     }
 
-     
-     
-      public int getMaxPhaseId() {
+    public int updateOrderNo1(int phase_map_id, int order_no) {
+        String Query = "UPDATE phase_map SET active = 'N' WHERE phase_map_id= " + phase_map_id + " AND active = 'Y'";
+        int rowsAffected = 0;
+        try {
+            connection.setAutoCommit(false);
+            rowsAffected = connection.prepareStatement(Query).executeUpdate();
+
+        } catch (Exception e) {
+            System.out.println("Error:Delete:JunctionModel-- " + e);
+        } finally {
+            try {
+                connection.setAutoCommit(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(JunctionModel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        if (rowsAffected > 0) {
+            message = "Record deleted successfully.";
+            msgBgColor = COLOR_OK;
+        } else {
+            message = "Cannot delete the record, some error.";
+            msgBgColor = COLOR_ERROR;
+        }
+        return rowsAffected;
+    }
+
+    public int getMaxPhaseId() {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2642,11 +3287,12 @@ int plan_id=selected_plan_id;
         }
         return plan_id;
     }
-      public int getPhaseIdupdate(int jpm,int phaseid) {
+
+    public int getPhaseIdupdate(int jpm, int phaseid,int orderno) {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement(" SELECT phase_map_id  FROM phase_map_temp where junction_plan_map_id='"+jpm+"' and phase_id='"+phaseid+"' and active='Y'");
+            pstmt = connection.prepareStatement(" SELECT phase_map_id  FROM phase_map_temp where junction_plan_map_id='" + jpm + "' and phase_id='" + phaseid + "' and order_no='"+orderno+"' and active='Y'");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             plan_id = rset.getInt("phase_map_id");
@@ -2656,77 +3302,78 @@ int plan_id=selected_plan_id;
         }
         return plan_id;
     }
-      public int getMaxPhaseno(int jpm) {
+
+    public int getMaxPhaseno(int jpm) {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement("Select Max(pd.phase_no) as phase_no " +
-" from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j \n" +
-"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and \n" +
-"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and\n" +
-"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+jpm+"' \n" +
-"                ;");
+            pstmt = connection.prepareStatement("Select Max(pd.phase_no) as phase_no "
+                    + " from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j \n"
+                    + "        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and \n"
+                    + "   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and\n"
+                    + "   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='" + jpm + "' \n"
+                    + "                ;");
             ResultSet rset = pstmt.executeQuery();
             rset.next();
             plan_id = rset.getInt("phase_no");
-            
+
         } catch (Exception e) {
             System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
         }
         return plan_id;
     }
-     
-      public List<PhaseData> getMaxPhaseMapIdOrder(int jpm) {
-          List<PhaseData> list=new ArrayList();
+
+    public List<PhaseData> getMaxPhaseMapIdOrder(int jpm) {
+        List<PhaseData> list = new ArrayList();
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no " +
-" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  " +
-"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  " +
-"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and " +
-"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='"+jpm+"' " +
-"   ;");
+            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no "
+                    + " from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  "
+                    + "        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  "
+                    + "   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and "
+                    + "   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='" + jpm + "' "
+                    + "   ;");
             ResultSet rset = pstmt.executeQuery();
-             while (rset.next()) {
-                 PhaseData pd=new PhaseData();
-                 pd.setPhasemapid(rset.getInt("phase_map_id"));
-                 pd.setPhase_info_id(rset.getInt("phase_id"));
-                 pd.setOrder_no(rset.getInt("order_no"));
-           list.add(pd);
-             } 
+            while (rset.next()) {
+                PhaseData pd = new PhaseData();
+                pd.setPhasemapid(rset.getInt("phase_map_id"));
+                pd.setPhase_info_id(rset.getInt("phase_id"));
+                pd.setOrder_no(rset.getInt("order_no"));
+                list.add(pd);
+            }
         } catch (Exception e) {
             System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
         }
         return list;
     }
-     
-      public List<PhaseData> getMaxPhaseMapIdOrder1(int jpm,int phase_id) {
-          List<PhaseData> list=new ArrayList();
+
+    public List<PhaseData> getMaxPhaseMapIdOrder1(int jpm, int phase_id) {
+        List<PhaseData> list = new ArrayList();
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
-            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no " +
-" from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  " +
-"        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  " +
-"   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and " +
-"   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='"+jpm+"' and pm.phase_id='"+phase_id+"'" +
-"   ;");
+            pstmt = connection.prepareStatement("Select pm.phase_map_id,pm.phase_id,pm.order_no "
+                    + " from phase_detail pd,phase_map pm ,junction_plan_map jpm ,junction j  "
+                    + "        where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and  "
+                    + "   pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and "
+                    + "   jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and pm.junction_plan_map_id='" + jpm + "' and pm.phase_id='" + phase_id + "'"
+                    + "   ;");
             ResultSet rset = pstmt.executeQuery();
-             while (rset.next()) {
-                 PhaseData pd=new PhaseData();
-                 pd.setPhasemapid(rset.getInt("phase_map_id"));
-                 pd.setPhase_info_id(rset.getInt("phase_id"));
-                 pd.setOrder_no(rset.getInt("order_no"));
-           list.add(pd);
-             } 
+            while (rset.next()) {
+                PhaseData pd = new PhaseData();
+                pd.setPhasemapid(rset.getInt("phase_map_id"));
+                pd.setPhase_info_id(rset.getInt("phase_id"));
+                pd.setOrder_no(rset.getInt("order_no"));
+                list.add(pd);
+            }
         } catch (Exception e) {
             System.out.println("PlanInfoModel getNoOfPlans() Error: " + e);
         }
         return list;
     }
-     
-     public int getMaxPhaseMapId() {
+
+    public int getMaxPhaseMapId() {
         int plan_id = 0;
         PreparedStatement pstmt;
         try {
@@ -2741,7 +3388,7 @@ int plan_id=selected_plan_id;
         return plan_id;
     }
 
-     public Junction getJunctionDetail(int junction_id) {
+    public Junction getJunctionDetail(int junction_id) {
         Junction junction = new Junction();
         try {
             String query = "SELECT junction_id, junction_name, address1, address2, city_name, controller_model, no_of_sides, amber_time, "
@@ -2786,7 +3433,8 @@ int plan_id=selected_plan_id;
         }
         return junction;
     }
-     public int updateRecordOfJunction(Junction junction) {
+
+    public int updateRecordOfJunction(Junction junction) {
         String query = null;
         PreparedStatement pstmt = null;
         int program_version_no = getProgramVersionNo(junction.getJunction_id());
@@ -2866,7 +3514,8 @@ int plan_id=selected_plan_id;
         }
         return rowsAffected;
     }
-private int getProgramVersionNo(int junction_id) {
+
+    private int getProgramVersionNo(int junction_id) {
         int program_version_no = 0;
         PreparedStatement pstmt;
         try {
@@ -2884,23 +3533,19 @@ private int getProgramVersionNo(int junction_id) {
         return program_version_no;
     }
 
-     
     public List<PhaseData> checkPhase(int side13, int side24) {
         List<PhaseData> list = new ArrayList<PhaseData>();
-         
-        
-         
-        String query2 = "Select pd.phase_info_id from phase_detail_temp pd where pd.active='Y' and pd.side13='"+side13+"' and pd.side24='"+side24+"'";
+
+        String query2 = "Select pd.phase_info_id from phase_detail_temp pd where pd.active='Y' and pd.side13='" + side13 + "' and pd.side24='" + side24 + "'";
 
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
             ResultSet rset = pstmt.executeQuery();
             while (rset.next()) {
                 PhaseData bean = new PhaseData();
- 
+
                 bean.setPhase_info_id(rset.getInt(1));
-               
-             
+
                 list.add(bean);
             }
         } catch (Exception e) {
@@ -2908,15 +3553,13 @@ private int getProgramVersionNo(int junction_id) {
         }
         return list;
     }
+
     public List<PhaseData> showDataPhaseNew(int junction_plan_map_id_selected, int plan_no) {
         List<PhaseData> list = new ArrayList<PhaseData>();
-         
-        
-         
-        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides ,pm.order_no from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j\n" +
-"                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n" +
-"                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='"+plan_no+"' order by pm.order_no ASC"
-                ;
+
+        String query2 = "Select pd.phase_info_id,j.junction_name,pd.side13,pd.side24,pd.phase_no,pd.remark,j.no_of_sides ,pm.order_no from phase_detail_temp pd,phase_map_temp pm ,junction_plan_map_temp jpm ,junction_temp j\n"
+                + "                where pm.phase_id=pd.phase_info_id and jpm.junction_id=j.junction_id and\n"
+                + "                pm.junction_plan_map_id=jpm.junction_plan_map_id and pm.active='Y' and jpm.active='Y' and pd.active='Y' and j.final_revision='valid' and jpm.plan_id='" + plan_no + "' and j.junction_id='" + junction_plan_map_id_selected + "'  order by pm.order_no ASC";
 
         try {
             PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query2);
@@ -2925,15 +3568,15 @@ private int getProgramVersionNo(int junction_id) {
                 PhaseData bean = new PhaseData();
 //                bean.setJunction_plan_map_id(rset.getInt(1));
                 bean.setPhase_info_id(rset.getInt(1));
-               
+
                 bean.setJunction_name(rset.getString(2));
-               bean.setSide13(rset.getInt(3));
+                bean.setSide13(rset.getInt(3));
                 bean.setSide24(rset.getInt(4));
                 bean.setPhase_no(rset.getInt(5));
-                 bean.setRemark(rset.getString(6));
-                 
-                 bean.setNo_of_sides(rset.getString(7));
-                 bean.setOrder_no(rset.getInt(8));
+                bean.setRemark(rset.getString(6));
+
+                bean.setNo_of_sides(rset.getString(7));
+                bean.setOrder_no(rset.getInt(8));
                 list.add(bean);
             }
         } catch (Exception e) {

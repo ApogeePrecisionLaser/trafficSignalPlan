@@ -7,7 +7,7 @@
     </context-param>
     <context-param>
         <param-name>connectionString</param-name>
-        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan2</param-value>
+        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan2?useSSL=false</param-value>
     </context-param>
     <context-param>
         <param-name>db_userName</param-name>
@@ -55,9 +55,13 @@
     </filter-mapping>
     <!-- ..............................JQuery Servlets................................................ -->
     <!-- ............................... General Servlets............................................. -->
-    <servlet>
+   <servlet>
         <servlet-name>ServletAdaptor</servlet-name>
         <servlet-class>com.sun.jersey.spi.container.servlet.ServletContainer</servlet-class>
+        <init-param>
+            <param-name>com.sun.jersey.config.property.packages</param-name>
+            <param-value>com.ts.webservice</param-value>
+        </init-param>
         <!--<load-on-startup>1</load-on-startup>-->
     </servlet>
     <servlet>

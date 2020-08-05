@@ -196,7 +196,7 @@
 					<rightPen lineWidth="1.0"/>
 				</box>
 				<textElement textAlignment="Justified"/>
-				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="28" y="0" width="84" height="20" uuid="8b5e0a22-41fb-4610-890c-64eecc70409c"/>

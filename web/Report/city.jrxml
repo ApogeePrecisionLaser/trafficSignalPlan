@@ -114,7 +114,7 @@
 					<bottomPen lineWidth="1.0"/>
 					<rightPen lineWidth="1.0"/>
 				</box>
-				<textFieldExpression><![CDATA[$V{PAGE_COUNT}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="424" y="0" width="86" height="20" uuid="50083eb3-aac8-4267-b35e-5364937e54e6"/>

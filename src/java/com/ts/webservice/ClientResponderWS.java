@@ -1855,7 +1855,7 @@ public class ClientResponderWS extends HttpServlet
             }
             /*---------------------------- code endeded to manage one minute difference in junction time and in application time  ------------------------------------------*/
 
-            //   String currentTimeSynchronizationStatus = this.clientResponderModel.getCurrentTimeSynchronizationStatus(juncHr, juncMin, juncDat, juncMonth, juncYear, appHr, appMin, appDat, appMonth, appYear);
+              currentTimeSynchronizationStatus = this.clientResponderModel.getCurrentTimeSynchronizationStatus(juncHr, juncMin, juncDat, juncMonth, juncYear, appHr, appMin, appDat, appMonth, appYear);
             String side13Status = Integer.toBinaryString(unsignedSide13);
             String side24Status = Integer.toBinaryString(unsignedSide24);
 
@@ -1869,7 +1869,7 @@ public class ClientResponderWS extends HttpServlet
             int programVersionNoFromDB = this.clientResponderModel.getProgramVersionNo(junctionID);
 
             String junctionName = this.clientResponderModel.getJunctionName(junctionID, program_version_no);
-            int noOfSides = this.clientResponderModel.getNoOfSides(junctionID, program_version_no);
+            int noOfSides = this.clientResponderModel.getNoOfSides(junctionID, programVersionNoFromDB);
             List sideNameList = new ArrayList(5);
             for (int j = 1; j <= noOfSides; j++) {
                 String sideName = this.clientResponderModel.getSideName(j, junctionID, program_version_no);
@@ -2850,6 +2850,91 @@ if(!"0".equals(secondry_vertical_for_side5)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match54.get("severity_case").toString(), Integer.parseInt(side4Match54.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
+            }
+        }
+}
+if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equals("0") && primary_horizontal_for_side3.equals("0") && primary_horizontal_for_side4.equals("0") && primary_horizontal_for_side5.equals("0") && primary_Vertical_for_side1.equals("0") && primary_Vertical_for_side2.equals("0") && primary_Vertical_for_side3.equals("0") && primary_Vertical_for_side4.equals("0") && primary_vertical_for_side5.equals("0") && secondry_horizontal_for_side1.equals("0") && secondry_horizontal_for_side2.equals("0") && secondry_horizontal_for_side3.equals("0") && secondry_horizontal_for_side4.equals("0") && secondry_horizontal_for_side5.equals("0") && secondry_verticalfor_side1.equals("0") && secondry_verticalfor_side2.equals("0") && secondry_verticalfor_side3.equals("0") && secondry_verticalfor_side4.equals("0") && secondry_vertical_for_side5.equals("0")){
+       // secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> sideoff1 = this.clientResponderModel.matchColor(side1, "00000000");
+        if (sideoff1.size() > 0) {
+             if(sideoff1.get("remark").equals("high")){
+            fault=1;
+            }else if(sideoff1.get("remark").equals("middle")){
+            fault=2;
+            }
+            int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(sideoff1.get("severity_case").toString(), Integer.parseInt(sideoff1.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
+            }
+        }
+}
+if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equals("0") && primary_horizontal_for_side3.equals("0") && primary_horizontal_for_side4.equals("0") && primary_horizontal_for_side5.equals("0") && primary_Vertical_for_side1.equals("0") && primary_Vertical_for_side2.equals("0") && primary_Vertical_for_side3.equals("0") && primary_Vertical_for_side4.equals("0") && primary_vertical_for_side5.equals("0") && secondry_horizontal_for_side1.equals("0") && secondry_horizontal_for_side2.equals("0") && secondry_horizontal_for_side3.equals("0") && secondry_horizontal_for_side4.equals("0") && secondry_horizontal_for_side5.equals("0") && secondry_verticalfor_side1.equals("0") && secondry_verticalfor_side2.equals("0") && secondry_verticalfor_side3.equals("0") && secondry_verticalfor_side4.equals("0") && secondry_vertical_for_side5.equals("0")){
+       // secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> sideoff2 = this.clientResponderModel.matchColor(side2, "00000000");
+        if (sideoff2.size() > 0) {
+             if(sideoff2.get("remark").equals("high")){
+            fault=1;
+            }else if(sideoff2.get("remark").equals("middle")){
+            fault=2;
+            }
+            int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(sideoff2.get("severity_case").toString(), Integer.parseInt(sideoff2.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
+            }
+        }
+}
+if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equals("0") && primary_horizontal_for_side3.equals("0") && primary_horizontal_for_side4.equals("0") && primary_horizontal_for_side5.equals("0") && primary_Vertical_for_side1.equals("0") && primary_Vertical_for_side2.equals("0") && primary_Vertical_for_side3.equals("0") && primary_Vertical_for_side4.equals("0") && primary_vertical_for_side5.equals("0") && secondry_horizontal_for_side1.equals("0") && secondry_horizontal_for_side2.equals("0") && secondry_horizontal_for_side3.equals("0") && secondry_horizontal_for_side4.equals("0") && secondry_horizontal_for_side5.equals("0") && secondry_verticalfor_side1.equals("0") && secondry_verticalfor_side2.equals("0") && secondry_verticalfor_side3.equals("0") && secondry_verticalfor_side4.equals("0") && secondry_vertical_for_side5.equals("0")){
+       // secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> sideoff3 = this.clientResponderModel.matchColor(side3, "00000000");
+        if (sideoff3.size() > 0) {
+             if(sideoff3.get("remark").equals("high")){
+            fault=1;
+            }else if(sideoff3.get("remark").equals("middle")){
+            fault=2;
+            }
+            int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(sideoff3.get("severity_case").toString(), Integer.parseInt(sideoff3.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
+            }
+        }
+}
+if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equals("0") && primary_horizontal_for_side3.equals("0") && primary_horizontal_for_side4.equals("0") && primary_horizontal_for_side5.equals("0") && primary_Vertical_for_side1.equals("0") && primary_Vertical_for_side2.equals("0") && primary_Vertical_for_side3.equals("0") && primary_Vertical_for_side4.equals("0") && primary_vertical_for_side5.equals("0") && secondry_horizontal_for_side1.equals("0") && secondry_horizontal_for_side2.equals("0") && secondry_horizontal_for_side3.equals("0") && secondry_horizontal_for_side4.equals("0") && secondry_horizontal_for_side5.equals("0") && secondry_verticalfor_side1.equals("0") && secondry_verticalfor_side2.equals("0") && secondry_verticalfor_side3.equals("0") && secondry_verticalfor_side4.equals("0") && secondry_vertical_for_side5.equals("0")){
+       // secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> sideoff4 = this.clientResponderModel.matchColor(side4, "00000000");
+        if (sideoff4.size() > 0) {
+             if(sideoff4.get("remark").equals("high")){
+            fault=1;
+            }else if(sideoff4.get("remark").equals("middle")){
+            fault=2;
+            }
+            int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(sideoff4.get("severity_case").toString(), Integer.parseInt(sideoff4.get("severity_case_id").toString()), sideDetailId);
+            if (faults > 0) {
+               // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
+            }
+        }
+}
+if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equals("0") && primary_horizontal_for_side3.equals("0") && primary_horizontal_for_side4.equals("0") && primary_horizontal_for_side5.equals("0") && primary_Vertical_for_side1.equals("0") && primary_Vertical_for_side2.equals("0") && primary_Vertical_for_side3.equals("0") && primary_Vertical_for_side4.equals("0") && primary_vertical_for_side5.equals("0") && secondry_horizontal_for_side1.equals("0") && secondry_horizontal_for_side2.equals("0") && secondry_horizontal_for_side3.equals("0") && secondry_horizontal_for_side4.equals("0") && secondry_horizontal_for_side5.equals("0") && secondry_verticalfor_side1.equals("0") && secondry_verticalfor_side2.equals("0") && secondry_verticalfor_side3.equals("0") && secondry_verticalfor_side4.equals("0") && secondry_vertical_for_side5.equals("0")){
+       // secondry_vertical_for_side5 = settingColorBit(secondry_vertical_for_side5);
+        // for side5
+        Map<String, Object> sideoff5 = this.clientResponderModel.matchColor(side5, "00000000");
+        if (sideoff5.size() > 0) {
+             if(sideoff5.get("remark").equals("high")){
+            fault=1;
+            }else if(sideoff5.get("remark").equals("middle")){
+            fault=2;
+            }
+            int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
+            int faults = this.clientResponderModel.insertIntoLogTable(sideoff5.get("severity_case").toString(), Integer.parseInt(sideoff5.get("severity_case_id").toString()), sideDetailId);
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
@@ -4206,7 +4291,7 @@ if(!"0".equals(secondry_vertical_for_side5)){
             int plan_id = junctionPlanDetail.get("plan_id");
             int order_no = junctionPlanDetail.get("order_no");
             int map_id = junctionPlanDetail.get("map_id");
-            int noOfPhase = this.clientResponderModel.getPhaseNoMapDay(junctionID, day_id, plan_id);
+            int noOfPhase = this.clientResponderModel.getPhaseNoMapDay(junctionID, day_id, plan_id,map_id);
             for (int i = (firstStartDataPosition + 6) + 2; i <= (firstStartDataPosition + 18); i++) {
                 if (extraByte == "") {
                     extraByte = extraByte + dataToProcess[i];
@@ -4263,7 +4348,7 @@ if(!"0".equals(secondry_vertical_for_side5)){
             int phase_map_id = junctionPlanDetail.get("phase_map_id");
             int phase_id = junctionPlanDetail.get("phase_id");
             int order_no = junctionPlanDetail.get("order_no");
-            for (int i = (firstStartDataPosition + 6) + 1; i <= (firstStartDataPosition + 18); i++) {
+            for (int i = (firstStartDataPosition + 6) + 1; i <= (firstStartDataPosition + 17); i++) {
                 if (extraByte == "") {
                     extraByte = extraByte + dataToProcess[i];
                 } else {

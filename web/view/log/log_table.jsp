@@ -1,4 +1,4 @@
-<%-- 
+ <%-- 
     Document   : log_table
     Created on : 21 Oct, 2019, 12:24:28 PM
     Author     : DELL
@@ -13,39 +13,63 @@
 <script type="text/javascript" src="JS/jquery.autocomplete.js"></script>
 <!--<script type="text/javascript" src="JS/jquery-ui.min.js"></script>-->
 <script type="text/javascript" language="javascript">
+    
     jQuery(function () {
-        $("#state_name").autocomplete("junctionCont", {
-            extraParams: {
-                action1: function () {
-                    return "getStateName"
-                }
-            }
-        });
-        $("#city_name").autocomplete("junctionCont", {
-            extraParams: {
-                action1: function () {
-                    return "getCityName"
-                },
+       
+            $("#searchjunction").autocomplete("LogTableCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getJunctionName";
+                        }
+                    }
+                });
+                });
+                
+                  jQuery(function () {
+            $("#searchside").autocomplete("LogTableCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getSideName";
+                          },
                 action2: function () {
-                    return document.getElementById("state_name").value;
+                    return document.getElementById("searchjunction").value;
                 }
+                    }
+                });
+                });
+                  jQuery(function () {
+            $("#searchdate").autocomplete("LogTableCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getdate";
+                        }},
+                action2: function () {
+                    return document.getElementById("searchjunction").value;
+                    }
+                });
+                });
+    
+        
+    function displayMapList(id) {
+                var queryString;
+            var searchjunction=document.getElementById("searchjunction").value;
+            var searchside=document.getElementById("searchside").value;
+            var searchdate=document.getElementById("searchdate").value;
+           
+                if (id === 'viewPdf')
+                    queryString = "requester=PRINT"+"&searchjunction=" + searchjunction +"&searchside="+searchside + "&searchdate="+searchdate;
+                else
+                    queryString = "requester=PRINTXls"+"&searchjunction=" + searchjunction +"&searchside="+searchside + "&searchdate="+searchdate;
+                var url = "LogTableCont?" + queryString;
+                popupwin = openPopUp(url, "log", 600, 900);
+            }  
+            
+             function openPopUp(url, window_name, popup_height, popup_width) {
+                var popup_top_pos = (screen.availHeight / 2) - (popup_height / 2);
+                var popup_left_pos = (screen.availWidth / 2) - (popup_width / 2);
+                var window_features = "left=" + popup_left_pos + ", top=" + popup_top_pos + ", width=" + popup_width + ", height=" + popup_height + ", resizable=no, scrollbars=yes, status=no, dialog=yes, dependent=yes";
+                return window.open(url, window_name, window_features);
             }
-        });
-    });
-
-    
-
-    
-
-   
-    
-
-    
-
-    
-  
-
-    
     
 
    
@@ -73,7 +97,30 @@
                                             </td>
                                         </tr>
                                     </table> </td> </tr>
-
+<tr><td>
+                                    <form action="LogTableCont" method="post" class="form-group container-fluid">
+                   
+                                    <table align="center">
+                                        <tr >
+                                             <td>
+                                              Junction<input type="text" name="searchjunction" id="searchjunction" value="${searchjunction}">
+                                            </td>
+                                            <td>
+                                              SideName<input type="text" name="searchside" id="searchside" value="${searchside}">
+                                            </td>
+                                            <td>
+                                              Date&Time<input type="text" name="searchdate" id="searchdate" value="${searchdate}">
+                                            </td>
+                                             
+                                       
+                                         <td>
+                                              <input type="submit" name="search" id="search" value="Search"/>  
+                                             <input type="submit" name="task" value="SearchAllRecords"/>
+                                          <input type="button" name="viewPdf" id="viewPdf" value="pdf" onclick="displayMapList(id)">
+                                          
+                                              <input type="button" name="viewXls" id="viewXls" value="excel"  onclick="displayMapList(id)">
+                                             </tr>
+                                    </table></form> </td></tr>
                             <tr>
                                 <td>
                                     <div style="overflow: auto;  max-height: 410px; padding:0px; margin-bottom: 20px">
@@ -147,6 +194,9 @@
                                                     </td>  </tr>
                                             </table>
                                             <%-- These hidden fields "lowerLimit", and "noOfRowsTraversed" belong to form1 of table1. --%>
+                                           <input type="hidden" name="manname" value="${manname}">
+                           <input type="hidden" name="pname" value="${pname}">
+                           <input type="hidden" name="dname" value="${dname}">
                                             <input type="hidden" name="lowerLimit" value="${lowerLimit}">
                                             <input type="hidden" id="noOfRowsTraversed" name="noOfRowsTraversed" value="${noOfRowsTraversed}">
                                         </form></div>

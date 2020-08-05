@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="report name" pageWidth="800" pageHeight="842" columnWidth="760" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="bb7ac9c4-0804-4d23-a673-b6b6efab6f20">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<field name="send_data" class="java.lang.String"/>
+	<field name="r_data" class="java.lang.String"/>
+	<field name="severity_case" class="java.lang.String"/>
+	<field name="date_time" class="java.lang.String"/>
+	<field name="side_name" class="java.lang.String"/>
+	<field name="junction_name" class="java.lang.String"/>
+	<field name="remark" class="java.lang.String"/>
+	<field name="sms_sent_status" class="java.lang.String"/>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="317" y="21" width="150" height="41" backcolor="#CCCCFF" uuid="6b1645e1-1820-4953-bb3d-6ea4c8421c57"/>
+				<textElement>
+					<font size="24" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Log Report]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="61" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="67" y="41" width="78" height="20" backcolor="#9999FF" uuid="a15dbe1f-a67b-4227-936b-6391eddc0a99"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[SendData]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="145" y="41" width="73" height="20" backcolor="#9999FF" uuid="eaf8a7dc-f0e7-4cad-b6aa-8be926ccd0ba"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[ReciveDate]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="218" y="41" width="80" height="20" backcolor="#9999FF" uuid="ee1ef729-bfa4-4e55-bc4b-5432459823d3"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[severity_case]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="298" y="41" width="113" height="20" backcolor="#9999FF" uuid="8b81a5b3-9790-4b26-9346-d7dbfaedcbf6"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[date_time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="411" y="41" width="111" height="20" backcolor="#9999FF" uuid="3c6357a5-749b-44d5-bc73-7040758f4b22"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[side_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="522" y="41" width="96" height="20" backcolor="#9999FF" uuid="760f02f2-0a39-45eb-8b3f-84974a274ed9"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[junction_name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="673" y="41" width="59" height="20" backcolor="#9999FF" uuid="e1e90f3c-af58-4f70-ac35-f277c800d260"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[remark]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="618" y="41" width="55" height="20" backcolor="#9999FF" uuid="75a9125e-b521-43a5-b2c3-171e0d0aa060"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[sms_sent_status]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="18" y="41" width="49" height="20" backcolor="#9999FF" uuid="69fab364-7c3d-46e5-9dbc-1cd425363da9"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<text><![CDATA[S.No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="23" splitType="Stretch">
+			<textField>
+				<reportElement x="67" y="0" width="78" height="20" uuid="555e998b-f59d-4e1b-8bce-a11664b84e87"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{send_data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="145" y="0" width="73" height="20" uuid="7e83dde6-7fe9-4444-a2eb-aefe01430319"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{r_data}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="218" y="0" width="80" height="20" uuid="64d1ab03-2f60-4cc4-8654-a24dbca4d17d"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{severity_case}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="298" y="0" width="113" height="20" uuid="c2bb12ab-15a9-42d8-9995-dcd504b946d1"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{date_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="411" y="0" width="111" height="20" uuid="35018eb5-2211-4139-93f0-c1eb8e74f2b8"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{side_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="522" y="0" width="96" height="20" uuid="b5a310d8-911c-41eb-9a9e-dd47d9f20945"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{junction_name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="673" y="0" width="59" height="20" uuid="16ec3e2e-3f28-4970-9444-63bbd0886c50"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{remark}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="618" y="0" width="55" height="20" uuid="00f38e8f-a8c3-49ec-94ce-ba11b22b438a"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$F{sms_sent_status}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="18" y="0" width="49" height="20" uuid="d3c8744a-4a14-42f9-aa63-f67abff585fa"/>
+				<box>
+					<pen lineWidth="1.0"/>
+					<topPen lineWidth="1.0"/>
+					<leftPen lineWidth="1.0"/>
+					<bottomPen lineWidth="1.0"/>
+					<rightPen lineWidth="1.0"/>
+				</box>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

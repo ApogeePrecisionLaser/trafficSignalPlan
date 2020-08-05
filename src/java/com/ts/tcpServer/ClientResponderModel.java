@@ -1670,10 +1670,18 @@ SeverityCase si=new SeverityCase();
 
     public String getCurrentTimeSynchronizationStatus(int juncHr, int juncMin, int juncDat, int juncMonth, int juncYear, int appHr, int appMin, int appDat, int appMonth, int appYear) {
         String currentTimeSynchronizationStatus = "N";
-        if (juncHr == appHr && juncMin == appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+        // increase time  (juncMin=appMin)    Now   juncMin <= appMin && appMin<juncMin+2
+//        if(juncMin>=59){
+//            juncMin=00;
+//        }else{
+//        juncMin=juncMin+2;
+//        }
+            if (juncHr == appHr && juncMin <= appMin && juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
             currentTimeSynchronizationStatus = "Y";
+            System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
         } else {
             currentTimeSynchronizationStatus = "N";
+              System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
         }
         return currentTimeSynchronizationStatus;
     }
@@ -1907,11 +1915,11 @@ SeverityCase si=new SeverityCase();
         return phaseNo;
     }
     
-    public int getPhaseNoMapDay(int junctionID, int day_id, int plan_id) {
+    public int getPhaseNoMapDay(int junctionID, int day_id, int plan_id,int jpm_id) {
         int phaseNo = 0;
         if(day_id > 0) {
             String query = "Select count(distinct phase_id) from junction_plan_map jp, phase_map pm " +
-                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and jp.day_id = ?";
+                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and jp.junction_plan_map_id = '"+jpm_id+"' and jp.day_id = ?";
             PreparedStatement pstmt;
             ResultSet rset;
             try {
@@ -1928,7 +1936,7 @@ SeverityCase si=new SeverityCase();
             }
         } else {
             String query = "Select count(distinct phase_id) from junction_plan_map jp, phase_map pm " +
-                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ? and day_id IS NULL and date_id IS NULL";
+                            "where jp.junction_plan_map_id = pm.junction_plan_map_id and jp.active='Y' and pm.active='Y' and jp.plan_id = ? and jp.junction_id = ?  and jp.junction_plan_map_id = '"+jpm_id+"' and day_id IS NULL and date_id IS NULL";
             PreparedStatement pstmt;
             ResultSet rset;
             try {
