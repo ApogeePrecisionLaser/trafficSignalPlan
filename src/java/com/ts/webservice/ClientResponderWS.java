@@ -1755,6 +1755,7 @@ public class ClientResponderWS extends HttpServlet
             int primary_Vertical_for_side4 = dataToProcess[firstStartDataPosition + 44] & 0xFF;
             int secondry_horizontal_for_side4 = dataToProcess[firstStartDataPosition + 45];// & 0xFF;
             int secondry_verticalfor_side4 = dataToProcess[firstStartDataPosition + 46];
+            System.out.println("secondry_verticalfor_side4"+secondry_verticalfor_side4);
             int hundred_place_side_4 = dataToProcess[firstStartDataPosition + 47];// & 0xFF;
             int tenth_place_side_4 = dataToProcess[firstStartDataPosition + 48];// & 0xFF;
             int once_place_side_4 = dataToProcess[firstStartDataPosition + 49];// & 0xFF;
@@ -2540,7 +2541,8 @@ public class ClientResponderWS extends HttpServlet
             }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
            int  faults = this.clientResponderModel.insertIntoLogTable(side1Match.get("severity_case").toString(), Integer.parseInt(side1Match.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+              System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side1Match.get("severity_case").toString());
+          if (faults > 0) {
                // sendSmsToAssignedFor("", side1Match.get("severity_case").toString());
             }
         }
@@ -2557,6 +2559,7 @@ public class ClientResponderWS extends HttpServlet
             }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side2Match.get("severity_case").toString(), Integer.parseInt(side2Match.get("severity_case_id").toString()), sideDetailId);
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side2Match.get("severity_case").toString());
             if (faults > 0) {
                // sendSmsToAssignedFor("", side2Match.get("severity_case").toString());
             }
@@ -2573,6 +2576,8 @@ if(!"0".equals(secondry_horizontal_for_side3)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side3Match.get("severity_case").toString(), Integer.parseInt(side3Match.get("severity_case_id").toString()), sideDetailId);
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side3Match.get("severity_case").toString());
+          
             if (faults > 0) {
                 //sendSmsToAssignedFor("", side3Match.get("severity_case").toString());
             }
@@ -2590,6 +2595,8 @@ secondry_verticalfor_side3 = settingColorBit(secondry_verticalfor_side3);
             }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match.get("severity_case").toString(), Integer.parseInt(side4Match.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match.get("severity_case").toString());
             }
@@ -2606,6 +2613,8 @@ secondry_verticalfor_side3 = settingColorBit(secondry_verticalfor_side3);
             }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side1Matchs.get("severity_case").toString(), Integer.parseInt(side1Matchs.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side1Matchs.get("severity_case").toString());
+          
             if (faults > 0) {
               //  sendSmsToAssignedFor("", side1Matchs.get("severity_case").toString());
             }
@@ -2622,6 +2631,8 @@ secondry_verticalfor_side3 = settingColorBit(secondry_verticalfor_side3);
             }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side2Match1.get("severity_case").toString(), Integer.parseInt(side2Match1.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side2Match1.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side2Match1.get("severity_case").toString());
             }
@@ -2638,6 +2649,8 @@ if(!"0".equals(secondry_horizontal_for_side4)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side3Match3.get("severity_case").toString(), Integer.parseInt(side3Match3.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side3Match3.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side3Match3.get("severity_case").toString());
             }
@@ -2656,6 +2669,8 @@ if(!"0".equals(secondry_horizontal_for_side4)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match12.get("severity_case").toString(), Integer.parseInt(side4Match12.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match12.get("severity_case").toString());
+          
             if (faults > 0) {
              //   sendSmsToAssignedFor("", side4Match12.get("severity_case").toString());
             }
@@ -2672,7 +2687,9 @@ if(!"0".equals(primary_horizontal_for_side3)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
            int  faults = this.clientResponderModel.insertIntoLogTable(side1Matchs21.get("severity_case").toString(), Integer.parseInt(side1Matchs21.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side1Matchs21.get("severity_case").toString());
+          
+           if (faults > 0) {
                // sendSmsToAssignedFor("", side1Matchs21.get("severity_case").toString());
             }
         }}
@@ -2688,6 +2705,8 @@ if(!"0".equals(primary_Vertical_for_side3)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side2Match122.get("severity_case").toString(), Integer.parseInt(side2Match122.get("severity_case_id").toString()), sideDetailId);
+           System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side2Match122.get("severity_case").toString());
+          
             if (faults > 0) {
              //   sendSmsToAssignedFor("", side2Match122.get("severity_case").toString());
             }
@@ -2704,6 +2723,8 @@ if(!"0".equals(secondry_horizontal_for_side1)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side3Match23.get("severity_case").toString(), Integer.parseInt(side3Match23.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side3Match23.get("severity_case").toString());
+          
             if (faults > 0) {
               //  sendSmsToAssignedFor("", side3Match23.get("severity_case").toString());
             }
@@ -2721,6 +2742,8 @@ secondry_verticalfor_side1 = settingColorBit(secondry_verticalfor_side1);
             }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match124.get("severity_case").toString(), Integer.parseInt(side4Match124.get("severity_case_id").toString()), sideDetailId);
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match124.get("severity_case").toString());
+          
             if (faults > 0) {
               //  sendSmsToAssignedFor("", side4Match124.get("severity_case").toString());
             }
@@ -2737,6 +2760,8 @@ if(!"0".equals(primary_horizontal_for_side2)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side1Matchs214.get("severity_case").toString(), Integer.parseInt(side1Matchs214.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side1Matchs214.get("severity_case").toString());
+          
             if (faults > 0) {
              //   sendSmsToAssignedFor("", side1Matchs214.get("severity_case").toString());
             }
@@ -2753,6 +2778,8 @@ if(!"0".equals(primary_Vertical_for_side4)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side2Match1224.get("severity_case").toString(), Integer.parseInt(side2Match1224.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side2Match1224.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side2Match1224.get("severity_case").toString());
             }
@@ -2769,7 +2796,9 @@ if(!"0".equals(secondry_horizontal_for_side2)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
            int faults = this.clientResponderModel.insertIntoLogTable(side3Match232.get("severity_case").toString(), Integer.parseInt(side3Match232.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side3Match232.get("severity_case").toString());
+          
+           if (faults > 0) {
                // sendSmsToAssignedFor("", side3Match232.get("severity_case").toString());
             }}
         }
@@ -2786,7 +2815,9 @@ if(!"0".equals(secondry_verticalfor_side2)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
            int faults = this.clientResponderModel.insertIntoLogTable(side4Match1242.get("severity_case").toString(), Integer.parseInt(side4Match1242.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match1242.get("severity_case").toString());
+          
+           if (faults > 0) {
              //   sendSmsToAssignedFor("", side4Match1242.get("severity_case").toString());
             }
         }}
@@ -2802,7 +2833,9 @@ if(!"0".equals(primary_horizontal_for_side5)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
              int faults = this.clientResponderModel.insertIntoLogTable(side4Match5.get("severity_case").toString(), Integer.parseInt(side4Match5.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match5.get("severity_case").toString());
+          
+             if (faults > 0) {
               //  sendSmsToAssignedFor("", side4Match5.get("severity_case").toString());
             }
         }}
@@ -2818,6 +2851,8 @@ if(!"0".equals(primary_vertical_for_side5)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match52.get("severity_case").toString(), Integer.parseInt(side4Match52.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match52.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match52.get("severity_case").toString());
             }
@@ -2834,7 +2869,9 @@ if(!"0".equals(secondry_horizontal_for_side5)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
            int faults= this.clientResponderModel.insertIntoLogTable(side4Match53.get("severity_case").toString(), Integer.parseInt(side4Match53.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match53.get("severity_case").toString());
+          
+           if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match53.get("severity_case").toString());
             }
         }}
@@ -2850,6 +2887,8 @@ if(!"0".equals(secondry_vertical_for_side5)){
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(side4Match54.get("severity_case").toString(), Integer.parseInt(side4Match54.get("severity_case_id").toString()), sideDetailId);
+           System.out.println("ssssssssssssssssssssssssssssssssssssss"  +side4Match54.get("severity_case").toString());
+           
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
@@ -2867,6 +2906,8 @@ if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equa
             }
             int sideDetailId = this.clientResponderModel.getSideId(1, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(sideoff1.get("severity_case").toString(), Integer.parseInt(sideoff1.get("severity_case_id").toString()), sideDetailId);
+           System.out.println("ssssssssssssssssssssssssssssssssssssss"  +sideoff1.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
@@ -2884,6 +2925,8 @@ if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equa
             }
             int sideDetailId = this.clientResponderModel.getSideId(2, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(sideoff2.get("severity_case").toString(), Integer.parseInt(sideoff2.get("severity_case_id").toString()), sideDetailId);
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +sideoff2.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
@@ -2901,6 +2944,8 @@ if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equa
             }
             int sideDetailId = this.clientResponderModel.getSideId(3, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(sideoff3.get("severity_case").toString(), Integer.parseInt(sideoff3.get("severity_case_id").toString()), sideDetailId);
+             System.out.println("ssssssssssssssssssssssssssssssssssssss"  +sideoff3.get("severity_case").toString());
+          
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
@@ -2918,7 +2963,8 @@ if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equa
             }
             int sideDetailId = this.clientResponderModel.getSideId(4, junctionID, programVersionNumber);
             int faults = this.clientResponderModel.insertIntoLogTable(sideoff4.get("severity_case").toString(), Integer.parseInt(sideoff4.get("severity_case_id").toString()), sideDetailId);
-            if (faults > 0) {
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +sideoff4.get("severity_case").toString());
+           if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }
         }
@@ -2934,7 +2980,9 @@ if(primary_horizontal_for_side1.equals("0") && primary_horizontal_for_side2.equa
             fault=2;
             }
             int sideDetailId = this.clientResponderModel.getSideId(5, junctionID, programVersionNumber);
+            
             int faults = this.clientResponderModel.insertIntoLogTable(sideoff5.get("severity_case").toString(), Integer.parseInt(sideoff5.get("severity_case_id").toString()), sideDetailId);
+            System.out.println("ssssssssssssssssssssssssssssssssssssss"  +sideoff5.get("severity_case").toString());
             if (faults > 0) {
                // sendSmsToAssignedFor("", side4Match54.get("severity_case").toString());
             }

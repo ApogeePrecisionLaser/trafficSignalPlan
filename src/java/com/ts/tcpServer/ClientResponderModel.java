@@ -1676,7 +1676,8 @@ SeverityCase si=new SeverityCase();
 //        }else{
 //        juncMin=juncMin+2;
 //        }
-            if (juncHr == appHr && juncMin <= appMin && juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+           // if (juncHr == appHr && juncMin <= appMin && juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+            if (juncHr == appHr && juncMin <= appMin &&  appMin<=juncMin+3 && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
             currentTimeSynchronizationStatus = "Y";
             System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
         } else {

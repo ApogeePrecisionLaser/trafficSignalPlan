@@ -50,8 +50,8 @@ public class LogTableModel {
                     + "inner join junction as j on j.junction_id = side.junction_id "
                     + " WHERE s.active='Y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
-                    + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') and "
-                    + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  "
+                    + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') order by l.log_table_id desc  "
+                 //   + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  "
                     + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
 //              + " IF('" + searchstate + "' = '',   s.state_name LIKE '%%',  s.state_name ='"+searchstate+"') and "
                //  + " IF('" + searchdistrict + "' = '',  d.district_name LIKE '%%', d.district_name ='"+searchdistrict+"')  "
@@ -88,7 +88,7 @@ public class LogTableModel {
                     + " WHERE s.active='Y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
                     + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') and "
-                    + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  ";
+                    + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"') ";
                   
 //              + " IF('" + searchstate + "' = '',   s.state_name LIKE '%%',  s.state_name ='"+searchstate+"') and "
                //  + " IF('" + searchdistrict + "' = '',  d.district_name LIKE '%%', d.district_name ='"+searchdistrict+"')  "
@@ -216,8 +216,8 @@ public class LogTableModel {
                     + "join junction as j on j.junction_id = side.junction_id "
                     + " WHERE s.active='Y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
-                    + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') and "
-                    + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  ";
+                    + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"')  ";
+                   // + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  ";
         int noOfRows = 0;
         try {
             ResultSet rset = connection.prepareStatement(query).executeQuery();
