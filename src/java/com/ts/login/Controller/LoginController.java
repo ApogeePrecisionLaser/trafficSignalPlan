@@ -12,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -30,15 +31,28 @@ public class LoginController extends HttpServlet {
         loginModel.setDb_userPassword(ctx.getInitParameter("db_userPassword"));
         loginModel.setConnection();
         String task = request.getParameter("task");
-
+   HttpSession session = request.getSession();
         if (task == null) {
             task = "";
         }
+         String designation = null;       
         if (task.equals("Login")) {
             String username = request.getParameter("username");
             String password = request.getParameter("password");
+               
+           //  session.setAttribute("user_name", username);
+          //   session.setAttribute("password", password);
             boolean userAuthentic = loginModel.isUserAuthentic(username, password);
+               designation=loginModel.getDesignation(username,password);
             if (userAuthentic == true) {
+                if(designation.equals("admin")){
+              //  designation="admin";
+                    session.setAttribute("login_designation", designation);
+                }else{
+               // designation="user";
+                    session.setAttribute("login_designation", designation);
+                   // session.setMaxInactiveInterval(60);
+                }
                 request.getRequestDispatcher("/after_login.jsp").forward(request, response);
             } else {
                 request.setAttribute("message", loginModel.getMessage());

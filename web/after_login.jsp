@@ -109,10 +109,14 @@ document.getElementById("stopWebService").style.display = "block";
                             <!--                        <input type="button" id="stopWebService" name="stopWebService" value="Stop WebService Response" onclick="web(id)">
                                                      <input type="button" id="startWebService" name="startWebService" value="Start WebService Response" onclick="web(id)">-->
 
+                           <c:if test="${login_designation == 'admin'}">  
                             <input type="submit" name="task" value="stopWebService" id="stopWebService" onclick="Openform(id)">
-                            <input type="submit" style="display: none" name="task" value="startWebService" id="startWebService" onclick="Openform1(id)">
+                             
+                                <input type="submit" style="display: none" name="task" value="startWebService" id="startWebService" onclick="Openform1(id)">
+                           
                             <input type="hidden" name="show_button" value="${show_button}">
                             <input type="button" class="danger"  onclick="viewJunctionCurrentStatus();" value="ViewFireVehicleCurrentStatus"> 
+  </c:if>  
                         </form>
                     </DIV>
                 </td>

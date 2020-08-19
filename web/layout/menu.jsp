@@ -11,18 +11,56 @@
 <html>
 
     <head>
+        <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
         <title>Traffic Signal</title>
         <link rel="stylesheet" href="style/style.css" media="screen">
         <link rel="stylesheet" href="style/menu.css" media="screen">
+        <style>
+            
+            .button11 {
+  background-color: #555555; /* Green */
+  border: none;
+  color: white;
+   
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 14px;
+  margin: 4px 2px;
+  cursor: pointer;
+}
+            
+        </style>
     </head>
 
     <body>
         <ul class="menu">
 
             <li><a href="after_login.jsp" class="home">Home</a></li>
+                             
+                           
+            
             <li><a href="loggedInJunctionCont" class="signal">View Signal Status</a></li>
-            <li><a href="junctionCont" class="junction">Junction Detail</a></li>
+            
+            <%
+    session=request.getSession(false);
+    if(session.getAttribute("login_designation")==null)
+    {
+        response.sendRedirect("beforeHomeCont");
+    }
+
+%>
+<c:if test="${login_designation == 'user'}">
+<li> <input type="button" class="button11"  onclick="viewJunctionCurrentStatus();" value="ViewFireVehicleCurrentStatus"> 
+                      </li></c:if>
+            <c:if test="${login_designation == 'admin'}">
+            <li>
+                
+                 
+                <a href="junctionCont" class="junction">Junction Detail</a>  
+        </li>
              <li><a href="JunctionDetailsUpdate" class="junction">Junction Detail Update</a></li>
+            
             <li><a href="#" class="log">Log Detail</a>
                 <ul>
                     <li><a href="connectedIpCont" class="log">Connected Ip Log</a></li>
@@ -56,8 +94,9 @@
                     
                 </ul>
             </li>
-
+</c:if>
             <li><a href="beforeHomeCont" class="signout">Signout</a></li>
+            
         </ul> <!-- end .menu -->
 
     </body>

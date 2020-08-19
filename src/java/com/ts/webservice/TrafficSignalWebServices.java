@@ -68,8 +68,8 @@ public class TrafficSignalWebServices {
         for (int i = 0; i < receivedBytes.length; i++) {
             System.out.print(" " + receivedBytes[i]);
         }
-        JunctionModel junctionModel = new JunctionModel();
-        System.out.println("");
+        JunctionModel junctionModel = new JunctionModel(); 
+        //System.out.println("");
         ClientResponderWS clientResponder = new ClientResponderWS();
         if (receivedBytes != null && receivedBytes.length != 0) {
             try {

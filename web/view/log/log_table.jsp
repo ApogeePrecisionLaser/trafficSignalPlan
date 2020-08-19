@@ -135,8 +135,9 @@
                                                     <th class="heading">Key Person</th>
                                                     <th class="heading">Junction Name</th>
                                                     <th class="heading">Side Name</th>
+                                                    <th class="heading">Side Aspect Name</th>
                                                     <th class="heading">Date Time</th>
-                                                    <th class="heading">Remark</th> 
+<!--                                                    <th class="heading">Remark</th> -->
                                                 </tr>
                                                 <c:forEach var="list" items="${requestScope['log_table']}" varStatus="loopCounter">
                                                     <tr class="row" onMouseOver=this.style.backgroundColor = '#E3ECF3' onmouseout=this.style.backgroundColor = 'white'>
@@ -153,8 +154,9 @@
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.key_person_id}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.junction_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side_name}</td>
+                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.side_aspect_name}</td>
                                                         <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.date_time}</td>
-                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.remark}</td>
+<!--                                                        <td id="t1c${IDGenerator.uniqueID}"  onclick="fillColumns(id)">${list.remark}</td>-->
                                                     </tr>
                                                 </c:forEach>
                                                 <tr>

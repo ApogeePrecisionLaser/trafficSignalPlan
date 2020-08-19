@@ -271,6 +271,7 @@ public class TS_StatusShowerController extends HttpServlet {
                     }
                 } else {
                     out.println("");
+                    System.out.println("exception");
                 }
                 }
                 

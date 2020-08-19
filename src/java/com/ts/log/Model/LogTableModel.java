@@ -43,12 +43,12 @@ public class LogTableModel {
     public List<LogTable> showData(int lowerLimit, int noOfRowsToDisplay,String junctionname,String sidename,String datetime) {
         List<LogTable> list = new ArrayList<LogTable>();
         try {
-            String query = "SELECT j.junction_id,side.side_detail_id,j.junction_name,side.side_name,l.log_table_id, s.send_data, s.recieved_data, l.sms_sent_status, l.date_time, l.revision_no, l.active,s.severity_case_id, s.severity_case"
+            String query = "SELECT j.junction_id,side.side_detail_id,j.junction_name,side.side_name,l.log_table_id, s.send_data, s.recieved_data, l.sms_sent_status, l.date_time, l.revision_no, l.active,s.severity_case_id, s.severity_case,l.side_aspect_name"
                     + " from log_table AS l "
                     + " inner join severity_case As s on s.severity_case_id = l.case_id "
                     + "inner join side_detail As side on side.side_detail_id = l.side_detail_id "
                     + "inner join junction as j on j.junction_id = side.junction_id "
-                    + " WHERE s.active='Y' and "
+                    + " WHERE s.active='Y' and j.final_revision='valid' and side.active='y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
                     + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') order by l.log_table_id desc  "
                  //   + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  "
@@ -69,6 +69,7 @@ public class LogTableModel {
                 logTable.setSms_sent_status(rset.getString("sms_sent_status"));
                 logTable.setDate_time(rset.getString("date_time"));
                 logTable.setSeverity_case(rset.getString("severity_case"));
+                logTable.setSide_aspect_name(rset.getString("side_aspect_name"));
                 list.add(logTable);
             }
 //
@@ -85,7 +86,7 @@ public class LogTableModel {
                     + "join severity_case As s on s.severity_case_id = l.case_id "
                     + "join side_detail As side on side.side_detail_id = l.side_detail_id "
                     + "join junction as j on j.junction_id = side.junction_id "
-                    + " WHERE s.active='Y' and "
+                    + " WHERE s.active='Y' and j.final_revision='valid' and side.active='y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
                     + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"') and "
                     + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"') ";
@@ -214,7 +215,7 @@ public class LogTableModel {
                     + "join severity_case As s on s.severity_case_id = l.case_id "
                     + "join side_detail As side on side.side_detail_id = l.side_detail_id "
                     + "join junction as j on j.junction_id = side.junction_id "
-                    + " WHERE s.active='Y' and "
+                    + " WHERE s.active='Y' and j.final_revision='valid' and side.active='y' and "
                     + " IF('" + junctionname + "' = '',   j.junction_name LIKE '%%',  j.junction_name='"+junctionname+"') and "
                     + " IF('" + sidename + "' = '',   side.side_name LIKE '%%',  side.side_name ='"+sidename+"')  ";
                    // + " IF('" + datetime + "' = '',   l.date_time LIKE '%%',  l.date_time ='"+datetime+"')  ";

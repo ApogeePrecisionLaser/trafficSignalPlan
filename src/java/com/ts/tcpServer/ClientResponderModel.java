@@ -206,7 +206,7 @@ public class ClientResponderModel extends HttpServlet {
             System.out.println("ClientResponderModel getSideName() Error: " + e);
         }
         return sideNames;
-    }
+    }     
     
     public int getSideId(int sideNo, int junctionID, int program_version_no) {
         String query = "SELECT side_detail_id FROM side_detail WHERE junction_id = ? AND side_no= ? ";
@@ -1671,13 +1671,10 @@ SeverityCase si=new SeverityCase();
     public String getCurrentTimeSynchronizationStatus(int juncHr, int juncMin, int juncDat, int juncMonth, int juncYear, int appHr, int appMin, int appDat, int appMonth, int appYear) {
         String currentTimeSynchronizationStatus = "N";
         // increase time  (juncMin=appMin)    Now   juncMin <= appMin && appMin<juncMin+2
-//        if(juncMin>=59){
-//            juncMin=00;
-//        }else{
-//        juncMin=juncMin+2;
-//        }
-           // if (juncHr == appHr && juncMin <= appMin && juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
-            if (juncHr == appHr && juncMin <= appMin &&  appMin<=juncMin+3 && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+        if(juncMin>=58 && juncMin<=60){
+            juncMin=00;
+               
+           if (juncHr == appHr &&  juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
             currentTimeSynchronizationStatus = "Y";
             System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
         } else {
@@ -1686,6 +1683,22 @@ SeverityCase si=new SeverityCase();
         }
         return currentTimeSynchronizationStatus;
     }
+        else{
+        juncMin=juncMin;
+           
+           if (juncHr == appHr && juncMin <= appMin  && appMin<=juncMin+3 && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+            currentTimeSynchronizationStatus = "Y";
+            System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
+        } else {
+            currentTimeSynchronizationStatus = "N";
+              System.out.println("Hello!!!!!!!!!!!!!!!!!!!!!!!"+juncMin+"                    sssssssssssssssss"+appMin);
+        }
+        return currentTimeSynchronizationStatus;
+    }
+        }
+           // if (juncHr == appHr && juncMin <= appMin && juncMin<=appMin && juncDat == appDat && juncMonth == appMonth && juncYear == appYear) {
+          
+        
 
     public String getLastTimeSynchronizationStatus(int junctionID, int program_version_no) {
         String status = "No Record";
@@ -2310,7 +2323,35 @@ if(a<=7){
         return mapObject;
     }
     
-    public int insertIntoLogTable(String severity_case,int severity_case_id, int side_detail_id) {
+    public int insertIntoLogTable(String severity_case,int severity_case_id, int side_detail_id,String side_aspect_name) {
+        PreparedStatement pstmt;
+        ResultSet rset;
+        int rowsReturned = 0;
+        if(severity_case_id > 0) {
+                String insertQyery = "INSERT INTO log_table(case_id, date_time, remark, side_detail_id,side_aspect_name) "
+                + " VALUES (?, ?, ?, ?,?) ";
+                try {
+//                    Date and time
+                    SimpleDateFormat formatter= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    Date date = new Date(System.currentTimeMillis());
+                    pstmt = connection.prepareStatement(insertQyery);
+                    pstmt.setInt(1, severity_case_id);
+                    pstmt.setString(2, formatter.format(date));
+                    pstmt.setString(3, severity_case);
+                    pstmt.setInt(4, side_detail_id);
+                    pstmt.setString(5, side_aspect_name);
+                    rowsReturned = pstmt.executeUpdate();
+                    if (rowsReturned > 0) {
+                        System.out.println("ClientResponderModel matchColor() Record inserted successfully in Log Table");
+                    }
+                } catch (SQLException e) {
+                    System.out.println("ClientResponderModel matchColor Error: " + e);
+                }
+            }
+        return rowsReturned;
+    }
+    
+     public int insertIntoLogTable(String severity_case,int severity_case_id, int side_detail_id) {
         PreparedStatement pstmt;
         ResultSet rset;
         int rowsReturned = 0;
@@ -2326,6 +2367,7 @@ if(a<=7){
                     pstmt.setString(2, formatter.format(date));
                     pstmt.setString(3, severity_case);
                     pstmt.setInt(4, side_detail_id);
+                 //   pstmt.setString(5, side_aspect_name);
                     rowsReturned = pstmt.executeUpdate();
                     if (rowsReturned > 0) {
                         System.out.println("ClientResponderModel matchColor() Record inserted successfully in Log Table");
@@ -2336,6 +2378,7 @@ if(a<=7){
             }
         return rowsReturned;
     }
+    
     
     
     

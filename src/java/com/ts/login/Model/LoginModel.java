@@ -52,7 +52,25 @@ public class LoginModel {
         }
         return isAuthentic;
     }
-
+ public String getDesignation(String user_name, String password) {
+        String str = "";
+        PreparedStatement pstmt;
+        ResultSet rst;
+        String query = "select name from user"
+                + " where email_id='" + user_name + "' and  password='" + password + "' ";
+              //  + " and l.key_person_id=kp.key_person_id and kp.designation_id=d.designation_id and d.active='Y' ";
+        try {
+            connection.setAutoCommit(false);
+            pstmt = connection.prepareStatement(query);
+            rst = pstmt.executeQuery();
+            while (rst.next()) {
+                str = rst.getString(1);
+            }
+        } catch (Exception e) {
+            System.out.println("getDesignation ERROR inside orderMgmtModel - " + e);
+        }
+        return str;
+    }
     public void setConnection() {
         try {
             Class.forName(driverClass);

@@ -68,7 +68,7 @@ public class TS_StatusUpdaterController extends HttpServlet {
             clientResponderws = new ClientResponderWS1();
             jun.setClientResponderws(clientResponderws);
         }
-
+ 
         response.setContentType("text/html");
 
         String task = request.getParameter("task");
@@ -77,8 +77,8 @@ public class TS_StatusUpdaterController extends HttpServlet {
         String minutes = request.getParameter("m");
         String seconds = request.getParameter("s");
         String currentTime = hours + ":" + minutes + ":" + seconds;
-        PlanInfo planInfo = (PlanInfo) ctx.getAttribute("planInfoRefreshList");
-
+        PlanInfo planInfo = (PlanInfo) ctx.getAttribute("planInfolist");
+ 
         Signal signal = (Signal) ctx.getAttribute("signal");
         synchronized (signal) {
             signal.setCurrentTime(currentTime);
@@ -114,14 +114,15 @@ public class TS_StatusUpdaterController extends HttpServlet {
             if (planInfo != null);
             planInfo.setResponseFromModemForClearance(false);
             clientResponderws.setPlanInfoRefreshList(planInfo);
-            this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
             this.cal = Calendar.getInstance();
             currentTime = this.dateFormat.format(this.cal.getTime());
             String currentVisitedTime = currentTime;
             int calculateCurrentTime = calculateTimeInSeconds(currentVisitedTime);
             int calculateLastTime = calculateTimeInSeconds(this.lastVisitedTime);
             int calculatedDifference = calculateCurrentTime - calculateLastTime;
-            this.responseFromModemForClearance = jun.isResponseFromModemForClearance();
+           this.responseFromModemForClearance = jun.isResponseFromModemForClearance();
+           // this.responseFromModemForClearance =true;
             out.print("success");
             out.close();
             return;

@@ -24,6 +24,15 @@ public class LogTable {
     int junction_id;
     String junction_name;
     String remark;
+    String side_aspect_name;
+
+    public String getSide_aspect_name() {
+        return side_aspect_name;
+    }
+
+    public void setSide_aspect_name(String side_aspect_name) {
+        this.side_aspect_name = side_aspect_name;
+    }
 
     public int getLog_table_id() {
         return log_table_id;

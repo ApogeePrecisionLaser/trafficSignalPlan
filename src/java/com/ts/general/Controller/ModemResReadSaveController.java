@@ -104,7 +104,7 @@ public class ModemResReadSaveController extends HttpServlet {
                             int calculateLastTime = calculateTimeInSeconds(this.lastVisitedTime);
                             int calculatedDifference = calculateCurrentTime - calculateLastTime;
                             this.responseFromModemForRefresh = jun.isResponseFromModemForActivity();
-                            if (!this.responseFromModemForRefresh) {
+                            if (!this.responseFromModemForRefresh) { 
                                 while (calculatedDifference < 20) {
                                     this.dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                     this.cal = Calendar.getInstance();
