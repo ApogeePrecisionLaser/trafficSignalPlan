@@ -1,4 +1,4 @@
-<%--
+ <%--
     Document   : junction
     Created on : Aug 10, 2012, 9:33:33 AM
     Author     : Shruti
@@ -11,6 +11,8 @@
 
 <html>
     <head>
+         <link href="style/style1.css" type="text/css" rel="stylesheet" media="Screen"/>
+        <link href="style/Table_content.css" type="text/css" rel="stylesheet" media="Screen"/>
         <link rel="stylesheet" type="text/css" href="style/style.css" />
         <link rel="stylesheet" type="text/css" href="style/Table_content.css" />
         <link rel="stylesheet" type="text/css" href="css/calendar.css" />
@@ -30,20 +32,26 @@
 
             function makeEditable(id) {
                 document.getElementById("city_name").disabled = false;
-                if(id == 'NEW') {
+                document.getElementById("sunrise_hr").disabled = false;
+                document.getElementById("sunrise_min").disabled = false;
+                document.getElementById("sunset_hr").disabled = false;
+                document.getElementById("sunset_min").disabled = false;
+                document.getElementById("date").disabled = false;
+                if(id === 'NEW') {
                     $("#message").html('');
                     //                    document.getElementById("message").innerHTML = "";      // Remove message
                     document.getElementById("EDIT").disabled = true;
                     document.getElementById("DELETE").disabled = true;
                     document.getElementById("SAVE").disabled = false;
-                    document.getElementById("Save AS New").disabled = true;
+                    document.getElementById("Save AS New").disabled = true
+                    ;
                     setDefaultColor(document.getElementById("noOfRowsTraversed").value, 7);
                     document.getElementById("city_name").focus();
                 }
-                if(id == 'EDIT') {
-                    document.getElementById("date").readOnly = true;
+                if(id === 'EDIT') {
+                   // document.getElementById("date").readOnly = true;
                     document.getElementById("NEW").disabled = false;
-                    document.getElementById("Save AS New").disabled = true;
+                    document.getElementById("Save AS New").disabled = false;
                     document.getElementById("SAVE").disabled = true;
                     document.getElementById("DELETE").disabled = false;
                     document.getElementById("city_name").focus();
@@ -92,6 +100,11 @@
                 //alert(lowerLimit);
                 var t1id = "t1c";
                 document.getElementById("city_name").value = document.getElementById(t1id + (lowerLimit + 1)).innerHTML;
+                document.getElementById("sunrise_hr").value = document.getElementById(t1id + (lowerLimit + 2)).innerHTML;
+                document.getElementById("sunrise_min").value = document.getElementById(t1id + (lowerLimit + 3)).innerHTML;
+                document.getElementById("sunset_hr").value = document.getElementById(t1id + (lowerLimit + 4)).innerHTML;
+                document.getElementById("sunset_min").value = document.getElementById(t1id + (lowerLimit + 5)).innerHTML;
+                document.getElementById("date1").value = document.getElementById(t1id + (lowerLimit + 6)).innerHTML;
                 // Now enable/disable various buttons.
 
                 for(var i = 0; i < noOfColumns; i++) {
@@ -180,6 +193,7 @@
                 if(document.getElementById("month_cb").checked){
                     document.getElementById("month").disabled=false;
                 }else{
+                    
                     document.getElementById("month").disabled=true;}
                 if(document.getElementById("date_cb").checked){
                     document.getElementById("date_filter").disabled=false;
@@ -187,7 +201,58 @@
                     document.getElementById("date_filter").disabled=true;}
             }
 
+     jQuery(function () {
+                
+                $("#searchCity").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchCity";
+                        }
+                    }
+                });
+                $("#searchdate").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchdate";
+                        }
+                        
+                    }
+                });
+                $("#searchsunrisehr").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchsunrisehr";
+                        } 
+                        
+                    }
+                });
+                 $("#searchsunrisemin").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchsunrisemin";
+                        }
+                    }
+                });
+                
+                 $("#searchsunsethr").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchsunsethr";
+                        }
+                    }
+                });
+                 $("#searchsunsetmin").autocomplete("JunSunriseSunsetCont", {
+                    extraParams: {
+                        action1: function () {
+                            return "getsearchsunsetmin";
+                        }
+                    }
+                });
+                
+                 
+             
 
+            });
         </script>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
@@ -213,86 +278,48 @@
                                 </td>
                             </tr>
                             <tr>
+                                 <form action="JunSunriseSunsetCont" method="post">
                                 <td align="center">
                                     <table id="table0"  align="center" width="500" >
 
-                                        <tr style="font-size:larger ;font-weight: 700;" >
+                                       
+                                                        <tr>
+                                                             <td>
+                                              City<input type="text" name="searchCity" id="searchCity" value="${searchCity}">
+                                            </td>
                                             <td>
-                                                <form name="form0" method="POST" action="JunSunriseSunsetCont" >
-                                                    <table border="0" class="reference">
-                                                        <tr>
-                                                            <td>
-                                                                City Name :    <input type="checkbox" name="checkbox" id="city_name_cb" value="city_name_cb" onclick="setVisibility(id)" ${city_name_cb eq 'checked' ? 'checked' : ''}>
-                                                            </td>
-                                                            <td colspan="2">
-                                                                Month  : <input type="checkbox" name="checkbox" id="month_cb" value="month_cb" onclick="setVisibility(id)" ${month_cb eq 'checked' ? 'checked' : ''}>
-                                                            </td>
-                                                            <td>
-                                                                Year  :<input type="checkbox" name="checkbox" id="year_cb" value="year_cb" onclick="setVisibility(id)" ${year_cb eq 'checked' ? 'checked' : ''}>
-                                                            </td>
-                                                            <td>
-                                                                Date  :<input type="checkbox" name="checkbox" id="date_cb" value="date_cb" onclick="setVisibility(id)" ${date_cb eq 'checked' ? 'checked' : ''}>
-                                                            </td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td nowrap >City Name<input  type="text" name="city_name_filter" id="city_name_filter" value="${city_name_filter eq '' ? '' : city_name_filter}" size="7" disabled></td>
-                                                            <td nowrap align="center">Year
-                                                                <select id="year" name="year" disabled>
-                                                                    <option value="2022" <c:if test="${year == 2022}">selected</c:if>>2022</option>
-                                                                    <option value="2021" <c:if test="${year == 2021}">selected</c:if>>2021</option>
-                                                                    <option value="2020" <c:if test="${year == 2020}">selected</c:if>>2020</option>
-                                                                    <option value="2019" <c:if test="${year == 2019}">selected</c:if>>2019</option>
-                                                                    <option value="2018" <c:if test="${year == 2018}">selected</c:if>>2018</option>
-                                                                    <option value="2017" <c:if test="${year == 2017}">selected</c:if>>2017</option>
-                                                                    <option value="2016" <c:if test="${year == 2016}">selected</c:if>>2016</option>
-                                                                    <option value="2015" <c:if test="${year == 2015}">selected</c:if>>2015</option>
-                                                                    <option value="2014" <c:if test="${year == 2014}">selected</c:if>>2014</option>
-                                                                    <option value="2013" <c:if test="${year == 2013}">selected</c:if>>2013</option>
-                                                                    <option value="2012" <c:if test="${year == 2012}">selected</c:if>>2012</option>
-                                                                    <option value="2011" <c:if test="${year == 2011}">selected</c:if>>2011</option>
-                                                                    <option value="2010" <c:if test="${year == 2010}">selected</c:if>>2010</option>
-                                                                    <option value="2009" <c:if test="${year == 2009}">selected</c:if>>2009</option>
-                                                                    <option value="2008" <c:if test="${year == 2008}">selected</c:if>>2008</option>
-                                                                    <option value="2007" <c:if test="${year == 2007}">selected</c:if>>2007</option>
-                                                                    <option value="2006" <c:if test="${year == 2006}">selected</c:if>>2006</option>
-                                                                    <option value="2005" <c:if test="${year == 2005}">selected</c:if>>2005</option>
-                                                                    <option value="2004" <c:if test="${year == 2004}">selected</c:if>>2004</option>
-                                                                    <option value="2003" <c:if test="${year == 2003}">selected</c:if>>2003</option>
-                                                                    <option value="2002" <c:if test="${year == 2002}">selected</c:if>>2002</option>
-                                                                    <option value="2001" <c:if test="${year == 2001}">selected</c:if>>2001</option>
-                                                                    <option value="2000" <c:if test="${year == 2000}">selected</c:if>>2000</option>
-                                                                </select>
-                                                            </td>
-                                                            <td nowrap align="center">Month
-                                                                <select id="month" name="month" disabled>
-                                                                    <option value="1" <c:if test="${month == 1}">selected</c:if>>Jan</option>
-                                                                    <option value="2" <c:if test="${month == 2}">selected</c:if>>Feb</option>
-                                                                    <option value="3" <c:if test="${month == 3}">selected</c:if>>Mar</option>
-                                                                    <option value="4" <c:if test="${month == 4}">selected</c:if>>Apr</option>
-                                                                    <option value="5" <c:if test="${month == 5}">selected</c:if>>May</option>
-                                                                    <option value="6" <c:if test="${month == 6}">selected</c:if>>Jun</option>
-                                                                    <option value="7" <c:if test="${month == 7}">selected</c:if>>Jul</option>
-                                                                    <option value="8" <c:if test="${month == 8}">selected</c:if>>Aug</option>
-                                                                    <option value="9" <c:if test="${month == 9}">selected</c:if>>Sep</option>
-                                                                    <option value="10" <c:if test="${month == 10}">selected</c:if>>Oct</option>
-                                                                    <option value="11" <c:if test="${month == 11}">selected</c:if>>Nov</option>
-                                                                    <option value="12" <c:if test="${month == 12}">selected</c:if>>Dec</option>
-                                                                </select>
-                                                            </td>
-                                                            <td nowrap >Date
-                                                                <input type="text" id="date_filter" name="date_filter" value="${date_filter eq '' ? 'dd-mm-yyyy' : date_filter}" style="text-align: center" size="10" readonly disabled>
-                                                                <a href="#" onclick="setYears(1947,2022);showCalender(this, 'date_filter', true);">
-                                                                    <img src="images/calender.png" alt="calender.png">
-                                                                </a>
-                                                            </td>
-                                                            <td colspan="3" nowrap>
-                                                                <input class="button" type="submit" id="search_time" name="search_time" value="SEARCH">
-                                                                <input class="button" type="reset" id="clear_time" name="clear_time" value="CLEAR" >
-                                                            </td>
+                                              Date<input type="text"  name="searchdate" id="searchdate" value="${searchdate}">
+                                            </td>
+                                            
+                                            <td>
+                                                SunriseHr
+                                                 <input type="text" name="searchsunrisehr" id="searchsunrisehr" value="${searchsunrisehr}">
+                                            </td>
+                                             <td>
+                                                SunriseMin
+                                                 <input type="text" name="searchsunrisemin" id="searchsunrisemin" value="${searchsunrisemin}">
+                                            </td>
+                                             <td>
+                                                SunsetHr
+                                                 <input type="text" name="searchsunsethr" id="searchsunsethr" value="${searchsunsethr}">
+                                            </td>
+                                             <td>
+                                              SunsetMin<input type="text" name="searchsunsetmin" id="searchsunsetmin" value="${searchJun}">
+                                            </td>
+                                              </tr>
+                                              <tr>
+                                                  <td></td>
+                                                  <td></td>
+                                            <td>
+                                                <input type="submit" name="search" id="search" value="Search"/></td>  
+                                            <td>  <input type="submit" name="task" value="SearchAllRecords"/></td>
+                                                          
+                                                            
                                                         </tr>
                                                     </table>
-                                                </form>
+                                               
                                             </td>
+                                             </form>
                                         </tr>
                                         <tr>
                                             <td>
@@ -363,6 +390,16 @@
                                                     <input type="hidden" name="year" id="year" value="${year}">
                                                     <input type="hidden" name="month" id="month" value="${month}">
                                                     <input type="hidden" name="date_filter" id="date_filter" value="${date_filter}">
+                                               <input type="hidden" name="lowerLimit" value="${lowerLimit}">
+                                                 <input type="hidden" name="a" value="${a}">
+                                             <input type="hidden" name="b" value="${b}">
+                                             <input type="hidden" name="c" value="${c}">
+                         
+                                             <input type="hidden" name="d" value="${d}">
+                                             <input type="hidden" name="e" value="${e}">
+                                             <input type="hidden" name="f" value="${f}">
+                                                
+                                                
                                                 </form>
                                             </td>
                                         </tr>
@@ -374,8 +411,37 @@
                                                         <tr align="center">
                                                             <th class="heading">City Name</th>
                                                             <td>
-                                                                <input type="text" id="city_name" name="city_name" value="" disabled><br>
+                                                                <input type="text" size="35" id="city_name" name="city_name" value="" disabled><br>
+                                                            </td> </tr>
+                                                         <tr align="center">
+                                                              <th class="heading">SunriseHr</th>
+                                                            <td>
+                                                                <input type="number" size="35" id="sunrise_hr" name="sunrise_hr" value="" min="0" max="23" disabled><br>
+                                                            </td></tr>
+                                                          <tr align="center">
+                                                              <th class="heading">SunriseMin</th>
+                                                            <td>
+                                                                <input type="number"  size="35" id="sunrise_min" name="sunrise_min" value="" min="0" max="59" disabled><br>
+                                                            </td></tr>
+                                                           <tr align="center">
+                                                              <th class="heading">SunsetHr</th>
+                                                            <td>
+                                                                <input type="number" size="35" id="sunset_hr" name="sunset_hr" value="" min="0" max="23" disabled><br>
+                                                            </td></tr>
+                                                            <tr align="center">
+                                                              <th class="heading">SunsetMin</th>
+                                                            <td>
+                                                                <input type="number" size="35" id="sunset_min" name="sunset_min" value="" min="0" max="59" disabled><br>
                                                             </td>
+                                                            
+                                                        </tr>
+                                                          <tr align="center">
+                                                              <th class="heading">Date</th>
+                                                            <td>
+                                                                <input type="date" size="35" id="date" name="date" value="" disabled><br>
+                                                                <input type="hidden" size="35" id="date1" name="date1" value="" ><br>
+                                                            </td>
+                                                            
                                                         </tr>
                                                         <tr>
                                                             <td align='center' colspan="2">

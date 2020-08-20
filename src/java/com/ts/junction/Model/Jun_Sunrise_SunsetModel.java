@@ -16,6 +16,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -50,49 +51,28 @@ public class Jun_Sunrise_SunsetModel extends HttpServlet {
         }
     }
 
-    public List<Jun_Sunrise_Sunset> showData(int lowerLimit, int noOfRowsToDisplay, String city_name, int year, int month, String date) {
+    public List<Jun_Sunrise_Sunset> showData(int lowerLimit, int noOfRowsToDisplay, String searchcity,String searchdate,String searchsunrisehr,String searchsunrisemin,String searchsunsethr,String searchsunsetmin) {
         List<Jun_Sunrise_Sunset> list = new ArrayList<Jun_Sunrise_Sunset>();
-        PreparedStatement pstmt;
+        PreparedStatement pstmt=null;
         try {
-            if ((city_name == null || city_name.isEmpty())
-                    && (year == 0) && (month == 0)
-                    && (date == null || date.isEmpty())) {
+           
                 String query = " SELECT city_name, sunrise_hr, sunrise_min, sunset_hr, sunset_min, date "
                         + " FROM jn_rise_set_time AS jrs, city AS c "
-                        + " WHERE c.city_id=jrs.city_id "
-                        + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-                pstmt = connection.prepareStatement(query);
-            } else {
-                city_name = "" + city_name + "%";
-                if (date == null || date.isEmpty()) {
-                    String query = "SELECT city_name, sunrise_hr, sunrise_min, sunset_hr, sunset_min, date "
-                            + " FROM jn_rise_set_time AS jrs, city AS c "
-                            + " WHERE c.city_id=jrs.city_id "
-                            + " AND  if( '" + city_name + "'  = '' , city_name like '%%' , city_name like '" + city_name + "' ) "
-                            + " AND  if( " + year + " = 0 , substring_index(date, '-', 1)  like '%' , substring_index(date, '-', 1) = " + year + " ) "
-                            + " AND  if( " + month + " = 0 ,substring_index(substring(date, 6), '-', 1) like '%' , substring_index(substring(date, 6), '-', 1) = " + month + " ) "
-                            + " AND if ( '" + date + " ' = '' , date like '%' , date like '" + date + "' ) "
-                            + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-                    pstmt = connection.prepareStatement(query);
-                } else {
-                    city_name = "" + city_name + "%";
-                    Date setDate = setDate(date);
-                    String query = "SELECT city_name, sunrise_hr, sunrise_min, sunset_hr, sunset_min, date "
-                            + " FROM jn_rise_set_time AS jrs, city AS c "
-                            + " WHERE c.city_id=jrs.city_id "
-                            + " AND  if( '" + city_name + "'  = '' , city_name like '%%' , city_name like '" + city_name + "' ) "
-                            + " AND  if( " + year + " = 0 , substring_index(date, '-', 1)  like '%' , substring_index(date, '-', 1) like " + year + " ) "
-                            + " AND  if( " + month + " = 0 ,substring_index(substring(date, 6), '-', 1) like '%' , substring_index(substring(date, 6), '-', 1) like " + month + " ) "
-                            + " AND if ( '" + setDate + " ' = '' , date like '%' , date like '" + setDate + "' ) "
-                            + "LIMIT " + lowerLimit + ", " + noOfRowsToDisplay;
-                    pstmt = connection.prepareStatement(query);
-                }
+                        + " WHERE c.city_id=jrs.city_id and"
+                    + " IF('" + searchcity + "' = '', c.city_name LIKE '%%',c.city_name ='" + searchcity + "') and " 
+                    + " IF('" + searchdate + "' = '', jrs.date LIKE '%%',jrs.date ='" + searchdate + "') and " 
+                    + " IF('" + searchsunrisehr + "' = '', jrs.sunrise_hr LIKE '%%',jrs.sunrise_hr ='" + searchsunrisehr + "') and " 
+                    + " IF('" + searchsunrisemin + "' = '', jrs.sunrise_min LIKE '%%',jrs.sunrise_min ='" + searchsunrisemin + "') and " 
+                    + " IF('" + searchsunsethr + "' = '', jrs.sunset_hr LIKE '%%',jrs.sunset_hr ='" + searchsunsethr + "') and " 
+                  + " IF('" + searchsunsetmin + "' = '', jrs.sunset_min LIKE '%%',jrs.sunset_min ='"+searchsunsetmin+"') ";
+                    
+               
 //                pstmt.setString(1, city_name);
 //                pstmt.setInt(2, year);
 //                pstmt.setInt(3, month);
                 //pstmt.setString(4, date);
-            }
-            ResultSet rset = pstmt.executeQuery();
+          
+          ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 Jun_Sunrise_Sunset junRiseSet = new Jun_Sunrise_Sunset();
                 junRiseSet.setCity_name(rset.getString("city_name"));
@@ -183,121 +163,30 @@ public class Jun_Sunrise_SunsetModel extends HttpServlet {
 
     public int insertRecord(Jun_Sunrise_Sunset junRiseSet) {
         String query;
-        int month = 1;
-        int day = 1;
-        int year = 2012;
-        Longitude_LatitudeCalculator llCalculator = new Longitude_LatitudeCalculator();
-        String city_name = junRiseSet.getCity_name();
-        String[] ll = llCalculator.findLatitudeLongitude(city_name);
-        String latitude = ll[0];
-        String longitude = ll[1];
-        int rowsAffected = 0;
-        while ((month != 13) && (day != 32)) {
+       
+         
+                int rowsAffected = 0;
+      
             query = "INSERT INTO jn_rise_set_time (city_id, sunrise_hr, sunrise_min, sunset_hr, sunset_min, date) "
                     + " VALUES(?, ?, ?, ?, ?, ?) ";
-            String date = generateDate(day, month, year);
-            day++;
-//            System.out.println("month---" + month + "day---" + day);
-            if ((day > 31) && (month == 1)) {
-                day = 1;
-                month = 2;
-            } else if ((day > 29) && (month == 2)) {
-                day = 1;
-                month = 3;
-            } else if ((day > 31) && (month == 3)) {
-                day = 1;
-                month = 4;
-            } else if ((day > 30) && (month == 4)) {
-                day = 1;
-                month = 5;
-            } else if ((day > 31) && (month == 5)) {
-                day = 1;
-                month = 6;
-            } else if ((day > 30) && (month == 6)) {
-                day = 1;
-                month = 7;
-            } else if ((day > 31) && (month == 7)) {
-                day = 1;
-                month = 8;
-            } else if ((day > 31) && (month == 8)) {
-                day = 1;
-                month = 9;
-            } else if ((day > 30) && (month == 9)) {
-                day = 1;
-                month = 10;
-            } else if ((day > 31) && (month == 10)) {
-                day = 1;
-                month = 11;
-            } else if ((day > 30) && (month == 11)) {
-                day = 1;
-                month = 12;
-            }
-//        String date = junRiseSet.getDate();
-            Date setDate = null;
-            try {
-                setDate = setDate(date);
-            } catch (Exception ex) {
-                System.out.println("junction sunrise sunset : setdate error" + ex);
-            }
-            System.out.println("sqltDate---" + setDate);
-            Location location = new Location(latitude, longitude);
-            SunriseSunsetCalculator calculator = new SunriseSunsetCalculator(location, city_name);
-            Calendar myCal = Calendar.getInstance();
-            myCal.setTime(setDate);
-            boolean IsDateExists = false;
-            try {
-                IsDateExists = IsDateExists(date, getCityId(city_name));
-            } catch (Exception ex) {
-                System.out.println("junction sunrise sunset : is date exists error" + ex);
-            }
-            if (IsDateExists == true) {
-                message = "Cannot insert the record.. Date " + date + " already exists.";
-                msgBgColor = COLOR_ERROR;
-                System.out.println("date already exists");
-            } else {
-                System.out.println("time---" + myCal.getTime());
-                String sunrise = calculator.getOfficialSunriseForDate(myCal);
-                String sunset = calculator.getOfficialSunsetForDate(myCal);
-                String[] str1 = sunrise.split(":");
-                int sunrise_hr = Integer.parseInt(str1[0]) + 5;
-                int sunrise_min = Integer.parseInt(str1[1]) + 30;
-                int sunrise_min_difference;
-                if (sunrise_hr > 24) {
-                    sunrise_hr = sunrise_hr - 24;
-                }
-                if (sunrise_min > 60) {
-                    sunrise_min_difference = sunrise_min - 60;
-                    sunrise_hr = sunrise_hr + 1;
-                    sunrise_min = sunrise_min_difference;
-                }
-                String[] str2 = sunset.split(":");
-                int sunset_hr = Integer.parseInt(str2[0]) + 5;
-                int sunset_min = Integer.parseInt(str2[1]) + 30;
-                int sunset_min_difference;
-                if (sunset_hr > 24) {
-                    sunset_hr = sunset_hr - 24;
-                }
-                if (sunset_min > 60) {
-                    sunset_min_difference = sunset_min - 60;
-                    sunset_hr = sunset_hr + 1;
-                    sunset_min = sunset_min_difference;
-                }
-                System.out.println("officialSunrise" + sunrise + "---------officialSunset" + sunset);
+//        
                 try {
                     PreparedStatement pstmt = (PreparedStatement) connection.prepareStatement(query);
-                    pstmt.setInt(1, getCityId(city_name));
-                    pstmt.setInt(2, sunrise_hr);
-                    pstmt.setInt(3, sunrise_min);
-                    pstmt.setInt(4, sunset_hr);
-                    pstmt.setInt(5, sunset_min);
-                    pstmt.setDate(6, setDate);
-                    rowsAffected = pstmt.executeUpdate();
+                      
+                    pstmt.setInt(1, getCityId(junRiseSet.getCity_name()));
+                    pstmt.setInt(2, junRiseSet.getSunrise_time_hrs());
+                    pstmt.setInt(3, junRiseSet.getSunrise_time_min());
+                    pstmt.setInt(4, junRiseSet.getSunset_time_hrs());
+                    pstmt.setInt(5, junRiseSet.getSunset_time_min());
+                    
+                    pstmt.setDate(6, junRiseSet.getSqldate());
+                            rowsAffected = pstmt.executeUpdate();
 
                 } catch (Exception e) {
                     System.out.println("Error: JunctionSunriseSunsetModel-insertRecord-" + e);
                 }
-            }
-        }
+           
+     
         if (rowsAffected > 0) {
             message = "Record inserted successfully.";
             msgBgColor = COLOR_OK;
@@ -332,7 +221,96 @@ public class Jun_Sunrise_SunsetModel extends HttpServlet {
         }
         return finalDate;
     }
-
+  public List<String> getCity() {
+        String query = "SELECT city_name from city WHERE active = 'Y'";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("city_name"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+  public List<String> getSunriseHr() {
+        String query = "SELECT sunrise_hr from jn_rise_set_time";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("sunrise_hr"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+  public List<String> getSunriseMin() {
+        String query = "SELECT sunrise_min from jn_rise_set_time";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("sunrise_min"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+  public List<String> getSunsetHr() {
+        String query = "SELECT sunset_hr from jn_rise_set_time";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("sunset_hr"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+  public List<String> getSunsetMin() {
+        String query = "SELECT sunset_min from jn_rise_set_time";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("sunset_min"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
+  public List<String> getSearchDate() {
+        String query = "SELECT date from jn_rise_set_time";
+        List<String> cameraMakeList = new ArrayList();
+        try {
+            PreparedStatement pstmt = connection.prepareStatement(query);
+            ResultSet rset = pstmt.executeQuery();
+            while(rset.next()){
+                cameraMakeList.add(rset.getString("date"));
+            }
+            
+        }catch (Exception e) {
+            System.out.println("CameraModel getJunctionName() Error: " + e);
+        }
+        return cameraMakeList;
+    }
     public List<String> getCityName(String q) {
         List<String> list = new ArrayList<String>();
         PreparedStatement pstmt;
@@ -367,7 +345,7 @@ public class Jun_Sunrise_SunsetModel extends HttpServlet {
         try {
             String query = "SELECT sunrise_hr, sunrise_min, sunset_hr, sunset_min "
                     + " FROM jn_rise_set_time AS jrs, city AS c "
-                    + " WHERE c.city_id=jrs.city_id AND substring_index(substring(date, 6), '-', 1)=12 AND jrs.city_id=1 ";
+                    + " WHERE c.city_id=jrs.city_id AND substring_index(substring(date, 6), '-', 1)=12 AND jrs.city_id=1";
             ResultSet rset = connection.prepareStatement(query).executeQuery();
             while (rset.next()) {
                 NewClass junRiseSet = new NewClass();
@@ -393,41 +371,28 @@ public class Jun_Sunrise_SunsetModel extends HttpServlet {
         return responseStr;
     }
 
-    public int getNoOfRows(String city_name, int year, int month, String date) {
+    public int getNoOfRows( String searchcity,String searchdate,String searchsunrisehr,String searchsunrisemin,String searchsunsethr,String searchsunsetmin) {
         int noOfRows = 0;
         PreparedStatement pstmt;
         try {
-            if ((city_name == null || city_name.isEmpty())
-                    && (year == 0) && (month == 0)
-                    && (date == null || date.isEmpty())) {
-                String query = " select count(*) from jn_rise_set_time ";
-                pstmt = connection.prepareStatement(query);
-            } else {
-                city_name = "" + city_name + "%";
-                if (date == null || date.isEmpty()) {
-                    String query = " select count(*) "
-                            + " FROM jn_rise_set_time AS jrs, city AS c "
-                            + " WHERE c.city_id=jrs.city_id "
-                            + " AND  if( '" + city_name + "'  = '' , city_name like '%%' , city_name like '" + city_name + "' ) "
-                            + " AND  if( " + year + " = 0 , substring_index(date, '-', 1)  like '%' , substring_index(date, '-', 1) = " + year + " ) "
-                            + " AND  if( " + month + " = 0 ,substring_index(substring(date, 6), '-', 1) like '%' , substring_index(substring(date, 6), '-', 1) = " + month + " ) "
-                            + " AND if ( '" + date + " ' = '' , date like '%' , date like '" + date + "' ) ";
-                    pstmt = connection.prepareStatement(query);
-                } else {
-                    city_name = "" + city_name + "%";
-                    Date setDate = setDate(date);
-                    String query = " select count(*) "
-                            + " FROM jn_rise_set_time AS jrs, city AS c "
-                            + " WHERE c.city_id=jrs.city_id "
-                            + " AND  if( '" + city_name + "'  = '' , city_name like '%%' , city_name like '" + city_name + "' ) "
-                            + " AND  if( " + year + " = 0 , substring_index(date, '-', 1)  like '%' , substring_index(date, '-', 1) like " + year + " ) "
-                            + " AND  if( " + month + " = 0 ,substring_index(substring(date, 6), '-', 1) like '%' , substring_index(substring(date, 6), '-', 1) like " + month + " ) "
-                            + " AND if ( '" + setDate + " ' = '' , date like '%' , date like '" + setDate + "' ) ";
-                    pstmt = connection.prepareStatement(query);
-                }
-            }
-            ResultSet rset = pstmt.executeQuery();
-            rset.next();
+             String query = " SELECT count(*)"
+                        + " FROM jn_rise_set_time AS jrs, city AS c "
+                        + " WHERE c.city_id=jrs.city_id and"
+                    + " IF('" + searchcity + "' = '', c.city_name LIKE '%%',c.city_name ='" + searchcity + "') and " 
+                    + " IF('" + searchdate + "' = '', jrs.date LIKE '%%',jrs.date ='" + searchdate + "') and " 
+                    + " IF('" + searchsunrisehr + "' = '', jrs.sunrise_hr LIKE '%%',jrs.sunrise_hr ='" + searchsunrisehr + "') and " 
+                    + " IF('" + searchsunrisemin + "' = '', jrs.sunrise_min LIKE '%%',jrs.sunrise_min ='" + searchsunrisemin + "') and " 
+                    + " IF('" + searchsunsethr + "' = '', jrs.sunset_hr LIKE '%%',jrs.sunset_hr ='" + searchsunsethr + "') and " 
+                  + " IF('" + searchsunsetmin + "' = '', jrs.sunset_min LIKE '%%',jrs.sunset_min ='"+searchsunsetmin+"') ";
+                    
+               
+//                pstmt.setString(1, city_name);
+//                pstmt.setInt(2, year);
+//                pstmt.setInt(3, month);
+                //pstmt.setString(4, date);
+          
+          ResultSet rset = connection.prepareStatement(query).executeQuery();
+                        rset.next();
             noOfRows = Integer.parseInt(rset.getString(1));
             System.out.println(noOfRows);
         } catch (Exception e) {

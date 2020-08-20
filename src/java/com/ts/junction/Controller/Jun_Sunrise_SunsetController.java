@@ -9,8 +9,13 @@ import com.ts.junction.tableClasses.Jun_Sunrise_Sunset;
 import com.ts.util.xyz;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.sql.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,7 +49,7 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
             if (jqstring != null) {
                 List<String> list = null;
                 if (jqstring.equals("getCityName")) {
-                    list = junctionModel.getCityName(q);
+                    list = junctionModel.getCityName(q);   
                 }
                 Iterator<String> iter = list.iterator();
                 while (iter.hasNext()) {
@@ -61,7 +66,80 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
         } catch (Exception e) {
             System.out.println("\n Error --SiteListController get JQuery Parameters Part-" + e);
         }
+            String searchcity = request.getParameter("searchCity");
+          String searchsunrisehr = request.getParameter("searchsunrisehr");
+           String searchsunrisemin = request.getParameter("searchsunrisemin");
+          String searchsunsethr = request.getParameter("searchsunsethr");
+          String searchsunsetmin = request.getParameter("searchsunsetmin");
+          String searchdate = request.getParameter("searchdate");
+        if(searchcity==null){
+        searchcity="";
+        }
+         if(searchsunrisehr==null){
+        searchsunrisehr="";
+        } 
+          if(searchsunrisemin==null){
+        searchsunrisemin="";
+        }
+         if(searchsunsethr==null){
+        searchsunsethr="";
+        } 
+         if(searchsunsetmin==null){
+        searchsunsetmin="";
+        } 
+         if(searchdate==null){
+        searchdate="";
+        } 
+         
+//         if (task.equals("SearchAllRecords")) {
+//            searchcity = "";
+//            searchsunrisehr="";
+//            searchsunrisemin="";
+//            searchsunsethr="";
+//            searchsunsetmin="";
+//            searchdate="";
+//           
+//        }
+         
+               
+        try {
+           //  String q = request.getParameter("q"); 
+            String JQstring = request.getParameter("action1");
+            if (JQstring != null) {
+                PrintWriter out = response.getWriter();
+                List<String> list = null;
 
+                if (JQstring.equals("getsearchCity")) {
+                    list = junctionModel.getCity();
+                }  if (JQstring.equals("getsearchdate")) {
+                    list = junctionModel.getSearchDate();
+                }
+                if (JQstring.equals("getsearchsunrisehr")) {
+                  list = junctionModel.getSunriseHr();
+                } if (JQstring.equals("getsearchsunrisemin")) {
+                   
+                   list = junctionModel.getSunriseMin();
+                }
+                  if (JQstring.equals("getsearchsunsethr")) {
+                   list = junctionModel.getSunsetHr();
+                }
+                  if (JQstring.equals("getsearchsunsetmin")) {
+                   list = junctionModel.getSunsetMin();
+                }
+                   
+
+                Iterator<String> iter = list.iterator();
+                while (iter.hasNext()) {
+                    String data = iter.next();
+                    out.println(data);
+                }
+                
+                out.flush();
+                return;
+            }
+        } catch (Exception e) {
+            System.out.println("\n Error --CameraController get JQuery Parameters Part-" + e);
+        }
         String city_name_filter = null, date_filter = null;
         int year = 0, month = 0;
         String city_name_cb = "", month_cb = "", year_cb = "", date_cb = "";
@@ -114,7 +192,7 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
 
         if (task.equals("DELETE")) {
             // Pretty sure that city_id will be available.
-            String date = request.getParameter("date");
+            String date = request.getParameter("date1");
             try {
                 junctionModel.deleteRecord(date);
             } catch (Exception ex) {
@@ -125,15 +203,33 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
         if (task.equals("SAVE") || task.equals("Save AS New")) {
             Jun_Sunrise_Sunset junSunriseSunset = new Jun_Sunrise_Sunset();
             String city_name = request.getParameter("city_name");
+            int sunrisehr = Integer.parseInt(request.getParameter("sunrise_hr"));
+            int sunrisemin = Integer.parseInt(request.getParameter("sunrise_min"));
+            int sunsethr = Integer.parseInt(request.getParameter("sunset_hr"));
+            int sunsetmin = Integer.parseInt(request.getParameter("sunset_min"));
+            String date = request.getParameter("date");
             junSunriseSunset.setCity_name(city_name);
-            String subTask = request.getParameter("subTasks");
-            if (subTask.equals("NEW") || task.equals("Save AS New")) {
-                try {
+            junSunriseSunset.setSunrise_time_hrs(sunrisehr);
+            junSunriseSunset.setSunrise_time_min(sunrisemin);
+            junSunriseSunset.setSunset_time_hrs(sunsethr);
+            junSunriseSunset.setSunset_time_min(sunsetmin);
+            try {
+                //String str=junSunriseSunset.getDate();
+             //   Date date1=new SimpleDateFormat("yyyy-dd-mm").parse(junSunriseSunset.getDate());
+                 Date date2=Date.valueOf(date);
+                  junSunriseSunset.setSqldate(date2);
+            } catch (Exception ex) {
+                Logger.getLogger(Jun_Sunrise_SunsetController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+          
+           // String subTask = request.getParameter("subTasks");
+//            if (subTask.equals("NEW") || task.equals("Save AS New")) {
+               try {
                     junctionModel.insertRecord(junSunriseSunset);
                 } catch (Exception ex) {
                     System.out.println("junction sunrise sunset controller : insertRecord error" + ex);
                 }
-            }
+           // }
         }
 
         try {
@@ -146,9 +242,26 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
         if (buttonAction == null) {
             buttonAction = "none";
         }
-        noOfRowsInTable = junctionModel.getNoOfRows(city_name_filter, year, month, date_filter);                  // get the number of records (rows) in the table.
-        if (buttonAction.equals("Next")); // lowerLimit already has value such that it shows forward records, so do nothing here.
+        noOfRowsInTable = junctionModel.getNoOfRows(searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);                  // get the number of records (rows) in the table.
+        if (buttonAction.equals("Next")){
+            searchcity = request.getParameter("a");
+              searchdate = request.getParameter("b");
+                 searchsunrisehr = request.getParameter("c");
+              searchsunrisemin = request.getParameter("d");
+                 searchsunsethr = request.getParameter("e");
+              searchsunsetmin = request.getParameter("f");
+             noOfRowsInTable = junctionModel.getNoOfRows(searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);  
+
+        } // lowerLimit already has value such that it shows forward records, so do nothing here.
         else if (buttonAction.equals("Previous")) {
+           searchcity = request.getParameter("a");
+              searchdate = request.getParameter("b");
+                 searchsunrisehr = request.getParameter("c");
+              searchsunrisemin = request.getParameter("d");
+                 searchsunsethr = request.getParameter("e");
+              searchsunsetmin = request.getParameter("f");
+             noOfRowsInTable = junctionModel.getNoOfRows(searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);  
+
             int temp = lowerLimit - noOfRowsToDisplay - noOfRowsTraversed;
             if (temp < 0) {
                 noOfRowsToDisplay = lowerLimit - noOfRowsTraversed;
@@ -157,8 +270,28 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
                 lowerLimit = temp;
             }
         } else if (buttonAction.equals("First")) {
+            
+            
+            searchcity = request.getParameter("a");
+              searchdate = request.getParameter("b");
+                 searchsunrisehr = request.getParameter("c");
+              searchsunrisemin = request.getParameter("d");
+                 searchsunsethr = request.getParameter("e");
+              searchsunsetmin = request.getParameter("f");
+           //  noOfRowsInTable = junctionModel.getNoOfRows(searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);  
+
+            
             lowerLimit = 0;
         } else if (buttonAction.equals("Last")) {
+            
+            searchcity = request.getParameter("a");
+              searchdate = request.getParameter("b");
+                 searchsunrisehr = request.getParameter("c");
+              searchsunrisemin = request.getParameter("d");
+                 searchsunsethr = request.getParameter("e");
+              searchsunsetmin = request.getParameter("f");
+             noOfRowsInTable = junctionModel.getNoOfRows(searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);  
+
             lowerLimit = noOfRowsInTable - noOfRowsToDisplay;
             if (lowerLimit < 0) {
                 lowerLimit = 0;
@@ -171,7 +304,7 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
 
         List<Jun_Sunrise_Sunset> list1 = null;
         try {
-            list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay, city_name_filter, year, month, date_filter);
+            list1 = junctionModel.showData(lowerLimit, noOfRowsToDisplay, searchcity,searchdate,searchsunrisehr,searchsunrisemin,searchsunsethr,searchsunsetmin);
         } catch (Exception ex) {
             System.out.println("junction sunrise sunset controller : showData error" + ex);
         }
@@ -186,6 +319,18 @@ public class Jun_Sunrise_SunsetController extends HttpServlet {
             request.setAttribute("showNext", "false");
             request.setAttribute("showLast", "false");
         }
+          request.setAttribute("searchcity", searchcity);
+          request.setAttribute("searchdate", searchdate);
+           request.setAttribute("searchsunrisehr", searchsunrisehr);
+          request.setAttribute("searchsunrisemin", searchsunrisemin);
+        request.setAttribute("searchsunsethr", searchsunsethr);
+            request.setAttribute("searchsunsetmin", searchsunsetmin);
+          request.setAttribute("a", searchcity);
+          request.setAttribute("b", searchdate);
+           request.setAttribute("c", searchsunrisehr);
+          request.setAttribute("d", searchsunrisemin);
+        request.setAttribute("e", searchsunsethr);
+            request.setAttribute("f", searchsunsetmin);
         request.setAttribute("city_name_cb", city_name_cb);
         request.setAttribute("month_cb", month_cb);
         request.setAttribute("year_cb", year_cb);
