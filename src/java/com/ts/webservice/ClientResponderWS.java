@@ -2525,10 +2525,21 @@ public class ClientResponderWS extends HttpServlet
                 }
 
             }
-//            
+//            PWM  Work
+String pwm_byte="3";
+String ext_byte1="0";
+String ext_byte2="0";
+String ext_byte3="0";
+String ext_byte4="0";
+if(TS_StatusUpdaterController.pwmvalglobal!=null && TS_StatusUpdaterController.pwmvalglobal!=""){
+pwm_byte=TS_StatusUpdaterController.pwmvalglobal;
+}
+
+
 
             System.out.println("activity bytes: " + activity + " " + activity1 + " " + activity2 + " " + activity3);
-            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " + fault + " " + firstLastDelimiter + " " + firstLastDelimiter;
+           // response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " + fault + " " + firstLastDelimiter + " " + firstLastDelimiter;
+            response = secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + secStartDelimiter + " " + junctionID + " " + programVersionNoFromDB + " " + fileNoFromDB + " " + functionNo + " " + activity + " " + activity1 + " " + activity2 + " " + activity3 + " " + pwm_byte + " " + ext_byte1 + " "+ ext_byte2 + " "+ ext_byte3 + " "+ ext_byte4 + " " + firstLastDelimiter + " " + firstLastDelimiter;
             System.out.println("response ::: " + response);
 
         } catch (Exception e) {

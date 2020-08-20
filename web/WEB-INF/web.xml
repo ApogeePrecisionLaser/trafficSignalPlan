@@ -7,7 +7,7 @@
     </context-param>
     <context-param>
         <param-name>connectionString</param-name>
-        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan2?useSSL=false</param-value>
+        <param-value>jdbc:mysql://localhost:3306/traffic_signal_plan2</param-value>
     </context-param>
     <context-param>
         <param-name>db_userName</param-name>
@@ -18,7 +18,7 @@
         <description>	</description>
         <param-name>db_userPassword</param-name>
 <!--        <param-value>jpss</param-value>-->
-<param-value></param-value>
+<param-value>root</param-value>
    
     </context-param>
     <context-param>

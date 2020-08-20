@@ -34,7 +34,7 @@ public class TS_StatusUpdaterController extends HttpServlet {
     private Calendar cal;
     String currentTime;
     private String lastVisitedTime;
-
+    public static String pwmvalglobal = null;
     public void init()
             throws ServletException {
         super.init();
@@ -167,6 +167,8 @@ public class TS_StatusUpdaterController extends HttpServlet {
 
         if (task.equals("changeActivity")) {
             String activity = request.getParameter("activity_no");
+           this.pwmvalglobal = request.getParameter("pwmval");
+           
             int activitySide = Integer.parseInt(request.getParameter("activitySide"));
             int junctionID = Integer.parseInt(request.getParameter("junctionId"));
             System.out.println("Server request for activity(from staus updater): " + activity + " " + activitySide);

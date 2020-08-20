@@ -528,6 +528,16 @@
                // if(radioBtnValue===2){
               //  readClientResponse();
                // }
+             //  alert();
+               debugger;
+                var pwmval = document.getElementById('pwm');
+               // alert(pwmval);
+                if(pwmval!==null){
+                pwmval=pwmval.options[pwmval.options.selectedIndex].value;
+                // alert(pwmval);
+                }else{
+                    pwmval="3";
+                }
                 var junctionId = doc.getElementById("junctionId").value;
                 var junctionName = doc.getElementById("junctionName").value;
                 var program_version_no = doc.getElementById("program_version_no").value;
@@ -555,7 +565,7 @@
                 // doc.getElementById("activity_message").style.backgroundColor = "lightyellow";
                 // $('#activity_image_loading').html(doc.getElementById("div_animationLoading").innerHTML);
 
-                var queryString = "task=changeActivity&activitySide="+activitySide+"&activity_no="+activity_no+"&junctionId=" + junctionId + "&junctionName=" +junctionName +"&program_version_no=" +program_version_no+ "&fileNo=" +fileNo;
+                var queryString = "task=changeActivity&activitySide="+activitySide+"&activity_no="+activity_no+"&junctionId=" + junctionId + "&junctionName=" +junctionName +"&program_version_no=" +program_version_no+ "&fileNo=" +fileNo+ "&pwmval=" +pwmval;
                 $.ajax({
                     url:"ts_statusUpdaterCont",
                     method:"POST",
@@ -564,6 +574,10 @@
                         var res = response;
                     }
                 });
+                  var property = document.getElementById("changeActivity");
+     
+        property.style.backgroundColor = "#228B22"
+     
                 //doc.forms['form3'].action = "ts_statusUpdaterCont?task=changeActivity&activitySide="+activitySide;
                 //doc.forms['form3'].submit();
             }
@@ -624,6 +638,13 @@
                                                                 <td><input type="radio" name="activityBtn" value="4" id="activity4" onclick="onSelect(id);">Jump&nbsp;&nbsp;&nbsp;</td>
                                                                 <td><input type="radio" name="activityBtn" value="5" id="activity5" onclick="onSelect(id);">Shutdown&nbsp;&nbsp;&nbsp;</td>
                                                                 <td><input type="radio" name="activityBtn" value="6" id="activity6" onclick="onSelect(id);">Extend</td>
+                                                                <td><label> <h5>PWM</h5> </label></td>  <td><select name="pwm" id="pwm">
+  <option value="3">Select</option>
+  <option value="1">Low</option>
+  <option value="2">Middle</option>
+  <option value="3">High</option>
+   
+</select></td>
                                                                 <td>
                                                                     <input type="button" id="changeActivity" value="Submit" onclick="changeActivityFn()">
                                                                     <input type="hidden" name="junctionId" value="${junctionId}">
